@@ -94,6 +94,28 @@ const DASHBOARD: AppRouteRecordRaw = {
           icon: 'IconUpload',
         },
       },
+      {
+        path: 'event',
+        name: 'Event',
+        component: () => import('@/views/data/event/index.vue'),
+        meta: {
+          locale: '热点事件',
+          requiresAuth: true,
+          roles: ['*'],
+          hideInMenu: false,
+        },
+      },
+      {
+        path: 'tag',
+        name: 'Tag',
+        component: () => import('@/views/data/tag/index.vue'),
+        meta: {
+          locale: '标签',
+          requiresAuth: true,
+          roles: ['*'],
+          hideInMenu: false,
+        },
+      },
   ],
 };
 
