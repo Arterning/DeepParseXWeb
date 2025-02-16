@@ -110,7 +110,7 @@ const DASHBOARD: AppRouteRecordRaw = {
         name: 'Tag',
         component: () => import('@/views/data/tag/index.vue'),
         meta: {
-          locale: '标签',
+          locale: '我的标签',
           requiresAuth: true,
           roles: ['*'],
           hideInMenu: false,

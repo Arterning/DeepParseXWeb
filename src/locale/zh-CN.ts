@@ -26,6 +26,8 @@ export default {
   'menu.faq': '常见问题',
   'menu.github': 'GitHub',
   'menu.sponsor': '赞助',
+  'menu.data.tag': '我的标签',
+  'menu.data.event': '热点事件',
   'navbar.action.locale': '切换为中文',
   'modal.title.tips': '温馨提示',
   'modal.title.tips.delete': '确定要删除吗？',
