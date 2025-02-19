@@ -16,7 +16,7 @@ export interface HttpError {
 
 // 设置全局 baseURL 和 withCredentials
 axios.defaults.baseURL = import.meta.env.VITE_API_BASE_URL || '';
-axios.defaults.withCredentials = true;
+// axios.defaults.withCredentials = true;
 
 // 封装错误提示逻辑
 const showError = (message: string) => {
