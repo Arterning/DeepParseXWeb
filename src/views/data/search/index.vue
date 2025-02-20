@@ -1,0 +1,336 @@
+<template>
+  <div class="container">
+    <a-layout style="padding: 0 18px">
+      <Breadcrumb :items="[$t('menu.data'), $t('搜索')]" />
+      <a-card :title="$t('搜索')" class="general-card">
+        <a-space direction="vertical" size="large" class="modal-title">
+          <a-input
+            v-model="searchQuery"
+            class="search"
+            placeholder="搜索您感兴趣的内容"
+            allow-clear
+            @input="handleInput"
+            @keyup.enter="handleEnter"
+          >
+            <template #prefix>
+              <icon-search />
+            </template>
+          </a-input>
+        </a-space>
+        <div v-if="!searchQuery" v-show="showHistory" class="history">
+          <div v-if="historyItems.length > 0" class="history-header">
+            <div class="tip">最近搜索</div>
+            <span class="del" @click="clearHistory">清除全部</span>
+          </div>
+          <a-list style="margin-top: 10px" :max-height="580" :scrollbar="true">
+            <a-list-item
+              v-for="(item, index) in historyItems"
+              :key="item"
+              class="history-item"
+              @click="historyHandle(item)"
+            >
+              <icon-history />
+              <span class="time">{{ item }}</span>
+              <icon-delete
+                type="close"
+                class="delete-icon"
+                @click.stop="deleteHistoryItem(index)"
+              />
+            </a-list-item>
+          </a-list>
+        </div>
+        <div v-else class="searchResults">
+          <div class="tip">搜索到{{ total }}个结果</div>
+          <a-list :max-height="450" :scrollbar="true" :loading="loading">
+            <a-list-item
+              v-for="result in searchResults"
+              :key="result.id"
+              class="ResultItem"
+            >
+              <a-list-item-meta>
+                <template #title>
+                  <a @click="handleResultClick(result)">
+                    <span v-html="highlightedHit(result.name)"></span>
+                  </a>
+                </template>
+              </a-list-item-meta>
+              <a-list-item-meta>
+                <template #description>
+                  <span v-html="highlightedHit(result.hit)"></span>
+                </template>
+              </a-list-item-meta>
+            </a-list-item>
+          </a-list>
+          <a-pagination
+            v-model:page-size="pageSize"
+            class="pagination"
+            :total="total"
+            show-total
+            show-jumper
+            show-page-size
+            @change="pageChange"
+            @page-size-change="onPageSizeChange"
+          />
+        </div>
+      </a-card>
+    </a-layout>
+  </div>
+  <div class="footer">
+    <Footer />
+  </div>
+</template>
+
+<script setup lang="ts">
+  import { ref, onMounted } from 'vue';
+  //   import { result } from 'lodash';
+  import { useRouter } from 'vue-router';
+  import Footer from '@/components/footer/index.vue';
+  // import { SearchItem, SearchRes, search } from '@/api/dashboard';
+
+  const visible = ref(true);
+  const showHistory = ref(true);
+  const historyItems = ref<string[]>([]);
+  const searchResults = ref()
+  // const search_after = ref<string[]>();
+  const total = ref<number>(0);
+  const searchQuery = ref('');
+  const router = useRouter(); // 使用 Vue Router
+  const loading = ref(false);
+  const pageSize = ref(10);
+
+  const handleInput = async () => {
+    if (!searchQuery.value) {
+      showHistory.value = true;
+    } else {
+      showHistory.value = false;
+      loading.value = true;
+      try {
+        // const results = await search({
+        //   q: searchQuery.value,
+        //   current: 0,
+        //   pageSize: pageSize.value,
+        // });
+        // searchResults.value = results.items;
+        // total.value = results.total;
+        // search_after.value = results.search_after;
+        saveHistory();
+      } catch (error) {
+        console.error('搜索失败:', error);
+      } finally {
+        loading.value = false;
+      }
+    }
+  };
+
+  const handleEnter = () => {
+    if (searchQuery.value) {
+      saveHistory();
+    }
+  };
+
+  const saveHistory = () => {
+    // 如果搜索历史中已经存在该记录，则先删除它
+    const index = historyItems.value.indexOf(searchQuery.value);
+    if (index !== -1) {
+      historyItems.value.splice(index, 1);
+    }
+    // 将新记录插入到数组的第一个位置
+    historyItems.value.unshift(searchQuery.value);
+
+    // 只保留最多5条历史记录
+    if (historyItems.value.length > 8) {
+      historyItems.value = historyItems.value.slice(0, 8);
+    }
+
+    localStorage.setItem('searchHistory', JSON.stringify(historyItems.value));
+  };
+
+  const historyHandle = (item: any) => {
+    searchQuery.value = item;
+    handleEnter();
+    handleInput();
+  };
+
+  const clearHistory = () => {
+    historyItems.value = [];
+    localStorage.removeItem('searchHistory');
+  };
+
+  const deleteHistoryItem = (index: number) => {
+    historyItems.value.splice(index, 1);
+    localStorage.setItem('searchHistory', JSON.stringify(historyItems.value));
+  };
+
+  const loadSearchHistory = () => {
+    const storedHistory = localStorage.getItem('searchHistory');
+    if (storedHistory) {
+      historyItems.value = JSON.parse(storedHistory);
+    }
+  };
+
+  // 在组件挂载时加载历史搜索记录
+  onMounted(loadSearchHistory);
+
+  // 计算过滤后的搜索结果
+  // const filteredResults = ref<SearchItem[]>([]);
+  // watch([searchQuery, searchResults], () => {
+  //   if (searchQuery.value) {
+  //     filteredResults.value = searchResults.value;
+  //   } else {
+  //     filteredResults.value = [];
+  //   }
+  // });
+
+  // 搜索结果跳转
+  const handleResultClick = (item: { entity_type: string; id: any; }) => {
+    // router.push({ name: 'appClientMenus', params: { id } });
+    if (item.entity_type === 'document') {
+      router.push({
+        name: 'DataDocDetail',
+        query: { docId: item.id },
+      });
+      // window.open(window.origin + '/data/doc-detail?docId='+item.id);
+    }
+
+    if (item.entity_type === 'person') {
+      router.push({
+        name: 'DataPersonDetail',
+        query: { personId: item.id },
+      });
+    }
+
+    if (item.entity_type === 'org') {
+      router.push({
+        name: 'DataOrgDetail',
+        query: { orgId: item.id },
+      });
+    }
+
+    if (item.entity_type === 'subject') {
+      router.push({
+        name: 'DataSubjectDetail',
+        query: { subjectId: item.id },
+      });
+    }
+
+    handleEnter();
+    visible.value = false;
+  };
+
+  const highlightedHit = (hit: string | undefined) => {
+    if (!hit) {
+      return '';
+    }
+    return hit.replace(/<b>(.*?)<\/b>/g, `<b style="color: aqua;">$1</b>`);
+  };
+
+  const pageChange = async (current: number) => {
+    try {
+      loading.value = true;
+      //   const results = await search({
+      //     q: searchQuery.value,
+      //     current: (current - 1) * pageSize.value,
+      //     pageSize: pageSize.value,
+      //     search_after: search_after.value,
+      //   });
+      //   searchResults.value = results.items;
+      //   total.value = results.total;
+      //   search_after.value = results.search_after;
+      // } catch (error) {
+      //   console.error('搜索失败:', error);
+      // } finally {
+      //   loading.value = false;
+      // }
+    } finally { /* empty */ }
+
+    const onPageSizeChange = () => {
+    }
+  }
+</script>
+
+<style scoped lang="less">
+  .nav-btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .modal-title {
+    width: 100%;
+  }
+
+  .search {
+    position: relative;
+    width: 100%;
+  }
+
+  .search:focus {
+    outline: none;
+    box-shadow: none;
+  }
+
+  .del {
+    cursor: pointer;
+    color: rgb(22, 93, 255);
+  }
+
+  .time {
+    margin-left: 15px;
+  }
+
+  .history,
+  .searchResults {
+    width: 100%;
+    height: 100%;
+
+    .tip {
+      color: aqua;
+      padding: 8px;
+    }
+  }
+
+  .history-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+
+  .history-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 0;
+  }
+
+  .history-item:hover,
+  .ResultItem:hover {
+    // background-color: #f0f0f0;
+    opacity: 1.5;
+    cursor: pointer;
+    color: rgb(22, 93, 255);
+  }
+
+  .delete-icon {
+    float: right;
+    cursor: pointer;
+    display: none;
+    color: rgb(22, 93, 255);
+  }
+
+  .history-item:hover .delete-icon {
+    display: block;
+  }
+
+  .history {
+    margin-top: 0;
+  }
+
+  .searchResults {
+    margin-top: 0;
+  }
+
+  .pagination {
+    margin-top: 20px;
+  }
+</style>

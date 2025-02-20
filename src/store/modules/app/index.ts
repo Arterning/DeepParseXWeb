@@ -18,6 +18,7 @@ function generateMenu(
   const views = import.meta.glob('@/views/**/*.vue');
 
   data.forEach((menu) => {
+    console.log(menu)
     const localeName = convertToCamelCase(menu.name);
     const menuItem: AppRouteRecordRaw = {
       path: !menu.path ? `/${convertToKebabCase(menu.name)}` : menu.path,

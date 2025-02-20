@@ -17,6 +17,7 @@ import localeGenerator from '@/views/automation/code-generator/local/zh-CN';
 import localeSettings from './zh-CN/settings';
 
 export default {
+  'menu.data.search': '搜索',
   'menu.dashboard': '仪表盘',
   'menu.admin': '系统管理',
   'menu.automation': '系统自动化',

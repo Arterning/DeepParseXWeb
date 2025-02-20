@@ -116,6 +116,17 @@ const DASHBOARD: AppRouteRecordRaw = {
           hideInMenu: false,
         },
       },
+    {
+      path: 'search',
+      name: 'search',
+      component: () => import('@/views/data/search/index.vue'),
+      meta: {
+        locale: '搜索',
+        requiresAuth: true,
+        roles: ['*'],
+        hideInMenu: false,
+      },
+    },
   ],
 };
 

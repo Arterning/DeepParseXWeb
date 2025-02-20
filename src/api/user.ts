@@ -70,7 +70,36 @@ export function getUserInfo(): Promise<UserState> {
 }
 
 export function getUserMenuList(): Promise<MenuItem[]> {
+  // alert('增加搜索功能-qinzhaohui');
+  // eslint-disable-next-line no-underscore-dangle
+  // const res_ = axios.get('/api/v1/sys/menus/sidebar').then((res) => {
+  //   console.log(res[2].children);
+  //   res[2].children.push({
+  //     id: 128,
+  //     title: '搜索',
+  //     name: 'search',
+  //     level: 0,
+  //     sort: 2,
+  //     icon: 'IconSearch',
+  //     path: 'search',
+  //     menu_type: 1,
+  //     component: '/data/search/index.vue',
+  //     perms: null,
+  //     status: 1,
+  //     show: 1,
+  //     cache: 0,
+  //     remark: null,
+  //     parent_id: 43,
+  //     created_time: '2024-12-12T09:42:13.817441Z',
+  //     updated_time: null,
+  //   });
+  //   return Promise.resolve(res);
+  // });
+  //
+  // console.log(res_);
+
   return axios.get('/api/v1/sys/menus/sidebar');
+  // return res_;
 }
 
 export function getUserList(params: SysUserParams): Promise<SysUserListRes> {
