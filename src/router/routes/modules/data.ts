@@ -116,6 +116,39 @@ const DASHBOARD: AppRouteRecordRaw = {
           hideInMenu: false,
         },
       },
+      {
+        path: 'mailbox',
+        name: 'Mailbox',
+        component: () => import('@/views/data/mailbox/index.vue'),
+        meta: {
+          locale: '邮箱管理',
+          requiresAuth: true,
+          roles: ['*'],
+          hideInMenu: false,
+        },
+      },
+      {
+        path: 'mailmsg',
+        name: 'Mailmsg',
+        component: () => import('@/views/data/mailmsg/index.vue'),
+        meta: {
+          locale: '邮件管理',
+          requiresAuth: true,
+          roles: ['*'],
+          hideInMenu: false,
+        },
+      },
+      {
+        path: 'person',
+        name: 'Person',
+        component: () => import('@/views/data/person/index.vue'),
+        meta: {
+          locale: '人物管理',
+          requiresAuth: true,
+          roles: ['*'],
+          hideInMenu: false,
+        },
+      },
   ],
 };
 
