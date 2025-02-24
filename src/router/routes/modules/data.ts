@@ -149,6 +149,28 @@ const DASHBOARD: AppRouteRecordRaw = {
           hideInMenu: false,
         },
       },
+      {
+        path: 'subject',
+        name: 'Subject',
+        component: () => import('@/views/data/subject/index.vue'),
+        meta: {
+          locale: '议题管理',
+          requiresAuth: true,
+          roles: ['*'],
+          hideInMenu: false,
+        },
+      },
+      {
+        path: 'scandal',
+        name: 'Scandal',
+        component: () => import('@/views/data/scandal/index.vue'),
+        meta: {
+          locale: '黑料管理',
+          requiresAuth: true,
+          roles: ['*'],
+          hideInMenu: false,
+        },
+      },
   ],
 };
 

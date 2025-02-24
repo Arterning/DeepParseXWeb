@@ -18,6 +18,7 @@ import localeSettings from './en-US/settings';
 
 export default {
   'menu.dashboard': 'Dashboard',
+  'menu.workplace': 'Home',
   'menu.admin': 'System Manage',
   'menu.automation': 'System Automation',
   'menu.log': 'Log',
