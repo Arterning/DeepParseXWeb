@@ -43,7 +43,7 @@ export default defineConfig({
           hack: `true; @import (reference) "${resolve(
             'src/assets/style/breakpoint.less'
           )}";`,
-          'color-primary-6': '#13c2c2',
+          // 'color-primary-6': '#13c2c2',
         },
         javascriptEnabled: true,
       },

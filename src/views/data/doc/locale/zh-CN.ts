@@ -1,5 +1,4 @@
 export default {
-  'menu.data': '数据',
   'menu.data.doc': '文件管理',
   'menu.data.upload': '文件上传',
   'menu.data.doc.detail': '文件内容',
