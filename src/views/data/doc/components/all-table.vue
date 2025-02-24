@@ -10,70 +10,109 @@
           >
             <a-row :gutter="16">
               <a-col :span="8">
-                <a-form-item :label="$t('data.doc.form.name')" field="name">
-                  <a-input
-                    @keyup.enter="search"
-                    v-model="formModel.name"
-                    :placeholder="$t('data.doc.form.name.placeholder')"
-                  />
-                </a-form-item>
+                <!--                <a-form-item :label="$t('data.doc.form.name')" field="name">-->
+                <!--                  <a-input-->
+                <!--                    v-model="formModel.name"-->
+                <!--                    :placeholder="$t('data.doc.form.name.placeholder')"-->
+                <!--                    @keyup.enter="search"-->
+                <!--                  />-->
+                <!--                </a-form-item>-->
+                <a-select :style="{width:'320px'}" placeholder="自定义表头" style="margin-bottom: 20px">
+                  <a-option>Beijing</a-option>
+                  <a-option>Shanghai</a-option>
+                  <a-option>Guangzhou</a-option>
+                  <a-option disabled>Disabled</a-option>
+                </a-select>
+                <a-space :size="'medium'">
+                  <a-button type="primary" @click="NewApi()">
+                    <template #icon>
+                      <icon-plus />
+                    </template>
+                    {{ $t('data.doc.button.create') }}
+                  </a-button>
+                  <a-button type="primary">
+                    <icon-arrow-up />
+                    {{ $t('data.doc.button.upload') }}
+                  </a-button>
+                  <a-button
+                    :disabled="selectStatus()"
+                    status="danger"
+                    @click="DeleteApi"
+                  >
+                    <template #icon>
+                      <icon-minus />
+                    </template>
+                    {{ $t('data.doc.button.delete') }}
+                  </a-button>
+                </a-space>
               </a-col>
             </a-row>
           </a-form>
         </a-col>
-        <a-divider direction="vertical" style="height: 30px" />
-        <a-col :span="6">
-          <a-space :size="'medium'" direction="horizontal">
-            <a-button type="primary" @click="search">
-              <template #icon>
-                <icon-search />
-              </template>
-              {{ $t('data.doc.form.search') }}
-            </a-button>
-            <a-button @click="resetSelect">
-              <template #icon>
-                <icon-refresh />
-              </template>
-              {{ $t('data.doc.form.reset') }}
-            </a-button>
+        <!--        <a-divider direction="vertical" style="height: 30px" />-->
+        <a-col :span="10">
+          <a-space direction="inline">
+            <a-form-item field="name" label="标签" style="margin-right: 30px">
+              <a-select :style="{ width: '150px' }" placeholder="请选择标签">
+                <a-option>Beijing</a-option>
+                <a-option>Shanghai</a-option>
+                <a-option>Guangzhou</a-option>
+                <a-option disabled>Disabled</a-option>
+              </a-select>
+            </a-form-item>
+            <a-form-item field="name" label="国籍/地区">
+              <a-select :style="{ width: '150px' }" placeholder="请选择国家">
+                <a-option>Beijing</a-option>
+                <a-option>Shanghai</a-option>
+                <a-option>Guangzhou</a-option>
+                <a-option disabled>Disabled</a-option>
+              </a-select>
+            </a-form-item>
+            <a-form-item field="name">
+              <a-input
+                v-model="formModel.name"
+                :placeholder="$t('data.doc.form.name.placeholder')"
+                @keyup.enter="search"
+              >
+                <template #suffix>
+                  <icon-search />
+                </template>
+              </a-input>
+            </a-form-item>
+          </a-space>
+          <a-space direction="inline">
+            <a-form-item field="name" label="上传时间">
+              <a-range-picker
+                show-time
+                :time-picker-props="{
+                  defaultValue: ['00:00:00', '00:00:00'],
+                }"
+                style="width: 380px"
+                @change="onChangeRangePicker"
+                @select="onSelectRangePicker"
+              />
+            </a-form-item>
+            <a-form-item>
+              <a-space :size="'medium'" direction="horizontal">
+                <a-button type="primary" @click="search">
+                  <template #icon>
+                    <icon-search />
+                  </template>
+                  {{ $t('data.doc.form.search') }}
+                </a-button>
+                <a-button @click="resetSelect">
+                  <template #icon>
+                    <icon-refresh />
+                  </template>
+                  {{ $t('data.doc.form.reset') }}
+                </a-button>
+              </a-space>
+            </a-form-item>
           </a-space>
         </a-col>
       </a-row>
       <a-divider />
-      <a-space :size="'medium'">
-        <a-button type="primary" @click="NewApi()">
-          <template #icon>
-            <icon-plus />
-          </template>
-          {{ $t('data.doc.button.create') }}
-        </a-button>
-        <a-button
-          :disabled="selectStatus()"
-          status="danger"
-          @click="DeleteApi"
-        >
-          <template #icon>
-            <icon-minus />
-          </template>
-          {{ $t('data.doc.button.delete') }}
-        </a-button>
-        <a-divider direction="vertical" style="height: 30px" />
-        <a-button
-          :disabled="selectStatus()||loading"
-          type="primary"
-          @click="submitExtractIPAddress"
-        >
-          {{ $t('data.doc.button.ip') }}
-        </a-button>
-        <a-button
-          :disabled="selectStatus()||loading"
-          type="primary"
-          @click="submitExtractUsercount"
-        >
-          {{ $t('data.doc.button.usercount') }}
-        </a-button>
-      </a-space>
-      <div class="content"> 
+      <div class="content">
         <a-table
           v-model:selected-keys="rowSelectKeys"
           :bordered="false"
@@ -92,31 +131,43 @@
           </template> -->
           <template #name="{ record }">
             <a-link
-              @click="router.push({name: 'DocDetail', params: { id: record.id }, query: { type: 'doc' } })"
               class="title-link"
-            >{{ record.name }}</a-link>
-          </template>     
+              @click="
+                router.push({
+                  name: 'DocDetail',
+                  params: { id: record.id },
+                  query: { type: 'doc' },
+                })
+              "
+              >{{ record.name }}</a-link
+            >
+          </template>
+          <template #isCollection>
+            <div>
+              <icon-star size="23" style="cursor: pointer" />
+            </div>
+          </template>
           <template #desc="{ record }">
             {{ cleanMarkdown(record.desc) }}
-          </template> 
+          </template>
           <template #created_time="{ record }">
             {{ tableDateFormat(record.created_time) }}
-          </template>     
+          </template>
           <template #operate="{ record }">
             <a-space>
               <a-tooltip content="修改">
                 <a-link @click="EditApi(record.id)">
-                  <icon-edit style="font-size:16"/>
+                  <icon-edit style="font-size: 16" />
                 </a-link>
               </a-tooltip>
               <a-tooltip content="查看">
                 <a-link @click="ViewApi(record.id, record.type)">
-                  <icon-unordered-list  style="font-size:16"/>
+                  <icon-unordered-list style="font-size: 16" />
                 </a-link>
-              </a-tooltip>                  
+              </a-tooltip>
               <a-tooltip content="隐藏">
                 <a-link @click="HideApi(record.id)">
-                  <icon-eye-invisible  style="font-size:16"/>
+                  <icon-eye-invisible style="font-size: 16" />
                 </a-link>
               </a-tooltip>
             </a-space>
@@ -152,33 +203,16 @@
               :label="$t('data.doc.form.name')"
               field="name"
             >
-              <a-input
-                v-model="form.name"
-              ></a-input>
+              <a-input v-model="form.name"></a-input>
             </a-form-item>
-            <a-form-item
-              :label="$t('data.doc.form.type')"
-              field="type"
-            >
-              <a-input
-                v-model="form.type"
-              ></a-input>
+            <a-form-item :label="$t('data.doc.form.type')" field="type">
+              <a-input v-model="form.type"></a-input>
             </a-form-item>
-            <a-form-item
-              :label="$t('data.doc.form.desc')"
-              field="desc"
-            >
-              <a-textarea
-                v-model="form.desc"
-              ></a-textarea>
+            <a-form-item :label="$t('data.doc.form.desc')" field="desc">
+              <a-textarea v-model="form.desc"></a-textarea>
             </a-form-item>
-            <a-form-item
-              :label="$t('data.doc.form.content')"
-              field="content"
-            >
-              <a-textarea
-                v-model="form.content"
-              ></a-textarea>
+            <a-form-item :label="$t('data.doc.form.content')" field="content">
+              <a-textarea v-model="form.content"></a-textarea>
             </a-form-item>
           </a-form>
         </a-modal>
@@ -200,16 +234,17 @@
           :title="`${$t('内容')}`"
           :visible="openView"
           fullscreen
-          hideCancel
+          hide-cancel
+          ok-text="关闭"
           @ok="cancelReq"
-          okText="关闭"
         >
-        <ExcelDetail 
-        v-if="form.type==='excel'"
-        :title="form.title" 
-        :doc_data="form.doc_data" 
-        :file="form.file"/>
-          <GeneralDetail v-else :info="form"/>
+          <ExcelDetail
+            v-if="form.type === 'excel'"
+            :title="form.title"
+            :doc_data="form.doc_data"
+            :file="form.file"
+          />
+          <GeneralDetail v-else :info="form" />
         </a-modal>
       </div>
     </a-card>
@@ -302,8 +337,8 @@
   };
   const HideApi = (pk: number) => {
     renderData.value = renderData.value.filter((item) => {
-      return item.id !== pk
-    })
+      return item.id !== pk;
+    });
   };
   const columns = computed<TableColumnData[]>(() => [
     {
@@ -311,16 +346,28 @@
       dataIndex: 'id',
       slotName: 'id',
       sortable: {
-        sortDirections: ['ascend', 'descend']
+        sortDirections: ['ascend', 'descend'],
       },
       ellipsis: true,
       tooltip: true,
-      width: 100
+      width: 100,
     },
     {
       title: t('data.doc.columns.name'),
       dataIndex: 'name',
       slotName: 'name',
+      ellipsis: true,
+    },
+    {
+      title: t('data.doc.columns.isCollection'),
+      dataIndex: 'isCollection',
+      slotName: 'isCollection',
+      ellipsis: true,
+    },
+    {
+      title: t('data.doc.columns.OriginName'),
+      dataIndex: 'OriginName',
+      slotName: 'OriginName',
       ellipsis: true,
     },
     {
@@ -331,13 +378,29 @@
       tooltip: true,
     },
     {
+      title: t('data.doc.columns.uploadtime'),
+      dataIndex: 'created_time',
+      slotName: 'created_time',
+      sortable: {
+        sortDirections: ['ascend', 'descend'],
+      },
+      width: 180,
+    },
+    {
       title: t('data.doc.columns.createdtime'),
       dataIndex: 'created_time',
       slotName: 'created_time',
       sortable: {
-        sortDirections: ['ascend', 'descend']
+        sortDirections: ['ascend', 'descend'],
       },
-      width: 180
+      width: 180,
+    },
+    {
+      title: t('data.doc.columns.type'),
+      dataIndex: 'desc',
+      slotName: 'desc',
+      ellipsis: true,
+      tooltip: true,
     },
     {
       title: t('data.doc.columns.operate'),
@@ -388,12 +451,12 @@
         await createSysDoc(form);
         cancelReq();
         Message.success(t('submit.create.success'));
-        await fetchApiList({ page: 1, size: pagination.pageSize});
+        await fetchApiList({ page: 1, size: pagination.pageSize });
       } else {
         await updateSysDoc(operateRow.value, form);
         cancelReq();
         Message.success(t('submit.update.success'));
-        await fetchApiList({ page: 1, size: pagination.pageSize});
+        await fetchApiList({ page: 1, size: pagination.pageSize });
       }
     } catch (error) {
       // console.log(error);
@@ -427,8 +490,8 @@
     setLoading(true);
     try {
       console.log(rowSelectKeys.value);
-      
-      await extractIPAddress( rowSelectKeys.value );
+
+      await extractIPAddress(rowSelectKeys.value);
       cancelReq();
       Message.success(t('submit.execute.success'));
       rowSelectKeys.value = [];
@@ -443,7 +506,7 @@
   const submitExtractUsercount = async () => {
     setLoading(true);
     try {
-      await extractUserCount( rowSelectKeys.value );
+      await extractUserCount(rowSelectKeys.value);
       cancelReq();
       Message.success(t('submit.execute.success'));
       rowSelectKeys.value = [];
@@ -468,8 +531,8 @@
       setLoading(false);
     }
   };
-  
-  fetchApiList({ page: 1, size: pagination.pageSize});
+
+  fetchApiList({ page: 1, size: pagination.pageSize });
 
   // 请求部门详情
   const fetchApiDetail = async (pk: number) => {
@@ -486,13 +549,13 @@
 
   // 事件: 分页
   const onPageChange = async (current: number) => {
-    await fetchApiList({ page: current, size: pagination.pageSize});
+    await fetchApiList({ page: current, size: pagination.pageSize });
   };
 
   // 事件: 分页大小
   const onPageSizeChange = async (pageSize: number) => {
     pagination.pageSize = pageSize;
-    await fetchApiList({ page: 1, size: pageSize});
+    await fetchApiList({ page: 1, size: pageSize });
   };
 
   // 搜索
@@ -508,9 +571,7 @@
   };
 
   // 重置方法
-  const resetMethod = () => {
-
-  };
+  const resetMethod = () => {};
 
   // 重置表单
   const resetForm = (data: Record<any, any>) => {
@@ -518,6 +579,15 @@
       // @ts-ignore
       form[key] = data[key];
     });
+  };
+
+  // 日期范围选择器钩子函数
+  const onChangeRangePicker = () => {
+    console.log('onChangeRangePicker');
+  };
+
+  const onSelectRangePicker = () => {
+    console.log('onSelectRangePicker');
   };
 </script>
 
@@ -528,15 +598,14 @@
 </script>
 
 <style lang="less" scoped>
-
   .content {
     padding-top: 20px;
   }
-  .title-link{
+  .title-link {
     text-overflow: ellipsis;
     overflow: hidden;
     white-space: nowrap;
-    display:block;
+    display: block;
   }
   .info-card {
     border-radius: 20px;
