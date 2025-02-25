@@ -182,6 +182,39 @@ const DASHBOARD: AppRouteRecordRaw = {
           hideInMenu: false,
         },
       },
+      {
+        path: 'social-account',
+        name: 'SocialAccount',
+        component: () => import('@/views/data/social-account/index.vue'),
+        meta: {
+          locale: '社交账号',
+          requiresAuth: true,
+          roles: ['*'],
+          hideInMenu: false,
+        },
+      },
+      {
+        path: 'social-post',
+        name: 'SocialPost',
+        component: () => import('@/views/data/social-post/index.vue'),
+        meta: {
+          locale: '社交帖子',
+          requiresAuth: true,
+          roles: ['*'],
+          hideInMenu: false,
+        },
+      },
+      {
+        path: 'news',
+        name: 'News',
+        component: () => import('@/views/data/news/index.vue'),
+        meta: {
+          locale: '新闻',
+          requiresAuth: true,
+          roles: ['*'],
+          hideInMenu: false,
+        },
+      },
   ],
 };
 
