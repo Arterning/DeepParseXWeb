@@ -1,5 +1,34 @@
 <template>
   <a-layout class="flex-layout">
+    <!--    收藏弹窗 -->
+    <a-modal
+      v-model:visible="collectVisi"
+      @ok="handleOk"
+      @cancel="handleCancel"
+    >
+      <template #title> 选择收藏位置 </template>
+      <div>
+        <a-select
+          :style="{ width: '100%', marginBottom: '15px' }"
+          placeholder="请选择需要保存的收藏夹"
+        >
+          <a-option>Beijing</a-option>
+          <a-option>Shanghai</a-option>
+          <a-option>Guangzhou</a-option>
+        </a-select>
+        <a-button style="width: 100%;">
+          <div>
+            新建收藏夹
+          </div>
+          <div>
+            <icon-plus />
+          </div>
+        </a-button>
+      </div>
+      <template #footer>
+        <a-button type="primary" style="width: 100%;">收藏</a-button>
+      </template>
+    </a-modal>
     <a-card :title="$t('All')" class="general-card">
       <a-row>
         <a-col :flex="62">
@@ -17,11 +46,19 @@
                 <!--                    @keyup.enter="search"-->
                 <!--                  />-->
                 <!--                </a-form-item>-->
-                <a-select :style="{width:'320px'}" placeholder="自定义表头" style="margin-bottom: 20px">
-                  <a-option>Beijing</a-option>
-                  <a-option>Shanghai</a-option>
-                  <a-option>Guangzhou</a-option>
-                  <a-option disabled>Disabled</a-option>
+                <a-select
+                  :style="{ width: '320px', marginBottom: '10px' }"
+                  :loading="loading"
+                  placeholder="自定义表头"
+                  multiple
+                  :filter-option="false"
+                >
+                  <a-option
+                    v-for="item in fileTypeOptions"
+                    :key="item.id"
+                    :value="item.name"
+                    >{{ item.name }}</a-option
+                  >
                 </a-select>
                 <a-space :size="'medium'">
                   <a-button type="primary" @click="NewApi()">
@@ -144,7 +181,7 @@
           </template>
           <template #isCollection>
             <div>
-              <icon-star size="23" style="cursor: pointer" />
+              <icon-star size="23" style="cursor: pointer" @click="collectVisi = true"/>
             </div>
           </template>
           <template #desc="{ record }">
@@ -284,6 +321,45 @@
   const { loading, setLoading } = useLoading(true);
   const router = useRouter();
 
+  // 文件类型筛选单
+  const fileTypeOptions = ref([
+    {
+      id: '文件名',
+      name: '文件名',
+    },
+    {
+      id: '文件原名',
+      name: '文件原名',
+    },
+    {
+      id: '上传时间',
+      name: '上传时间',
+    },
+    {
+      id: '文件创建时间',
+      name: '文件创建时间',
+    },
+    {
+      id: '文件类型',
+      name: '文件类型',
+    },
+    {
+      id: '上传用户',
+      name: '上传用户',
+    },
+    {
+      id: '文件来源',
+      name: '文件来源',
+    },
+    {
+      id: '文件所属部门',
+      name: '文件所属部门',
+    },
+  ]);
+
+  // 收藏弹窗
+  const collectVisi = ref(false);
+
   // 表单
   const generateFormModel = () => {
     return {
@@ -341,17 +417,17 @@
     });
   };
   const columns = computed<TableColumnData[]>(() => [
-    {
-      title: 'ID',
-      dataIndex: 'id',
-      slotName: 'id',
-      sortable: {
-        sortDirections: ['ascend', 'descend'],
-      },
-      ellipsis: true,
-      tooltip: true,
-      width: 100,
-    },
+    // {
+    //   title: 'ID',
+    //   dataIndex: 'id',
+    //   slotName: 'id',
+    //   sortable: {
+    //     sortDirections: ['ascend', 'descend'],
+    //   },
+    //   ellipsis: true,
+    //   tooltip: true,
+    //   width: 100,
+    // },
     {
       title: t('data.doc.columns.name'),
       dataIndex: 'name',

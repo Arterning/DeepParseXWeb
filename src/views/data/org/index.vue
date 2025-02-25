@@ -319,50 +319,55 @@
 
   const columns = computed<TableColumnData[]>(() => [
     {
-      title: 'ID',
-      dataIndex: 'id',
-      slotName: 'id',
-      sortable: {
-        sortDirections: ['ascend', 'descend']
-      },
+      title: '收藏',
+      dataIndex: 'collection',
+      slotName: 'collection',
       ellipsis: true,
       tooltip: true,
-      width: 100,
+      width: 70,
+    },
+    {
+      title: '关注',
+      dataIndex: 'follow',
+      slotName: 'follow',
+      ellipsis: true,
+      tooltip: true,
+      width: 70,
     },
     {
       title: t('data.org.columns.org_name'),
       dataIndex: 'org_name',
       slotName: 'org_name',
       ellipsis: true,
-      width: 200
+      width: 200,
     },
     {
       title: t('data.org.columns.org_file_nums'),
       dataIndex: 'org_file_nums',
       slotName: 'org_file_nums',
-      width: 150
-    }, 
+      width: 150,
+    },
     {
       title: t('data.org.columns.org_assets_nums'),
       dataIndex: 'org_assets_nums',
       slotName: 'org_assets_nums',
-      width: 150
-    }, 
+      width: 150,
+    },
     {
       title: t('data.org.columns.org_desc'),
       dataIndex: 'org_desc',
       slotName: 'org_desc',
       tooltip: true,
       ellipsis: true,
-    },  
+    },
     {
       title: t('data.org.columns.created_time'),
       dataIndex: 'created_time',
       slotName: 'created_time',
       sortable: {
-        sortDirections: ['ascend', 'descend']
+        sortDirections: ['ascend', 'descend'],
       },
-      width: 180
+      width: 180,
     },
     {
       title: t('data.org.columns.operate'),

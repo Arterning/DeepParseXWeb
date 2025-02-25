@@ -215,6 +215,18 @@ const DASHBOARD: AppRouteRecordRaw = {
           hideInMenu: false,
         },
       },
+    {
+      path: 'assistant',
+      name: 'aiAssistant',
+      component: () => import('@/views/data/aiAssistant/index.vue'),
+      meta: {
+        locale: 'menu.data.aiAssistant',
+        requiresAuth: true,
+        icon: 'IconFile',
+        roles: ['*'],
+        hideInMenu: false,
+      },
+    },
   ],
 };
 
