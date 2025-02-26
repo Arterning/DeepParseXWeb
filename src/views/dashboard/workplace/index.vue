@@ -6,7 +6,6 @@
         <DataPanel />
       </div>
     </div>
-    <Footer />
   </div>
 </template>
 
@@ -17,9 +16,6 @@
 </script>
 
 <script lang="ts">
-  export default {
-    name: 'Dashboard', // If you want the include property of keep-alive to take effect, you must name the component
-  };
 </script>
 
 <style lang="less" scoped>

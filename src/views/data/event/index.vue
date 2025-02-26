@@ -12,9 +12,7 @@
             <a-row :gutter="16">
               <a-col :span="8">
                 <a-form-item field="name" label="名称">
-                  <a-input
-                    v-model="formModel.name"
-                  />
+                  <a-input v-model="formModel.name" />
                 </a-form-item>
               </a-col>
             </a-row>
@@ -72,13 +70,11 @@
           @page-size-change="onPageSizeChange"
         >
           <template #index="{ rowIndex }">
-             {{ rowIndex + 1 }} 
+            {{ rowIndex + 1 }}
           </template>
           <template #operate="{ record }">
             <a-space>
-              <a-link @click="EditEvent(record.id)">
-                编辑
-              </a-link>
+              <a-link @click="EditEvent(record.id)"> 编辑 </a-link>
             </a-space>
           </template>
         </a-table>
@@ -97,14 +93,10 @@
             <a-form-item
               :feedback="true"
               label="名称"
-              :rules="[
-                { required: true, message: 'required' },
-              ]"
+              :rules="[{ required: true, message: 'required' }]"
               field="name"
             >
-              <a-input
-                v-model="form.name"
-              ></a-input>
+              <a-input v-model="form.name"></a-input>
             </a-form-item>
           </a-form>
         </a-modal>
