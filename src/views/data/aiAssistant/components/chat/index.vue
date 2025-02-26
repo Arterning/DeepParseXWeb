@@ -220,9 +220,9 @@
   //   font-size: large;
   // }
   .chat-content{
-    flex: 1;
     padding: 0.5rem;
     overflow-y: scroll;
+    height: calc(100vh - 34rem);
   }
   .start-tip{
     text-align: center;
