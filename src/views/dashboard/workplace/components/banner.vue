@@ -1,9 +1,14 @@
 <template>
   <div class="main">
-    <div class="wordCloud"> </div>
+    <div class="wordCloudContainer">
+      <div class="wordCloud1"> </div>
+      <div class="wordCloud2"> </div>
+      <div class="wordCloud3"> </div>
+      <div class="wordCloud4"> </div>
+    </div>
     <div class="second">
-      <div id="pieChart" style="background-color: #f4f5f8"></div>
-      <div id="barChart" style="background-color: #f4f5f8"></div>
+      <div id="pieChart" style="background-color: #f4f5f8;padding: 20px"></div>
+      <div id="barChart" style="background-color: #f4f5f8;padding: 20px"></div>
     </div>
   </div>
 </template>
@@ -13,76 +18,40 @@
   import { onMounted } from 'vue';
   import TagCloud from 'TagCloud';
 
-
-
-    const container = '.wordCloud';
-  const texts = [
+  const container = '.wordCloud1';
+  const texts1 = [
     ' 紅樓夢',
     ' 賈寶玉',
     ' 薛寶釵',
     ' 王熙鳳',
     ' 李紈',
     ' 賈元春',
-    ' 賈迎春',
-    ' 賈探春',
-    ' 秦可卿',
-    ' 林黛玉',
-    ' 賈巧姐',
-    ' 賈惜春',
     ' 紅樓夢',
     ' 賈寶玉',
     ' 薛寶釵',
     ' 王熙鳳',
     ' 李紈',
     ' 賈元春',
-    ' 賈迎春',
-    ' 賈探春',
-    ' 秦可卿',
-    ' 林黛玉',
-    ' 賈巧姐',
-    ' 賈惜春',
-    ' 紅樓夢',
-    ' 賈寶玉',
-    ' 薛寶釵',
-    ' 王熙鳳',
-    ' 李紈',
-    ' 賈元春',
-    ' 賈迎春',
-    ' 賈探春',
-    ' 秦可卿',
-    ' 林黛玉',
-    ' 賈巧姐',
-    ' 賈惜春',
-    ' 史湘雲',
-    ' 妙玉',
-    ' 賈政',
-    ' 賈赦',
-    ' 賈璉',
-    ' 賈珍',
-    ' 賈環',
-    ' 賈母',
-    ' 王夫人',
-    ' 薛姨媽',
-    ' 尤氏',
-    ' 平兒',
-    ' 秦可卿',
-    ' 林黛玉',
-    ' 賈巧姐',
-    ' 賈惜春',
-    ' 史湘雲',
-    ' 妙玉',
-    ' 賈政',
-    ' 賈赦',
-    ' 賈璉',
-    ' 賈珍',
-    ' 賈環',
-    ' 賈母',
-    ' 王夫人',
-    ' 薛姨媽',
-    ' 尤氏',
-    ' 平兒',
   ];
-  const options = {
+  const options1 = {
+    containerClass: '__tagcloud',
+    radius: 220,
+    initSpeed: 'slow',
+    maxSpeed: 'slow',
+  };
+  const options2 = {
+    containerClass: '__tagcloud',
+    radius: 200,
+    initSpeed: 'slow',
+    maxSpeed: 'slow',
+  };
+  const options3 = {
+    containerClass: '__tagcloud',
+    radius: 240,
+    initSpeed: 'slow',
+    maxSpeed: 'slow',
+  };
+  const options4 = {
     containerClass: '__tagcloud',
     radius: 200,
     initSpeed: 'slow',
@@ -95,14 +64,43 @@
     console.log(spans);
 
     spans.forEach((span) => {
+      const hoverStyle = {
+        backgroundColor: '#f4f5f8',
+      };
+
+// 定义鼠标离开时的样式
+      const defaultStyle = {
+        backgroundColor: null,
+      };
+
+      // 设置默认样式
+      Object.assign(span.style, defaultStyle);
+
       const hex = Math.floor(Math.random() * 0xffffff).toString(16);
       const Color = `#${`000000${hex}`.slice(-6)}`; // 保证返回的颜色值是6位
       span.style.color = Color;
+      span.style.cursor = 'pointer';
+      span.addEventListener('click', () => {
+        alert(span.innerText);
+      });
+
+      // 添加鼠标悬停事件监听器
+      span.addEventListener('mouseenter', function() {
+        Object.assign(span.style, hoverStyle);
+      });
+
+// 添加鼠标离开事件监听器
+      span.addEventListener('mouseleave', function() {
+        Object.assign(span.style, defaultStyle);
+      });
     });
   };
 
   onMounted(() => {
-    TagCloud(container, texts, options);
+    TagCloud('.wordCloud1', texts1, options1);
+    TagCloud('.wordCloud2', texts1, options2);
+    TagCloud('.wordCloud3', texts1, options3);
+    TagCloud('.wordCloud4', texts1, options4);
     initPieChart();
     initBarChart();
     randomColor();
@@ -207,5 +205,18 @@
   .second div {
     height: 400px;
     width: 100%;
+  }
+
+  .wordCloudContainer {
+    height: 400px;
+    display: flex;
+  }
+
+  .wordCloudContainer div {
+    flex: 1;
+  }
+
+  /deep/.--tagcloud .tagcloud--item :hover {
+    background-color: #999999 !important;
   }
 </style>
