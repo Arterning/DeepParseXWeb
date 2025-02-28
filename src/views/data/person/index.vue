@@ -12,7 +12,7 @@
             <a-row :gutter="16">
               <a-col :span="8">
                 <a-form-item field="name" label="名称">
-                  <a-input v-model="formModel.name" />
+                  <a-input v-model="formModel.name" :placeholder="$t('搜索人物名称')"/>
                 </a-form-item>
               </a-col>
             </a-row>
@@ -58,13 +58,12 @@
       <div class="content">
         <a-table
           v-model:selected-keys="rowSelectKeys"
-          :bordered="false"
+          :bordered="true"
           :columns="columns"
           :data="renderData"
           :loading="loading"
           :pagination="pagination"
           :row-selection="rowSelection"
-          :size="'medium'"
           row-key="id"
           @page-change="onPageChange"
           @page-size-change="onPageSizeChange"
@@ -193,7 +192,6 @@
       slotName: 'collection',
       ellipsis: true,
       tooltip: true,
-      width: 70,
     },
     {
       title: '关注',
@@ -201,7 +199,6 @@
       slotName: 'follow',
       ellipsis: true,
       tooltip: true,
-      width: 70,
     },
     {
       title: '姓名',
@@ -209,31 +206,27 @@
       slotName: 'name',
       ellipsis: true,
       tooltip: true,
-      width: 200,
     },
     {
-      title: '其他名称',
-      dataIndex: 'otherName',
-      slotName: 'otherName',
+      title: '其他名',
+      dataIndex: 'other_name',
+      slotName: 'other_name',
       ellipsis: true,
       tooltip: true,
-      width: 200,
     },
     {
       title: '性别',
-      dataIndex: 'sex',
-      slotName: 'sex',
+      dataIndex: 'gender',
+      slotName: 'gender',
       ellipsis: true,
       tooltip: true,
-      width: 200,
     },
     {
-      title: '所属框架',
-      dataIndex: 'framework',
-      slotName: 'framework',
+      title: '所属组织',
+      dataIndex: 'organization',
+      slotName: 'organization',
       ellipsis: true,
       tooltip: true,
-      width: 200,
     },
     {
       title: '职位',
@@ -241,23 +234,27 @@
       slotName: 'position',
       ellipsis: true,
       tooltip: true,
-      width: 200,
     },
     {
       title: '职业',
-      dataIndex: 'vocation',
-      slotName: 'vocation',
+      dataIndex: 'profession',
+      slotName: 'profession',
       ellipsis: true,
       tooltip: true,
-      width: 200,
     },
     {
       title: '出生日期',
-      dataIndex: 'birthday',
-      slotName: 'birthday',
+      dataIndex: 'birth_date',
+      slotName: 'birth_date',
       ellipsis: true,
       tooltip: true,
-      width: 200,
+    },
+    {
+      // 毕业院校/专业
+      title: t('毕业院校/专业'),
+      dataIndex: 'school',
+      slotName: 'school',
+      ellipsis: true,
     },
     {
       title: t('操作'),

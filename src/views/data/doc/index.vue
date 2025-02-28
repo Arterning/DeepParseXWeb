@@ -29,17 +29,11 @@
         </a-tab-pane>
         <a-tab-pane key="5">
           <template #title>
-            <icon-email /> 邮件
-          </template>
-          <EmailTable />
-        </a-tab-pane>
-        <a-tab-pane key="6">
-          <template #title>
             <icon-nav /> Excel
           </template>
           <ExcelTable />
         </a-tab-pane>
-        <a-tab-pane key="7">
+        <a-tab-pane key="6">
           <template #title>
             <icon-file-pdf /> PDF
           </template>

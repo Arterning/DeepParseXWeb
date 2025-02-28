@@ -14,9 +14,46 @@
                   <a-form-item field="name" label="名称">
                     <a-input
                       v-model="formModel.name"
+                      :placeholder="$t('搜索邮件标题')"
                     />
                   </a-form-item>
                 </a-col>
+                <a-col :span="8">
+                <a-form-item :label="$t('主题')" field="title">
+                  <a-input
+                    @keyup.enter="search"
+                    v-model="formModel.title"
+                    :placeholder="$t('搜索主题')"
+                  />
+                </a-form-item>
+              </a-col>
+              <a-col :span="8">
+                <a-form-item :label="$t('发件人')" field="email_from">
+                  <a-input
+                    @keyup.enter="search"
+                    v-model="formModel.email_from"
+                    :placeholder="$t('搜索发件人')"
+                  />
+                </a-form-item>
+              </a-col>
+              <a-col :span="8">
+                <a-form-item :label="$t('收件人')" field="email_to">
+                  <a-input
+                    @keyup.enter="search"
+                    v-model="formModel.email_to"
+                    :placeholder="$t('搜索收件人')"
+                  />
+                </a-form-item>
+              </a-col>
+              <a-col :span="8">
+                <a-form-item :label="$t('时间')" field="email_time">
+                  <a-input
+                    @keyup.enter="search"
+                    v-model="formModel.email_time"
+                    :placeholder="$t('搜索时间')"
+                  />
+                </a-form-item>
+              </a-col>
               </a-row>
             </a-form>
           </a-col>
@@ -156,6 +193,12 @@
     const generateFormModel = () => {
       return {
         name: undefined,
+        title: undefined,
+        type: undefined,
+        email_subject: undefined,
+        email_from: undefined,
+        email_to: undefined,
+        email_time: undefined,
       };
     };
     const formModel = ref(generateFormModel());
@@ -210,6 +253,40 @@
         ellipsis: true,
         tooltip: true,
         width: 200,
+      },
+      {
+        title: t('时间'),
+        dataIndex: 'time',
+        slotName: 'time',
+        ellipsis: true,
+        tooltip: true,
+        width: 200,
+      },
+      {
+        // category
+        title: t('类型'),
+        dataIndex: 'category',
+        slotName: 'category',
+        ellipsis: true,
+        tooltip: true,
+        width: 200,
+      },
+      {
+        // 发送者
+        title: t('发送者'),
+        dataIndex: 'sender',
+        slotName: 'sender',
+        ellipsis: true,
+        tooltip: true,
+        width: 200,
+      },
+      {
+        // 接收者
+        title: t('接收者'),
+        dataIndex: 'receiver',
+        slotName: 'receiver',
+        ellipsis: true,
+        tooltip: true,
       },
       {
         title: t('操作'),

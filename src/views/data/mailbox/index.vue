@@ -14,6 +14,7 @@
                   <a-form-item field="name" label="名称">
                     <a-input
                       v-model="formModel.name"
+                      :placeholder="$t('搜索邮箱地址')"
                     />
                   </a-form-item>
                 </a-col>
@@ -210,6 +211,38 @@
         ellipsis: true,
         tooltip: true,
         width: 200,
+      },
+      {
+        // 国家/地区
+        title: t('国家/地区'),
+        dataIndex: 'country',
+        slotName: 'country',
+        ellipsis: true,
+        tooltip: true,
+      },
+      {
+        // 标签
+        title: t('标签'),
+        dataIndex: 'labels',
+        slotName: 'labels',
+        ellipsis: true,
+        tooltip: true,
+      },
+      {
+        // 邮件数量
+        title: t('邮件数量'),
+        dataIndex: 'email_num',
+        slotName: 'email_num',
+        ellipsis: true,
+        tooltip: true,
+      },
+      {
+        // other_info
+        title: t('其他信息'),
+        dataIndex: 'other_info',
+        slotName: 'other_info',
+        ellipsis: true,
+        tooltip: true,
       },
       {
         title: t('操作'),

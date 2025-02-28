@@ -14,6 +14,7 @@
                   <a-form-item field="name" label="名称">
                     <a-input
                       v-model="formModel.name"
+                      :placeholder="$t('搜索名称')"
                     />
                   </a-form-item>
                 </a-col>
@@ -210,6 +211,14 @@
         ellipsis: true,
         tooltip: true,
         width: 200,
+      },
+      {
+        // 来源
+        title: t('来源'),
+        dataIndex: 'source',
+        slotName: 'source',
+        ellipsis: true,
+        tooltip: true,
       },
       {
         title: t('操作'),

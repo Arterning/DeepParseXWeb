@@ -14,6 +14,7 @@
                   <a-form-item field="name" label="名称">
                     <a-input
                       v-model="formModel.name"
+                      :placeholder="$t('搜索名称')"
                     />
                   </a-form-item>
                 </a-col>
@@ -204,12 +205,28 @@
         width: 100,
       },
       {
-        title: t('名称'),
+        title: t('社交账户名称'),
         dataIndex: 'name',
         slotName: 'name',
         ellipsis: true,
         tooltip: true,
         width: 200,
+      },
+      {
+        // 国家/地区
+        title: t('国家/地区'),
+        dataIndex: 'country',
+        slotName: 'country',
+        ellipsis: true,
+        tooltip: true,
+      },
+      {
+        // labels
+        title: t('标签'),
+        dataIndex: 'labels',
+        slotName: 'labels',
+        ellipsis: true,
+        tooltip: true,
       },
       {
         title: t('操作'),

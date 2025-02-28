@@ -37,8 +37,7 @@
 
 </script>
 <template>
-  <div class="msg"
-  :class="message.sender === 'user'? 'user-mode': 'bot-mode'">
+  <div class="msg" :class="message.sender === 'user'? 'user-mode': 'bot-mode'">
     <a-avatar v-if="message.sender === 'bot'" class="avator">
       <IconRobot />
     </a-avatar>
@@ -91,7 +90,7 @@
   .chat-area{
     margin: 0.5rem 1rem 1rem 1rem;
     flex: 1;
-    min-width: 960px;
+    min-width: 900px;
     max-width: 1024px;
     white-space: wrap;
   }

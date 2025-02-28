@@ -14,6 +14,7 @@
                   <a-form-item field="name" label="名称">
                     <a-input
                       v-model="formModel.name"
+                      :placeholder="$t('搜索新闻标题')"
                     />
                   </a-form-item>
                 </a-col>
@@ -204,12 +205,68 @@
         width: 100,
       },
       {
-        title: t('名称'),
+        title: t('新闻标题'),
         dataIndex: 'name',
         slotName: 'name',
         ellipsis: true,
         tooltip: true,
         width: 200,
+      },
+      {
+        // 新闻简介
+        title: t('新闻简介'),
+        dataIndex: 'summary',
+        slotName: 'summary',
+        ellipsis: true,
+        tooltip: true,
+      },
+      {
+        // 新闻类型
+        title: t('新闻类型'),
+        dataIndex: 'news_type',
+        slotName: 'news_type',
+        ellipsis: true,
+        tooltip: true,
+      },
+      {
+        // 新闻来源
+        title: t('新闻来源'),
+        dataIndex: 'source',
+        slotName: 'source',
+        ellipsis: true,
+        tooltip: true,
+      },
+      {
+        // 新闻组织
+        title: t('新闻组织'),
+        dataIndex: 'organization',
+        slotName: 'organization',
+        ellipsis: true,
+        tooltip: true,
+      },
+      {
+        // 新闻作者
+        title: t('新闻作者'),
+        dataIndex: 'author',
+        slotName: 'author',
+        ellipsis: true,
+        tooltip: true,
+      },
+      {
+        // 新闻时间
+        title: t('新闻时间'),
+        dataIndex: 'time',
+        slotName: 'time',
+        ellipsis: true,
+        tooltip: true,
+      },
+      {
+        // 新闻地点
+        title: t('新闻地点'),
+        dataIndex: 'location',
+        slotName: 'location',
+        ellipsis: true,
+        tooltip: true,
       },
       {
         title: t('操作'),
