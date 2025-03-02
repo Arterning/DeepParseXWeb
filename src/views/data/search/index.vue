@@ -1,8 +1,8 @@
 <template>
   <div class="container">
     <a-layout style="padding: 0 18px">
-      <Breadcrumb :items="[$t('menu.data'), $t('搜索')]" />
-      <a-card :title="$t('搜索')" class="general-card">
+      <Breadcrumb :items="[$t('menu.data'), $t('数据搜索')]" />
+      <a-card :title="$t('数据搜索')" class="general-card">
         <a-space direction="vertical" size="large" class="modal-title">
           <a-input
             v-model="searchQuery"
@@ -69,7 +69,6 @@
             show-jumper
             show-page-size
             @change="pageChange"
-            @page-size-change="onPageSizeChange"
           />
         </div>
       </a-card>
@@ -85,6 +84,7 @@
   //   import { result } from 'lodash';
   import { useRouter } from 'vue-router';
   import Footer from '@/components/footer/index.vue';
+  import { searchSysDocList } from '@/api/doc';
   // import { SearchItem, SearchRes, search } from '@/api/dashboard';
 
   const visible = ref(true);
@@ -105,14 +105,11 @@
       showHistory.value = false;
       loading.value = true;
       try {
-        // const results = await search({
-        //   q: searchQuery.value,
-        //   current: 0,
-        //   pageSize: pageSize.value,
-        // });
-        // searchResults.value = results.items;
-        // total.value = results.total;
-        // search_after.value = results.search_after;
+        const results = await searchSysDocList({
+          tokens: searchQuery.value,
+        });
+        searchResults.value = results;
+        total.value = searchResults.value.length;
         saveHistory();
       } catch (error) {
         console.error('搜索失败:', error);
@@ -243,8 +240,6 @@
       // }
     } finally { /* empty */ }
 
-    const onPageSizeChange = () => {
-    }
   }
 </script>
 
