@@ -88,7 +88,7 @@
         </a-col>
         <!--        <a-divider direction="vertical" style="height: 30px" />-->
         <a-col :span="10">
-          <a-space direction="inline">
+          <a-space direction="horizontal">
             <a-form-item field="name" label="标签" style="margin-right: 30px">
               <a-select :style="{ width: '150px' }" placeholder="请选择标签">
                 <a-option>Beijing</a-option>
@@ -117,7 +117,7 @@
               </a-input>
             </a-form-item>
           </a-space>
-          <a-space direction="inline">
+          <a-space direction="horizontal">
             <a-form-item field="name" label="上传时间">
               <a-range-picker
                 show-time
@@ -665,6 +665,14 @@
   const onSelectRangePicker = () => {
     console.log('onSelectRangePicker');
   };
+
+  const handleOk = () => {
+    console.log('handleok')
+  }
+
+  const handleCancel = () => {
+    console.log('handleCancel')
+  }
 </script>
 
 <script lang="ts">

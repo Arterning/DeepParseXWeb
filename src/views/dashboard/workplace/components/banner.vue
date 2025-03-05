@@ -7,16 +7,20 @@
       <div class="wordCloud4"> </div>
     </div>
     <div class="second">
-      <div id="pieChart" style="background-color: #f4f5f8;padding: 20px"></div>
-      <div id="barChart" style="background-color: #f4f5f8;padding: 20px"></div>
+      <div id="pieChart" style="background-color: #f4f5f8; padding: 20px"></div>
+      <div id="barChart" style="background-color: #f4f5f8; padding: 20px"></div>
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
   import * as echarts from 'echarts';
-  import { onMounted } from 'vue';
+  import { onMounted, ref } from 'vue';
   import TagCloud from 'TagCloud';
+
+  const currentCase = ref('Horizontal Tree');
+
+  const relationVisible = ref(false);
 
   const container = '.wordCloud1';
   const texts1 = [
@@ -36,7 +40,7 @@
   const options1 = {
     containerClass: '__tagcloud',
     radius: 220,
-    initSpeed: 'slow',
+    initSpeed:'slow',
     maxSpeed: 'slow',
   };
   const options2 = {
@@ -61,37 +65,36 @@
   const randomColor = () => {
     // 给定font 随机颜色
     const spans = document.querySelectorAll('.__tagcloud > span');
-    console.log(spans);
 
     spans.forEach((span) => {
       const hoverStyle = {
         backgroundColor: '#f4f5f8',
       };
 
-// 定义鼠标离开时的样式
+      // 定义鼠标离开时的样式
       const defaultStyle = {
         backgroundColor: null,
       };
 
       // 设置默认样式
-      Object.assign(span.style, defaultStyle);
+      Object.assign((span as HTMLSpanElement).style, defaultStyle);
 
       const hex = Math.floor(Math.random() * 0xffffff).toString(16);
       const Color = `#${`000000${hex}`.slice(-6)}`; // 保证返回的颜色值是6位
-      span.style.color = Color;
-      span.style.cursor = 'pointer';
-      span.addEventListener('click', () => {
-        alert(span.innerText);
+      (span as HTMLSpanElement).style.color = Color;
+      (span as HTMLSpanElement).style.cursor = 'pointer';
+      (span as HTMLSpanElement).addEventListener('click', () => {
+        alert((span as HTMLSpanElement).innerText);
       });
 
       // 添加鼠标悬停事件监听器
-      span.addEventListener('mouseenter', function() {
-        Object.assign(span.style, hoverStyle);
+      span.addEventListener('mouseenter', function () {
+        Object.assign((span as HTMLSpanElement).style, hoverStyle);
       });
 
-// 添加鼠标离开事件监听器
-      span.addEventListener('mouseleave', function() {
-        Object.assign(span.style, defaultStyle);
+      // 添加鼠标离开事件监听器
+      span.addEventListener('mouseleave', function () {
+        Object.assign((span as HTMLSpanElement).style, defaultStyle);
       });
     });
   };
@@ -187,7 +190,6 @@
   .wordCloud {
     width: 100%;
     height: 350px;
-    //background-color: pink;
   }
   /deep/.__tagcloud {
     width: 100% !important;
@@ -196,7 +198,6 @@
   }
   .second {
     width: 100%;
-    //background-color: yellow;
     display: flex;
 
     flex-direction: row;
