@@ -1,11 +1,9 @@
 <template>
-  <div class="container">
-    <a-layout style="padding: 0 18px">
+    <a-layout class="flex-layout">
       <Breadcrumb :items="[$t('menu.data'), $t('搜索')]" />
       <a-card
         :title="$t(' ')"
         class="general-card"
-        :body-style="{ height: '650px' }"
       >
         <a-space
           direction="vertical"
@@ -13,8 +11,9 @@
           class="modal-title"
           align="center"
           style="margin-top: 100px; display: flex"
+          v-if="true"
         >
-          <div style="width: 1500px">
+          <div>
             <a-input-group>
               <a-select
                 v-model="selectValue"
@@ -50,21 +49,6 @@
             </a-input-group>
             <a-collapse :active-key="collapseBtn" style="border: none">
               <a-collapse-item key="1" :show-expand-icon="false">
-<!--                <a-row :gutter="[16, 16]">-->
-<!--                  <a-col :span="8">-->
-<!--                    <a-select placeholder="请选择类型">-->
-<!--                      <div v-for="(item) in higherSearchData" :key="item.name">-->
-<!--                        <a-option :value="item.name" v-if="selectValue === item.displayType">{{ item.name }}</a-option>-->
-<!--                      </div>-->
-<!--                    </a-select>-->
-<!--                  </a-col>-->
-<!--                  <a-col :span="8">-->
-<!--                    <a-input placeholder="上传用户"></a-input>-->
-<!--                  </a-col>-->
-<!--                  <a-col :span="8">-->
-<!--                    <a-range-picker />-->
-<!--                  </a-col>-->
-<!--                </a-row>-->
                 <a-form :model="form" layout="horizontal" labelCol="{ span: 4 }" wrapperCol="{ span: 14 }" v-if="selectValue === '文件名称'">
                   <a-row>
                     <a-col :span="8">
@@ -439,7 +423,6 @@
         </a-space>
       </a-card>
     </a-layout>
-  </div>
   <div class="footer">
     <Footer />
   </div>
@@ -455,7 +438,32 @@
 
   const selectValue = ref();
   const collapseBtn = ref<string[]>(['2']);
-  const form = reactive({});
+  const form = reactive({
+    socialAccountId: '',
+    uploadUser: '',
+    fileName: '',
+    originalName: '',
+    relatedFile: '',
+    relatedOrganization: '',
+    relatedPerson: '',
+    department: '',
+    fileSource: '',
+    fileType: '',
+    name: '',
+    occupation: '',
+    otherName: '',
+    gender: '',
+    organization: '',
+    birthDate: '',
+    organizationKeyword: '',
+    creationTime: '',
+    tag: '',
+    countryL: '',
+    socialPlatform: '',
+    emailCount: 0,
+    otherInfo: '',
+    country: '',
+  });
   const visible = ref(true);
   const showHistory = ref(true);
   const historyItems = ref<string[]>([]);
