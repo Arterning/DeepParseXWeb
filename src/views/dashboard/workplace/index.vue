@@ -4,6 +4,7 @@
       <div class="panel">
         <Banner />
         <DataPanel />
+        <Footer />
       </div>
     </div>
   </div>
