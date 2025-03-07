@@ -37,6 +37,17 @@ const DASHBOARD: AppRouteRecordRaw = {
       },
     },
     {
+      path: 'person-detail/:id',
+      name: 'PersonDetail',
+      component: () => import('@/views/data/person-detail/index.vue'),
+      meta: {
+        locale: 'menu.data.person.detail',
+        requiresAuth: true,
+        roles: ['*'],
+        hideInMenu: true,
+      },
+    },
+    {
       path: 'assets',
       name: 'Assets',
       component: () => import('@/views/data/assets/index.vue'),
@@ -74,7 +85,7 @@ const DASHBOARD: AppRouteRecordRaw = {
     {
       path: 'org-detail/:id',
       name: 'OrgDetail',
-      component: () => import('@/views/data/org/components/org-detail/index.vue'),
+      component: () => import('@/views/data/org-detail/index.vue'),
       meta: {
         locale: 'menu.data.org.detail',
         requiresAuth: true,
