@@ -253,7 +253,7 @@
     SysOrgParams
   } from '@/api/org';
   import { querySysDocList, SysDocRes } from '@/api/doc';
-  import Detail from './components/org-detail/detail.vue';
+  import Detail from '@/views/data/org-detail/index.vue';
   
 
   const { t } = useI18n();
