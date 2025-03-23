@@ -1,0 +1,1 @@
+pm2 start pnpm --name ldaweb -- run dev --host 0.0.0.0

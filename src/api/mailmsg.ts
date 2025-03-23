@@ -1,0 +1,59 @@
+import axios from 'axios';
+import qs from 'query-string';
+
+export interface MailMsgReq {
+  name: string;
+}
+
+export interface MailMsgRes extends MailMsgReq {
+  id: number;
+}
+
+export interface MailMsgParams {
+  name?: string;
+  page?: number;
+  size?: number;
+}
+
+export interface MailMsgListRes {
+  items: MailMsgRes[];
+  total: number;
+}
+
+export interface MailMsgDeleteParams {
+  pk: number[];
+}
+
+export function queryMailMsgList(params: MailMsgParams): Promise<MailMsgListRes> {
+  return axios.get('/api/v1/sys/mailmsg', {
+    params,
+    paramsSerializer: (obj) => {
+      return qs.stringify(obj);
+    },
+  });
+}
+
+export function queryMailMsgAll(): Promise<MailMsgRes[]> {
+  return axios.get('/api/v1/sys/mailmsg/all');
+}
+
+export function queryMailMsgDetail(pk: number): Promise<MailMsgRes> {
+  return axios.get(`/api/v1/sys/mailmsg/${pk}`);
+}
+
+export function createMailMsg(data: MailMsgReq) {
+  return axios.post('/api/v1/sys/mailmsg', data);
+}
+
+export function updateMailMsg(pk: number, data: MailMsgReq) {
+  return axios.put(`/api/v1/sys/mailmsg/${pk}`, data);
+}
+
+export function deleteMailMsg(params: MailMsgDeleteParams) {
+  return axios.delete(`/api/v1/sys/mailmsg`, {
+    params,
+    paramsSerializer: (obj) => {
+      return qs.stringify(obj);
+    },
+  });
+}
