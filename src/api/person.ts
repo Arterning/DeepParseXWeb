@@ -3,6 +3,13 @@ import qs from 'query-string';
 
 export interface PersonReq {
   name: string;
+  gender: string;
+  other_name: string;
+  organization: string;
+  position: string;
+  profession: string;
+  birth_date: string;
+  school: string;
 }
 
 export interface PersonRes extends PersonReq {

@@ -39,7 +39,6 @@
   .panel {
     background-color: var(--color-bg-2);
     border-radius: 4px;
-    overflow: auto;
   }
 
   :deep(.panel-border) {

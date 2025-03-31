@@ -96,18 +96,33 @@
           >
             <a-form ref="formRef" :model="form">
               <a-form-item
-                :feedback="true"
-                label="名称"
-                :rules="[
-                  { required: true, message: 'required' },
-                ]"
-                field="name"
+                  :feedback="true"
+                  label="姓名"
+                  :rules="[{ required: true, message: 'required' }]"
+                  field="name"
               >
-                <a-input
-                  v-model="form.name"
-                ></a-input>
+                <a-input v-model="form.name"></a-input>
+              </a-form-item>
+              <a-form-item label="社交账号昵称">
+                <a-input v-model="form.social_name"></a-input>
+              </a-form-item>
+              <a-form-item label="社交账户">
+                <a-input v-model="form.social_account"></a-input>
+              </a-form-item>
+              <a-form-item label="国家/地区">
+                <a-input v-model="form.country"></a-input>
+              </a-form-item>
+              <a-form-item label="性别">
+                <a-input v-model="form.gender"></a-input>
+              </a-form-item>
+              <a-form-item label="政治面貌">
+                <a-input v-model="form.political"></a-input>
+              </a-form-item>
+              <a-form-item label="其他信息">
+                <a-input v-model="form.other_info"></a-input>
               </a-form-item>
             </a-form>
+
           </a-modal>
           <a-modal
             :closable="false"
@@ -205,9 +220,25 @@
         width: 100,
       },
       {
-        title: t('社交账户名称'),
+        title: t('姓名'),
         dataIndex: 'name',
         slotName: 'name',
+        ellipsis: true,
+        tooltip: true,
+        width: 200,
+      },
+      {
+        title: t('社交账户昵称'),
+        dataIndex: 'social_name',
+        slotName: 'social_name',
+        ellipsis: true,
+        tooltip: true,
+        width: 200,
+      },
+      {
+        title: t('社交账户'),
+        dataIndex: 'social_account',
+        slotName: 'social_account',
         ellipsis: true,
         tooltip: true,
         width: 200,
@@ -217,6 +248,30 @@
         title: t('国家/地区'),
         dataIndex: 'country',
         slotName: 'country',
+        ellipsis: true,
+        tooltip: true,
+      },
+      {
+        // 国家/地区
+        title: t('性别'),
+        dataIndex: 'gender',
+        slotName: 'gender',
+        ellipsis: true,
+        tooltip: true,
+      },
+      {
+        // 国家/地区
+        title: t('政治面貌'),
+        dataIndex: 'political',
+        slotName: 'political',
+        ellipsis: true,
+        tooltip: true,
+      },
+      {
+        // 国家/地区
+        title: t('其他信息'),
+        dataIndex: 'other_info',
+        slotName: 'other_info',
         ellipsis: true,
         tooltip: true,
       },
@@ -246,7 +301,14 @@
     };
     const formDefaultValues: SocialAccountReq = {
       name: '',
+      social_name: '',
+      social_account: '',
+      country: '',
+      gender: '',
+      political: '',
+      other_info: '',
     };
+
     const form = reactive<SocialAccountReq>({ ...formDefaultValues });
     const buttonStatus = ref<string>();
     const formRef = ref();

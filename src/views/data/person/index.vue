@@ -12,7 +12,10 @@
             <a-row :gutter="16">
               <a-col :span="8">
                 <a-form-item field="name" label="名称">
-                  <a-input v-model="formModel.name" :placeholder="$t('搜索人物名称')"/>
+                  <a-input
+                    v-model="formModel.name"
+                    :placeholder="$t('搜索人物名称')"
+                  />
                 </a-form-item>
               </a-col>
             </a-row>
@@ -91,11 +94,32 @@
           <a-form ref="formRef" :model="form">
             <a-form-item
               :feedback="true"
-              label="名称"
+              label="姓名"
               :rules="[{ required: true, message: 'required' }]"
               field="name"
             >
               <a-input v-model="form.name"></a-input>
+            </a-form-item>
+            <a-form-item label="其他名">
+              <a-input v-model="form.other_name"></a-input>
+            </a-form-item>
+            <a-form-item label="性别">
+              <a-input v-model="form.gender"></a-input>
+            </a-form-item>
+            <a-form-item label="所属组织">
+              <a-input v-model="form.organization"></a-input>
+            </a-form-item>
+            <a-form-item label="职业">
+              <a-input v-model="form.profession"></a-input>
+            </a-form-item>
+            <a-form-item label="职位">
+              <a-input v-model="form.position"></a-input>
+            </a-form-item>
+            <a-form-item label="出生日期">
+              <a-date-picker v-model="form.birth_date" style="width: 500px"/>
+            </a-form-item>
+            <a-form-item label="毕业院校/专业">
+              <a-input v-model="form.school"></a-input>
             </a-form-item>
           </a-form>
         </a-modal>
@@ -274,6 +298,13 @@
   };
   const formDefaultValues: PersonReq = {
     name: '',
+    gender: '',
+    other_name: '',
+    organization: '',
+    position: '',
+    profession: '',
+    birth_date: '',
+    school: '',
   };
   const form = reactive<PersonReq>({ ...formDefaultValues });
   const buttonStatus = ref<string>();
