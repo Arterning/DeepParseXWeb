@@ -1,11 +1,18 @@
 <template>
   <div class="main">
-    <div class="wordCloudContainer">
-      <div class="wordCloud1"> </div>
-      <div class="wordCloud2"> </div>
-      <div class="wordCloud3"> </div>
-      <div class="wordCloud4"> </div>
-    </div>
+    <a-tabs default-active-key="1">
+      <a-tab-pane key="1" title="Tab 1">
+        <div class="wordCloudContainer">
+          <div class="wordCloud1"> </div>
+          <div class="wordCloud2"> </div>
+          <div class="wordCloud3"> </div>
+          <div class="wordCloud4"> </div>
+        </div>
+      </a-tab-pane>
+      <a-tab-pane key="2" title="Tab 2">
+        <div id="map" class="wordCloudContainer"> ddsf </div>
+      </a-tab-pane>
+    </a-tabs>
     <div class="second">
       <div id="pieChart" style="background-color: #f4f5f8; padding: 20px"></div>
       <div id="barChart" style="background-color: #f4f5f8; padding: 20px"></div>
@@ -17,6 +24,7 @@
   import * as echarts from 'echarts';
   import { onMounted, ref } from 'vue';
   import TagCloud from 'TagCloud';
+  import china from '../../../../assets/jsonConfig/china.json';
 
   const currentCase = ref('Horizontal Tree');
 
@@ -40,7 +48,7 @@
   const options1 = {
     containerClass: '__tagcloud',
     radius: 220,
-    initSpeed:'slow',
+    initSpeed: 'slow',
     maxSpeed: 'slow',
   };
   const options2 = {
@@ -107,6 +115,7 @@
     initPieChart();
     initBarChart();
     randomColor();
+    chinaMap();
   });
 
   const initPieChart = () => {
@@ -151,6 +160,8 @@
       ],
     };
 
+
+
     myPieChart.setOption(option);
   };
 
@@ -179,6 +190,127 @@
     };
 
     myBarChart.setOption(option);
+  };
+
+  const chinaMap = () => {
+    const initMap = echarts.init(document.getElementById('map'));
+    echarts.registerMap('world', china);
+
+    const option = {
+      tooltip: {
+        trigger: 'item',
+        formatter: '{b}<br/>{c} (模拟数据)',
+      },
+      visualMap: {
+        min: 0,
+        max: 1000,
+        text: ['High', 'Low'],
+        realtime: false,
+        calculable: true,
+        inRange: {
+          color: ['#e7f3fe', '#154d9a'],
+        },
+        textStyle: {
+          color: '#000',
+        },
+      },
+      series: [
+        {
+          type: 'map',
+          map: 'world',
+          roam: true, // 开启缩放和平移
+          scaleLimit: {
+            min: 1,
+            max: 10,
+          },
+          emphasis: {
+            label: {
+              show: true,
+              color: '#333',
+            },
+            itemStyle: {
+              areaColor: '#ffcf34',
+            },
+          },
+          itemStyle: {
+            borderColor: '#000',
+            borderWidth: 0.5,
+          },
+          // 模拟数据（实际使用时需要真实数据）
+          data: [
+            { name: 'China', value: 500 },
+            { name: 'United States', value: 300 },
+            { name: 'Russia', value: 200 },
+            { name: 'Australia', value: 150 },
+            { name: 'Brazil', value: 180 },
+          ],
+        },
+      ],
+    };
+
+    const option2 = {
+      title: {
+        text: '世界地图示例',
+        left: 'center'
+      },
+      tooltip: {
+        trigger: 'item',
+        formatter: '{b}'
+      },
+      toolbox: {
+        show: true,
+        feature: {
+          dataZoom: {
+            yAxisIndex: 'none'
+          },
+          restore: {},
+          saveAsImage: {}
+        }
+      },
+      geo: {
+        map: 'world',
+        roam: true, // 开启缩放和平移
+        zoom: 1.2, // 初始缩放级别
+        label: {
+          show: false // 默认不显示国家名称
+        },
+        itemStyle: {
+          areaColor: '#e6f3ff',
+          borderColor: '#00287F', // 国境线颜色
+          borderWidth: 1 // 国境线宽度
+        },
+        emphasis: {
+          label: {
+            show: true // 悬停时显示国家名称
+          },
+          itemStyle: {
+            areaColor: '#a5d8ff' // 悬停颜色
+          }
+        }
+      },
+      // 示例打点数据（可以自行修改或添加）
+      series: [{
+        type: 'scatter',
+        coordinateSystem: 'geo',
+        symbol: 'pin',
+        symbolSize: 20,
+        itemStyle: {
+          color: '#D32F2F'
+        },
+        data: [
+          { name: 'China', value: [116.46, 39.92, '北京'] },
+          { name: 'United States', value: [-77.0365, 38.8951, '华盛顿'] },
+          { name: 'France', value: [2.3522, 48.8566, '巴黎'] }
+        ],
+        tooltip: {
+          formatter(params) {
+            return params.data.value;
+          }
+        }
+      }]
+    };
+
+    initMap.setOption(option2);
   };
 </script>
 

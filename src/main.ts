@@ -3,6 +3,7 @@ import ArcoVue from '@arco-design/web-vue';
 import ArcoVueIcon from '@arco-design/web-vue/es/icon';
 import { InstallCodeMirror } from 'codemirror-editor-vue3';
 import globalComponents from '@/components';
+import vue3TreeOrg from 'vue3-tree-org';
 import router from './router';
 import store from './store';
 import i18n from './locale';
@@ -10,9 +11,13 @@ import directive from './directive';
 import App from './App.vue';
 import '@/assets/style/global.less';
 import '@/api/interceptor';
+import 'vue3-tree-org/lib/vue3-tree-org.css';
 
 const app = createApp(App);
 app.config.warnHandler = () => null;
+
+
+app.use(vue3TreeOrg);
 
 app.use(ArcoVue, {});
 app.use(ArcoVueIcon);
