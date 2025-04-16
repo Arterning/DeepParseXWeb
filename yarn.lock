@@ -3556,6 +3556,11 @@ copy-descriptor@^0.1.0:
   resolved "https://registry.npmmirror.com/copy-descriptor/-/copy-descriptor-0.1.1.tgz"
   integrity sha512-XgZ0pFcakEUlbwQEVNg3+QAis1FyTL3Qel9FYy8pSkQqoG3PNoT0bOCQtOXcOkur21r2Eq2kI+IE+gsmAEVlYw==
 
+core-js@^3.6.5:
+  version "3.41.0"
+  resolved "https://registry.npmmirror.com/core-js/-/core-js-3.41.0.tgz"
+  integrity sha512-SJ4/EHwS36QMJd6h/Rg+GyR4A5xE0FSI3eZ+iBVpfqf1x0eTSg1smWLHrA+2jQThZSh97fmSgFSU8B61nxosxA==
+
 core-util-is@~1.0.0:
   version "1.0.3"
   resolved "https://registry.npmmirror.com/core-util-is/-/core-util-is-1.0.3.tgz"
@@ -12744,6 +12749,11 @@ vue-i18n@^9.2.2:
     "@intlify/shared" "9.14.0"
     "@vue/devtools-api" "^6.5.0"
 
+vue-org-tree@^0.1.0:
+  version "0.1.0"
+  resolved "https://registry.npmmirror.com/vue-org-tree/-/vue-org-tree-0.1.0.tgz"
+  integrity sha512-9SivpMblYi0DH4QXroUsGxmzaGJ/NXYee8F1OWi2PIXcE3MaZfL0wyxRUkkVOeyluztyAZyFeIeLY0z7Yr61Yg==
+
 vue-router@^4.0.14:
   version "4.4.5"
   resolved "https://registry.npmmirror.com/vue-router/-/vue-router-4.4.5.tgz"
@@ -12778,6 +12788,13 @@ vue-tsc@^1.0.14:
     "@vue/runtime-dom" "3.5.8"
     "@vue/server-renderer" "3.5.8"
     "@vue/shared" "3.5.8"
+
+vue3-tree-org@^4.2.2:
+  version "4.2.2"
+  resolved "https://registry.npmmirror.com/vue3-tree-org/-/vue3-tree-org-4.2.2.tgz"
+  integrity sha512-AG2SykyD6dw0jIyqBm8iuF9j9GWli6KrwudxR1RjULCCBTDFsoNm7MmP/weKT7wowN/sPk+e2RsnvEJMw2OJMw==
+  dependencies:
+    core-js "^3.6.5"
 
 walk-up-path@^4.0.0:
   version "4.0.0"
