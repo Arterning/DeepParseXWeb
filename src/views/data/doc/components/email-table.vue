@@ -257,7 +257,7 @@
     import { cleanMarkdown } from '@/utils/string';
     import { tableDateFormat } from '@/utils/date';
     import { useRouter } from 'vue-router';
-    import GeneralDetail from './general-detail.vue';
+    import GeneralDetail from '@views/data/doc/components/general-detail.vue';
   
     const { t } = useI18n();
     const { loading, setLoading } = useLoading(true);

@@ -1,10 +1,12 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import NProgress from 'nprogress'; // progress bar
 import 'nprogress/nprogress.css';
-
 import appRoutes from '@/router/routes';
+
 import { NOT_FOUND_ROUTE, OAUTH2_CALLBACK, REDIRECT_MAIN } from './routes/base';
 import createRouteGuard from './guard';
+
+
 
 NProgress.configure({ showSpinner: false }); // NProgress Configuration
 
@@ -32,7 +34,6 @@ const router = createRouter({
     return { top: 0 };
   },
 });
-
 createRouteGuard(router);
 
 

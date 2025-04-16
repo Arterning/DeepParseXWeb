@@ -3,6 +3,13 @@ import qs from 'query-string';
 
 export interface PersonReq {
   name: string;
+  other_name:string;
+  gender:string;
+  organization:string;
+  position:string;
+  profession:string;
+  birth_date:string;
+  school:string;
 }
 
 export interface PersonRes extends PersonReq {
@@ -11,6 +18,15 @@ export interface PersonRes extends PersonReq {
 
 export interface PersonParams {
   name?: string;
+
+  other_name:string;
+  gender:string;
+  organization:string;
+  position:string;
+  profession:string;
+  birth_date:string;
+  school:string;
+
   page?: number;
   size?: number;
 }

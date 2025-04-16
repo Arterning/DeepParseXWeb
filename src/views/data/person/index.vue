@@ -1,5 +1,34 @@
 <template>
   <a-layout class="flex-layout">
+    <!--    收藏弹窗 -->
+    <a-modal
+      v-model:visible="collectVisi"
+      @ok="handleOk"
+      @cancel="handleCancel"
+    >
+      <template #title> 选择收藏位置 </template>
+      <div>
+        <a-select
+          :style="{ width: '100%', marginBottom: '15px' }"
+          placeholder="请选择需要保存的收藏夹"
+        >
+          <a-option>Beijing</a-option>
+          <a-option>Shanghai</a-option>
+          <a-option>Guangzhou</a-option>
+        </a-select>
+        <a-button style="width: 100%;">
+          <div>
+            新建收藏夹
+          </div>
+          <div>
+            <icon-plus />
+          </div>
+        </a-button>
+      </div>
+      <template #footer>
+        <a-button type="primary" style="width: 100%;" @ok="handleOk">收藏</a-button>
+      </template>
+    </a-modal>
     <Breadcrumb />
     <a-card :title="$t('人物管理')" class="general-card">
       <a-row>
@@ -15,25 +44,61 @@
                   <a-input v-model="formModel.name" :placeholder="$t('搜索人物名称')"/>
                 </a-form-item>
               </a-col>
+              <a-col :span="10">
+          <a-space direction="inline">
+            <a-form-item field="name" label="标签" style="margin-right: 30px">
+              <a-select :style="{ width: '150px' }" placeholder="请选择标签">
+                <a-option>Beijing</a-option>
+                <a-option>Shanghai</a-option>
+                <a-option>Guangzhou</a-option>
+                <a-option disabled>Disabled</a-option>
+              </a-select>
+            </a-form-item>
+            <a-form-item field="name" label="国籍/地区">
+              <a-select :style="{ width: '150px' }" placeholder="请选择国家">
+                <a-option>Beijing</a-option>
+                <a-option>Shanghai</a-option>
+                <a-option>Guangzhou</a-option>
+                <a-option disabled>Disabled</a-option>
+              </a-select>
+            </a-form-item>
+            
+          </a-space>
+          <a-space direction="inline">
+            <a-form-item field="name" label="出生日期">
+              <a-range-picker
+                show-time
+                :time-picker-props="{
+                  defaultValue: ['00:00:00', '00:00:00'],
+                }"
+                style="width: 380px"
+                @change="onChangeRangePicker"
+                @select="onSelectRangePicker"
+              />
+            </a-form-item>
+            <a-form-item>
+              <a-space :size="'medium'" direction="horizontal">
+                <a-button type="primary" @click="search">
+                  <template #icon>
+                    <icon-search />
+                  </template>
+                  {{ $t('data.doc.form.search') }}
+                </a-button>
+                <a-button @click="resetSelect">
+                  <template #icon>
+                    <icon-refresh />
+                  </template>
+                  {{ $t('data.doc.form.reset') }}
+                </a-button>
+              </a-space>
+            </a-form-item>
+          </a-space>
+        </a-col>
             </a-row>
           </a-form>
         </a-col>
         <a-divider direction="vertical" style="height: 30px" />
         <a-col :span="6">
-          <a-space :size="'medium'" direction="horizontal">
-            <a-button type="primary" @click="search">
-              <template #icon>
-                <icon-search />
-              </template>
-              搜索
-            </a-button>
-            <a-button @click="resetSelect">
-              <template #icon>
-                <icon-refresh />
-              </template>
-              重置
-            </a-button>
-          </a-space>
         </a-col>
       </a-row>
       <a-divider />
@@ -68,8 +133,43 @@
           @page-change="onPageChange"
           @page-size-change="onPageSizeChange"
         >
-          <template #index="{ rowIndex }">
+          <!-- <template #index="{ rowIndex }">
             {{ rowIndex + 1 }}
+          </template> -->
+          <template #name="{ record }">
+            <a-link
+              class="title-link"
+              @click="
+                router.push({
+                  name: 'PersonDetail',
+                  params: { id :record.id },
+                  query: { type: 'person'},
+                })
+              "
+              >{{ record.name }}</a-link>
+
+          </template>
+          <template #collection="{ record }">
+            <div>
+              <!-- 修改：绑定动态样式，根据当前记录的收藏状态设置颜色 -->
+              <icon-star
+                id="star-{{ record.id }}"
+                size="23"
+                :style="{ cursor: 'pointer', color: record.isCollected ? '#e6a23c' : 'initial' }"
+                @click.stop="toggleCollect(record)"
+              />
+            </div>
+          </template>
+          <template #follow="{ record }">
+            <div>
+              <!-- 修改：绑定动态样式，根据当前记录的关注状态设置颜色 -->
+              <icon-user
+                id="user-{{ record.id }}"
+                size="23"
+                :style="{ cursor: 'pointer', color: record.isFollowed ? 'blue' : 'initial' }"
+                @click.stop="toggleFollow(record)"
+              />
+            </div>
           </template>
           <template #operate="{ record }">
             <a-space>
@@ -91,11 +191,35 @@
           <a-form ref="formRef" :model="form">
             <a-form-item
               :feedback="true"
-              label="名称"
+              label="姓名"
               :rules="[{ required: true, message: 'required' }]"
               field="name"
             >
               <a-input v-model="form.name"></a-input>
+            </a-form-item>
+            <a-form-item
+              :feedback="true"
+              label="性别"
+              field="gender"
+            >
+              <a-input v-model="form.gender"></a-input>
+            </a-form-item>
+            <a-form-item label="其他名称" field="other_name">
+              <a-input v-model="form.other_name"></a-input>
+            </a-form-item>
+            
+            <a-form-item label="所属组织" field="organization">
+              <a-textarea v-model="form.organization"></a-textarea>
+            </a-form-item>
+            <a-form-item label="职位" field="position">
+              <a-textarea v-model="form.position"></a-textarea>
+            </a-form-item>
+            <a-form-item label="职业" field="profession">
+              <a-textarea v-model="form.profession"></a-textarea>
+            </a-form-item>
+            <a-form-item label="出生日期" field="birth_date">
+              <!-- 修改后，确保 form 对象包含 birth_date 属性 -->
+              <a-input v-model="form.birth_date"></a-input>
             </a-form-item>
           </a-form>
         </a-modal>
@@ -114,14 +238,23 @@
         </a-modal>
       </div>
     </a-card>
-    <Footer />
+    <Footer />  
   </a-layout>
+  <!-- 新增：人物详情组件 -->
+  <PersonDetail
+    v-if="showDetail"
+    :person="selectedPerson"
+    @close="showDetail = false"
+  />
+  <!-- ... existing code ... -->
 </template>
 
-<script lang="ts" setup>
+<script setup lang="ts">
+// import { ref } from 'vue';
+
+  // Move all import statements to the top
   import {
     Message,
-    SelectOptionData,
     TableColumnData,
   } from '@arco-design/web-vue';
   import { useI18n } from 'vue-i18n';
@@ -139,6 +272,15 @@
     updatePerson,
   } from '@/api/person';
   import { Pagination } from '@/types/global';
+  import { useRouter } from 'vue-router'; // 引入路由钩子
+  import { toPath } from 'lodash';
+  // import PersonDetail from './PersonDetail.vue';
+  // Add the import statement that was at line 551 here
+  // For example, if it was something like import SomeModule from 'some-module';
+  // Add it in the appropriate order among the other imports
+
+  // Add an empty line after the last import
+  
 
   const { t } = useI18n();
   const { loading, setLoading } = useLoading(true);
@@ -147,6 +289,12 @@
   const generateFormModel = () => {
     return {
       name: undefined,
+      gender: undefined,
+      other: undefined,
+      organization: undefined,
+      position: undefined,
+      profession: undefined,
+      birth_date: undefined
     };
   };
   const formModel = ref(generateFormModel());
@@ -208,9 +356,9 @@
       tooltip: true,
     },
     {
-      title: '其他名',
-      dataIndex: 'other_name',
-      slotName: 'other_name',
+      title: '其他名称',
+      dataIndex: 'other',
+      slotName: 'other',
       ellipsis: true,
       tooltip: true,
     },
@@ -274,10 +422,26 @@
   };
   const formDefaultValues: PersonReq = {
     name: '',
+    other_name: '',
+    gender: '',
+    organization: '',
+    position: '',
+    profession: '',
+    birth_date: '',
+    school: ''
   };
   const form = reactive<PersonReq>({ ...formDefaultValues });
   const buttonStatus = ref<string>();
   const formRef = ref();
+
+    // 收藏弹窗
+    const collectVisi = ref(false) ;
+
+    // 收藏成功 按钮变色
+    const handleOk = async () => {
+      // 关闭收藏弹窗
+      collectVisi.value = false;
+    };
 
   // 表单校验
   const beforeSubmit = async (done: any) => {
@@ -339,7 +503,8 @@
     setLoading(true);
     try {
       const res = await queryPersonList(params);
-      renderData.value = res.items;
+      // 为每条记录添加初始收藏和关注状态
+      renderData.value = res.items.map(item => ({ ...item, isCollected: false, isFollowed: false }));
       pagination.total = res.total;
       pagination.current = params.page;
     } catch (error) {
@@ -397,6 +562,35 @@
       // @ts-ignore
       form[key] = data[key];
     });
+  };
+
+  // 新增：定义收藏状态
+  const isCollected = ref(false);
+
+  // 新增：切换收藏状态的方法
+  const toggleCollect = (record: any) => {
+    record.isCollected = !record.isCollected;
+    // 打开收藏弹窗
+    collectVisi.value = true;
+  };
+
+  // 新增：切换关注状态的方法
+  const toggleFollow = (record: any) => {
+    record.isFollowed = !record.isFollowed;
+  };
+
+
+  const router = useRouter(); // 获取路由实例
+
+
+  // 新增：控制详情页面显示
+  const showDetail = ref(false);
+  const selectedPerson = ref({});
+
+  // 新增：显示人物详情的方法
+  const showPersonDetail = (record:any) => {
+    selectedPerson.value = record;
+    showDetail.value = true;
   };
 </script>
 
