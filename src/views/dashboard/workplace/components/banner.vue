@@ -1,7 +1,9 @@
 <template>
   <div class="main">
     <a-tabs default-active-key="1">
-      <a-tab-pane key="1" title="Tab 1">
+      <a-tab-pane key="1" title="热点事件">
+        <div id="map" class="wordCloudContainer"> 
+        </div>
         <div class="wordCloudContainer">
           <div class="wordCloud1"> </div>
           <div class="wordCloud2"> </div>
@@ -9,14 +11,13 @@
           <div class="wordCloud4"> </div>
         </div>
       </a-tab-pane>
-      <a-tab-pane key="2" title="Tab 2">
-        <div id="map" class="wordCloudContainer"> ddsf </div>
+      <a-tab-pane key="2" title="情报统计">
+        <div class="second">
+          <div id="pieChart" style="background-color: #f4f5f8; padding: 20px"></div>
+          <div id="barChart" style="background-color: #f4f5f8; padding: 20px"></div>
+        </div>
       </a-tab-pane>
     </a-tabs>
-    <div class="second">
-      <div id="pieChart" style="background-color: #f4f5f8; padding: 20px"></div>
-      <div id="barChart" style="background-color: #f4f5f8; padding: 20px"></div>
-    </div>
   </div>
 </template>
 
@@ -26,24 +27,11 @@
   import TagCloud from 'TagCloud';
   import china from '../../../../assets/jsonConfig/china.json';
 
-  const currentCase = ref('Horizontal Tree');
-
-  const relationVisible = ref(false);
-
-  const container = '.wordCloud1';
   const texts1 = [
-    ' 紅樓夢',
-    ' 賈寶玉',
-    ' 薛寶釵',
-    ' 王熙鳳',
-    ' 李紈',
-    ' 賈元春',
-    ' 紅樓夢',
-    ' 賈寶玉',
-    ' 薛寶釵',
-    ' 王熙鳳',
-    ' 李紈',
-    ' 賈元春',
+    ' G7峰会',
+    ' 美国大选',
+    ' 特朗普贸易战',
+    ' 保护环境',
   ];
   const options1 = {
     containerClass: '__tagcloud',
@@ -197,60 +185,8 @@
     echarts.registerMap('world', china);
 
     const option = {
-      tooltip: {
-        trigger: 'item',
-        formatter: '{b}<br/>{c} (模拟数据)',
-      },
-      visualMap: {
-        min: 0,
-        max: 1000,
-        text: ['High', 'Low'],
-        realtime: false,
-        calculable: true,
-        inRange: {
-          color: ['#e7f3fe', '#154d9a'],
-        },
-        textStyle: {
-          color: '#000',
-        },
-      },
-      series: [
-        {
-          type: 'map',
-          map: 'world',
-          roam: true, // 开启缩放和平移
-          scaleLimit: {
-            min: 1,
-            max: 10,
-          },
-          emphasis: {
-            label: {
-              show: true,
-              color: '#333',
-            },
-            itemStyle: {
-              areaColor: '#ffcf34',
-            },
-          },
-          itemStyle: {
-            borderColor: '#000',
-            borderWidth: 0.5,
-          },
-          // 模拟数据（实际使用时需要真实数据）
-          data: [
-            { name: 'China', value: 500 },
-            { name: 'United States', value: 300 },
-            { name: 'Russia', value: 200 },
-            { name: 'Australia', value: 150 },
-            { name: 'Brazil', value: 180 },
-          ],
-        },
-      ],
-    };
-
-    const option2 = {
       title: {
-        text: '世界地图示例',
+        text: '',
         left: 'center'
       },
       tooltip: {
@@ -310,7 +246,7 @@
       }]
     };
 
-    initMap.setOption(option2);
+    initMap.setOption(option);
   };
 </script>
 
