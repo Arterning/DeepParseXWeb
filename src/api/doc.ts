@@ -93,6 +93,10 @@ export function deleteSysDoc(params: SysDocPickParams) {
   });
 }
 
+export function queryRecentDocs(): Promise<SysDocRes[]> {
+  return axios.get(`/api/v1/sys/docs/recent_docs`)
+}
+
 export function extractIPAddress(params: number[]) {
   return axios.post(`/api/v1/sys/ip_addr`, params);
 }
