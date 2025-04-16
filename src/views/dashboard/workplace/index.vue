@@ -1,5 +1,5 @@
 <template>
-  <div class="container flex-layout">
+  <div class="flex-layout">
     <div class="left-side">
       <div class="panel">
         <Banner />

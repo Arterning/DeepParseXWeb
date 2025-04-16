@@ -59,9 +59,10 @@
   // }
   .content-box{
       // display: flex;
-      width: 70vw;
-      max-height: 65vh;
-      overflow: auto;
+      //width: 70vw;
+       width: 86vw;
+      //max-height: 65vh;
+      //overflow: auto;
   }
   
   .flex{

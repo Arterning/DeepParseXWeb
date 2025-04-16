@@ -1,5 +1,5 @@
 <template>
-    <a-layout class="flex-layout">
+    <a-layout class="flex-layout" style="position: relative">
       <Breadcrumb :items="[$t('menu.data'), $t('搜索')]" />
       <a-card
         :title="$t(' ')"
@@ -10,10 +10,10 @@
           size="large"
           class="modal-title"
           align="center"
-          style="margin-top: 100px; display: flex"
+          style="margin-top: 100px;"
           v-if="true"
         >
-          <div>
+          <div style="position: absolute;left: 80px">
             <a-input-group>
               <a-select
                 v-model="selectValue"
