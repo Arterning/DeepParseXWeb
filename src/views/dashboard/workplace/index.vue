@@ -1,5 +1,5 @@
 <template>
-  <div class="container flex-layout">
+  <div class="flex-layout">
     <div class="left-side">
       <div class="panel">
         <Banner />
@@ -39,7 +39,6 @@
   .panel {
     background-color: var(--color-bg-2);
     border-radius: 4px;
-    overflow: auto;
   }
 
   :deep(.panel-border) {

@@ -96,16 +96,15 @@
           >
             <a-form ref="formRef" :model="form">
               <a-form-item
-                :feedback="true"
-                label="名称"
-                :rules="[
-                  { required: true, message: 'required' },
-                ]"
-                field="name"
+                  :feedback="true"
+                  label="名称"
+                  :rules="[{ required: true, message: 'required' }]"
+                  field="name"
               >
-                <a-input
-                  v-model="form.name"
-                ></a-input>
+                <a-input v-model="form.name"></a-input>
+              </a-form-item>
+              <a-form-item label="发布时间">
+                <a-date-picker v-model="form.time" style="width: 500px" />
               </a-form-item>
             </a-form>
           </a-modal>
@@ -238,6 +237,7 @@
     };
     const formDefaultValues: SocialPostReq = {
       name: '',
+      time: '',
     };
     const form = reactive<SocialPostReq>({ ...formDefaultValues });
     const buttonStatus = ref<string>();

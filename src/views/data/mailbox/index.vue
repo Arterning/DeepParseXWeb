@@ -96,15 +96,25 @@
           >
             <a-form ref="formRef" :model="form">
               <a-form-item
-                :feedback="true"
-                label="名称"
-                :rules="[
-                  { required: true, message: 'required' },
-                ]"
-                field="name"
+                  :feedback="true"
+                  label="名称"
+                  :rules="[{ required: true, message: 'required' }]"
+                  field="name"
               >
+                <a-input v-model="form.name"></a-input>
+              </a-form-item>
+              <!-- country -->
+              <a-form-item label="国家/地区" field="country">
+                <a-select v-model="form.country" :placeholder="$t('请选择')">
+                  <a-option value="china">中国</a-option>
+                  <a-option value="usa">美国</a-option>
+                </a-select>
+              </a-form-item>
+              <!-- other_info -->
+              <a-form-item label="其他信息" field="other_info">
                 <a-input
-                  v-model="form.name"
+                    v-model="form.other_info"
+                    :placeholder="$t('请输入其他信息')"
                 ></a-input>
               </a-form-item>
             </a-form>

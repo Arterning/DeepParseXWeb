@@ -96,16 +96,53 @@
           >
             <a-form ref="formRef" :model="form">
               <a-form-item
-                :feedback="true"
-                label="名称"
-                :rules="[
-                  { required: true, message: 'required' },
-                ]"
-                field="name"
+                  :feedback="true"
+                  label="新闻名称"
+                  :placeholder="$t('输入名称')"
+                  :rules="[{ required: true, message: 'required' }]"
+                  field="name"
               >
                 <a-input
-                  v-model="form.name"
+                    v-model="form.name"
+                    :placeholder="$t('输入名称')"
                 ></a-input>
+              </a-form-item>
+              <a-form-item field="summary" label="新闻简介">
+                <a-textarea
+                    v-model="form.summary"
+                    :placeholder="$t('新闻简介')"
+                />
+              </a-form-item>
+              <!-- news_type -->
+              <a-form-item field="news_type" label="新闻类型">
+                <a-input v-model="form.news_type" :placeholder="$t('新闻类型')" />
+              </a-form-item>
+              <!-- source -->
+              <a-form-item field="source" label="新闻来源">
+                <a-input v-model="form.source" :placeholder="$t('新闻来源')" />
+              </a-form-item>
+              <!-- organization -->
+              <a-form-item field="organization" label="新闻组织">
+                <a-input
+                    v-model="form.organization"
+                    :placeholder="$t('新闻组织')"
+                />
+              </a-form-item>
+              <!-- author -->
+              <a-form-item field="author" label="新闻作者">
+                <a-input v-model="form.author" :placeholder="$t('新闻作者')" />
+              </a-form-item>
+              <!-- time -->
+              <a-form-item field="time" label="新闻时间">
+                <a-input v-model="form.time" :placeholder="$t('新闻时间')" />
+              </a-form-item>
+              <!-- location -->
+              <a-form-item field="location" label="新闻地点">
+                <a-input v-model="form.location" :placeholder="$t('新闻地点')" />
+              </a-form-item>
+              <!-- detail -->
+              <a-form-item field="detail" label="新闻详情">
+                <a-textarea v-model="form.detail" :placeholder="$t('新闻详情')" />
               </a-form-item>
             </a-form>
           </a-modal>
@@ -157,6 +194,14 @@
     const generateFormModel = () => {
       return {
         name: undefined,
+        summary: undefined,
+        news_type: undefined,
+        source: undefined,
+        organization: undefined,
+        author: undefined,
+        time: undefined,
+        location: undefined,
+        detail: undefined,
       };
     };
     const formModel = ref(generateFormModel());
@@ -182,6 +227,7 @@
       buttonStatus.value = 'new';
       drawerTitle.value = t('新增');
       resetForm(formDefaultValues);
+      resetForm(form);
       openNewOrEdit.value = true;
     };
     const EditNews = async (pk: number) => {
@@ -286,6 +332,16 @@
     };
     const formDefaultValues: NewsReq = {
       name: '',
+      summary: '',
+      news_type: '',
+      source: '',
+      organization: '',
+      author: '',
+      time: '',
+      location: '',
+      tag: '',
+      person: '',
+      detail: '',
     };
     const form = reactive<NewsReq>({ ...formDefaultValues });
     const buttonStatus = ref<string>();

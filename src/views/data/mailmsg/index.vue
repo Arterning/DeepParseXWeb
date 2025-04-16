@@ -21,36 +21,36 @@
                 <a-col :span="8">
                 <a-form-item :label="$t('主题')" field="title">
                   <a-input
-                    @keyup.enter="search"
                     v-model="formModel.title"
                     :placeholder="$t('搜索主题')"
+                    @keyup.enter="search"
                   />
                 </a-form-item>
               </a-col>
               <a-col :span="8">
                 <a-form-item :label="$t('发件人')" field="email_from">
                   <a-input
-                    @keyup.enter="search"
                     v-model="formModel.email_from"
                     :placeholder="$t('搜索发件人')"
+                    @keyup.enter="search"
                   />
                 </a-form-item>
               </a-col>
               <a-col :span="8">
                 <a-form-item :label="$t('收件人')" field="email_to">
                   <a-input
-                    @keyup.enter="search"
                     v-model="formModel.email_to"
                     :placeholder="$t('搜索收件人')"
+                    @keyup.enter="search"
                   />
                 </a-form-item>
               </a-col>
               <a-col :span="8">
                 <a-form-item :label="$t('时间')" field="email_time">
                   <a-input
-                    @keyup.enter="search"
                     v-model="formModel.email_time"
                     :placeholder="$t('搜索时间')"
+                    @keyup.enter="search"
                   />
                 </a-form-item>
               </a-col>
@@ -132,15 +132,47 @@
           >
             <a-form ref="formRef" :model="form">
               <a-form-item
-                :feedback="true"
-                label="名称"
-                :rules="[
-                  { required: true, message: 'required' },
-                ]"
-                field="name"
+                  :feedback="true"
+                  label="名称"
+                  :rules="[{ required: true, message: 'required' }]"
+                  field="name"
               >
                 <a-input
-                  v-model="form.name"
+                    v-model="form.name"
+                    :placeholder="$t('请输入名称')"
+                ></a-input>
+              </a-form-item>
+              <!-- time -->
+              <a-form-item :feedback="true" label="时间" field="time">
+                <a-date-picker
+                    v-model="form.time"
+                    style="width: 500px"
+                    :placeholder="$t('请输入时间')"
+                />
+              </a-form-item>
+              <!-- 分类 -->
+              <a-form-item :feedback="true" label="类型" field="category">
+                <a-input
+                    v-model="form.category"
+                    :placeholder="$t('请输入类型')"
+                ></a-input>
+              </a-form-item>
+              <a-form-item :feedback="true" label="发送者" field="category">
+                <a-input
+                    v-model="form.sender"
+                    :placeholder="$t('请输入发送者')"
+                ></a-input>
+              </a-form-item>
+              <a-form-item :feedback="true" label="接收者" field="category">
+                <a-input
+                    v-model="form.receiver"
+                    :placeholder="$t('请输入接收者')"
+                ></a-input>
+              </a-form-item>
+              <a-form-item :feedback="true" label="抄送者" field="category">
+                <a-input
+                    v-model="form.cc"
+                    :placeholder="$t('请输入抄送者')"
                 ></a-input>
               </a-form-item>
             </a-form>
@@ -289,6 +321,14 @@
         tooltip: true,
       },
       {
+        // 抄送者
+        title: t('抄送者'),
+        dataIndex: 'cc',
+        slotName: 'cc',
+        ellipsis: true,
+        tooltip: true,
+      },
+      {
         title: t('操作'),
         dataIndex: 'operate',
         slotName: 'operate',
@@ -306,6 +346,13 @@
     };
     const formDefaultValues: MailMsgReq = {
       name: '',
+      original: '',
+      content: '',
+      time: '',
+      category: '',
+      sender: '',
+      receiver: '',
+      cc: '',
     };
     const form = reactive<MailMsgReq>({ ...formDefaultValues });
     const buttonStatus = ref<string>();

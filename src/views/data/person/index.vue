@@ -41,7 +41,10 @@
             <a-row :gutter="16">
               <a-col :span="8">
                 <a-form-item field="name" label="名称">
-                  <a-input v-model="formModel.name" :placeholder="$t('搜索人物名称')"/>
+                  <a-input
+                    v-model="formModel.name"
+                    :placeholder="$t('搜索人物名称')"
+                  />
                 </a-form-item>
               </a-col>
               <a-col :span="10">

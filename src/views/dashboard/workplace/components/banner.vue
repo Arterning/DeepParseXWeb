@@ -1,15 +1,23 @@
 <template>
   <div class="main">
-    <div class="wordCloudContainer">
-      <div class="wordCloud1"> </div>
-      <div class="wordCloud2"> </div>
-      <div class="wordCloud3"> </div>
-      <div class="wordCloud4"> </div>
-    </div>
-    <div class="second">
-      <div id="pieChart" style="background-color: #f4f5f8; padding: 20px"></div>
-      <div id="barChart" style="background-color: #f4f5f8; padding: 20px"></div>
-    </div>
+    <a-tabs default-active-key="1">
+      <a-tab-pane key="1" title="热点事件">
+        <div id="map" class="wordCloudContainer"> 
+        </div>
+        <div class="wordCloudContainer">
+          <div class="wordCloud1"> </div>
+          <div class="wordCloud2"> </div>
+          <div class="wordCloud3"> </div>
+          <div class="wordCloud4"> </div>
+        </div>
+      </a-tab-pane>
+      <a-tab-pane key="2" title="情报统计">
+        <div class="second">
+          <div id="pieChart" style="background-color: #f4f5f8; padding: 20px"></div>
+          <div id="barChart" style="background-color: #f4f5f8; padding: 20px"></div>
+        </div>
+      </a-tab-pane>
+    </a-tabs>
   </div>
 </template>
 
@@ -17,30 +25,18 @@
   import * as echarts from 'echarts';
   import { onMounted, ref } from 'vue';
   import TagCloud from 'TagCloud';
+  import china from '../../../../assets/jsonConfig/china.json';
 
-  const currentCase = ref('Horizontal Tree');
-
-  const relationVisible = ref(false);
-
-  const container = '.wordCloud1';
   const texts1 = [
-    ' 紅樓夢',
-    ' 賈寶玉',
-    ' 薛寶釵',
-    ' 王熙鳳',
-    ' 李紈',
-    ' 賈元春',
-    ' 紅樓夢',
-    ' 賈寶玉',
-    ' 薛寶釵',
-    ' 王熙鳳',
-    ' 李紈',
-    ' 賈元春',
+    ' G7峰会',
+    ' 美国大选',
+    ' 特朗普贸易战',
+    ' 保护环境',
   ];
   const options1 = {
     containerClass: '__tagcloud',
     radius: 220,
-    initSpeed:'slow',
+    initSpeed: 'slow',
     maxSpeed: 'slow',
   };
   const options2 = {
@@ -107,6 +103,7 @@
     initPieChart();
     initBarChart();
     randomColor();
+    chinaMap();
   });
 
   const initPieChart = () => {
@@ -151,6 +148,8 @@
       ],
     };
 
+
+
     myPieChart.setOption(option);
   };
 
@@ -179,6 +178,75 @@
     };
 
     myBarChart.setOption(option);
+  };
+
+  const chinaMap = () => {
+    const initMap = echarts.init(document.getElementById('map'));
+    echarts.registerMap('world', china);
+
+    const option = {
+      title: {
+        text: '',
+        left: 'center'
+      },
+      tooltip: {
+        trigger: 'item',
+        formatter: '{b}'
+      },
+      toolbox: {
+        show: true,
+        feature: {
+          dataZoom: {
+            yAxisIndex: 'none'
+          },
+          restore: {},
+          saveAsImage: {}
+        }
+      },
+      geo: {
+        map: 'world',
+        roam: true, // 开启缩放和平移
+        zoom: 1.2, // 初始缩放级别
+        label: {
+          show: false // 默认不显示国家名称
+        },
+        itemStyle: {
+          areaColor: '#e6f3ff',
+          borderColor: '#00287F', // 国境线颜色
+          borderWidth: 1 // 国境线宽度
+        },
+        emphasis: {
+          label: {
+            show: true // 悬停时显示国家名称
+          },
+          itemStyle: {
+            areaColor: '#a5d8ff' // 悬停颜色
+          }
+        }
+      },
+      // 示例打点数据（可以自行修改或添加）
+      series: [{
+        type: 'scatter',
+        coordinateSystem: 'geo',
+        symbol: 'pin',
+        symbolSize: 20,
+        itemStyle: {
+          color: '#D32F2F'
+        },
+        data: [
+          { name: 'China', value: [116.46, 39.92, '北京'] },
+          { name: 'United States', value: [-77.0365, 38.8951, '华盛顿'] },
+          { name: 'France', value: [2.3522, 48.8566, '巴黎'] }
+        ],
+        tooltip: {
+          formatter(params) {
+            return params.data.value;
+          }
+        }
+      }]
+    };
+
+    initMap.setOption(option);
   };
 </script>
 

@@ -70,7 +70,9 @@
     "vue": "^3.3.0",
     "vue-echarts": "^6.2.3",
     "vue-i18n": "^9.2.2",
-    "vue-router": "^4.0.14"
+    "vue-org-tree": "^0.1.0",
+    "vue-router": "^4.0.14",
+    "vue3-tree-org": "^4.2.2"
   },
   "devDependencies": {
     "@arco-plugins/vite-vue": "^1.4.5",
