@@ -76,8 +76,12 @@
             <a-link class="title-link" @click="
               router.push({
                 name: 'DocDetail',
-                params: { id: record.id },
-                query: { type: 'doc' },
+                params: { 
+                  id: record.id,
+                },
+                query: {
+                  appendix: record.name,
+                }
               })
               ">{{ record.name }}</a-link>
           </template>

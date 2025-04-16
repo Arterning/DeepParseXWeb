@@ -12,7 +12,7 @@
 </template>
 
 <script lang="ts" setup>
-import { SysDocRes } from '@/api/doc';
+import { querySysDocDetail, SysDocRes } from '@/api/doc';
 import useLoading from '@/hooks/loading';
 import { onMounted, ref } from 'vue';
 import { useRoute } from 'vue-router';
@@ -24,29 +24,16 @@ import EmailDetail from './email-detail.vue';
 
 
 const route = useRoute();
-const docStore = useDocStore();
 const { loading, setLoading } = useLoading(true);
 
 const info = ref<SysDocRes>();
 
 const { id } = route.params;
 
-onMounted(() => {
+onMounted(async () => {
   setLoading(true);
-  const max = 30 * 1000; // 超时时间
-  const slice = 200; // 每次检查间隔时间
-  const maxNumber = max / slice;
-  let count = 0
-  if (id) {
-    const inter = setInterval(() => {
-      info.value = docStore.getDocMap.get(Number(id));
-      count += 1;
-      if (info.value || count >= maxNumber) {
-        setLoading(false);
-        clearInterval(inter);
-      }
-    }, slice)
-  }
+  info.value = await querySysDocDetail(Number(id));   
+  setLoading(false);
 })
 
 </script>
