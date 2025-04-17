@@ -36,7 +36,12 @@
     <h1 class="text-4xl my-[15px]">{{ organizationInfo.org_name }}</h1>
     <div class="mainContent">
       <div class="contentItem relative">
-        <a-button type="dashed" class="absolute z-50 right-0" @click="saveOrgTree">保存</a-button>
+        <a-button
+          type="dashed"
+          class="absolute z-50 right-0"
+          @click="saveOrgTree"
+          >保存</a-button
+        >
         <vue3-tree-org
           :data="organizationInfo.org_structure"
           center
@@ -136,28 +141,33 @@
 </template>
 
 <script lang="ts" setup>
-import { Notification } from '@arco-design/web-vue';
-  import {
-    ref,
-    onMounted,
-    reactive,
-    computed,
-    watch,
-    onBeforeMount,
-    nextTick,
-  } from 'vue';
+  import { Notification } from '@arco-design/web-vue';
+  import { ref, onMounted, reactive } from 'vue';
   import * as echarts from 'echarts';
-  import orgStore from '@/store/modules/org';
-  import { orgFormType } from '@/store/modules/org/types';
+  import { useRoute } from 'vue-router';
   import { Vue3TreeOrg } from 'vue3-tree-org';
-  import { updateSysOrg } from '@/api/org';
-  import org from '@/store/modules/org';
+  import { querySysOrgDetail, updateSysOrg } from '@/api/org';
   import china from '../../../assets/jsonConfig/china.json';
 
   const props = defineProps(['info']);
 
+  export interface SysOrgParams {
+    name?: string;
+    org_name: string;
+    org_file_nums?: number;
+    org_assets_nums?: number;
+    org_desc?: string;
+    create_time?: string;
+    update_time?: string;
+    org_structure?: string;
+    org_location?: string;
+    org_introduce?: string;
+    org_tag?: string;
+    id?: number;
+  }
+
   // 组织数据
-  const organizationInfo = reactive<orgFormType>({
+  let organizationInfo = reactive<SysOrgParams>({
     name: '',
     org_file_nums: 0,
     org_assets_nums: 0,
@@ -166,123 +176,42 @@ import { Notification } from '@arco-design/web-vue';
     org_introduce: '',
     org_structure: '',
     org_tag: '',
-    docs: [],
-    assets: [],
     org_name: '',
     id: 0,
   });
 
-  const dataRalation = reactive({
-    label: '组织架构图默认根节点',
-  });
-  // watch(
-  //   () => dataRalation,
-  //   async (v) => {
-  //     // console.log(v);
-  //     organizationInfo.org_structure = JSON.stringify(v);
-  //     organizationInfo.org_tag = JSON.stringify(organizationInfo.org_tag);
-  //     await updateSysOrg(props.info.id, organizationInfo);
-  //     organizationInfo.org_tag = JSON.parse(organizationInfo.org_tag);
-  //   },
-  //   {
-  //     deep: true,
-  //   }
-  // );
-
   const saveOrgTree = async () => {
-    organizationInfo.org_structure = JSON.stringify(organizationInfo.org_structure);
-    organizationInfo.org_tag = JSON.stringify(organizationInfo.org_tag);
+    // organizationInfo.org_structure = JSON.stringify(
+    //   organizationInfo?.org_structure
+    // );
+    // organizationInfo.org_tag = JSON.stringify(organizationInfo?.org_tag);
     const res = await updateSysOrg(props.info.id, organizationInfo);
-    organizationInfo.org_tag = JSON.parse(organizationInfo.org_tag);
-    organizationInfo.org_structure = JSON.parse(organizationInfo.org_structure);
+    // organizationInfo.org_tag = JSON.parse(organizationInfo?.org_tag);
+    // organizationInfo.org_structure = JSON.parse(organizationInfo?.org_structure);
     Notification.success({
       title: '保存成功！',
       content: '保存组织架构图成功',
-    })
-  }
-
-  const newsList = [
-    {
-      title: '新闻二',
-      dyc: '动态二',
-      time: '2004.11.12',
-    },
-    {
-      title: '新闻三',
-      dyc: '动态三',
-      time: '2004.11.12',
-    },
-    {
-      title: '新闻一',
-      dyc: '动态一',
-      time: '2004.11.12',
-    },
-  ];
-
-  const initRedarCharts = () => {
-    const myChart = echarts.init(document.getElementById('redar'));
-
-    // 雷达图配置项
-    const option = {
-      title: {
-        text: '组织能力',
-      },
-      legend: {
-        data: ['Allocated Budget', 'Actual Spending'],
-      },
-      radar: {
-        // shape: 'circle',
-        indicator: [
-          { name: 'Sales', max: 6500 },
-          { name: 'Administration', max: 16000 },
-          { name: 'Information Technology', max: 30000 },
-          { name: 'Customer Support', max: 38000 },
-          { name: 'Development', max: 52000 },
-          { name: 'Marketing', max: 25000 },
-        ],
-      },
-      series: [
-        {
-          name: 'Budget vs spending',
-          type: 'radar',
-          data: [
-            {
-              value: [4200, 3000, 20000, 35000, 50000, 18000],
-              name: 'Allocated Budget',
-            },
-            {
-              value: [5000, 14000, 28000, 26000, 42000, 21000],
-              name: 'Actual Spending',
-            },
-          ],
-        },
-      ],
-    };
-
-    myChart.setOption(option);
+    });
   };
 
-  onMounted(() => {
-    // initRedarCharts();
+  onMounted(async () => {
     chinaMap();
-    const storeData = orgStore().getForm();
-    console.log('1231');
-    // console.log(storeData)
-    // eslint-disable-next-line guard-for-in,no-restricted-syntax
-    for (const storeDataKey in storeData) {
-      organizationInfo[storeDataKey] = storeData[storeDataKey];
-    }
-    organizationInfo.org_tag = JSON.parse(organizationInfo.org_tag);
-    console.log(organizationInfo);
-    if(organizationInfo.org_structure === '' || organizationInfo.org_structure === null || organizationInfo. org_structure === undefined) {
-      organizationInfo.org_structure = {
-        label: '组织架构图默认根节点',
-      }
-    } else {
-      organizationInfo.org_structure = JSON.parse(
-        organizationInfo.org_structure
-      );
-    }
+    const paramsId = useRoute().params.id;
+    const res = await querySysOrgDetail(Number(paramsId));
+
+    organizationInfo = reactive({ ...res });
+
+    // organizationInfo.org_tag = JSON.parse(organizationInfo?.org_tag);
+
+    // if (!organizationInfo.org_structure) {
+    //   organizationInfo.org_structure = {
+    //     label: '组织架构图默认根节点',
+    //   };
+    // } else {
+    //   organizationInfo.org_structure = JSON.parse(
+    //     organizationInfo?.org_structure
+    //   );
+    // }
   });
   const columns = [
     {
