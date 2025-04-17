@@ -83,7 +83,11 @@
               </template> -->
               <template #org_name="{ record }">
                 <a-link
-                  @click="router.push({name: 'OrgDetail', params: { id: record.id }, query: { type: 'org' } })"
+                  @click="router.push({
+                    name: 'OrgDetail', 
+                    params: { id: record.id }, 
+                    query: { appendix: record.org_name},
+                  })"
                   class="title-link"
                 >{{ record.org_name }}</a-link>
               </template> 

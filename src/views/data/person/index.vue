@@ -134,7 +134,7 @@
                 router.push({
                   name: 'PersonDetail',
                   params: { id :record.id },
-                  query: { type: 'person'},
+                  query: { appendix: record.name},
                 })
               "
               >{{ record.name }}</a-link>

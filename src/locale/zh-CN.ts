@@ -47,6 +47,7 @@ export default {
   'menu.social.socialAccount': '社交账号',
   'menu.social.socialPost': '社交帖子',
   'menu.upload': '文件上传',
+  'menu.data.person.detail': '人物详情',
   'menu.data.data.detail': '数据详情',
   'navbar.action.locale': '切换为中文',
   'modal.title.tips': '温馨提示',
