@@ -33,75 +33,63 @@
     <a-card :title="$t('人物管理')" class="general-card">
       <a-row>
         <a-col :flex="62">
-          <a-form
-            :auto-label-width="true"
-            :model="formModel"
-            label-align="right"
-          >
+          <a-form :auto-label-width="true" :model="formModel" label-align="right">
             <a-row :gutter="16">
               <a-col :span="8">
-                <a-form-item field="name" label="名称">
+                <a-form-item field="name" label="人物名称">
                   <a-input
                     v-model="formModel.name"
                     :placeholder="$t('搜索人物名称')"
                   />
                 </a-form-item>
               </a-col>
-              <a-col :span="10">
-          <a-space direction="inline">
-            <a-form-item field="name" label="标签" style="margin-right: 30px">
-              <a-select :style="{ width: '150px' }" placeholder="请选择标签">
-                <a-option>Beijing</a-option>
-                <a-option>Shanghai</a-option>
-                <a-option>Guangzhou</a-option>
-                <a-option disabled>Disabled</a-option>
-              </a-select>
-            </a-form-item>
-            <a-form-item field="name" label="国籍/地区">
-              <a-select :style="{ width: '150px' }" placeholder="请选择国家">
-                <a-option>Beijing</a-option>
-                <a-option>Shanghai</a-option>
-                <a-option>Guangzhou</a-option>
-                <a-option disabled>Disabled</a-option>
-              </a-select>
-            </a-form-item>
-            
-          </a-space>
-          <a-space direction="inline">
-            <a-form-item field="name" label="出生日期">
-              <a-range-picker
-                show-time
-                :time-picker-props="{
-                  defaultValue: ['00:00:00', '00:00:00'],
-                }"
-                style="width: 380px"
-                @change="onChangeRangePicker"
-                @select="onSelectRangePicker"
-              />
-            </a-form-item>
-            <a-form-item>
-              <a-space :size="'medium'" direction="horizontal">
-                <a-button type="primary" @click="search">
-                  <template #icon>
-                    <icon-search />
-                  </template>
-                  {{ $t('data.doc.form.search') }}
-                </a-button>
-                <a-button @click="resetSelect">
-                  <template #icon>
-                    <icon-refresh />
-                  </template>
-                  {{ $t('data.doc.form.reset') }}
-                </a-button>
-              </a-space>
-            </a-form-item>
-          </a-space>
-        </a-col>
+              <a-col :span="8">
+                <a-form-item field="name" label="标签" style="margin-right: 30px">
+                  <a-select :style="{ width: '150px' }" placeholder="请选择标签">
+                    <a-option>Beijing</a-option>
+                    <a-option>Shanghai</a-option>
+                    <a-option>Guangzhou</a-option>
+                    <a-option disabled>Disabled</a-option>
+                  </a-select>
+                </a-form-item>
+              </a-col>
+              <a-col :span="8">
+                <a-form-item field="name" label="国籍/地区">
+                  <a-select :style="{ width: '150px' }" placeholder="请选择国家">
+                    <a-option>Beijing</a-option>
+                    <a-option>Shanghai</a-option>
+                    <a-option>Guangzhou</a-option>
+                    <a-option disabled>Disabled</a-option>
+                  </a-select>
+                </a-form-item>
+              </a-col>
+
+              <a-col :span="8">
+                <a-form-item field="name" label="出生日期">
+                  <a-range-picker show-time :time-picker-props="{
+                    defaultValue: ['00:00:00', '00:00:00'],
+                  }" style="width: 380px" @change="onChangeRangePicker" @select="onSelectRangePicker" />
+                </a-form-item>
+              </a-col>
             </a-row>
           </a-form>
         </a-col>
         <a-divider direction="vertical" style="height: 30px" />
         <a-col :span="6">
+          <a-space :size="'medium'" direction="horizontal">
+            <a-button type="primary" @click="search">
+              <template #icon>
+                <icon-search />
+              </template>
+              {{ $t('data.doc.form.search') }}
+            </a-button>
+            <a-button @click="resetSelect">
+              <template #icon>
+                <icon-refresh />
+              </template>
+              {{ $t('data.doc.form.reset') }}
+            </a-button>
+          </a-space>
         </a-col>
       </a-row>
       <a-divider />
