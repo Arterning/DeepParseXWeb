@@ -25,16 +25,11 @@
     listenerRouteChange,
     removeRouteListener,
   } from '@/utils/route-listener';
-  import { useAppStore, useDocStore, useTabBarStore } from '@/store';
-  import { querySysDocDetail } from '@/api/doc';
-  import { Doc } from '@/store/modules/doc/types';
-  import { querySysOrgDetail } from '@/api/org';
-  import { querySysAssetsDetail } from '@/api/assets';
+  import { useAppStore, useTabBarStore } from '@/store';
   import tabItem from './tab-item.vue';
 
   const appStore = useAppStore();
   const tabBarStore = useTabBarStore();
-  const docStore = useDocStore();
 
   const affixRef = ref();
   const tagList = computed(() => {
@@ -56,25 +51,9 @@
       !route.meta.noAffix &&
       !tagList.value.some((tag) => tag.fullPath === route.fullPath)
     ) {
-      let res;
-      if(route.params.id){
-        if(route.query.type === 'doc'){
-          res = await querySysDocDetail(Number(route.params.id));   
-          docStore.add(res as Doc);
-          tabBarStore.updateTabList(route, res?.name);
-        }
-        else if(route.query.type === 'org'){
-          res = await querySysOrgDetail(Number(route.params.id));
-          tabBarStore.updateTabList(route, res?.org_name);
-        }
-        else if(route.query.type === 'assets'){
-          res = await querySysAssetsDetail(Number(route.params.id));
-          tabBarStore.updateTabList(route, res?.assets_name);
-        }
-      }
-      else{
-        tabBarStore.updateTabList(route);
-      }
+      const { appendix } = route.query;
+      // console.log(route.query);
+      tabBarStore.updateTabList(route, appendix as string);
     }
   }, true);
 

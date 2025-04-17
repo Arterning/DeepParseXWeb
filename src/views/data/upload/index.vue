@@ -17,8 +17,13 @@
             <template #item="{ item, index }">
               <a-list-item :key="index" class="ResultItem" @click="
                 $router.push({
-                  name: 'DataDocDetail',
-                  query: { docId: item.id },
+                  name: 'DocDetail',
+                  params: { 
+                    id: item.id,
+                  },
+                  query: {
+                    appendix: item.title,
+                  }
                 })
                 ">
                 <div class="flex justify-between cursor-pointer">
