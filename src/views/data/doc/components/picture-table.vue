@@ -78,10 +78,17 @@
             {{ rowIndex + 1 }}
           </template> -->
           <template #name="{ record }">
-          <a-link
-            @click="router.push({name: 'DocDetail', params: { id: record.id }, query: { type: 'doc' } })"
-            class="title-link"
-          >{{ record.name }}</a-link>
+            <a-link class="title-link" @click="
+              router.push({
+                name: 'DocDetail',
+                params: { 
+                  id: record.id,
+                },
+                query: {
+                  appendix: record.name,
+                }
+              })
+              ">{{ record.name }}</a-link>
           </template> 
           <template #desc="{ record }">
             {{ cleanMarkdown(record.desc) }}
@@ -222,7 +229,7 @@
   import { useRouter } from 'vue-router';
   import { tableDateFormat } from '@/utils/date';
   import { cleanMarkdown } from '@/utils/string';
-  import GeneralDetail from './general-detail.vue';
+  import GeneralDetail from '@/views/data/doc-detail/general-detail.vue';
 
 
   const { t } = useI18n();

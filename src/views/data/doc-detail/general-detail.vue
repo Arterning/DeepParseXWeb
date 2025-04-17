@@ -3,15 +3,17 @@
         <a-layout style="padding: 0 18px">
             <a-card class="general-card">
                 <template #title>
-                    <a-space size="large">
+                    <!-- <a-space size="large">
                         {{ info.title }}
-                    </a-space>
+                    </a-space> -->
                     <div class="mt-3">
                         <a-space size="large">
                             <a-link>
-                                <template #icon> <icon-edit /> </template>编辑文件</a-link>
+                                <template #icon> <icon-edit /> </template>编辑文件
+                            </a-link>
                             <a-link v-if="info?.uuid">
-                                <template #icon> <icon-file-pdf /> </template>阅读原文</a-link>
+                                <template #icon> <icon-file-pdf /> </template>阅读原文
+                            </a-link>
                             <a-link>
                                 <template #icon> <icon-star /></template> 收藏
                             </a-link>
@@ -72,8 +74,8 @@
                                 </template>
                                 <div class="flex gap-1" v-if="compare">
                                     <a-tooltip content="点击以查看">
-                                        <a-image v-if="info.type === 'picture'" height="480" fit="contain"
-                                            class="image" :src="buildSrcURL(info.file)" />
+                                        <a-image v-if="info.type === 'picture'" height="480" fit="contain" class="image"
+                                            :src="buildSrcURL(info.file)" />
                                     </a-tooltip>
                                     <div v-if="info.type === 'media'" class="media-box">
                                         <icon-music class="media-icon" />
@@ -100,7 +102,6 @@
 </template>
 
 <script lang="ts" setup>
-import { emailDateFormat } from '@/utils/date';
 import { computed, ref } from 'vue';
 import { marked } from 'marked';
 
@@ -138,16 +139,6 @@ const descMD = computed(() => {
     return marked(props.info.desc) as string;
 })
 
-const routes = [
-    {
-        path: '/data/doc',
-        label: '文件管理',
-    },
-    {
-        path: `/data/doc-detail?docId=${props.info.id}`,
-        label: '数据详情',
-    },
-];
 </script>
 
 <style lang="less" scoped>

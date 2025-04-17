@@ -3,9 +3,7 @@
     <a-card class="general-card">
       <div class="left-content" style="float: left; width: 50%">
         <a-layout class="flex-layout">
-          <!-- <Breadcrumb /> -->
           <a-card class="general-card">
-            <!-- 人物基本信息 -->       
             <div class="left-left-content" style="float: left; width: 20%">
               <avatar-view></avatar-view>
             </div>       
@@ -100,15 +98,6 @@
       <div class="right-content" style="float: left; width: 50%; padding-left: 20px; box-sizing: border-box;">
         <a-layout class="flex-layout">
           <a-card class="general-card">
-            <a-list :max-height="240" @reach-bottom="fetchData" :scrollbar="scrollbar">
-              <template #header>List title</template>
-              <template #scroll-loading>
-                <div v-if="bottom">No more data</div>
-                <a-spin v-else />
-              </template>
-              <a-list-item v-for="item of news" :key="item">{{item}}</a-list-item>
-            </a-list>
-            <a-divider />
             <h3>工作关系图谱</h3>
             <node-dialog></node-dialog>
           </a-card>
