@@ -55,6 +55,7 @@ import Footer from '@/components/footer/index.vue';
 import { getToken } from '@/utils/auth';
 import { queryRecentDocs, SysDocRes } from '@/api/doc';
 import useLoading from '@/hooks/loading';
+import { executeTask } from '@/api/task';
 
 const { t } = useI18n();
 
@@ -110,18 +111,48 @@ const customRequest = (option: RequestOption): UploadRequest => {
   xhr.onerror = function error(e) {
     onError(e);
   };
-  xhr.onload = function onload() {
+  xhr.onload = async function onload() {
     if (xhr.status < 200 || xhr.status >= 300) {
       Message.error(t('导入失败'));
       return onError(xhr.responseText);
     }
 
     Message.success(t('导入成功'));
+    const res = JSON.parse(xhr.response);
+    const { data } = res;
+    const { id } = data;
+    await fetchData();
+
+    const uid = await executeTask("upload_handle_file", {
+      "kwargs": {
+        id,
+      },
+    });
+
+    const BASE = import.meta.env.VITE_API_BASE_URL;
+    let url = `/api/v1/tasks/${uid}/sse`;
+    if (BASE) {
+        url = `${BASE}/api/v1/tasks/${uid}/sse`;
+    }
+
+    const eventSource = new EventSource(url);
+
+    eventSource.onmessage = (event: any) => {
+        const xx = JSON.parse(event.data);
+        console.log(xx);
+    };
+
+    eventSource.onerror = () => {
+        console.error("SSE 连接错误");
+        eventSource.close();
+    };
+
+
+
     return onSuccess(xhr.response);
   };
   const formData = new FormData();
   formData.append('file', fileItem.file as Blob);
-  formData.append('title', "23");
   const token = getToken();
   let url = '/api/v1/sys/upload';
   if (import.meta.env.VITE_API_BASE_URL) {
