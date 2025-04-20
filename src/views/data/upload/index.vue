@@ -9,6 +9,13 @@
       </a-card>
       <a-upload multiple draggable :directory="uploadDirectory" :custom-request="customRequest" />
 
+
+      <a-progress :percent="progress" :style="{ width: '100%' }" v-if="progress > 0">
+          <template v-slot:text="scope">
+              进度 {{ scope.percent * 100 }}%
+          </template>
+      </a-progress>
+
       <a-space style="padding-top: 22px" />
       <a-row>
         <a-col>
@@ -81,6 +88,7 @@ const hotDocs = ref<SysDocRes[]>([]);
     await fetchData();
   })
 
+const progress = ref(0);
 
 const beforeUpload = (file: File): Promise<boolean> => {
   if (uploadDirectory.value) {
@@ -138,8 +146,8 @@ const customRequest = (option: RequestOption): UploadRequest => {
     const eventSource = new EventSource(url);
 
     eventSource.onmessage = (event: any) => {
-        const xx = JSON.parse(event.data);
-        console.log(xx);
+        const esd = JSON.parse(event.data);
+        progress.value = esd.progress;
     };
 
     eventSource.onerror = () => {
