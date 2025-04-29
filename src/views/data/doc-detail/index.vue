@@ -6,7 +6,7 @@
         <TextDetail v-if="info.type === 'text'" :info="info" />
         <ExcelDetail v-if="info.type === 'excel'" :info="info" />
         <PdfDetail v-if="info.type === 'pdf'" :info="info" />
-        <PdfDetail v-if="info.type == 'picture'" :info="info" />
+        <PictureDetail v-if="info.type == 'picture'" :info="info" />
       </a-card>
     </div>
   </a-layout>
@@ -22,6 +22,7 @@ import Footer from '@/components/footer/index.vue';
 import TextDetail from './text-detail.vue';
 import PdfDetail from './pdf-detail.vue';
 import ExcelDetail from './excel-detail.vue';
+import PictureDetail from './picture-detail.vue';
 
 
 
