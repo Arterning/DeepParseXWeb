@@ -80,6 +80,9 @@
                 <a-link @click="EditSubject(record.id)">
                   编辑
                 </a-link>
+                <a-link @click="router.push({name: 'DataDetail', params: { id: record.id }, query: { type: 'subject' } })">
+                  查看
+                </a-link>
               </a-space>
             </template>
           </a-table>
@@ -149,9 +152,11 @@
       updateSubject,
     } from '@/api/subject';
     import { Pagination } from '@/types/global';
+    import {useRouter} from "vue-router";
   
     const { t } = useI18n();
     const { loading, setLoading } = useLoading(true);
+    const router = useRouter();
   
     // 表单
     const generateFormModel = () => {

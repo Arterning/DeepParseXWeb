@@ -80,6 +80,9 @@
                 <a-link @click="EditNews(record.id)">
                   编辑
                 </a-link>
+                <a-link @click="router.push({name: 'DataDetail', params: { id: record.id }, query: { type: 'news' } })">
+                  查看
+                </a-link>
               </a-space>
             </template>
           </a-table>
@@ -174,6 +177,7 @@
     import { useI18n } from 'vue-i18n';
     import { computed, reactive, ref } from 'vue';
     import useLoading from '@/hooks/loading';
+    import {useRouter} from "vue-router";
     import Footer from '@/components/footer/index.vue';
     import {
       createNews,
@@ -189,6 +193,7 @@
   
     const { t } = useI18n();
     const { loading, setLoading } = useLoading(true);
+    const router = useRouter();
   
     // 表单
     const generateFormModel = () => {

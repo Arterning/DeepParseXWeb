@@ -133,6 +133,9 @@
                       <icon-eye-invisible  style="font-size:16"/>
                     </a-link>
                   </a-tooltip>
+                  <a-link @click="router.push({name: 'DataDetail', params: { id: record.id }, query: { type: 'assets' } })">
+                    查看
+                  </a-link>
                 </a-space>
               </template>
             </a-table>

@@ -116,6 +116,9 @@
                 <a-link @click="EditMailMsg(record.id)">
                   编辑
                 </a-link>
+                <a-link @click="router.push({name: 'DataDetail', params: { id: record.id }, query: { type: 'mailmsg' } })">
+                  查看
+                </a-link>
               </a-space>
             </template>
           </a-table>
@@ -217,9 +220,11 @@
       updateMailMsg,
     } from '@/api/mailmsg';
     import { Pagination } from '@/types/global';
+    import {useRouter} from "vue-router";
   
     const { t } = useI18n();
     const { loading, setLoading } = useLoading(true);
+    const router = useRouter();
   
     // 表单
     const generateFormModel = () => {
@@ -269,6 +274,9 @@
       drawerTitle.value = t('删除');
       openDelete.value = true;
     };
+    const lookup = () => {
+      console.log('查询')
+    }
     const columns = computed<TableColumnData[]>(() => [
       {
         title: 'ID',

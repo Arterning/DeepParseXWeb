@@ -175,6 +175,18 @@
                     </a-option>
                   </a-select>
                 </a-form-item>
+                <a-form-item :label="$t('组织地点')" field="docs">
+                  <a-input
+                      v-model="form.org_location"
+                      :placeholder="$t('请输入组织地点')"
+                  ></a-input>
+                </a-form-item>
+                <a-form-item :label="$t('组织标签')" field="docs">
+                  <a-input-tag
+                               v-model="form.org_tag"
+                               placeholder="请输入组织标签"
+                               allow-clear/>
+                </a-form-item>
                 <a-form-item :label="$t('组织资产')" field="assets">
                   <a-select
                     v-model="form.assets"
@@ -198,6 +210,14 @@
                 >
                   <a-textarea
                     v-model="form.org_desc"
+                  ></a-textarea>
+                </a-form-item>
+                <a-form-item
+                    :label="$t('组织简介')"
+                    field="org_desc"
+                >
+                  <a-textarea
+                      v-model="form.org_introduce"
                   ></a-textarea>
                 </a-form-item>
               </a-form>
@@ -254,7 +274,6 @@
   } from '@/api/org';
   import { querySysDocList, SysDocRes } from '@/api/doc';
   import Detail from '@/views/data/org-detail/index.vue';
-  
 
   const { t } = useI18n();
   const { loading, setLoading } = useLoading(true);
@@ -289,6 +308,9 @@
     org_file_nums: 0,
     org_assets_nums: 0,
     org_desc: '',
+    org_location: '',
+    org_introduce: '',
+    org_tag: [],
     docs: [],
     assets: [],
   };
@@ -482,6 +504,8 @@
 
   // 提交按钮
   const submitNewOrEdit = async () => {
+    form.org_tag = JSON.stringify(form.org_tag)
+    console.log(form)
     setLoading(true);
     try {
       if (buttonStatus.value === 'new') {
@@ -494,10 +518,11 @@
       form.value = generateFormModel();
       await fetchApiList({ page: 1, size: pagination.pageSize});
     } catch (error) {
-      // console.log(error);      
+      // console.log(error);
     } finally {
       setLoading(false);
     }
+    form.org_tag = JSON.parse(form.org_tag)
   };
 
   // 选取式按钮状态
