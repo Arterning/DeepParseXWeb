@@ -26,7 +26,7 @@
       <div class="flex-1 overflow-y-auto p-6">
         <!-- 邮件标题 -->
         <h1 class="text-2xl font-semibold text-gray-900 mb-2">
-          {{ mailData.subject }}
+          {{ mailData.name }}
         </h1>
 
         <!-- 元信息区域 -->
@@ -37,11 +37,11 @@
           </div>
           <div class="flex items-center gap-2 text-gray-600">
             <a-icon-calendar />
-            <span>{{ formatDate(mailData.sendTime) }}</span>
+            <span>{{ formatDate(mailData.time) }}</span>
           </div>
           <div class="flex items-center gap-2 text-gray-600">
             <a-icon-tag />
-            <span>{{ mailData.type }}</span>
+            <span>{{ mailData?.type }}</span>
           </div>
         </div>
 
@@ -49,22 +49,24 @@
         <div class="mb-6">
           <h2 class="text-sm font-medium text-gray-600 mb-2">收件人</h2>
           <div class="flex flex-wrap gap-2">
-            <a-tag
-              v-for="(recipient, index) in mailData.recipients"
-              :key="index"
-            >
-              {{ recipient }}
-            </a-tag>
+            <!--            <a-tag-->
+            <!--              v-for="(recipient, index) in mailData.recipients"-->
+            <!--              :key="index"-->
+            <!--            >-->
+            <!--              {{ recipient }}-->
+            <!--            </a-tag>-->
+            <a-tag>{{ mailData.receiver }}</a-tag>
           </div>
         </div>
 
         <!-- 抄送信息 -->
-        <div v-if="mailData.cc && mailData.cc.length" class="mb-6">
+        <div v-if="true" class="mb-6">
           <h2 class="text-sm font-medium text-gray-600 mb-2">抄送</h2>
           <div class="flex flex-wrap gap-2">
-            <a-tag v-for="(cc, index) in mailData.cc" :key="index" type="gray">
-              {{ cc }}
-            </a-tag>
+            <!--            <a-tag v-for="(cc, index) in mailData.cc" :key="index" type="gray">-->
+            <!--              {{ cc }}-->
+            <!--            </a-tag>-->
+            <a-tag>{{ mailData.cc }}</a-tag>
           </div>
         </div>
 
@@ -72,7 +74,7 @@
         <div class="border-t border-gray-200 pt-6">
           <div
             class="prose max-w-none text-gray-800"
-            v-html="mailData.content"
+            v-html="mailData.original"
           ></div>
         </div>
       </div>
@@ -82,9 +84,18 @@
 </template>
 
 <script setup lang="ts">
-  import { ref } from 'vue';
+  import { ref, onBeforeMount, reactive } from 'vue';
   import { Message } from '@arco-design/web-vue';
   import Footer from '@/components/footer/index.vue';
+  import { useRoute } from 'vue-router';
+  import { queryMailMsgDetail } from '@/api/mailmsg';
+
+  onBeforeMount(async () => {
+    const route = useRoute();
+    const id = Number(route.params.id); // 获取路由参数中的 id
+    const res = await queryMailMsgDetail(id);
+    mailData.value = reactive(res);
+  });
 
   interface MailData {
     subject: string;
@@ -96,13 +107,57 @@
     content: string;
   }
 
-  const mailData = ref<MailData>({
-    subject: '关于2024年第二季度项目计划的重要通知',
+  interface MailData2 {
+    // 邮件标题
+    name: string;
+
+    // 邮件原文
+    original: string;
+
+    // 邮件翻译
+    content: string;
+
+    // 发送时间
+    time: string;
+
+    // 发送者
+    sender: string;
+
+    // 接收者
+    receiver: string;
+
+    // 抄送者
+    cc: string;
+  }
+
+  let mailData = ref<MailData2>({
+    name: '关于2024年第二季度项目计划的重要通知',
     sender: 'project@company.com',
-    recipients: ['user1@example.com', 'user2@example.com'],
-    cc: ['manager@company.com', 'director@company.com'],
-    sendTime: new Date(),
-    type: '工作邮件',
+    receiver: 'user1@example.com',
+    cc: 'manager@company.com',
+    time: '2011',
+    original: `<p>尊敬的各位同事：</p>
+           <p>现将2024年第二季度项目计划相关事项通知如下：</p>
+           <ol>
+             <li>项目启动会将于3月25日14:00在会议室A召开</li>
+             <li>请各小组在4月1日前提交初步方案</li>
+             <li>预算申报截止日期调整为4月10日</li>
+             <li>项目启动会将于3月25日14:00在会议室A召开</li>
+             <li>请各小组在4月1日前提交初步方案</li>
+             <li>预算申报截止日期调整为4月10日</li>
+             <li>项目启动会将于3月25日14:00在会议室A召开</li>
+             <li>请各小组在4月1日前提交初步方案</li>
+             <li>预算申报截止日期调整为4月10日</li>
+             <li>项目启动会将于3月25日14:00在会议室A召开</li>
+             <li>请各小组在4月1日前提交初步方案</li>
+             <li>预算申报截止日期调整为4月10日</li>
+             <li>项目启动会将于3月25日14:00在会议室A召开</li>
+             <li>请各小组在4月1日前提交初步方案</li>
+             <li>预算申报截止日期调整为4月10日</li>
+           </ol>
+           <p>请务必准时参加并做好相关准备。</p>
+           <p>此致<br>敬礼</p>
+           <p>项目办公室</p>`,
     content: `<p>尊敬的各位同事：</p>
            <p>现将2024年第二季度项目计划相关事项通知如下：</p>
            <ol>
