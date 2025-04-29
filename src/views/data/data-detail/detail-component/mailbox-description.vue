@@ -4,18 +4,18 @@
     <a-card title="邮箱描述" class="email-card">
       <a-descriptions>
         <a-descriptions-item label="邮件名称">{{
-            email.name
-          }}</a-descriptions-item>
+          email.name
+        }}</a-descriptions-item>
         <a-descriptions-item label="国家/地区">{{
-            email.country
-          }}</a-descriptions-item>
+          email.country
+        }}</a-descriptions-item>
         <a-descriptions-item label="标签">{{ email.tags }}</a-descriptions-item>
         <a-descriptions-item label="邮件数量">{{
-            email.count
-          }}</a-descriptions-item>
+          email.count
+        }}</a-descriptions-item>
         <a-descriptions-item label="其他信息">{{
-            email.otherInfo
-          }}</a-descriptions-item>
+          email.other_info
+        }}</a-descriptions-item>
       </a-descriptions>
     </a-card>
     <Footer />
@@ -23,15 +23,19 @@
 </template>
 
 <script setup>
-  import { reactive } from 'vue';
-  import Footer from "@/components/footer/index.vue";
+  import { reactive, onBeforeMount, ref } from 'vue';
+  import Footer from '@/components/footer/index.vue';
+  import { queryMailBoxDetail } from '@/api/mailbox';
+  import { useRoute } from 'vue-router';
 
-  const email = reactive({
-    name: '示例邮件',
-    country: '中国',
-    tags: '重要',
-    count: 10,
-    otherInfo: '其他信息',
+  const email = ref({
+  });
+
+  onBeforeMount(async () => {
+    const route = useRoute();
+    const id = Number(route.params.id); // 获取路由参数中的 id
+    const res = await queryMailBoxDetail(id);
+    email.value = reactive(res);
   });
 </script>
 

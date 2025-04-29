@@ -1,11 +1,11 @@
 <template>
   <a-layout class="flex-layout">
     <Breadcrumb />
-    <a-card :title="$t('社交帖子')" class="general-card">
+    <a-card title="社交帖子描述" class="post-card">
       <a-descriptions>
-        <a-descriptions-item label="名称">{{ post.name }}</a-descriptions-item>
+        <a-descriptions-item label="标题">{{ post.name }}</a-descriptions-item>
         <a-descriptions-item label="发布时间">{{
-          post.publishTime
+          post.time
         }}</a-descriptions-item>
       </a-descriptions>
     </a-card>
@@ -14,12 +14,19 @@
 </template>
 
 <script setup>
-  import { reactive } from 'vue';
+  import { reactive, onBeforeMount, ref } from 'vue';
   import Footer from '@/components/footer/index.vue';
+  import { querySocialPostDetail } from '@/api/socialPost';
+  import { useRoute } from 'vue-router';
 
-  const post = reactive({
-    name: '示例帖子',
-    publishTime: '2023-10-01 10:00',
+  onBeforeMount(async () => {
+    const route = useRoute();
+    const id = Number(route.params.id); // 获取路由参数中的 id
+    const res = await querySocialPostDetail(id);
+    post.value = reactive(res);
+  });
+
+  const post = ref({
   });
 </script>
 

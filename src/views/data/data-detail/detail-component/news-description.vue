@@ -4,29 +4,29 @@
     <a-card title="新闻描述" class="news-card">
       <a-descriptions>
         <a-descriptions-item label="新闻标题">{{
-            news.title
-          }}</a-descriptions-item>
+          news.name
+        }}</a-descriptions-item>
         <a-descriptions-item label="新闻简介">{{
-            news.summary
-          }}</a-descriptions-item>
+          news.summary
+        }}</a-descriptions-item>
         <a-descriptions-item label="新闻类型">{{
-            news.type
-          }}</a-descriptions-item>
+          news.news_type
+        }}</a-descriptions-item>
         <a-descriptions-item label="新闻来源">{{
-            news.source
-          }}</a-descriptions-item>
+          news.source
+        }}</a-descriptions-item>
         <a-descriptions-item label="新闻组织">{{
-            news.organization
-          }}</a-descriptions-item>
+          news.organization
+        }}</a-descriptions-item>
         <a-descriptions-item label="新闻作者">{{
-            news.author
-          }}</a-descriptions-item>
+          news.author
+        }}</a-descriptions-item>
         <a-descriptions-item label="新闻时间">{{
-            news.date
-          }}</a-descriptions-item>
+          news.time
+        }}</a-descriptions-item>
         <a-descriptions-item label="新闻地点">{{
-            news.location
-          }}</a-descriptions-item>
+          news.location
+        }}</a-descriptions-item>
       </a-descriptions>
     </a-card>
     <Footer />
@@ -34,18 +34,19 @@
 </template>
 
 <script setup>
-  import { reactive } from 'vue';
-  import Footer from "@/components/footer/index.vue";
+  import { reactive, onBeforeMount, ref } from 'vue';
+  import Footer from '@/components/footer/index.vue';
+  import { queryNewsDetail } from '@/api/news';
+  import { useRoute } from 'vue-router';
 
-  const news = reactive({
-    title: '示例新闻',
-    summary: '这是一个新闻摘要',
-    type: '政治',
-    source: '某新闻社',
-    organization: '某组织',
-    author: '作者名',
-    date: '2023-10-01',
-    location: '某地',
+  onBeforeMount(async () => {
+    const route = useRoute();
+    const id = Number(route.params.id); // 获取路由参数中的 id
+    const res = await queryNewsDetail(id);
+    news.value = reactive(res);
+  });
+
+  const news = ref({
   });
 </script>
 

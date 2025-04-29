@@ -1,26 +1,23 @@
 <template>
   <a-layout class="flex-layout">
     <Breadcrumb />
-    <a-card title="议题描述" class="email-card">
+    <a-card title="资产描述" class="email-card">
       <a-descriptions>
-        <a-descriptions-item label="id">{{
-            email.name
-          }}</a-descriptions-item>
         <a-descriptions-item label="资产名称">{{
-            email.country
-          }}</a-descriptions-item>
+            assets.assets_name
+        }}</a-descriptions-item>
         <a-descriptions-item label="ip地址">{{
-            email.country1
-          }}</a-descriptions-item>
+            assets.ip_addr
+        }}</a-descriptions-item>
         <a-descriptions-item label="端口号">{{
-            email.country1
-          }}</a-descriptions-item>
+            assets.assets_ports
+        }}</a-descriptions-item>
         <a-descriptions-item label="服务">{{
-            email.country1
-          }}</a-descriptions-item>
+            assets.assets_status
+        }}</a-descriptions-item>
         <a-descriptions-item label="描述">{{
-            email.country1
-          }}</a-descriptions-item>
+            assets.assets_desc
+        }}</a-descriptions-item>
       </a-descriptions>
     </a-card>
     <Footer />
@@ -28,18 +25,24 @@
 </template>
 
 <script setup>
-import { reactive } from 'vue';
-import Footer from "@/components/footer/index.vue";
+  import { reactive, onBeforeMount, ref } from 'vue';
+  import Footer from '@/components/footer/index.vue';
+  import { useRoute } from 'vue-router';
+  import { querySysAssetsDetail } from '@/api/assets';
 
-const email = reactive({
-  name: '示例',
-  country: '中国',
-  country1: '来源',
-});
+  const assets = ref({
+  });
+
+  onBeforeMount(async () => {
+    const route = useRoute();
+    const id = Number(route.params.id); // 获取路由参数中的 id
+    const res = await querySysAssetsDetail(id);
+    assets.value = reactive(res);
+  });
 </script>
 
 <style scoped>
-.email-card {
-  margin-bottom: 20px;
-}
+  .email-card {
+    margin-bottom: 20px;
+  }
 </style>
