@@ -8,58 +8,54 @@
                     </a-space> -->
                 </template>
                 <div class="content">
-                    <a-tabs default-active-key="1">
-                        <a-tab-pane key="1" title="基础信息">
-                            <a-card class="info-card">
-                                <template #title>
-                                    <div class="flex gap-5 items-center">
-                                        {{ $t('文件信息') }}
-                                    </div>
-                                </template>
-                                <a-descriptions :column="1">
-                                    <a-descriptions-item label="标题">
-                                        {{ info.title }}
-                                    </a-descriptions-item>
-                                    <a-descriptions-item label="用户账号">
-                                        <div v-if="!info.account_pwd">未提取</div>
-                                        <div v-if="info.account_pwd === '[]'">无</div>
-                                        <div v-else v-html="user"></div>
-                                    </a-descriptions-item>
-                                </a-descriptions>
-                            </a-card>
+                    <a-card class="info-card">
+                        <template #title>
+                            <div class="flex gap-5 items-center">
+                                {{ $t('文件信息') }}
+                            </div>
+                        </template>
+                        <a-descriptions :column="1">
+                            <a-descriptions-item label="标题">
+                                {{ info.title }}
+                            </a-descriptions-item>
+                            <a-descriptions-item label="用户账号">
+                                <div v-if="!info.account_pwd">未提取</div>
+                                <div v-if="info.account_pwd === '[]'">无</div>
+                                <div v-else v-html="user"></div>
+                            </a-descriptions-item>
+                        </a-descriptions>
+                    </a-card>
 
-                            <a-space style="padding-top: 22px" />
-                            <a-card>
-                                <template #title>
-                                    <div class="flex gap-5 items-center">
-                                        {{ $t('摘要') }}
-                                    </div>
-                                </template>
-                                <pre class="desc">
-                    {{ descMD }}
-                </pre>
-                            </a-card>
+                    <a-space style="padding-top: 22px" />
+                    <a-card>
+                        <template #title>
+                            <div class="flex gap-5 items-center">
+                                {{ $t('摘要') }}
+                            </div>
+                        </template>
+                        <p class="text-xl max-w-6xl whitespace-pre-wrap break-words p-4 rounded-lg">
+                            {{ descMD }}
+                        </p>
+                    </a-card>
 
-                            <a-space style="padding-top: 22px" />
+                    <a-space style="padding-top: 22px" />
 
-                            <a-card class="info-card">
-                                <template #title>
-                                    <div class="flex justify-between items-center">
-                                        <div class="flex gap-3">
-                                            {{ $t('内容') }}
-                                        </div>
-                                    </div>
-                                </template>
-                                <div class="flex gap-1" v-if="compare">
-                                    <a-scrollbar style="height:500px;overflow: auto;">
-                                        <pre class="text-xl max-w-6xl whitespace-pre-wrap break-words p-4 rounded-lg">
-                            {{ info.content }}
-                        </pre>
-                                    </a-scrollbar>
+                    <a-card class="info-card">
+                        <template #title>
+                            <div class="flex justify-between items-center">
+                                <div class="flex gap-3">
+                                    {{ $t('内容') }}
                                 </div>
-                            </a-card>
-                        </a-tab-pane>
-                    </a-tabs>
+                            </div>
+                        </template>
+                        <div class="flex gap-1" v-if="compare">
+                            <a-scrollbar style="height:500px;overflow: auto;">
+                                <p class="text-xl max-w-6xl whitespace-pre-wrap break-words p-4 rounded-lg">
+                                        {{ info.content }}
+                                </p>
+                            </a-scrollbar>
+                        </div>
+                    </a-card>
                 </div>
             </a-card>
         </a-layout>

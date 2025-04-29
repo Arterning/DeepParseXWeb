@@ -48,9 +48,9 @@
                                         {{ $t('摘要') }}
                                     </div>
                                 </template>
-                                <pre class="desc">
-                    {{ descMD }}
-                </pre>
+                                <p class="text-xl max-w-6xl whitespace-pre-wrap break-words p-4 rounded-lg">
+                                    {{ descMD }}
+                                </p>
                             </a-card>
 
                             <a-space style="padding-top: 22px" />
@@ -85,18 +85,17 @@
                                         class="h-[500px] w-1/2 "></iframe>
                                     <div class="w-1/2">
                                         <a-scrollbar style="height:500px;overflow: auto;">
-                                            <pre
-                                                class="text-xl max-w-6xl whitespace-pre-wrap break-words p-4 rounded-lg">
-                {{ info.content }}
-            </pre>
+                                            <p class="text-xl max-w-6xl whitespace-pre-wrap break-words p-4 rounded-lg">
+                                                {{ info.content }}
+                                            </p>
                                         </a-scrollbar>
                                     </div>
                                 </div>
                                 <div v-else>
                                     <a-scrollbar style="height:500px;overflow: auto;">
-                                        <pre class="text-xl max-w-6xl whitespace-pre-wrap break-words p-4 rounded-lg">
-            {{ info.content }}
-        </pre>
+                                        <p class="text-xl max-w-6xl whitespace-pre-wrap break-words p-4 rounded-lg">
+                                                {{ info.content }}
+                                        </p>
                                     </a-scrollbar>
                                 </div>
                             </a-card>
