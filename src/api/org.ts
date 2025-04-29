@@ -1,13 +1,12 @@
 import axios from 'axios';
 import qs from 'query-string';
 
-
 export interface SysOrgParams {
   org_name: string;
   org_file_nums?: number;
   org_assets_nums?: number;
   org_desc?: string;
-  create_time: string;
+  create_time?: string;
   update_time?: string;
 }
 
