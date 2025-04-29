@@ -12,7 +12,7 @@ export interface MailMsgReq {
   content: string;
 
   // 发送时间
-  time: string;
+  time: Date;
 
   // 发送者
   sender: string;
@@ -22,6 +22,8 @@ export interface MailMsgReq {
 
   // 抄送者
   cc: string;
+
+  category: string;
 }
 
 export interface MailMsgRes extends MailMsgReq {

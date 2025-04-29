@@ -16,21 +16,23 @@
     <a-space style="padding-top: 22px" />
 
     <a-card class="info-card" title="内容">
-        <a-row :gutter="24" style="margin: 10px 0;">
-            <a-col :span="12"><a-input v-model="term" @press-enter="search" placeholder="搜索" /></a-col>
-            <a-col :span="6">
+        <a-row :gutter="24" class="my-10">
+            <a-col :span="24" >
+                <a-input class="p-3" v-model="term" @press-enter="search" placeholder="搜索" />
+            </a-col>
+            <!-- <a-col :span="12">
                 <a-button type="primary" @click="search">
                     <template #icon>
                         <icon-search />
                     </template>
                     {{ $t('data.doc.form.search') }}
                 </a-button>
-            </a-col>
+            </a-col> -->
         </a-row>
 
         <div style="width:80vw">
-            <a-table :columns="columns" :data="filteredData" column-resizable :hoverable="false" :bordered="{ cell: true }"
-                :ellipsis="true" :scroll="scrollPercent" />
+            <a-table :columns="columns" :data="filteredData" column-resizable :hoverable="false"
+                :bordered="{ cell: true }" :ellipsis="true" :scroll="scrollPercent" />
         </div>
     </a-card>
 

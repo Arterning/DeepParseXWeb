@@ -64,7 +64,28 @@
           </a-space>
         </a-col>
       </a-row>
+
       <a-divider class="mt-0" />
+
+      <a-space :size="'medium'">
+        <a-button type="primary" @click="NewApi()">
+          <template #icon>
+            <icon-plus />
+          </template>
+          {{ $t('data.doc.button.create') }}
+        </a-button>
+        <a-button
+          :disabled="deleteButtonStatus()"
+          status="danger"
+          @click="DeleteApi"
+        >
+          <template #icon>
+            <icon-minus />
+          </template>
+          {{ $t('data.doc.button.delete') }}
+        </a-button>
+      </a-space>
+
       <div class="content">
         <a-table v-model:selected-keys="rowSelectKeys" :bordered="false" :columns="columns" :data="renderData"
           :loading="loading" :pagination="pagination" :row-selection="rowSelection" :size="'medium'" row-key="id"
@@ -399,6 +420,11 @@ const submitNewOrEdit = async () => {
 
 // 选取式按钮状态
 const selectStatus = () => {
+  return rowSelectKeys.value?.length === 0;
+};
+
+// 删除按钮状态
+const deleteButtonStatus = () => {
   return rowSelectKeys.value?.length === 0;
 };
 
