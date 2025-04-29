@@ -1,7 +1,7 @@
 <template>
     <a-layout class="flex-layout">
       <Breadcrumb />
-      <a-card :title="$t('邮件管理')" class="general-card">
+      <a-card :title="$t('邮件')" class="general-card">
         <a-row>
           <a-col :flex="62">
             <a-form

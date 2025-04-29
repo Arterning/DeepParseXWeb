@@ -92,6 +92,13 @@
                                         </a-scrollbar>
                                     </div>
                                 </div>
+                                <div v-else>
+                                    <a-scrollbar style="height:500px;overflow: auto;">
+                                        <pre class="text-xl max-w-6xl whitespace-pre-wrap break-words p-4 rounded-lg">
+            {{ info.content }}
+        </pre>
+                                    </a-scrollbar>
+                                </div>
                             </a-card>
                         </a-tab-pane>
                     </a-tabs>
@@ -111,9 +118,9 @@ const compare = ref<boolean>(true);
 const buildSrcURL = (file: string) => {
     let url;
     if (import.meta.env.VITE_API_BASE_URL) {
-        url = `${import.meta.env.VITE_API_BASE_URL}/${file}`;
+        url = `${import.meta.env.VITE_API_BASE_URL}/api/v1/sys/docs/preview/${file}`;
     } else {
-        url = `${window.origin}/${file}`;
+        url = `${window.origin}/api/v1/sys/docs/preview/${file}`;
     }
     return url;
 }

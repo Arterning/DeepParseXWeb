@@ -23,7 +23,7 @@
         </a-tab-pane>
         <a-tab-pane key="4">
           <template #title>
-            邮件管理
+            邮件
           </template>
           <EmailDetail :info="info" :person="{}" />
         </a-tab-pane>

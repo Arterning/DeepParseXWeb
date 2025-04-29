@@ -154,7 +154,7 @@ const DASHBOARD: AppRouteRecordRaw = {
         name: 'Mailbox',
         component: () => import('@/views/data/mailbox/index.vue'),
         meta: {
-          locale: '邮箱管理',
+          locale: '邮箱',
           requiresAuth: true,
           roles: ['*'],
           hideInMenu: false,
@@ -165,7 +165,7 @@ const DASHBOARD: AppRouteRecordRaw = {
         name: 'Mailmsg',
         component: () => import('@/views/data/mailmsg/index.vue'),
         meta: {
-          locale: '邮件管理',
+          locale: '邮件',
           requiresAuth: true,
           roles: ['*'],
           hideInMenu: false,
