@@ -1,11 +1,5 @@
 export default {
-  'menu.data.doc': '文件管理',
-  'menu.data.upload': '文件上传',
-  'menu.data.doc.detail': '文件内容',
-  'menu.data.assets': '资产管理',
-  'menu.data.assets.detail': '资产详情',
-  'menu.data.org.detail': '组织详情',
-  'menu.data.org': '组织管理',
+
   // form
   'data.doc.form.title': '文件标题',
   'data.doc.form.name': '文件名称',

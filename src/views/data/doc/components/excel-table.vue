@@ -86,10 +86,17 @@
             {{ rowIndex + 1 }}
           </template> -->
           <template #name="{ record }">
-          <a-link
-            @click="router.push({name: 'DocDetail', params: { id: record.id }, query: { type: 'doc' } })"
-            class="title-link"
-          >{{ record.name }}</a-link>
+            <a-link class="title-link" @click="
+              router.push({
+                name: 'DocDetail',
+                params: { 
+                  id: record.id,
+                },
+                query: {
+                  appendix: record.name,
+                }
+              })
+              ">{{ record.name }}</a-link>
           </template> 
           <template #desc="{ record }">
             {{ cleanMarkdown(record.desc) }}
@@ -230,7 +237,7 @@
     import { Pagination } from '@/types/global';
     import { tableDateFormat } from '@/utils/date';
     import { cleanMarkdown } from '@/utils/string';
-    import ExcelDetail from '@/views/data/doc/components/excel-detail.vue';
+    import GeneralDetail from '@/views/data/doc-detail/general-detail.vue';
     import { useRouter } from 'vue-router';
 
 

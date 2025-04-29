@@ -1,7 +1,7 @@
 <template>
     <Breadcrumb />
     <div class="general-card">
-      <a-card class="content-box">
+      <a-card class="content-box" :loading="loading">
       <a-tabs default-active-key="1">
         <a-tab-pane key="1">
           <template #title>
@@ -42,27 +42,16 @@
       </a-tabs>
     </a-card>
     </div>
-    <!-- <div class="general-card">
-      <a-card class="content-box">
-        <GeneralDetail :info="info" :person="{}" />
-      </a-card>
-    </div> -->
 
     <Footer />
   </template>
 
 <script setup lang="ts">
-import { PersonRes } from '@/api/person';
+import { PersonRes, queryPersonDetail } from '@/api/person';
 import useLoading from '@/hooks/loading';
 import { onMounted, ref } from 'vue';
 import { useRoute } from 'vue-router';
-import { useUserStore, useTabBarStore } from '@/store';
-// import { ref } from 'vue';
-
 import Footer from '@/components/footer/index.vue';
-
-import { Form, FormItem } from '@arco-design/web-vue';
-
 import GeneralDetail from './general-detail.vue';
 import EmailDetail from './email-detail.vue';
 import BlackDetail from './black-detail.vue';
@@ -70,32 +59,19 @@ import NewsDetail from './news-detail.vue';
 import SocialDetail from './social-detail.vue';
 import OtherDetail from './other-detail.vue';
 
-// import Breadcrumb from '@/components/Breadcrumb.vue';
-// 局部导入 Arco Design 组件
 
 const info = ref<PersonRes>();
 const route = useRoute();
 const { loading, setLoading } = useLoading(true);
-const userStore = useUserStore();
 
 const { id } = route.params;
 
-onMounted(() => {
+onMounted(async () => {
   setLoading(true);
-  const max = 30 * 1000; // 超时时间
-  const slice = 200; // 每次检查间隔时间
-  const maxNumber = max / slice;
-  let count = 0
   if (id) {
-    const inter = setInterval(() => {
-      // info.value = userStore.get.get(Number(id));
-      count += 1;
-      if (info.value || count >= maxNumber) {
-        setLoading(false);
-        clearInterval(inter);
-      }
-    }, slice)
+    info.value = await queryPersonDetail(Number(id));
   }
+  setLoading(false);
 })
 </script>
 

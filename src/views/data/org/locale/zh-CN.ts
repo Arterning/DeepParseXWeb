@@ -1,5 +1,4 @@
 export default {
-  'data.sysOrg': '组织管理',
   // form
   'data.org.form.name': '组织名称',
   'data.org.form.name.placeholder': '请输入组织名称',

@@ -205,8 +205,8 @@ import { Pagination } from '@/types/global';
 import { useRouter } from 'vue-router';
 import { tableDateFormat } from '@/utils/date';
 import { cleanMarkdown } from '@/utils/string';
-import GeneralDetail from './general-detail.vue';
-import ExcelDetail from './excel-detail.vue';
+import GeneralDetail from '@/views/data/doc-detail/general-detail.vue';
+import ExcelDetail from '@/views/data/doc-detail/excel-detail.vue';
 
 const { t } = useI18n();
 const { loading, setLoading } = useLoading(true);
