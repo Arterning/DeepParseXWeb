@@ -7,26 +7,16 @@
         <a-card :title="$t('data.sysAssets')" class="general-card">
           <a-row>
             <a-col :flex="62">
-              <a-form
-                :auto-label-width="true"
-                :model="formModel"
-                label-align="right"
-              >
+              <a-form :auto-label-width="true" :model="formModel" label-align="right">
                 <a-row :gutter="16">
                   <a-col :span="8">
                     <a-form-item :label="$t('data.assets.form.name')" field="assets_name">
-                      <a-input
-                        v-model="formModel.assets_name"
-                        :placeholder="$t('data.assets.form.name.placeholder')"
-                      />
+                      <a-input v-model="formModel.assets_name" :placeholder="$t('data.assets.form.name.placeholder')" />
                     </a-form-item>
                   </a-col>
                   <a-col :span="8">
                     <a-form-item :label="$t('data.assets.form.ip_addr')" field="ip_addr">
-                      <a-input
-                        v-model="formModel.ip_addr"
-                        :placeholder="$t('data.assets.form.ip_addr.placeholder')"
-                      />
+                      <a-input v-model="formModel.ip_addr" :placeholder="$t('data.assets.form.ip_addr.placeholder')" />
                     </a-form-item>
                   </a-col>
                 </a-row>
@@ -50,7 +40,7 @@
               </a-space>
             </a-col>
           </a-row>
-          <a-divider class="mt-0"/>
+          <a-divider class="mt-0" />
           <a-space :size="'medium'">
             <a-button type="primary" @click="NewApi()">
               <template #icon>
@@ -58,11 +48,7 @@
               </template>
               {{ $t('data.assets.button.create') }}
             </a-button>
-            <a-button
-              :disabled="selectStatus()"
-              status="danger"
-              @click="DeleteApi"
-            >
+            <a-button :disabled="selectStatus()" status="danger" @click="DeleteApi">
               <template #icon>
                 <icon-minus />
               </template>
@@ -70,41 +56,29 @@
             </a-button>
           </a-space>
           <div class="content">
-            
-            <a-table
-              v-model:selected-keys="rowSelectKeys"
-              :bordered="false"
-              :columns="columns"
-              :data="renderData"
-              :loading="loading"
-              :pagination="pagination"
-              :row-selection="rowSelection"
-              :size="'medium'"
-              row-key="id"
-              :scroll="{ x: 1200 }"
-              @page-change="onPageChange"
-              @page-size-change="onPageSizeChange"
-            >
+
+            <a-table v-model:selected-keys="rowSelectKeys" :bordered="false" :columns="columns" :data="renderData"
+              :loading="loading" :pagination="pagination" :row-selection="rowSelection" :size="'medium'" row-key="id"
+              :scroll="{ x: 1200 }" @page-change="onPageChange" @page-size-change="onPageSizeChange">
               <!-- <template #index="{ rowIndex }">
                 {{ rowIndex + 1 }}
               </template> -->
               <template #assets_name="{ record }">
                 <a-link
-                  @click="router.push({name: 'AssetsDetail', params: { id: record.id }, query: { type: 'assets' } })"
-                  class="title-link"
-                >{{ record.assets_name }}</a-link>
-              </template> 
-              
+                  @click="router.push({ name: 'AssetsDetail', params: { id: record.id }, query: { type: 'assets' } })">{{
+                    record.assets_name }}</a-link>
+              </template>
+
               <template #assets_ports="{ record }">
                 <a-space wrap>
                   <a-tag v-for="(item, index) in record.assets_ports" :key='index'>{{ item }}</a-tag>
                 </a-space>
-              </template> 
+              </template>
               <template #assets_services="{ record }">
                 <a-space wrap>
                   <a-tag v-for="(item, index) in record.assets_services" :key='index'>{{ item }}</a-tag>
                 </a-space>
-              </template> 
+              </template>
               <template #assets_status="{ record }">
                 <a-tag v-if="record.assets_status" :color="`green`" bordered>
                   {{ $t(`data.assets.status.${record.assets_status}`) }}
@@ -115,25 +89,26 @@
               </template>
               <template #created_time="{ record }">
                 {{ tableDateFormat(record.created_time) }}
-              </template>    
+              </template>
               <template #operate="{ record }">
                 <a-space>
                   <a-tooltip content="修改">
                     <a-link @click="EditApi(record.id)">
-                      <icon-edit style="font-size:16"/>
+                      <icon-edit style="font-size:16" />
                     </a-link>
                   </a-tooltip>
                   <a-tooltip content="查看">
                     <a-link @click="ViewApi(record.id)">
-                      <icon-unordered-list  style="font-size:16"/>
-                    </a-link>
-                  </a-tooltip>                  
-                  <a-tooltip content="隐藏">
-                    <a-link @click="HideApi(record.id)">
-                      <icon-eye-invisible  style="font-size:16"/>
+                      <icon-unordered-list style="font-size:16" />
                     </a-link>
                   </a-tooltip>
-                  <a-link @click="router.push({name: 'DataDetail', params: { id: record.id }, query: { type: 'assets' } })">
+                  <a-tooltip content="隐藏">
+                    <a-link @click="HideApi(record.id)">
+                      <icon-eye-invisible style="font-size:16" />
+                    </a-link>
+                  </a-tooltip>
+                  <a-link
+                    @click="router.push({name: 'DataDetail', params: { id: record.id }, query: { type: 'assets' } })">
                     查看
                   </a-link>
                 </a-space>
@@ -141,70 +116,31 @@
             </a-table>
           </div>
           <div class="content-modal">
-            <a-modal
-              :closable="false"
-              :on-before-ok="beforeSubmit"
-              :title="drawerTitle"
-              :visible="openNewOrEdit"
-              :width="550"
-              @cancel="cancelReq"
-              @ok="submitNewOrEdit"
-            >
+            <a-modal :closable="false" :on-before-ok="beforeSubmit" :title="drawerTitle" :visible="openNewOrEdit"
+              :width="550" @cancel="cancelReq" @ok="submitNewOrEdit">
               <a-form ref="formRef" :model="form">
-                <a-form-item
-                  :feedback="true"
-                  :label="$t('data.assets.form.name')"
-                  :rules="[
+                <a-form-item :feedback="true" :label="$t('data.assets.form.name')" :rules="[
                     { required: true, message: $t('data.assets.form.name.help') },
-                  ]"
-                  field="assets_name"
-                >
-                  <a-input
-                    v-model="form.assets_name"
-                    :placeholder="$t('data.assets.form.name.placeholder')"
-                  ></a-input>
+                  ]" field="assets_name">
+                  <a-input v-model="form.assets_name" :placeholder="$t('data.assets.form.name.placeholder')"></a-input>
                 </a-form-item>
-                <a-form-item
-                  :feedback="true"
-                  :label="$t('data.assets.form.ip_addr')"
-                  :rules="[
+                <a-form-item :feedback="true" :label="$t('data.assets.form.ip_addr')" :rules="[
                     { required: true, message: $t('data.assets.form.ip_addr.help') },
-                  ]"
-                  field="ip_addr"
-                >
-                  <a-input
-                    v-model="form.ip_addr"
-                    :placeholder="$t('data.assets.form.ip_addr.placeholder')"
-                  ></a-input>
+                  ]" field="ip_addr">
+                  <a-input v-model="form.ip_addr" :placeholder="$t('data.assets.form.ip_addr.placeholder')"></a-input>
                 </a-form-item>
-                <a-form-item
-                  :feedback="true"
-                  :label="$t('data.assets.form.assets_ports')"
-                  field="assets_ports"
-                >
-                  <a-input-tag v-model="form.assets_ports" 
-                  :placeholder="$t('data.assets.form.assets_ports.placeholder')" allow-clear/>
+                <a-form-item :feedback="true" :label="$t('data.assets.form.assets_ports')" field="assets_ports">
+                  <a-input-tag v-model="form.assets_ports"
+                    :placeholder="$t('data.assets.form.assets_ports.placeholder')" allow-clear />
                 </a-form-item>
-                <a-form-item
-                  :feedback="true"
-                  :label="$t('data.assets.form.assets_services')"
-                  field="assets_services"
-                >
-                  <a-input-tag v-model="form.assets_services" 
-                  :placeholder="$t('data.assets.form.assets_services.placeholder')" allow-clear/>
+                <a-form-item :feedback="true" :label="$t('data.assets.form.assets_services')" field="assets_services">
+                  <a-input-tag v-model="form.assets_services"
+                    :placeholder="$t('data.assets.form.assets_services.placeholder')" allow-clear />
                 </a-form-item>
-                <a-form-item
-                  :label="$t('data.assets.form.assets_desc')"
-                  field="assets_desc"
-                >
-                  <a-textarea
-                    v-model="form.assets_desc"
-                  ></a-textarea>
+                <a-form-item :label="$t('data.assets.form.assets_desc')" field="assets_desc">
+                  <a-textarea v-model="form.assets_desc"></a-textarea>
                 </a-form-item>
-                <a-form-item
-                  :label="$t('data.assets.form.assets_status')"
-                  field="assets_status"
-                >
+                <a-form-item :label="$t('data.assets.form.assets_status')" field="assets_status">
                   <a-switch type="round" v-model="form.assets_status">
                     <template #checked>
                       {{ $t(`data.assets.form.assets_status.${form.assets_status}`) }}
@@ -214,38 +150,22 @@
                     </template>
                   </a-switch>
                 </a-form-item>
-                <a-form-item
-                  :feedback="true"
-                  :label="$t('data.assets.form.assets_remarks')"
-                  field="assets_remarks"
-                >
-                  <a-input v-model="form.assets_remarks" 
-                  :placeholder="$t('data.assets.form.assets_remarks.placeholder')" allow-clear/>
+                <a-form-item :feedback="true" :label="$t('data.assets.form.assets_remarks')" field="assets_remarks">
+                  <a-input v-model="form.assets_remarks"
+                    :placeholder="$t('data.assets.form.assets_remarks.placeholder')" allow-clear />
                 </a-form-item>
               </a-form>
             </a-modal>
-            <a-modal
-              :closable="false"
-              :title="`${$t('modal.title.tips')}`"
-              :visible="openDelete"
-              :width="360"
-              @cancel="cancelReq"
-              @ok="submitDelete"
-            >
+            <a-modal :closable="false" :title="`${$t('modal.title.tips')}`" :visible="openDelete" :width="360"
+              @cancel="cancelReq" @ok="submitDelete">
               <a-space>
                 <icon-exclamation-circle-fill size="24" style="color: #e6a23c" />
                 {{ $t('modal.title.tips.delete') }}
               </a-space>
             </a-modal>
-            <a-modal
-              :closable="false"
-              :title="`${$t('内容')}`"
-              :visible="openView"
-              hideCancel
-              @ok="cancelReq"
-              okText="关闭"
-            >
-              <AssetsDetail :info="form"/>
+            <a-modal :closable="false" :title="`${$t('内容')}`" :visible="openView" hideCancel @ok="cancelReq"
+              okText="关闭">
+              <AssetsDetail :info="form" />
             </a-modal>
           </div>
         </a-card>

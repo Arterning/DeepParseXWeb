@@ -87,9 +87,7 @@
                     name: 'OrgDetail', 
                     params: { id: record.id }, 
                     query: { appendix: record.org_name},
-                  })"
-                  class="title-link"
-                >{{ record.org_name }}</a-link>
+                  })">{{ record.org_name }}</a-link>
               </template> 
               
               <template #created_time="{ record }">

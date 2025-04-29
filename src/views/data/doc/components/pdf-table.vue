@@ -80,7 +80,7 @@
             {{ rowIndex + 1 }}
           </template> -->
           <template #name="{ record }">
-            <a-link class="title-link" @click="
+            <a-link @click="
               router.push({
                 name: 'DocDetail',
                 params: { 

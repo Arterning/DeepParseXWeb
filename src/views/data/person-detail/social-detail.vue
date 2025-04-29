@@ -165,7 +165,6 @@
           </template> -->
           <template #name="{ record }">
             <a-link
-              class="title-link"
               @click="
                 router.push({
                   name: 'DocDetail',
