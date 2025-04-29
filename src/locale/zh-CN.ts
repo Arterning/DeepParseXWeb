@@ -40,7 +40,7 @@ export default {
   'menu.analyse.person': '人物管理',
   'menu.analyse.scandal': '黑料管理',
   'menu.analyse.subject': '议题管理',
-  'menu.data.doc': '文件管理',
+  'menu.data.doc': '文件数据',
   'menu.data.upload': '文件上传',
   'menu.data.doc.detail': '文件内容',
   'menu.analyse.assets': '资产管理',

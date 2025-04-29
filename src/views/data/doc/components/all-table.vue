@@ -8,7 +8,7 @@
               <a-col :span="8">
                 <a-form-item :label="$t('data.doc.form.name')" field="name">
                   <a-input v-model="formModel.name" :placeholder="$t('data.doc.form.name.placeholder')"
-                    @keyup.enter="search" >
+                    @keyup.enter="search">
                     <template #suffix>
                       <icon-search />
                     </template>
@@ -74,11 +74,7 @@
           </template>
           {{ $t('data.doc.button.create') }}
         </a-button>
-        <a-button
-          :disabled="deleteButtonStatus()"
-          status="danger"
-          @click="DeleteApi"
-        >
+        <a-button :disabled="deleteButtonStatus()" status="danger" @click="DeleteApi">
           <template #icon>
             <icon-minus />
           </template>
@@ -87,17 +83,27 @@
       </a-space>
 
       <div class="content">
-        <a-table v-model:selected-keys="rowSelectKeys" :bordered="false" :columns="columns" :data="renderData"
-          :loading="loading" :pagination="pagination" :row-selection="rowSelection" :size="'medium'" row-key="id"
-          @page-change="onPageChange" @page-size-change="onPageSizeChange">
-          <!-- <template #index="{ rowIndex }">
+        <a-table 
+            v-model:selected-keys="rowSelectKeys" 
+            column-resizable 
+            bordered 
+            :columns="columns"
+            :data="renderData" 
+            :loading="loading" 
+            :pagination="pagination" 
+            :row-selection="rowSelection" :size="'medium'"
+            row-key="id" 
+            @page-change="onPageChange" 
+            @page-size-change="onPageSizeChange"
+          >
+          <template #index="{ rowIndex }">
             {{ rowIndex + 1 }}
-          </template> -->
+          </template>
           <template #name="{ record }">
-            <a-link class="title-link" @click="
+            <a-link @click="
               router.push({
                 name: 'DocDetail',
-                params: { 
+                params: {
                   id: record.id,
                 },
                 query: {
@@ -170,8 +176,8 @@
         </a-modal>
         <a-modal :closable="false" :title="`${$t('内容')}`" :visible="openView" fullscreen hide-cancel ok-text="关闭"
           @ok="cancelReq">
-          <ExcelDetail v-if="form.type === 'excel'" :title="form.title" :doc_data="form.doc_data" :file="form.file" />
-          <GeneralDetail v-else :info="form" />
+          <ExcelDetail v-if="form.type === 'excel'" :info="form" />
+          <!-- <GeneralDetail v-else :info="form" /> -->
         </a-modal>
         <!--    收藏弹窗 -->
         <a-modal v-model:visible="collectVisi" @ok="handleOk" @cancel="handleCancel">
@@ -226,7 +232,6 @@ import { Pagination } from '@/types/global';
 import { useRouter } from 'vue-router';
 import { tableDateFormat } from '@/utils/date';
 import { cleanMarkdown } from '@/utils/string';
-import GeneralDetail from '@/views/data/doc-detail/general-detail.vue';
 import ExcelDetail from '@/views/data/doc-detail/excel-detail.vue';
 
 const { t } = useI18n();
@@ -294,34 +299,37 @@ const HideApi = (pk: number) => {
   });
 };
 const columns = computed<TableColumnData[]>(() => [
-  // {
-  //   title: 'ID',
-  //   dataIndex: 'id',
-  //   slotName: 'id',
-  //   sortable: {
-  //     sortDirections: ['ascend', 'descend'],
-  //   },
-  //   ellipsis: true,
-  //   tooltip: true,
-  //   width: 100,
-  // },
+  {
+    title: '#',
+    dataIndex: 'id',
+    slotName: 'id',
+    sortable: {
+      sortDirections: ['ascend', 'descend'],
+    },
+    ellipsis: true,
+    tooltip: true,
+    width: 100,
+  },
   {
     title: t('data.doc.columns.name'),
     dataIndex: 'name',
     slotName: 'name',
     ellipsis: true,
+    tooltip: true,
   },
   {
     title: t('data.doc.columns.isCollection'),
     dataIndex: 'isCollection',
     slotName: 'isCollection',
     ellipsis: true,
+    tooltip: true,
   },
   {
     title: t('data.doc.columns.OriginName'),
     dataIndex: 'OriginName',
     slotName: 'OriginName',
     ellipsis: true,
+    tooltip: true,
   },
   {
     title: t('data.doc.columns.desc'),
@@ -337,7 +345,7 @@ const columns = computed<TableColumnData[]>(() => [
     sortable: {
       sortDirections: ['ascend', 'descend'],
     },
-    width: 180,
+    // width: 180,
   },
   {
     title: t('data.doc.columns.createdtime'),
@@ -346,7 +354,7 @@ const columns = computed<TableColumnData[]>(() => [
     sortable: {
       sortDirections: ['ascend', 'descend'],
     },
-    width: 180,
+    // width: 180,
   },
   {
     title: t('data.doc.columns.type'),

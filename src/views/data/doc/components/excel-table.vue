@@ -239,7 +239,6 @@
     import { Pagination } from '@/types/global';
     import { tableDateFormat } from '@/utils/date';
     import { cleanMarkdown } from '@/utils/string';
-    import GeneralDetail from '@/views/data/doc-detail/general-detail.vue';
     import { useRouter } from 'vue-router';
 
 

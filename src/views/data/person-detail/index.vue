@@ -52,7 +52,6 @@ import useLoading from '@/hooks/loading';
 import { onMounted, ref } from 'vue';
 import { useRoute } from 'vue-router';
 import Footer from '@/components/footer/index.vue';
-import GeneralDetail from './general-detail.vue';
 import EmailDetail from './email-detail.vue';
 import BlackDetail from './black-detail.vue';
 import NewsDetail from './news-detail.vue';

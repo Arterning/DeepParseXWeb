@@ -207,7 +207,7 @@
           @ok="cancelReq"
           okText="关闭"
         >
-          <GeneralDetail :info="form"/>
+          <!-- <GeneralDetail :info="form"/> -->
         </a-modal>
       </div>
     </a-card>
@@ -238,7 +238,6 @@
   import { useRouter } from 'vue-router';
   import { tableDateFormat } from '@/utils/date';
   import { cleanMarkdown } from '@/utils/string';
-  import GeneralDetail from '@/views/data/doc-detail/general-detail.vue';
 
 
   const { t } = useI18n();
