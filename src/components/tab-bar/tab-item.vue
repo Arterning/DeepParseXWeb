@@ -189,7 +189,7 @@
   }
 
   .link-activated {
-    background-color: #13c2c2;
+    background-color: #2e6fd0;
 
     // .tag-link {
     //   color: #13c2c2;
