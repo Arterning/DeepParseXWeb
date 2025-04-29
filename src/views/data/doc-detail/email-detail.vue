@@ -2,7 +2,7 @@
     <a-space direction = "vertical">
         <a-descriptions :column="1">
             <a-descriptions-item label="邮件头">
-                <a-divider />
+                <a-divider class="mt-0"/>
                 <div class="email-title flex mb-2">   
                     <div class="email-label">主题</div>
                     <div>{{ info.email_subject || '-' }}</div>
@@ -19,7 +19,7 @@
                     <div class="email-label">时间</div>
                     <div>{{ emailDateFormat(info.email_time) }}</div>
                 </div>
-                <a-divider />
+                <a-divider class="mt-0"/>
             </a-descriptions-item>
             <a-descriptions-item label="用户账号">
                 <div v-if="!info.account_pwd">未提取</div>

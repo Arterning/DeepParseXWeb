@@ -5,7 +5,7 @@
       <a-layout class="flex-layout">
       <!-- <Breadcrumb /> -->
       <a-card class="general-card">
-      <a-divider />
+      <a-divider class="mt-0"/>
       <a-row>
         <a-col :span="24">
           <h3>新闻关联</h3>
@@ -43,7 +43,7 @@
           </template>
           <a-list-item v-for="item of data" :key="item">{{item}}</a-list-item>
         </a-list>
-        <a-divider />
+        <a-divider class="mt-0"/>
       <a-row>
         <a-col :span="24">
           <h3>工作关系图谱</h3>

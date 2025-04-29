@@ -73,6 +73,7 @@
         
         <a-table
           v-model:selected-keys="rowSelectKeys"
+          column-resizable
           :bordered="false"
           :columns="columns"
           :data="renderData"

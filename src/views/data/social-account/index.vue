@@ -39,7 +39,7 @@
             </a-space>
           </a-col>
         </a-row>
-        <a-divider />
+        <a-divider class="mt-0"/>
         <a-space :size="'medium'">
           <a-button type="primary" @click="NewSocialAccount()">
             <template #icon>
@@ -61,6 +61,7 @@
         <div class="content">
           <a-table
             v-model:selected-keys="rowSelectKeys"
+            column-resizable
             :bordered="false"
             :columns="columns"
             :data="renderData"

@@ -39,7 +39,7 @@
           </a-space>
         </a-col>
       </a-row>
-      <a-divider />
+      <a-divider class="mt-0"/>
       <a-space :size="'medium'">
         <a-button type="primary" @click="NewApi()">
           <template #icon>
@@ -62,8 +62,8 @@
         
         <a-table
           v-model:selected-keys="rowSelectKeys"
-          :bordered="false"
           column-resizable
+          :bordered="false"
           :columns="columns"
           :data="renderData"
           :loading="loading"

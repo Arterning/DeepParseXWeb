@@ -18,7 +18,7 @@
          <a-descriptions :data="lizi" title="User Info" :align="{ label: 'right' }" />
         </a-space>
       </div>
-      <a-divider />
+      <a-divider class="mt-0"/>
       <a-row>
         <a-col :span="24">
           <h3>个人简历</h3>
@@ -26,7 +26,7 @@
         </a-col>
       </a-row>
       <!-- 相关新闻 -->
-      <a-divider />
+      <a-divider class="mt-0"/>
       <a-row>
         <a-col :span="24">
           <h3>工作记录</h3>
@@ -64,7 +64,7 @@
           </template>
           <a-list-item v-for="item of data" :key="item">{{item}}</a-list-item>
         </a-list>
-        <a-divider />
+        <a-divider class="mt-0"/>
       <a-row>
         <a-col :span="24">
           <h3>工作关系图谱</h3>

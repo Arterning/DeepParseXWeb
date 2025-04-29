@@ -39,7 +39,7 @@
             </a-space>
           </a-col>
         </a-row>
-        <a-divider />
+        <a-divider class="mt-0"/>
         <a-space :size="'medium'">
           <a-button type="primary" @click="NewScandal()">
             <template #icon>
