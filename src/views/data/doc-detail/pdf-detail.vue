@@ -73,14 +73,6 @@
                                     </div>
                                 </template>
                                 <div class="flex gap-1" v-if="compare">
-                                    <a-tooltip content="点击以查看">
-                                        <a-image v-if="info.type === 'picture'" height="480" fit="contain" class="image"
-                                            :src="buildSrcURL(info.file)" />
-                                    </a-tooltip>
-                                    <div v-if="info.type === 'media'" class="media-box">
-                                        <icon-music class="media-icon" />
-                                        <video :src="buildSrcURL(info.file)" class="video" controls></video>
-                                    </div>
                                     <iframe v-if="info.type === 'pdf'" :src="buildSrcURL(info.file)" frameborder="0"
                                         class="h-[500px] w-1/2 "></iframe>
                                     <div class="w-1/2">

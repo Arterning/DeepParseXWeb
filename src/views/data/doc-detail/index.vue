@@ -7,6 +7,8 @@
         <ExcelDetail v-if="info.type === 'excel'" :info="info" />
         <PdfDetail v-if="info.type === 'pdf'" :info="info" />
         <PictureDetail v-if="info.type == 'picture'" :info="info" />
+        <PictureDetail v-if="info.type == 'picture'" :info="info" />
+        <MediaDetail v-if="info.type == 'media'" :info="info" />
       </a-card>
     </div>
   </a-layout>
@@ -23,7 +25,7 @@ import TextDetail from './text-detail.vue';
 import PdfDetail from './pdf-detail.vue';
 import ExcelDetail from './excel-detail.vue';
 import PictureDetail from './picture-detail.vue';
-
+import MediaDetail from './media-detail.vue';
 
 
 const route = useRoute();
