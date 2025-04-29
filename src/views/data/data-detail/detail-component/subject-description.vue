@@ -3,15 +3,12 @@
     <Breadcrumb />
     <a-card title="议题描述" class="email-card">
       <a-descriptions>
-        <a-descriptions-item label="id">{{
-            email.name
-          }}</a-descriptions-item>
         <a-descriptions-item label="名称">{{
-            email.country
-          }}</a-descriptions-item>
+          subject.name
+        }}</a-descriptions-item>
         <a-descriptions-item label="来源">{{
-            email.country1
-          }}</a-descriptions-item>
+          subject.source
+        }}</a-descriptions-item>
       </a-descriptions>
     </a-card>
     <Footer />
@@ -19,18 +16,24 @@
 </template>
 
 <script setup>
-import { reactive } from 'vue';
-import Footer from "@/components/footer/index.vue";
+  import { reactive, onBeforeMount, ref } from 'vue';
+  import Footer from '@/components/footer/index.vue';
+  import { querySubjectDetail } from '@/api/subject';
+  import { useRoute } from 'vue-router';
 
-const email = reactive({
-  name: '示例',
-  country: '中国',
-  country1: '来源',
-});
+  onBeforeMount(async () => {
+    const route = useRoute();
+    const id = Number(route.params.id); // 获取路由参数中的 id
+    const res = await querySubjectDetail(id);
+    subject.value = reactive(res);
+  });
+
+  const subject = ref({
+  });
 </script>
 
 <style scoped>
-.email-card {
-  margin-bottom: 20px;
-}
+  .email-card {
+    margin-bottom: 20px;
+  }
 </style>
