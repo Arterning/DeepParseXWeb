@@ -7,7 +7,6 @@
         <ExcelDetail v-if="info.type === 'excel'" :info="info" />
         <PdfDetail v-if="info.type === 'pdf'" :info="info" />
         <PictureDetail v-if="info.type == 'picture'" :info="info" />
-        <PictureDetail v-if="info.type == 'picture'" :info="info" />
         <MediaDetail v-if="info.type == 'media'" :info="info" />
       </a-card>
     </div>
