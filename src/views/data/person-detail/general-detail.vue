@@ -14,34 +14,42 @@
                   v-if="!isEditing"
                   :data="lizi" 
                   title="User Info" 
-                  :align="{ label: 'right' }"
+                  :align="{ label: 'left' }"
+                  :column="2"
                 />
                 <!-- 编辑模式 -->
-                <a-form
-                  v-else
-                  :model="editableData" 
-                  layout="vertical"
-                >
-                  <a-form-item
-                    v-for="(item, index) in lizi"
-                    :key="index"
-                    :label="item.label"
-                  >
-                    <a-input v-model="editableData[index].value" />
-                  </a-form-item>
-                </a-form>
+                <div v-else class="edit-container">
+                  <a-row :gutter="24" class="edit-row">
+                    <a-col 
+                      v-for="(item, index) in lizi" 
+                      :key="index" 
+                      :span="12"
+                      class="edit-col"
+                    >
+                      <div class="edit-item">
+                        <span class="edit-label">{{ item.label }}</span>
+                        <a-input 
+                          v-model="editableData[index].value"
+                          class="edit-input"
+                          :placeholder="item.value"
+                        />
+                      </div>
+                    </a-col>
+                  </a-row>
+                </div>
               </a-space>
 
               <!-- 操作按钮组 -->
-              <div class="edit-buttons">
-                <a-button 
+              <div class="edit-buttons" style="margin-top: 0px; text-align: right;">
+                <icon-edit 
                   v-if="!isEditing"
                   type="primary"
                   @click="enterEditMode"
                   class="edit-button"
+                  size="large"
                 >
                   修改信息
-                </a-button>
+                </icon-edit>
                 <a-space v-else>
                   <a-button type="primary" @click="submitEdit">提交</a-button>
                   <a-button @click="cancelEdit">取消</a-button>
@@ -60,8 +68,8 @@
             <a-row>
               <a-col :span="24">
                 <h3>工作记录</h3>
-                <a-space direction="vertical" size="large" fill>
-                  <a-table :columns="columns" :data="job">
+                <a-space direction="vertical" size="small" fill>
+                  <a-table :columns="columns" :data="job" :bordered="false" class="compact-table">
                     <template #job-filter="{ filterValue, setFilterValue, handleFilterConfirm, handleFilterReset}">
                       <div class="custom-filter">
                         <a-space>
@@ -80,8 +88,8 @@
             <a-divider />
             <a-row>
               <a-col>
-                  <a-card>
-                    <a-list :max-height="240" @reach-bottom="blackInfo" :scrollbar="scrollbar" >
+                  <a-card  :bordered="false" class="compact-card">
+                    <a-list :max-height="240" @reach-bottom="blackInfo" :scrollbar="scrollbar" class="borderless-list">
                       <template #header>黑料信息</template>
                       <template #scroll-loading>
                         <div v-if="bottom">No more data</div>
@@ -96,6 +104,20 @@
         </a-layout>
       </div>
       <div class="right-content" style="float: left; width: 50%; padding-left: 20px; box-sizing: border-box;">
+        <a-row>
+              <a-col>
+                  <a-card  :bordered="false" class="compact-card">
+                    <a-list :max-height="140" :style="{ height: '150px' }" @reach-bottom="fetchData" :scrollbar="scrollbar" class="recent-activities">
+                      <template #header>近期动态</template>
+                      <template #scroll-loading>
+                        <div v-if="bottom">No more data</div>
+                        <a-spin v-else />
+                      </template>
+                      <a-list-item v-for="item of news" :key="item">{{item}}</a-list-item>
+                    </a-list>
+                  </a-card>
+              </a-col>
+            </a-row>
         <a-layout class="flex-layout">
           <a-card class="general-card">
             <h3>工作关系图谱</h3>
@@ -119,6 +141,7 @@
   import avatarView from '@/views/data/person-detail/avatarView.vue';
   import { IconSearch } from '@arco-design/web-vue/es/icon';
   import { IconClose } from '@arco-design/web-vue/es/icon';
+  import { text } from 'stream/consumers';
 
     // 新增：定义弹窗状态
     const showAvatarModal = ref(false);
@@ -154,6 +177,22 @@
     {
       label: '职位',
       value: 'zhanjie',
+    },
+    {
+      label: '职业',
+      value: 'woker',
+    },
+    {
+      label: '出生日期',
+      value: '2005.09.23',
+    },
+    {
+      label: '毕业院校',
+      value: '北京大学',
+    },
+    {
+      label: '人物标签',
+      value: '标签一',
     },
   ];
 
@@ -196,7 +235,12 @@ const editableData = reactive<Array<{label: string; value: string}>>([]);
 
 // 进入编辑模式
 const enterEditMode = () => {
-  editableData.splice(0, editableData.length, ...lizi.map(item => ({...item})));
+  editableData.splice(0, editableData.length, ...lizi.map(item => ({
+    ...item,
+    // 保持与展示数据结构一致
+    label: item.label,
+    value: item.value
+  })));
   isEditing.value = true;
 };
 
@@ -334,27 +378,90 @@ const cancelEdit = () => {
     border: 1px solid var(--color-border);
   }
   .edit-buttons {
-  position: absolute;
-  right: 0;
-  bottom: 0;
-  padding: 8px;
-  background: rgba(255, 255, 255, 0.9);
-  border-radius: 4px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    margin: 20px 0;
+    height: 20px;
+    text-align: right;
+    padding: 2px 8px;
+    font-size: 10px;
+    line-height: 1.2;
+    /* border-radius: 4px; */
 }
-
-.edit-button {
-  margin-right: 0px;
-}
-
-/* 调整表单样式 */
-.a-form-item {
-  margin-bottom: 12px;
-}
-
-.a-input {
+/* 完全复用展示模式布局 */
+.edit-container {
   width: 100%;
+  padding: 12px 16px;
 }
+
+.edit-row {
+  margin: -6px 0;
+}
+
+.edit-col {
+  padding: 6px 0;
+}
+
+.edit-item {
+  display: flex;
+  align-items: center;
+  height: 22px;
+}
+
+.edit-label {
+  width: 35%;
+  text-align: left;
+  color: var(--color-text-2);
+  font-size: 14px;
+  margin-right: 12px;
+}
+
+.edit-input {
+  flex: 1;
+  height: 22px;
+  line-height: 22px;
+  padding: 0 8px;
+  border-radius: 2px;
+  border: 1px solid var(--color-border);
+}
+
+/* 覆盖默认输入框样式 */
+.edit-input :deep(.arco-input) {
+  height: 22px;
+  min-height: 22px;
+  padding: 0;
+  border: none;
+  background: transparent;
+}
+
+.edit-input :deep(.arco-input:hover),
+.edit-input :deep(.arco-input:focus) {
+  background: var(--color-fill-2);
+  border-radius: 2px;
+}
+.recent-activities :deep(.arco-list-header) {
+  font-size: 16px !important;
+  font-weight: 600 !important;
+  padding: 8px 0 4px 0 !important; /* 上 8px 下 4px */
+  margin-left: 12px;
+}
+
+.recent-activities :deep(.arco-list-item) {
+  font-size: 15px !important;
+  line-height: 1.5 !important;
+  min-height: 28px !important; /* 根据字体大小调整 */
+  padding: 5px 0 !important;
+  margin-left: 12px;
+}
+
+/* 移除默认悬停背景色 */
+.recent-activities :deep(.arco-list-item:hover) {
+  background-color: transparent !important;
+}
+
+/* 调整加载状态样式 */
+.recent-activities :deep(.arco-spin) {
+  margin: 4px 0 !important;
+}
+
   /* 自定义样式 */
   /* 确保隐藏样式优先级 */
   .custom-filter {
@@ -369,4 +476,18 @@ const cancelEdit = () => {
   display: flex;
   justify-content: space-between;
 }
+.borderless-list :deep(.arco-list) {
+  border: none !important;
+}
+
+.borderless-list :deep(.arco-list-header) {
+  border-bottom: none !important;
+  padding: 8px 0 !important;
+}
+
+.borderless-list :deep(.arco-list-item) {
+  border-bottom: none !important;
+  padding: 4px 0 !important;
+}
+
 </style>

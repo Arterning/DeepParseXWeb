@@ -1,5 +1,5 @@
 <template>
-  <div ref="container" class="relation-container">
+  <div ref="container" class="relation-container" :data-theme="isDarks ? 'dark' : 'light'">
     <!-- 控制按钮组 -->
     <div class="controls" :class="{ 'fullscreen-controls': isFullscreen }">
       <div class="operations-group">
@@ -127,13 +127,14 @@
 </template>
 
 <script setup lang="ts">
-    import { ref, reactive, onMounted, onUnmounted } from 'vue'
+    import { ref, reactive, onMounted, onUnmounted, watch, computed} from 'vue';
+    import useAppStore  from '@/store/modules/app/index';
     import Footer from '@/components/footer/index.vue';
     import { Form, Input, Select, Button, Modal } from '@arco-design/web-vue';
     import cytoscape, { Core } from 'cytoscape';
     import dagre from 'cytoscape-dagre';
     import { TableColumnData } from '@arco-design/web-vue/es/table/interface';
-    import { values } from 'lodash';
+    import { reduce, values } from 'lodash';
 
     import m1Avatar from '@/assets/images/logo.png';
     import m2Avatar from '@/assets/images/logo.png';
@@ -145,6 +146,34 @@
     import l1Avatar from '@/assets/images/logo.png';
     import o1Avatar from '@/assets/images/logo.png';
 
+    const appStore = useAppStore();
+    // 监听主题变化
+    watch(() => appStore.isDarkMode, (isDark) => {
+      updateGraphTheme(isDark)
+    })
+    const isDarks = computed(() => appStore.isDarkMode)
+    // 主题更新方法
+    const updateGraphTheme = (isDark: boolean) => {
+      if (!cy.value) return
+
+      cy.value.style()
+        .selector('node')
+          .style({
+            'color': isDark ? '#ffffff' : '#333333',
+          })
+        .selector('edge')
+          .style({
+            'color': isDark ? '#ffffff' : '#333333',
+          })
+        .update()
+
+      // 特殊节点处理
+      cy.value.nodes('[group="leader"]').style({
+        'background-color': isDark ? '#FF9800' : '#FFC107'
+      })
+
+      cy.value.resize().fit()
+    }
   // 这里假设从父组件传递人物数据，实际中可以根据需求调整
   // const props = defineProps(['info']);
   // 注册布局插件
@@ -429,7 +458,7 @@ interface CyNode {
               'border-color': (ele) => ele.data('active') ? '#666' : '#999',
               'background-image': 'data(avatar)',
               'background-fit': 'cover',
-              'shape': 'round-rectangle',
+              'shape': 'ellipse',
               'border-width': 2,
               'display': (ele:any) => ele.data('visible') ? 'element' : 'none', // 动态条件判断
             },
@@ -437,7 +466,7 @@ interface CyNode {
           {
             selector: 'node[group="leader"]',
             style: {
-              shape: 'diamond',
+              shape: 'ellipse',
               width: 55,
               height: 55,
             },
@@ -633,7 +662,9 @@ onMounted(() => {
     }
   })
 })
-
+onMounted(() => {
+  updateGraphTheme(appStore.isDarkMode)
+})
 onUnmounted(() => {
   cy.value?.destroy()
 })
@@ -652,15 +683,30 @@ onUnmounted(() => {
   width: 90%;
   top: 10px;
   right: 25px;
-  z-index: 1000;
-  background: rgba(255, 255, 255, 0.95);
+  z-index: 10;
   padding: 12px;
   border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  background: var(--graph-controls-bg);
+  box-shadow: 0 4px 12px var(--graph-shadow-color);
   /* min-width: 380px; */
   display: flex;
   flex-direction: column;
   gap: 12px;
+
+  /* 按钮文字颜色 */
+  :deep(.arco-btn) {
+    color: var(--graph-text-color);
+    border-color: var(--graph-border-color);
+    
+    &:hover {
+      background-color: var(--graph-hover-bg);
+    }
+  }
+  
+  /* 文字颜色 */
+  .scale-text, .filter-label {
+    color: var(--graph-text-color);
+  }
 }
 
 .operations-group {
@@ -727,14 +773,18 @@ onUnmounted(() => {
     width: 100%;
     height: 100%;
     border: 1px solid #ddd;
-    background: white;
+    background-color: var(--graph-bg-color);
+  border-color: var(--graph-border-color);
+  transition: background-color 0.3s, border-color 0.3s;
   }
 
   .relation-container {
     position: relative;
     width: 100%;
     height: 600px;
-    background: white; /* 设置背景色避免透明 */
+    background-color: var(--graph-bg-color);
+  border-color: var(--graph-border-color);
+  transition: background-color 0.3s, border-color 0.3s;
 }
 
 /* 全屏模式专用样式 */
@@ -824,5 +874,72 @@ onUnmounted(() => {
     align-items: center;
     gap: 8px;
   }
+  /* 全局主题变量 */
+  [data-theme='light'] {
+  /* 明亮模式 */
+  --graph-bg-color: #ffffff;
+  --graph-border-color: #ffffff;
+  --graph-controls-bg: rgba(255, 255, 255, 0.786);
+  --graph-shadow-color: rgba(0, 0, 0, 0.244);
+  --graph-text-color: #000000c3;
+  --graph-hover-bg: rgba(255, 255, 255, 0.04);
+}
+
+[data-theme='dark'] {
+  /* 暗色模式 */
+  --graph-bg-color: #1a1a1a;
+  --graph-border-color: #444444;
+  --graph-controls-bg: rgba(26, 26, 26, 0.95);
+  --graph-shadow-color: rgba(0, 0, 0, 0.3);
+  --graph-text-color: #e0e0e0;
+  --graph-hover-bg: rgba(255, 255, 255, 0.08);
+}
 </style>
+    <!-- 适配Arco组件样式 -->
+<style>
+/* 下拉菜单 */
+[data-theme='dark'] {
+  :deep(.arco-select-popup) {
+    background: #2a2a2a;
+    border-color: #444;
     
+    .arco-select-option {
+      color: #e0e0e0;
+      
+      &:hover {
+        background: #333;
+      }
+    }
+  }
+  
+  /* 单选框/复选框 */
+  :deep(.arco-radio-button), 
+  :deep(.arco-checkbox) {
+    background: #333;
+    border-color: #444;
+    color: #999;
+    
+    &.arco-radio-checked,
+    &.arco-checkbox-checked {
+      background: #444;
+      color: #fff;
+    }
+  }
+  
+  /* 模态框 */
+  :deep(.arco-modal) {
+    background: #2a2a2a;
+    color: #e0e0e0;
+    
+    .arco-modal-title {
+      color: #fff;
+    }
+    
+    .arco-input {
+      background: #333;
+      border-color: #444;
+      color: #e0e0e0;
+    }
+  }
+}
+</style>

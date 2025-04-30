@@ -52,7 +52,10 @@ function generateMenu(
 }
 
 const useAppStore = defineStore('app', {
-  state: (): AppState => ({ ...defaultSettings }),
+  state: (): AppState => ({ 
+    ...defaultSettings,
+    isDarkMode: false
+   }),
 
   getters: {
     appCurrentSetting(state: AppState): AppState {
@@ -75,6 +78,8 @@ const useAppStore = defineStore('app', {
 
     // Change theme color
     toggleTheme(dark: boolean) {
+      this.isDarkMode = !this.isDarkMode
+      document.documentElement.setAttribute('data-theme', this.isDarkMode ? 'dark' : 'light')
       if (dark) {
         this.theme = 'dark';
         document.body.setAttribute('arco-theme', 'dark');
@@ -131,5 +136,6 @@ const useAppStore = defineStore('app', {
     },
   },
 });
+
 
 export default useAppStore;

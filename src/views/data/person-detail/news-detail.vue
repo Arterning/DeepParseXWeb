@@ -1,42 +1,57 @@
 <template>
   <div class="container">
     <a-card class="general-card">
-    <div class="left-content" style="float: left; width: 40%;">
+    <div class="left-content" style="float: left; width: 45%;">
       <a-layout class="flex-layout">
       <!-- <Breadcrumb /> -->
       <a-card class="general-card">
-     
       <a-row>
         <a-col :span="24">
           <h3>新闻关联</h3>
-            <a-space direction="vertical" size="large" fill>
-              <a-space>
-                <a-switch v-model="alignLeft" />
-                <span>Filter icon align left: {{alignLeft}}</span>
-              </a-space>
-              <a-table :columns="columns" :data-source="job" :filter-icon-align-left="alignLeft" />
-            </a-space>
-          <ul>
-            
-          </ul>
+          <a-space direction="vertical" size="large" fill>
+        <!-- 筛选条件 -->
+        <a-row :gutter="16" align="center">
+          <a-col :span="10">
+            <a-input-search 
+              v-model="searchKeyword"
+              placeholder="输入关键词搜索"
+              @search="handleSearch"
+            />
+          </a-col>
+          <a-col :span="14">
+            <a-range-picker
+              v-model="dateRange"
+              style="width: 100%"
+              @change="handleDateChange"
+            />
+          </a-col>
+        </a-row>
+
+        <!-- 数据表格 -->
+        <a-table 
+          :columns="columns"
+          :data="filteredData"
+          :filter-icon-align-left="alignLeft"
+          @sorter-change="handleSort"
+        />
+      </a-space>
         </a-col>
       </a-row>
     </a-card>
     <!-- <Footer /> -->
   </a-layout>
-
-    </div>
-    <div class="right-content" style="float: left; width: 60%; padding-left: 20px; box-sizing: border-box;">
+</div>
+    <div class="right-content" style="float: left; width: 55%; padding-left: 20px; box-sizing: border-box;">
       <div class="wordCloudContainer">
       <div class="wordClouds"> </div>
     </div>
     <div class="second">
-      <div id="pieChart" style="background-color: #f4f5f8; padding: 20px"></div>
-      <div id="barChart" style="background-color: #f4f5f8; padding: 20px"></div>
+      <div id="pieChart" style="padding: 20px"></div>
+      <div id="barChart" style="padding: 20px"></div>
     </div>
     <div class="third">
-      <div id="barCharts" style="background-color: #f4f5f8; padding: 20px; width: 100%;"></div>
-      <div id="popChart" style="background-color: #f4f5f8; padding: 20px; width: 100%;"></div>
+      <div id="barCharts" style="padding: 20px; height: 200px; width: 100%;"></div>
+      <div id="popChart" style="padding: 20px; width: 100%;"></div>
     </div>
     </div>
   </a-card>
@@ -45,7 +60,7 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, ref, onMounted, onUnmounted, getCurrentInstance } from 'vue';
+import { reactive, ref, onMounted, onUnmounted, getCurrentInstance,computed } from 'vue';
 // import { ref } from 'vue';
 import Footer from '@/components/footer/index.vue';
 import { Form, FormItem } from '@arco-design/web-vue';
@@ -75,84 +90,98 @@ const props = defineProps({
     required: true
   }
 });
-const lizi = [{
-      label: '姓名',
-      value: 'sjy',
-    }, {
-      label: '其他名称',
-      value: 'ywlp',
-    }, {
-      label: '性别',
-      value: '女'
-    }, {
-      label: '所属组织',
-      value: 'Beijing',
-    }, {
-      label: '职位',
-      value: 'zhanjie'
-    }];
-
   const alignLeft = ref(false);
+// 假数据生成
+const generateMockData = () => {
+  const mockData = [];
+  const keywords = ['发布会', '签约', '获奖', '合作', '战略', '融资', '产品'];
+  const organizations = ['腾讯', '阿里', '百度', '字节跳动', '美团'];
+  
+  for (let i = 1; i <= 50; i+=1) {
+    mockData.push({
+      key: String(i),
+      time: `2024-0${Math.ceil(i/10)}-${String(i%30+1).padStart(2, '0')}`, // 生成日期
+      job: `${organizations[i%5]} ${keywords[i%7]}相关新闻记录 ${i}`,
+      timestamp: new Date(2024, Math.floor(i/30), i%30).getTime()
+    });
+  }
+  return mockData;
+};
+// 响应式数据
+const rawData = reactive(generateMockData());
+const searchKeyword = ref('');
+const dateRange = ref<[Date | null, Date | null]>([null, null]);
+const sortOrder = ref<'ascend' | 'descend'>('ascend');
 
-  const columns: TableColumnData[] = [
-      {
-        title: '工作时间',
-        dataIndex: 'time',
-        sortable: {
-          sortDirections: ['ascend', 'descend']
-        }
-      },
-      {
-        title: '工作记录',
-        dataIndex: 'job',
-      },
-    ];
-    const job = reactive([{
-      key: '1',
-      time: '20240204',
-      job: '工作了一阵子',
-    }, {
-      key: '2',
-      time: '20240205',
-      job: '又工作了一阵子',
-    }, {
-      key: '3',
-      time: '20240206',
-      job: '又又工作了一阵子',
-    }, {
-      key: '4',
-      time: '20240207',
-      job: '又又又工作了一阵子',
-    }, {
-      key: '5',
-      time: '20240208',
-      job: '又又又又工作了一阵子',
-    }]);
+// 处理排序
+const handleSort = (dataIndex: string, order: string) => {
+  sortOrder.value = order;
+};
 
-    const fetchData = () => {
-      console.log('reach bottom!');
-      if (current.value <= 5) {
-        window.setTimeout(() => {
-          const index = data.length;
-          data.push(
-            `Beijing Bytedance Technology Co., Ltd. ${index + 1}`,
-            `Bytedance Technology Co., Ltd. ${index + 2}`,
-            `Beijing Toutiao Technology Co., Ltd. ${index + 3}`,
-            `Beijing Volcengine Technology Co., Ltd. ${index + 4}`,
-            `China Beijing Bytedance Technology Co., Ltd. ${index + 5}`
-          );
-          current.value += 1
-        }, 2000)
-      } else {
-        bottom.value = true
+
+// 处理搜索
+const handleSearch = (value: string) => {
+  searchKeyword.value = value;
+};
+
+// 切换排序方式
+const toggleSortOrder = () => {
+  sortOrder.value = sortOrder.value === 'ascend' ? 'descend' : 'ascend';
+};
+
+const isValidDate = (d: unknown): d is Date => {
+  return d instanceof Date && !Number.isNaN(d.getTime());
+};
+// 计算属性处理过滤和排序
+const filteredData = computed(() => {
+  return rawData
+    .filter(item => {
+      const matchesKeyword = item.job.toLowerCase().includes(searchKeyword.value.toLowerCase());
+      
+      // 处理日期范围类型
+      const [start, end] = dateRange.value as [Date | undefined, Date | undefined];
+      const itemDate = new Date(item.time);
+      
+      // 日期范围过滤逻辑
+      let inDateRange = true;
+      if (start && isValidDate(start)) {
+        inDateRange = itemDate >= start;
       }
-    }
+      if (end && isValidDate(end)) {
+        inDateRange = inDateRange && itemDate <= end;
+      }
 
-    const goBack = () => {
-  setTimeout(() => {
-    router.push('/Echarts')
-  }, 1000)
-}
+      return matchesKeyword && inDateRange;
+    })
+    .sort((a, b) => {
+      return sortOrder.value === 'ascend' 
+        ? a.timestamp - b.timestamp 
+        : b.timestamp - a.timestamp;
+    });
+});
+
+// 处理日期变化事件
+const handleDateChange = (dates: [Date | null, Date | null]) => {
+  dateRange.value = dates;
+};
+
+// 表格列配置
+const columns: TableColumnData[] = [
+  {
+    title: '时间',
+    dataIndex: 'time',
+    sortable: {
+      sortDirections: ['ascend', 'descend']
+    },
+    width: 120
+  },
+  {
+    title: '新闻内容',
+    dataIndex: 'job',
+    ellipsis: true,
+    tooltip: true
+  }
+];
 
 const currentCase = ref('Horizontal Tree');
 
@@ -326,71 +355,73 @@ const currentCase = ref('Horizontal Tree');
 
   const option = {
     title: {
-      text: '情感分布图',
+        text: '情感分布图'
     },
-    tooltip: {},
-    legend: {
-      data: ['test'],
+    tooltip: {
+        trigger: 'axis',
+        axisPointer: {
+            type: 'shadow'
+        }
     },
-    // 修改 xAxis 和 yAxis 的类型和数据
     xAxis: {
-      type: 'value',
-      axisLine: { show: false }, // 隐藏 x 轴轴线
-      axisTick: { show: false }, // 隐藏 x 轴刻度
-      axisLabel: { show: false }, // 隐藏 x 轴刻度标签
+        type: 'value',
+        max: 60,
+        min: 0,  // 明确设置最小值
+        splitLine: {
+            show: false
+        },
+        axisLine: { show: false },
+        axisTick: { show: false },
+        axisLabel: { show: false }
     },
     yAxis: {
-      type: 'category',
-      data: ['情绪1', '情绪2', '情绪3', '情绪4', '情绪5', '情绪6'],
-      axisLabel: {
-        fontSize: 7 // 这里可以根据需要调整字体大小
-      }
+        type: 'category',
+        data: ['情绪1', '情绪2', '情绪3', '情绪4', '情绪5'], // 确保与数据项数量一致
+        axisLabel: {
+            fontSize: 12,
+            margin: 20,  // 增加标签外边距
+            padding: [0, 10] // 增加标签内边距
+        },
+        axisLine: { show: false },
+        axisTick: { show: false },
+        inverse: true  // 反转坐标轴让数据从顶部开始
     },
-    series: [
-      {
+    series: [{
         name: '数量',
         type: 'bar',
         data: [
-          {
-            value: 56,
-            itemStyle: {
-              color: 'yellow'
-            }
-          },
-          {
-            value: 52,
-            itemStyle: {
-              color: 'pink'
-            }
-          },
-          {
-            value: 40,
-            itemStyle: {
-              color: 'blue'
-            }
-          },
-          {
-            value: 36,
-            itemStyle: {
-              color: 'red'
-            }
-          },
-          {
-            value: 30,
-            itemStyle: {
-              color: 'purple'
-            }
-          },
+            { value: 56, itemStyle: { color: 'yellow' } },
+            { value: 52, itemStyle: { color: 'pink' } },
+            { value: 40, itemStyle: { color: 'blue' } },
+            { value: 36, itemStyle: { color: 'red' } },
+            { value: 30, itemStyle: { color: 'purple' } }
         ],
-        barWidth: 10,
+        barWidth: 12,  // 调整为固定像素值
+        barGap: '40%', // 增大条间距
+        barCategoryGap: '50%', // 增大类目间距
         label: {
-          show: true,
-          position: 'right', // 将数值显示在柱的右侧（柱头）
-          valueAnimation: true // 开启数值动画
+            show: true,
+            position: 'right',
+            fontSize: 12,
+            color: '#333',
+            formatter: '{c}'
+        },
+        itemStyle: {
+            borderRadius: [0, 6, 6, 0]
         }
-      },
-    ],
-  };
+    }],
+    grid: {
+        left: '5%',   // 增大左侧留白
+        right: '20%',  // 增大右侧留白
+        top: '20%',
+        bottom: '15%',
+        containLabel: true
+    },
+    // 添加动画配置
+    animationDuration: 1000,
+    animationEasing: 'cubicOut'
+};
+  myBarChart.resize();
   myBarChart.setOption(option);
 };
   const initPopChart = () => {
@@ -402,7 +433,7 @@ const currentCase = ref('Horizontal Tree');
    
     const option = {
         title: {
-          text: '气泡图示例'
+          text: '新闻时间趋势'
         },
         xAxis: {
           type: 'value',
@@ -546,6 +577,30 @@ const currentCase = ref('Horizontal Tree');
   .wordCloudContainer div {
     flex: 1;
   }
+  .arco-col {
+  margin-bottom: 12px;
+}
+
+/* 表格样式优化 */
+:deep(.arco-table-th) {
+  background-color: var(--color-fill-2);
+}
+
+:deep(.arco-table-tr):hover {
+  background-color: var(--color-fill-1);
+}
+
+/* 响应式适配 */
+@media (max-width: 768px) {
+  .arco-col {
+    width: 100%;
+    margin-bottom: 8px;
+  }
+  
+  .arco-range-picker {
+    width: 100%;
+  }
+}
 
   /deep/.--tagcloud .tagcloud--item :hover {
     background-color: #999999 !important;
