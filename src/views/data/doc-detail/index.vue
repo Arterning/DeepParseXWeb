@@ -3,9 +3,30 @@
     <Breadcrumb />
     <div class="general-card">
       <a-card v-if="info" class="content-box" :loading="loading">
-        <ExcelDetail v-if="info.type === 'excel'" :title="info.title" :desc="info.desc" :doc_data="info.doc_data"
-          :file="info.file" />
-        <GeneralDetail v-else :info="info" />
+        <a-tabs>
+          <a-tab-pane key="1" title="基本信息">
+            <TextDetail v-if="info.type === 'text'" :info="info" />
+            <ExcelDetail v-if="info.type === 'excel'" :info="info" />
+            <PdfDetail v-if="info.type === 'pdf'" :info="info" />
+            <PictureDetail v-if="info.type == 'picture'" :info="info" />
+            <MediaDetail v-if="info.type == 'media'" :info="info" />
+          </a-tab-pane>
+          <a-tab-pane key="2" title="知识图谱">
+            <div class="flex flex-col h-screen bg-gray-900 text-gray-100">
+              <div class="flex flex-col flex-1 overflow-hidden">
+                <GraphControls 
+                  class="bg-gray-800 p-2 border-b border-gray-700" 
+                  @dataChange="handleDataChange"
+                />
+                <KnowledgeGraph 
+                  class="flex-1" 
+                  :graph-data="graphData" 
+                  @dataChange="handleDataChange"
+                />
+              </div>
+            </div>
+          </a-tab-pane>
+        </a-tabs>
       </a-card>
     </div>
   </a-layout>
@@ -18,9 +39,22 @@ import useLoading from '@/hooks/loading';
 import { onMounted, ref } from 'vue';
 import { useRoute } from 'vue-router';
 import Footer from '@/components/footer/index.vue';
-import GeneralDetail from './general-detail.vue';
+import TextDetail from './text-detail.vue';
+import PdfDetail from './pdf-detail.vue';
 import ExcelDetail from './excel-detail.vue';
+import PictureDetail from './picture-detail.vue';
+import MediaDetail from './media-detail.vue';
+import GraphControls from './GraphControls.vue';
+import KnowledgeGraph from './KnowledgeGraph.vue';
 
+const graphData = ref({
+  nodes: [],
+  edges: []
+});
+
+const handleDataChange = (newData: any) => {
+  graphData.value = newData;
+};
 
 const route = useRoute();
 const { loading, setLoading } = useLoading(true);

@@ -39,7 +39,7 @@
             </a-space>
           </a-col>
         </a-row>
-        <a-divider />
+        <a-divider class="mt-0"/>
         <a-space :size="'medium'">
           <a-button type="primary" @click="NewSocialAccount()">
             <template #icon>
@@ -61,6 +61,7 @@
         <div class="content">
           <a-table
             v-model:selected-keys="rowSelectKeys"
+            column-resizable
             :bordered="false"
             :columns="columns"
             :data="renderData"
@@ -79,6 +80,9 @@
               <a-space>
                 <a-link @click="EditSocialAccount(record.id)">
                   编辑
+                </a-link>
+                <a-link @click="router.push({name: 'DataDetail', params: { id: record.id }, query: { type: 'socialAccount' } })">
+                  查看
                 </a-link>
               </a-space>
             </template>
@@ -164,9 +168,11 @@
       updateSocialAccount,
     } from '@/api/socialAccount';
     import { Pagination } from '@/types/global';
+    import {useRouter} from "vue-router";
   
     const { t } = useI18n();
     const { loading, setLoading } = useLoading(true);
+    const router = useRouter();
   
     // 表单
     const generateFormModel = () => {

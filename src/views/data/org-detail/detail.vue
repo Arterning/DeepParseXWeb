@@ -43,7 +43,7 @@
           >保存</a-button
         >
         <vue3-tree-org
-          :data="organizationInfo.org_structure"
+          :data="{}"
           center
           :horizontal="false"
           :collapsable="false"
@@ -159,7 +159,6 @@
     org_desc?: string;
     create_time?: string;
     update_time?: string;
-    org_structure?: string;
     org_location?: string;
     org_introduce?: string;
     org_tag?: string;
@@ -174,20 +173,13 @@
     org_desc: '',
     org_location: '',
     org_introduce: '',
-    org_structure: '',
     org_tag: '',
     org_name: '',
     id: 0,
   });
 
   const saveOrgTree = async () => {
-    // organizationInfo.org_structure = JSON.stringify(
-    //   organizationInfo?.org_structure
-    // );
-    // organizationInfo.org_tag = JSON.stringify(organizationInfo?.org_tag);
     const res = await updateSysOrg(props.info.id, organizationInfo);
-    // organizationInfo.org_tag = JSON.parse(organizationInfo?.org_tag);
-    // organizationInfo.org_structure = JSON.parse(organizationInfo?.org_structure);
     Notification.success({
       title: '保存成功！',
       content: '保存组织架构图成功',
@@ -200,18 +192,6 @@
     const res = await querySysOrgDetail(Number(paramsId));
 
     organizationInfo = reactive({ ...res });
-
-    // organizationInfo.org_tag = JSON.parse(organizationInfo?.org_tag);
-
-    // if (!organizationInfo.org_structure) {
-    //   organizationInfo.org_structure = {
-    //     label: '组织架构图默认根节点',
-    //   };
-    // } else {
-    //   organizationInfo.org_structure = JSON.parse(
-    //     organizationInfo?.org_structure
-    //   );
-    // }
   });
   const columns = [
     {

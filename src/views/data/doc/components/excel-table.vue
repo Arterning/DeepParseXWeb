@@ -48,7 +48,9 @@
           </a-space>
         </a-col>
       </a-row>
-      <a-divider />
+      
+      <a-divider class="mt-0" />
+
       <a-space :size="'medium'">
         <a-button type="primary" @click="NewApi()">
           <template #icon>
@@ -71,6 +73,7 @@
         
         <a-table
           v-model:selected-keys="rowSelectKeys"
+          column-resizable
           :bordered="false"
           :columns="columns"
           :data="renderData"
@@ -86,7 +89,7 @@
             {{ rowIndex + 1 }}
           </template> -->
           <template #name="{ record }">
-            <a-link class="title-link" @click="
+            <a-link @click="
               router.push({
                 name: 'DocDetail',
                 params: { 
@@ -237,7 +240,6 @@
     import { Pagination } from '@/types/global';
     import { tableDateFormat } from '@/utils/date';
     import { cleanMarkdown } from '@/utils/string';
-    import GeneralDetail from '@/views/data/doc-detail/general-detail.vue';
     import { useRouter } from 'vue-router';
 
 

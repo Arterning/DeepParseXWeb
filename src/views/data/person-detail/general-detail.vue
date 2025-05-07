@@ -64,7 +64,7 @@
               </a-col>
             </a-row>
             <!-- 相关新闻 -->
-            <a-divider />
+            <a-divider class="mt-0"/>
             <a-row>
               <a-col :span="24">
                 <h3>工作记录</h3>
@@ -85,7 +85,7 @@
                 </a-space>
               </a-col>
             </a-row>
-            <a-divider />
+            <a-divider class="mt-0"/>
             <a-row>
               <a-col>
                   <a-card  :bordered="false" class="compact-card">

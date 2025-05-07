@@ -48,9 +48,9 @@
                                         {{ $t('摘要') }}
                                     </div>
                                 </template>
-                                <pre class="desc">
-                    {{ descMD }}
-                </pre>
+                                <p class="text-xl max-w-6xl whitespace-pre-wrap break-words p-4 rounded-lg">
+                                    {{ descMD }}
+                                </p>
                             </a-card>
 
                             <a-space style="padding-top: 22px" />
@@ -73,24 +73,22 @@
                                     </div>
                                 </template>
                                 <div class="flex gap-1" v-if="compare">
-                                    <a-tooltip content="点击以查看">
-                                        <a-image v-if="info.type === 'picture'" height="480" fit="contain" class="image"
-                                            :src="buildSrcURL(info.file)" />
-                                    </a-tooltip>
-                                    <div v-if="info.type === 'media'" class="media-box">
-                                        <icon-music class="media-icon" />
-                                        <video :src="buildSrcURL(info.file)" class="video" controls></video>
-                                    </div>
                                     <iframe v-if="info.type === 'pdf'" :src="buildSrcURL(info.file)" frameborder="0"
                                         class="h-[500px] w-1/2 "></iframe>
                                     <div class="w-1/2">
                                         <a-scrollbar style="height:500px;overflow: auto;">
-                                            <pre
-                                                class="text-xl max-w-6xl whitespace-pre-wrap break-words p-4 rounded-lg">
-                {{ info.content }}
-            </pre>
+                                            <p class="text-xl max-w-6xl whitespace-pre-wrap break-words p-4 rounded-lg">
+                                                {{ info.content }}
+                                            </p>
                                         </a-scrollbar>
                                     </div>
+                                </div>
+                                <div v-else>
+                                    <a-scrollbar style="height:500px;overflow: auto;">
+                                        <p class="text-xl max-w-6xl whitespace-pre-wrap break-words p-4 rounded-lg">
+                                                {{ info.content }}
+                                        </p>
+                                    </a-scrollbar>
                                 </div>
                             </a-card>
                         </a-tab-pane>
@@ -111,9 +109,9 @@ const compare = ref<boolean>(true);
 const buildSrcURL = (file: string) => {
     let url;
     if (import.meta.env.VITE_API_BASE_URL) {
-        url = `${import.meta.env.VITE_API_BASE_URL}/${file}`;
+        url = `${import.meta.env.VITE_API_BASE_URL}/api/v1/sys/docs/preview/${file}`;
     } else {
-        url = `${window.origin}/${file}`;
+        url = `${window.origin}/api/v1/sys/docs/preview/${file}`;
     }
     return url;
 }

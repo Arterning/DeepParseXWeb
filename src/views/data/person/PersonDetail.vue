@@ -19,7 +19,7 @@
         </a-col>
       </a-row>
       <!-- 个人简历 -->
-      <a-divider />
+      <a-divider class="mt-0"/>
       <a-row>
         <a-col :span="24">
           <h3>个人简历</h3>
@@ -27,7 +27,7 @@
         </a-col>
       </a-row>
       <!-- 相关新闻 -->
-      <a-divider />
+      <a-divider class="mt-0"/>
       <a-row>
         <a-col :span="24">
           <h3>相关新闻</h3>

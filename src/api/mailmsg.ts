@@ -2,7 +2,28 @@ import axios from 'axios';
 import qs from 'query-string';
 
 export interface MailMsgReq {
+  // 邮件标题
   name: string;
+
+  // 邮件原文
+  original: string;
+
+  // 邮件翻译
+  content: string;
+
+  // 发送时间
+  time: Date;
+
+  // 发送者
+  sender: string;
+
+  // 接收者
+  receiver: string;
+
+  // 抄送者
+  cc: string;
+
+  category: string;
 }
 
 export interface MailMsgRes extends MailMsgReq {

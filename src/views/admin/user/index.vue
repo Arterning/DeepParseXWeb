@@ -80,7 +80,7 @@
           </a-space>
         </a-col>
       </a-row>
-      <a-divider />
+      <a-divider class="mt-0"/>
       <a-button type="primary" @click="AddUser()">
         <template #icon>
           <icon-plus />

@@ -48,7 +48,7 @@
           </a-space>
         </a-col>
       </a-row>
-      <a-divider />
+      <a-divider class="mt-0"/>
       <a-space :size="'medium'">
         <a-button type="primary" @click="NewApi()">
           <template #icon>
@@ -87,7 +87,7 @@
             {{ rowIndex + 1 }}
           </template> -->
           <template #name="{ record }">
-            <a-link class="title-link" @click="
+            <a-link @click="
               router.push({
                 name: 'DocDetail',
                 params: { 
@@ -207,7 +207,7 @@
           @ok="cancelReq"
           okText="关闭"
         >
-          <GeneralDetail :info="form"/>
+          <!-- <GeneralDetail :info="form"/> -->
         </a-modal>
       </div>
     </a-card>
@@ -238,7 +238,6 @@
   import { useRouter } from 'vue-router';
   import { tableDateFormat } from '@/utils/date';
   import { cleanMarkdown } from '@/utils/string';
-  import GeneralDetail from '@/views/data/doc-detail/general-detail.vue';
 
 
   const { t } = useI18n();

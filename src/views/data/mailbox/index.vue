@@ -1,7 +1,7 @@
 <template>
     <a-layout class="flex-layout">
       <Breadcrumb />
-      <a-card :title="$t('邮箱管理')" class="general-card">
+      <a-card :title="$t('邮箱')" class="general-card">
         <a-row>
           <a-col :flex="62">
             <a-form
@@ -39,7 +39,7 @@
             </a-space>
           </a-col>
         </a-row>
-        <a-divider />
+        <a-divider class="mt-0"/>
         <a-space :size="'medium'">
           <a-button type="primary" @click="NewMailBox()">
             <template #icon>
@@ -62,6 +62,7 @@
           <a-table
             v-model:selected-keys="rowSelectKeys"
             :bordered="false"
+            column-resizable
             :columns="columns"
             :data="renderData"
             :loading="loading"
@@ -79,6 +80,9 @@
               <a-space>
                 <a-link @click="EditMailBox(record.id)">
                   编辑
+                </a-link>
+                <a-link @click="router.push({name: 'DataDetail', params: { id: record.id }, query: { type: 'mailbox' } })">
+                  查看
                 </a-link>
               </a-space>
             </template>
@@ -159,9 +163,11 @@
       updateMailBox,
     } from '@/api/mailbox';
     import { Pagination } from '@/types/global';
+    import {useRouter} from "vue-router";
   
     const { t } = useI18n();
     const { loading, setLoading } = useLoading(true);
+    const router = useRouter();
   
     // 表单
     const generateFormModel = () => {

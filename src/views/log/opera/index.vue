@@ -65,7 +65,7 @@
           </a-space>
         </a-col>
       </a-row>
-      <a-divider />
+      <a-divider class="mt-0"/>
       <div class="content">
         <a-table
           :bordered="false"

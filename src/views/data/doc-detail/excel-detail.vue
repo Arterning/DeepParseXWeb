@@ -2,41 +2,44 @@
     <a-card class="info-card" title="基础信息">
         <a-descriptions :column="1">
             <a-descriptions-item label="标题">
-                {{ title }}
+                {{ props.info.title }}
             </a-descriptions-item>
             <a-descriptions-item label="简介">
-                {{ desc }}
+                {{ props.info.desc }}
             </a-descriptions-item>
-            <a-descriptions-item label="原始文件">
-                <a-link @click="handleView(file)">查看</a-link>
-            </a-descriptions-item>
+            <!-- <a-descriptions-item label="原始文件">
+                <a-link @click="handleView(props.info.file)">查看</a-link>
+            </a-descriptions-item> -->
         </a-descriptions>
     </a-card>
 
     <a-space style="padding-top: 22px" />
 
     <a-card class="info-card" title="内容">
-        <a-row :gutter="24" style="margin: 10px 0;">
-            <a-col :span="12"><a-input v-model="term" @press-enter="search" placeholder="搜索" /></a-col>
-            <a-col :span="6">
+        <a-row :gutter="24" class="my-10">
+            <a-col :span="24" >
+                <a-input class="p-3" v-model="term" @press-enter="search" placeholder="搜索" />
+            </a-col>
+            <!-- <a-col :span="12">
                 <a-button type="primary" @click="search">
                     <template #icon>
                         <icon-search />
                     </template>
                     {{ $t('data.doc.form.search') }}
                 </a-button>
-            </a-col>
+            </a-col> -->
         </a-row>
 
         <div style="width:80vw">
-            <a-table :columns="columns" :data="filteredData" column-resizable :hoverable="false" :bordered="{ cell: true }"
-                :ellipsis="true" :scroll="scrollPercent" />
+            <a-table :columns="columns" :data="filteredData" column-resizable :hoverable="false"
+                :bordered="{ cell: true }" :ellipsis="true" :scroll="scrollPercent" />
         </div>
     </a-card>
 
 </template>
 
 <script lang="ts" setup>
+import {  SysDocRes } from '@/api/doc';
 import { PropType, computed, ref, watchEffect } from 'vue';
 
 const term = ref('')
@@ -65,9 +68,12 @@ const scrollPercent = {
 };
 // 动态生成 columns
 const columns = computed(() => {
-    if (props.doc_data.length > 0) {
+    if (!props.info.doc_data) {
+        return []
+    }
+    if (props.info.doc_data.length > 0) {
         // 获取第一个对象的键名
-        const keys = Object.keys(props.doc_data[0]);
+        const keys = Object.keys(props.info.doc_data[0]);
         return keys.map(key => ({
             title: key.charAt(0).toUpperCase() + key.slice(1), // 将键名首字母大写
             dataIndex: key,
@@ -76,30 +82,17 @@ const columns = computed(() => {
     }
     return []; // 如果 doc_data 为空，返回空数组
 });
-const props = defineProps({
-    title: {
-        type: String,
-        default: '',
-    },
-    desc: {
-        type: String,
-        default: '',
-    },
-    doc_data: {
-        type: Array as PropType<Record<string, any>[]>,
-        default() {
-            return [];
-        },
-    },
-    file: {
-        type: String,
-        default: '',
-    },
-});
+
+
+interface Props {
+    info: SysDocRes;
+}
+
+const props = defineProps<Props>();
 
 // Model 组件需要接受props的变化
 watchEffect(() => {
-    data.value = props.doc_data;
+    data.value = props.info.doc_data || [];
     filteredData.value = data.value;
 })
 

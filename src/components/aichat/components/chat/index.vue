@@ -169,7 +169,7 @@
       </template>
     </div>
     <div class="chat-footer">
-      <a-divider />
+      <a-divider class="mt-0"/>
           <div class="chat-input">
             <textarea
               ref="textareaRef"
