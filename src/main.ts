@@ -1,5 +1,6 @@
 import { createApp } from 'vue';
 import ArcoVue from '@arco-design/web-vue';
+import { Modal } from '@arco-design/web-vue';
 import ArcoVueIcon from '@arco-design/web-vue/es/icon';
 import { InstallCodeMirror } from 'codemirror-editor-vue3';
 import globalComponents from '@/components';
@@ -12,6 +13,7 @@ import App from './App.vue';
 import '@/assets/style/global.less';
 import '@/api/interceptor';
 import 'vue3-tree-org/lib/vue3-tree-org.css';
+
 
 const app = createApp(App);
 app.config.warnHandler = () => null;
@@ -29,3 +31,12 @@ app.use(globalComponents);
 app.use(directive);
 app.use(InstallCodeMirror);
 app.mount('#app');
+
+Modal.config({
+    getPopupContainer: () => {
+      // 动态获取全屏容器
+      return document.fullscreenElement || document.body;
+    },
+    // 提升全局z-index基础值
+    zIndex: 10010
+  });

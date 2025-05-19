@@ -57,6 +57,8 @@ import BlackDetail from './black-detail.vue';
 import NewsDetail from './news-detail.vue';
 import SocialDetail from './social-detail.vue';
 import OtherDetail from './other-detail.vue';
+import GeneralDetail from './general-detail.vue';
+
 
 
 const info = ref<PersonRes>();
