@@ -33,7 +33,7 @@
   </a-layout>
 </template>
 
-<script setup>
+<script setup lang="ts">
   import { reactive, onBeforeMount, ref } from 'vue';
   import Footer from '@/components/footer/index.vue';
   import { querySocialAccountDetail } from '@/api/socialAccount';

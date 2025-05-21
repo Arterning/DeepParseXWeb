@@ -32,11 +32,3 @@ app.use(directive);
 app.use(InstallCodeMirror);
 app.mount('#app');
 
-Modal.config({
-    getPopupContainer: () => {
-      // 动态获取全屏容器
-      return document.fullscreenElement || document.body;
-    },
-    // 提升全局z-index基础值
-    zIndex: 10010
-  });

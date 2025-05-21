@@ -9,7 +9,7 @@
   <AssetsDes v-if="type === 'assets'"></AssetsDes>
 </template>
 
-<script setup>
+<script setup lang="ts">
   import { useRoute } from 'vue-router';
   import SocialAccountDes from './detail-component/socialAccount-description.vue';
   import SocialPostDes from './detail-component/socialPost-description.vue';

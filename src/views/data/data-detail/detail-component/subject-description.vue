@@ -15,7 +15,7 @@
   </a-layout>
 </template>
 
-<script setup>
+<script lang="ts" setup>
   import { reactive, onBeforeMount, ref } from 'vue';
   import Footer from '@/components/footer/index.vue';
   import { querySubjectDetail } from '@/api/subject';
