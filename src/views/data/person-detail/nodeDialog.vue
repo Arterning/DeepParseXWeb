@@ -123,8 +123,6 @@
   import cytoscape, { Core } from 'cytoscape';
   import dagre from 'cytoscape-dagre';
   import edgehandles from 'cytoscape-edgehandles';
-  import { DndProvider } from 'react-dnd';
-  import HTML5Backend from 'react-dnd-html5-backend';
 
   import m1Avatar from '@/assets/images/logo.png';
   import m2Avatar from '@/assets/images/logo.png';
