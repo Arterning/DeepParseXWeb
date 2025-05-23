@@ -12,11 +12,18 @@
             <MediaDetail v-if="info.type == 'media'" :info="info" />
           </a-tab-pane>
           <a-tab-pane key="2" title="知识图谱">
-            <div class="flex flex-col h-screen bg-gray-900 text-gray-100">
+            <a-skeleton :loading="extractGraphLoading" :animation="true">
+              <a-space direction="vertical" :style="{width:'100%'}" size="large">
+                <a-skeleton-line :rows="3" />
+                <a-skeleton-shape />
+              </a-space>
+            </a-skeleton>
+            <div class="flex flex-col h-screen bg-gray-900 text-gray-100" v-if="!extractGraphLoading">
               <div class="flex flex-col flex-1 overflow-hidden">
                 <GraphControls 
                   class="bg-gray-800 p-2 border-b border-gray-700"
                   :initial-data="graphData"
+                  @extract-graph="handleExtractGraph"
                   @dataChange="handleDataChange"
                 />
                 <KnowledgeGraph 
@@ -35,7 +42,7 @@
 </template>
 
 <script lang="ts" setup>
-import { querySysDocDetail, SysDocRes } from '@/api/doc';
+import { querySysDocDetail, SysDocRes, extractGraphData } from '@/api/doc';
 import useLoading from '@/hooks/loading';
 import { onMounted, ref } from 'vue';
 import { useRoute } from 'vue-router';
@@ -53,9 +60,19 @@ const graphData = ref({
   edges: []
 });
 
+const extractGraphLoading = ref(false);
+
 const handleDataChange = (newData: any) => {
   graphData.value = newData;
 };
+
+const handleExtractGraph = async () => {
+  if (!info.value) return;
+  extractGraphLoading.value = true;
+  const res = await extractGraphData(info.value.id);
+  extractGraphLoading.value = false;
+  handleDataChange(res);
+}
 
 const route = useRoute();
 const { loading, setLoading } = useLoading(true);

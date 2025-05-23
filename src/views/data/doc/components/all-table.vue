@@ -261,7 +261,7 @@ const rowSelection = reactive({
 });
 const basePagination: Pagination = {
   current: 1,
-  defaultPageSize: 20,
+  defaultPageSize: 10,
   showTotal: true,
   showPageSize: true,
   bufferSize: 3,
@@ -308,7 +308,7 @@ const columns = computed<TableColumnData[]>(() => [
     },
     ellipsis: true,
     tooltip: true,
-    width: 100,
+    // width: 100,
   },
   {
     title: t('data.doc.columns.name'),
@@ -367,7 +367,7 @@ const columns = computed<TableColumnData[]>(() => [
     title: t('data.doc.columns.operate'),
     dataIndex: 'operate',
     slotName: 'operate',
-    width: 150,
+    // width: 150,
     align: 'center',
   },
 ]);

@@ -103,6 +103,10 @@ export function extractIPAddress(params: number[]) {
   return axios.post(`/api/v1/sys/ip_addr`, params);
 }
 
+// 提取知识图谱
+export function extractGraphData(pk: number) {
+  return axios.get(`/api/v1/sys/docs/build_graph/${pk}`);
+}
 
 export function extractUserCount(params: number[]) {
   return axios.post(`/api/v1/sys/account_pwd`, params);

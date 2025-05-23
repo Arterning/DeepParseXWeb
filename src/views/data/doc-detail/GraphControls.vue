@@ -6,7 +6,7 @@ const props = defineProps<{
   initialData: GraphData;
 }>();
 
-const emit = defineEmits(['dataChange']);
+const emit = defineEmits(['dataChange', 'extractGraph']);
 
 const graphData = ref<GraphData>({
   nodes: [],
@@ -209,27 +209,35 @@ const showAddRelationModal = ref(false);
     <div class="bg-gray-700 p-4 rounded-lg shadow flex justify-between">
       <!-- <h3 class="text-lg font-semibold text-cyan-400 mb-3">操作</h3> -->
       <div class="flex gap-2">
+
+        <!-- 提取知识图谱 -->
+        <button @click="emit('extractGraph')"
+          class="bg-indigo-600 hover:bg-indigo-700 text-white p-2 rounded transition-colors duration-200 flex items-center justify-center">
+          <span class="i-heroicons-arrow-path-solid mr-2"></span>
+          提取图谱
+        </button>
+
         <button @click="() => (showAddNodeModal = true)"
-          class="bg-cyan-600 hover:bg-cyan-700 text-white py-2 px-4 rounded transition-colors duration-200 flex items-center justify-center">
+          class="bg-cyan-600 hover:bg-cyan-700 text-white p-2 rounded transition-colors duration-200 flex items-center justify-center">
           <span class="i-heroicons-plus-circle-solid mr-2"></span>
           添加节点
         </button>
 
 
         <button @click="() => (showAddRelationModal = true)"
-          class="bg-purple-600 hover:bg-purple-700 text-white py-2 px-4 rounded transition-colors duration-200 flex items-center justify-center">
+          class="bg-purple-600 hover:bg-purple-700 text-white p-2 rounded transition-colors duration-200 flex items-center justify-center">
           <span class="i-heroicons-link-solid mr-2"></span>
           添加关系
         </button>
 
         <button @click="emit('dataChange', graphData)"
-          class="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded transition-colors duration-200 flex items-center justify-center">
+          class="bg-blue-600 hover:bg-blue-700 text-white p-2 rounded transition-colors duration-200 flex items-center justify-center">
           <span class="i-heroicons-arrow-path-solid mr-2"></span>
           刷新视图
         </button>
 
         <button @click="emit('dataChange', { nodes: [], edges: [] })"
-          class="bg-red-600 hover:bg-red-700 text-white py-2 px-4 rounded transition-colors duration-200 flex items-center justify-center">
+          class="bg-red-600 hover:bg-red-700 text-white p-2 rounded transition-colors duration-200 flex items-center justify-center">
           <span class="i-heroicons-trash-solid mr-2"></span>
           清空图谱
         </button>
