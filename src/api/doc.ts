@@ -1,5 +1,6 @@
 import axios from 'axios';
 import qs from 'query-string';
+import type { GraphData } from '@/types/graph';
 
 export interface SysDocReq {
   name: string;
@@ -17,6 +18,7 @@ export interface SysDocRes extends SysDocReq {
   email_to?: string;
   email_subject?: string;
   email_time?: string;
+  graph_data?: GraphData;
 }
 
 export interface SysDocQueryRes {

@@ -3,7 +3,7 @@ import { computed, ref, watch } from 'vue';
 import type { NodeData, EdgeData, GraphData } from '@/types/graph';
 
 const props = defineProps<{
-  initialData?: GraphData;
+  initialData: GraphData;
 }>();
 
 const emit = defineEmits(['dataChange']);
@@ -15,11 +15,13 @@ const graphData = ref<GraphData>({
 
 // 从 localStorage 加载数据
 const loadData = () => {
-  const savedData = localStorage.getItem('knowledge-graph');
-  if (savedData) {
-    graphData.value = JSON.parse(savedData);
-    emit('dataChange', graphData.value);
-  }
+  // const savedData = localStorage.getItem('knowledge-graph');
+  // if (savedData) {
+  //   graphData.value = JSON.parse(savedData);
+  //   emit('dataChange', graphData.value);
+  // }
+  graphData.value = props.initialData;
+  emit('dataChange', graphData.value);
 };
 
 // 保存数据到 localStorage
@@ -129,7 +131,7 @@ const showAddRelationModal = ref(false);
   <div class="space-y-4">
     <!-- 添加节点 -->
     <a-modal v-model:visible="showAddNodeModal" :title="$t('Add Node')" @ok="addNode">
-      <div class="bg-gray-700 p-2 rounded-lg shadow">
+      <div class="p-2 rounded-lg shadow">
         <h3 class="text-lg font-semibold text-cyan-400 mb-3">添加节点</h3>
         <div class="space-y-3">
           <div>
@@ -155,18 +157,18 @@ const showAddRelationModal = ref(false);
               <option value="concept">概念</option>
             </select>
           </div>
-          <button @click="addNode"
+          <!-- <button @click="addNode"
             class="w-full bg-cyan-600 hover:bg-cyan-700 text-white py-2 px-4 rounded transition-colors duration-200 flex items-center justify-center">
             <span class="i-heroicons-plus-circle-solid mr-2"></span>
             确认
-          </button>
+          </button> -->
         </div>
       </div>
     </a-modal>
 
     <a-modal v-model:visible="showAddRelationModal" :title="$t('添加关系')" @ok="addEdge">
       <!-- 添加关系 -->
-      <div class="bg-gray-700 p-4 rounded-lg shadow">
+      <div class="p-4 rounded-lg shadow">
         <h3 class="text-lg font-semibold text-cyan-400 mb-3">添加关系</h3>
         <div class="space-y-3">
           <div>
@@ -195,11 +197,11 @@ const showAddRelationModal = ref(false);
               class="w-full bg-gray-600 border border-gray-500 rounded px-3 py-2 text-white focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
               required placeholder="例如: 朋友, 同事, 属于" />
           </div>
-          <button @click="addEdge"
+          <!-- <button @click="addEdge"
             class="w-full bg-purple-600 hover:bg-purple-700 text-white py-2 px-4 rounded transition-colors duration-200 flex items-center justify-center">
             <span class="i-heroicons-link-solid mr-2"></span>
             确认
-          </button>
+          </button> -->
         </div>
       </div>
     </a-modal>
@@ -226,7 +228,7 @@ const showAddRelationModal = ref(false);
           刷新视图
         </button>
 
-        <button @click="deleteSelected([])"
+        <button @click="emit('dataChange', { nodes: [], edges: [] })"
           class="bg-red-600 hover:bg-red-700 text-white py-2 px-4 rounded transition-colors duration-200 flex items-center justify-center">
           <span class="i-heroicons-trash-solid mr-2"></span>
           清空图谱

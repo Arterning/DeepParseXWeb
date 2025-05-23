@@ -15,7 +15,8 @@
             <div class="flex flex-col h-screen bg-gray-900 text-gray-100">
               <div class="flex flex-col flex-1 overflow-hidden">
                 <GraphControls 
-                  class="bg-gray-800 p-2 border-b border-gray-700" 
+                  class="bg-gray-800 p-2 border-b border-gray-700"
+                  :initial-data="graphData"
                   @dataChange="handleDataChange"
                 />
                 <KnowledgeGraph 
@@ -66,6 +67,7 @@ const { id } = route.params;
 onMounted(async () => {
   setLoading(true);
   info.value = await querySysDocDetail(Number(id));
+  graphData.value = info.value.graph_data as any;
   setLoading(false);
 })
 
