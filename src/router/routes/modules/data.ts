@@ -150,22 +150,11 @@ const DASHBOARD: AppRouteRecordRaw = {
       },
     },
       {
-        path: 'mailbox',
-        name: 'Mailbox',
-        component: () => import('@/views/data/mailbox/index.vue'),
+        path: 'mail',
+        name: 'Mail',
+        component: () => import('@/views/data/mail/index.vue'),
         meta: {
-          locale: '邮箱',
-          requiresAuth: true,
-          roles: ['*'],
-          hideInMenu: false,
-        },
-      },
-      {
-        path: 'mailmsg',
-        name: 'Mailmsg',
-        component: () => import('@/views/data/mailmsg/index.vue'),
-        meta: {
-          locale: '邮件',
+          locale: '邮件数据',
           requiresAuth: true,
           roles: ['*'],
           hideInMenu: false,
@@ -205,22 +194,11 @@ const DASHBOARD: AppRouteRecordRaw = {
         },
       },
       {
-        path: 'social-account',
-        name: 'SocialAccount',
-        component: () => import('@/views/data/social-account/index.vue'),
+        path: 'social',
+        name: 'Social',
+        component: () => import('@/views/data/social/index.vue'),
         meta: {
-          locale: '社交账号',
-          requiresAuth: true,
-          roles: ['*'],
-          hideInMenu: false,
-        },
-      },
-      {
-        path: 'social-post',
-        name: 'SocialPost',
-        component: () => import('@/views/data/social-post/index.vue'),
-        meta: {
-          locale: '社交帖子',
+          locale: '社交数据',
           requiresAuth: true,
           roles: ['*'],
           hideInMenu: false,
