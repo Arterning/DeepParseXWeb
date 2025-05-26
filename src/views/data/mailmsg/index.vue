@@ -112,6 +112,28 @@
             <template #index="{ rowIndex }">
                {{ rowIndex + 1 }} 
             </template>
+            <template #name="{ record }">
+              <div class="flex flex-col gap-2">
+                <div class="flex gap-2 justify-between items-center">
+                  <div class="text-gray-500">
+                    主题：
+                    <a-link>
+                      {{ record.name }}
+                    </a-link>
+                  </div>
+                  <a-tag>{{ record.time }}</a-tag>
+                </div>
+                <div class="flex flex-col gap-1 text-gray-500">
+                  <div>发送：<a-tag color="gold">{{ record.sender }} </a-tag></div>
+                  <div>接收：<a-tag color="blue">{{ record.receiver }}</a-tag></div>
+                  <div>抄送：<a-tag color="purple">{{ record.cc || '无抄送人' }}</a-tag></div>
+                </div>
+                <div class="flex items-center justify-between gap-2">
+                  <a-tag v-if="record.category">{{ record.category }}</a-tag>
+                  <span v-if="record.location">{{ record.location }}</span>
+                </div>
+              </div>
+            </template>
             <template #operate="{ record }">
               <a-space>
                 <a-link @click="EditMailMsg(record.id)">
@@ -280,64 +302,64 @@
       console.log('查询')
     }
     const columns = computed<TableColumnData[]>(() => [
-      {
-        title: 'ID',
-        dataIndex: 'index',
-        slotName: 'index',
-        ellipsis: true,
-        tooltip: true,
-        width: 100,
-      },
+      // {
+      //   title: 'ID',
+      //   dataIndex: 'index',
+      //   slotName: 'index',
+      //   ellipsis: true,
+      //   tooltip: true,
+      //   width: 100,
+      // },
       {
         title: t('名称'),
         dataIndex: 'name',
         slotName: 'name',
         ellipsis: true,
         tooltip: true,
-        width: 200,
+        // width: 200,
       },
-      {
-        title: t('时间'),
-        dataIndex: 'time',
-        slotName: 'time',
-        ellipsis: true,
-        tooltip: true,
-        width: 200,
-      },
-      {
-        // category
-        title: t('类型'),
-        dataIndex: 'category',
-        slotName: 'category',
-        ellipsis: true,
-        tooltip: true,
-        width: 200,
-      },
-      {
-        // 发送者
-        title: t('发送者'),
-        dataIndex: 'sender',
-        slotName: 'sender',
-        ellipsis: true,
-        tooltip: true,
-        width: 200,
-      },
-      {
-        // 接收者
-        title: t('接收者'),
-        dataIndex: 'receiver',
-        slotName: 'receiver',
-        ellipsis: true,
-        tooltip: true,
-      },
-      {
-        // 抄送者
-        title: t('抄送者'),
-        dataIndex: 'cc',
-        slotName: 'cc',
-        ellipsis: true,
-        tooltip: true,
-      },
+      // {
+      //   title: t('时间'),
+      //   dataIndex: 'time',
+      //   slotName: 'time',
+      //   ellipsis: true,
+      //   tooltip: true,
+      //   width: 200,
+      // },
+      // {
+      //   // category
+      //   title: t('类型'),
+      //   dataIndex: 'category',
+      //   slotName: 'category',
+      //   ellipsis: true,
+      //   tooltip: true,
+      //   width: 200,
+      // },
+      // {
+      //   // 发送者
+      //   title: t('发送者'),
+      //   dataIndex: 'sender',
+      //   slotName: 'sender',
+      //   ellipsis: true,
+      //   tooltip: true,
+      //   width: 200,
+      // },
+      // {
+      //   // 接收者
+      //   title: t('接收者'),
+      //   dataIndex: 'receiver',
+      //   slotName: 'receiver',
+      //   ellipsis: true,
+      //   tooltip: true,
+      // },
+      // {
+      //   // 抄送者
+      //   title: t('抄送者'),
+      //   dataIndex: 'cc',
+      //   slotName: 'cc',
+      //   ellipsis: true,
+      //   tooltip: true,
+      // },
       {
         title: t('操作'),
         dataIndex: 'operate',
@@ -358,7 +380,7 @@
       name: '',
       original: '',
       content: '',
-      time: '',
+      time: new Date(),
       category: '',
       sender: '',
       receiver: '',
