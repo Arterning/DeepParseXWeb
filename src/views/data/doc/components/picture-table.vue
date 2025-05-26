@@ -254,6 +254,7 @@
   });
   const basePagination: Pagination = {
     current: 1,
+    pageSize: 10,
     defaultPageSize: 20,
     showTotal: true,
     showPageSize: true,

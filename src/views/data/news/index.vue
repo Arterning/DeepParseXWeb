@@ -14,6 +14,7 @@
                   <a-form-item field="name" label="名称">
                     <a-input
                       v-model="formModel.name"
+                      @keyup.enter="search"
                       :placeholder="$t('搜索新闻标题')"
                     />
                   </a-form-item>
@@ -75,6 +76,24 @@
           >
             <template #index="{ rowIndex }">
                {{ rowIndex + 1 }} 
+            </template>
+            <template #name="{ record }">
+              <div class="flex flex-col gap-2">
+                <div class="flex gap-2">
+                  <a-link>
+                    {{ record.name }}
+                  </a-link>
+                  <a-tag>{{ record.source }}</a-tag>
+                </div>
+                <p class="text-gray-500">
+                  {{ record.summary }}
+                </p>
+                <div class="flex items-center gap-2">
+                  <span>{{ record.time }}</span>
+                  <span class="text-gray-500">|</span>
+                  <span>{{ record.location }}</span>
+                </div>
+              </div>
             </template>
             <template #operate="{ record }">
               <a-space>
@@ -221,6 +240,7 @@
     });
     const basePagination: Pagination = {
       current: 1,
+      pageSize: 20,
       defaultPageSize: 20,
       showTotal: true,
       showPageSize: true,
@@ -248,78 +268,77 @@
       openDelete.value = true;
     };
     const columns = computed<TableColumnData[]>(() => [
+      // {
+      //   title: 'ID',
+      //   dataIndex: 'index',
+      //   slotName: 'index',
+      //   ellipsis: true,
+      //   tooltip: true,
+      //   width: 100,
+      // },
       {
-        title: 'ID',
-        dataIndex: 'index',
-        slotName: 'index',
-        ellipsis: true,
-        tooltip: true,
-        width: 100,
-      },
-      {
-        title: t('新闻标题'),
+        title: t('新闻'),
         dataIndex: 'name',
         slotName: 'name',
         ellipsis: true,
         tooltip: true,
-        width: 200,
       },
-      {
-        // 新闻简介
-        title: t('新闻简介'),
-        dataIndex: 'summary',
-        slotName: 'summary',
-        ellipsis: true,
-        tooltip: true,
-      },
-      {
-        // 新闻类型
-        title: t('新闻类型'),
-        dataIndex: 'news_type',
-        slotName: 'news_type',
-        ellipsis: true,
-        tooltip: true,
-      },
-      {
-        // 新闻来源
-        title: t('新闻来源'),
-        dataIndex: 'source',
-        slotName: 'source',
-        ellipsis: true,
-        tooltip: true,
-      },
-      {
-        // 新闻组织
-        title: t('新闻组织'),
-        dataIndex: 'organization',
-        slotName: 'organization',
-        ellipsis: true,
-        tooltip: true,
-      },
-      {
-        // 新闻作者
-        title: t('新闻作者'),
-        dataIndex: 'author',
-        slotName: 'author',
-        ellipsis: true,
-        tooltip: true,
-      },
-      {
-        // 新闻时间
-        title: t('新闻时间'),
-        dataIndex: 'time',
-        slotName: 'time',
-        ellipsis: true,
-        tooltip: true,
-      },
-      {
-        // 新闻地点
-        title: t('新闻地点'),
-        dataIndex: 'location',
-        slotName: 'location',
-        ellipsis: true,
-        tooltip: true,
-      },
+      // {
+      //   // 新闻简介
+      //   title: t('新闻简介'),
+      //   dataIndex: 'summary',
+      //   slotName: 'summary',
+      //   ellipsis: true,
+      //   tooltip: true,
+      // },
+      // {
+      //   // 新闻类型
+      //   title: t('新闻类型'),
+      //   dataIndex: 'news_type',
+      //   slotName: 'news_type',
+      //   ellipsis: true,
+      //   tooltip: true,
+      // },
+      // {
+      //   // 新闻来源
+      //   title: t('新闻来源'),
+      //   dataIndex: 'source',
+      //   slotName: 'source',
+      //   ellipsis: true,
+      //   tooltip: true,
+      // },
+      // {
+      //   // 新闻组织
+      //   title: t('新闻组织'),
+      //   dataIndex: 'organization',
+      //   slotName: 'organization',
+      //   ellipsis: true,
+      //   tooltip: true,
+      // },
+      // {
+      //   // 新闻作者
+      //   title: t('新闻作者'),
+      //   dataIndex: 'author',
+      //   slotName: 'author',
+      //   ellipsis: true,
+      //   tooltip: true,
+      // },
+      // {
+      //   // 新闻时间
+      //   title: t('新闻时间'),
+      //   dataIndex: 'time',
+      //   slotName: 'time',
+      //   ellipsis: true,
+      //   tooltip: true,
+      // },
+      // {
+      //   // 新闻地点
+      //   title: t('新闻地点'),
+      //   dataIndex: 'location',
+      //   slotName: 'location',
+      //   ellipsis: true,
+      //   tooltip: true,
+      // },
       {
         title: t('操作'),
         dataIndex: 'operate',

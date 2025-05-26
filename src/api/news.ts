@@ -3,6 +3,16 @@ import qs from 'query-string';
 
 export interface NewsReq {
   name: string;
+  summary: string;
+  news_type: string;
+  source: string;
+  organization: string;
+  author: string;
+  time: string;
+  location: string;
+  tag: string;
+  person: string;
+  detail: string;
 }
 
 export interface NewsRes extends NewsReq {

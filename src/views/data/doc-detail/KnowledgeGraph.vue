@@ -44,35 +44,35 @@ const initGraph = () => {
         }
       },
       {
-        selector: 'node[type="person"]',
+        selector: 'node[type="人物"]',
         style: {
           'shape': 'ellipse',
           'background-color': '#06b6d4'
         }
       },
       {
-        selector: 'node[type="organization"]',
+        selector: 'node[type="组织"]',
         style: {
           'shape': 'rectangle',
           'background-color': '#8b5cf6'
         }
       },
       {
-        selector: 'node[type="location"]',
+        selector: 'node[type="地点"]',
         style: {
           'shape': 'diamond',
           'background-color': '#10b981'
         }
       },
       {
-        selector: 'node[type="event"]',
+        selector: 'node[type="事件"]',
         style: {
           'shape': 'star',
           'background-color': '#f59e0b'
         }
       },
       {
-        selector: 'node[type="concept"]',
+        selector: 'node[type="概念"]',
         style: {
           'shape': 'triangle',
           'background-color': '#ec4899'

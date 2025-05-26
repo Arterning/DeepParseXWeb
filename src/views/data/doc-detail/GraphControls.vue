@@ -150,11 +150,11 @@ const showAddRelationModal = ref(false);
             <label class="block text-sm font-medium text-gray-300 mb-1">类型</label>
             <select v-model="newNode.type"
               class="w-full bg-gray-600 border border-gray-500 rounded px-3 py-2 text-white focus:ring-2 focus:ring-cyan-500 focus:border-transparent">
-              <option value="person">人物</option>
-              <option value="organization">组织</option>
-              <option value="location">地点</option>
-              <option value="event">事件</option>
-              <option value="concept">概念</option>
+              <option value="人物">人物</option>
+              <option value="组织">组织</option>
+              <option value="地点">地点</option>
+              <option value="事件">事件</option>
+              <option value="概念">概念</option>
             </select>
           </div>
           <!-- <button @click="addNode"
@@ -255,11 +255,11 @@ const showAddRelationModal = ref(false);
           <select v-model="filterType"
             class="bg-gray-600 border border-gray-500 rounded px-3 py-2 text-white focus:ring-2 focus:ring-cyan-500 focus:border-transparent">
             <option value="all">所有类型</option>
-            <option value="person">人物</option>
-            <option value="organization">组织</option>
-            <option value="location">地点</option>
-            <option value="event">事件</option>
-            <option value="concept">概念</option>
+            <option value="人物">人物</option>
+            <option value="组织">组织</option>
+            <option value="地点">地点</option>
+            <option value="事件">事件</option>
+            <option value="概念">概念</option>
           </select>
         </div>
         <div>
