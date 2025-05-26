@@ -1,8 +1,8 @@
 export default {
 
   // form
-  'data.doc.form.title': '文件标题',
-  'data.doc.form.name': '文件名称',
+  'data.doc.form.title': '文件原名',
+  'data.doc.form.name': '文件主题',
   'data.doc.form.type': '文件类型',
   'data.doc.form.desc': '文件摘要',
   'data.doc.form.content': '文件内容',
@@ -31,7 +31,8 @@ export default {
   'data.doc.columns.type': '文件类型',
   'data.doc.columns.desc': '文件描述',
   'data.doc.columns.edit': '编辑',
-  'data.doc.columns.name': '文件名',
+  'data.doc.columns.name': '文件主题',
+  'data.doc.columns.title': '文件原名',
   'data.doc.columns.isCollection': '收藏',
   'data.doc.columns.OriginName': '文件原名',
   'data.doc.columns.path': '文件路径',

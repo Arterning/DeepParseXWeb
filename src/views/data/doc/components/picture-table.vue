@@ -78,17 +78,31 @@
             {{ rowIndex + 1 }}
           </template> -->
           <template #name="{ record }">
-            <a-link @click="
-              router.push({
-                name: 'DocDetail',
-                params: { 
-                  id: record.id,
-                },
-                query: {
-                  appendix: record.name,
-                }
-              })
-              ">{{ record.name }}</a-link>
+            <div class="flex flex-col gap-2">
+              <div class="flex gap-2 justify-between items-center">
+                <div class="text-gray-500">
+                  <a-link @click="
+                    router.push({
+                      name: 'DocDetail',
+                      params: { 
+                        id: record.id,
+                      },
+                      query: {
+                        appendix: record.name,
+                      }
+                    })
+                    ">{{ record.name }}</a-link>
+                </div>
+                <a-tag>{{ record.type?.toUpperCase() }}</a-tag>
+              </div>
+              <p class="text-gray-500 max-w-[300px]">
+                {{ record.desc }}
+              </p>
+              <div class="flex items-center justify-start gap-2">
+                <a-tag >{{ tableDateFormat(record.created_time) }}</a-tag>
+                <a-tag v-if="record.updated_time">{{ tableDateFormat(record.updated_time) }}</a-tag>
+              </div>
+            </div>
           </template> 
           <template #desc="{ record }">
             {{ cleanMarkdown(record.desc) }}
@@ -293,39 +307,39 @@
     })
   };
   const columns = computed<TableColumnData[]>(() => [
-    {
-      title: 'ID',
-      dataIndex: 'id',
-      slotName: 'id',
-      sortable: {
-        sortDirections: ['ascend', 'descend']
-      },
-      ellipsis: true,
-      tooltip: true,
-      width: 100
-    },
+    // {
+    //   title: 'ID',
+    //   dataIndex: 'id',
+    //   slotName: 'id',
+    //   sortable: {
+    //     sortDirections: ['ascend', 'descend']
+    //   },
+    //   ellipsis: true,
+    //   tooltip: true,
+    //   width: 100
+    // },
     {
       title: t('data.doc.columns.name'),
       dataIndex: 'name',
       slotName: 'name',
       ellipsis: true,
     },
-    {
-      title: t('data.doc.columns.desc'),
-      dataIndex: 'desc',
-      slotName: 'desc',
-      ellipsis: true,
-      tooltip: true,
-    },
-    {
-      title: t('data.doc.columns.createdtime'),
-      dataIndex: 'created_time',
-      slotName: 'created_time',
-      sortable: {
-        sortDirections: ['ascend', 'descend']
-      },
-      width: 180
-    },
+    // {
+    //   title: t('data.doc.columns.desc'),
+    //   dataIndex: 'desc',
+    //   slotName: 'desc',
+    //   ellipsis: true,
+    //   tooltip: true,
+    // },
+    // {
+    //   title: t('data.doc.columns.createdtime'),
+    //   dataIndex: 'created_time',
+    //   slotName: 'created_time',
+    //   sortable: {
+    //     sortDirections: ['ascend', 'descend']
+    //   },
+    //   width: 180
+    // },
     {
       title: t('data.doc.columns.operate'),
       dataIndex: 'operate',
