@@ -19,7 +19,7 @@
         </a-tab-pane>
         <a-tab-pane key="5">
           <template #title>
-            <icon-nav /> Excel
+            <icon-nav /> 表格
           </template>
           <ExcelTable />
         </a-tab-pane>
