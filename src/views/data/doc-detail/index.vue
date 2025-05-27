@@ -5,11 +5,11 @@
       <a-card v-if="info" class="content-box" :loading="loading">
         <a-tabs>
           <a-tab-pane key="1" title="基本信息">
-            <TextDetail v-if="info.type === 'text'" :info="info" />
-            <ExcelDetail v-else-if="info.type === 'excel'" :info="info" />
-            <PdfDetail v-else-if="info.type === 'pdf'" :info="info" />
-            <PictureDetail v-else-if="info.type == 'picture'" :info="info" />
-            <MediaDetail v-else-if="info.type == 'media'" :info="info" />
+            <TextDetail v-if="info.type === '文本'" :info="info" />
+            <ExcelDetail v-else-if="info.type === '表格'" :info="info" />
+            <PdfDetail v-else-if="info.type === 'PDF'" :info="info" />
+            <PictureDetail v-else-if="info.type == '图片'" :info="info" />
+            <MediaDetail v-else-if="info.type == '媒体'" :info="info" />
             <TextDetail v-else :info="info" />
           </a-tab-pane>
           <a-tab-pane key="2" title="知识图谱">

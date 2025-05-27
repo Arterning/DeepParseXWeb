@@ -173,7 +173,7 @@
                     :placeholder="$t('请选择类型')"
                 >
                   <a-option
-                      v-for="(item, index) in ['文本', 'PDF', 'EXCEL', '图片', '视频', '音频', '其他']"
+                      v-for="(item, index) in ['文本', 'PDF', 'EXCEL', '图片', '媒体', '其他']"
                       :key="index"
                       :value="item"
                   >
@@ -397,12 +397,12 @@
         await createSysDoc(form);
         cancelReq();
         Message.success(t('submit.create.success'));
-        await fetchApiList({ page: 1, size: pagination.pageSize, type: 'picture' });
+        await fetchApiList({ page: 1, size: pagination.pageSize, type: '图片' });
       } else {
         await updateSysDoc(operateRow.value, form);
         cancelReq();
         Message.success(t('submit.update.success'));
-        await fetchApiList({ page: 1, size: pagination.pageSize, type: 'picture' });
+        await fetchApiList({ page: 1, size: pagination.pageSize, type: '图片' });
       }
     } catch (error) {
       // console.log(error);
@@ -423,7 +423,7 @@
       await deleteSysDoc({ pk: rowSelectKeys.value });
       cancelReq();
       Message.success(t('submit.delete.success'));
-      await fetchApiList({ page: 1, size: pagination.pageSize, type: 'picture' });
+      await fetchApiList({ page: 1, size: pagination.pageSize, type: '图片' });
       rowSelectKeys.value = [];
     } catch (error) {
       openDelete.value = false;
@@ -448,7 +448,7 @@
       setLoading(false);
     }
   };
-  fetchApiList({ page: 1, size: pagination.pageSize, type: 'picture' });
+  fetchApiList({ page: 1, size: pagination.pageSize, type: '图片' });
 
   // 请求部门详情
   const fetchApiDetail = async (pk: number) => {
@@ -465,20 +465,20 @@
 
   // 事件: 分页
   const onPageChange = async (current: number) => {
-    await fetchApiList({ page: current, size: pagination.pageSize, type: 'picture' });
+    await fetchApiList({ page: current, size: pagination.pageSize, type: '图片' });
   };
 
   // 事件: 分页大小
   const onPageSizeChange = async (pageSize: number) => {
     pagination.pageSize = pageSize;
-    await fetchApiList({ page: 1, size: pageSize, type: 'picture' });
+    await fetchApiList({ page: 1, size: pageSize, type: '图片' });
   };
 
   // 搜索
   const search = async () => {
     await fetchApiList({
       ...formModel.value,
-      type: 'picture',
+      type: '图片',
     } as unknown as SysDocParams);
   };
 
