@@ -116,17 +116,19 @@
               <div class="flex flex-col gap-2">
                 <div class="flex gap-2 justify-between items-center">
                   <div class="text-gray-500">
-                    主题：
-                    <a-link>
+                    <a-link @click="router.push({name: 'DataDetail', params: { id: record.id }, query: { type: 'mailmsg' } })">
                       {{ record.name }}
                     </a-link>
                   </div>
                   <a-tag>{{ record.time }}</a-tag>
                 </div>
                 <div class="flex flex-col gap-1 text-gray-500">
-                  <div>发送：<a-tag color="gold">{{ record.sender }} </a-tag></div>
-                  <div>接收：<a-tag color="blue">{{ record.receiver }}</a-tag></div>
-                  <div>抄送：<a-tag color="purple">{{ record.cc || '无抄送人' }}</a-tag></div>
+                  <div>
+                    <a-tag color="gold">{{ record.sender }} </a-tag>
+                    ->
+                    <a-tag color="blue">{{ record.receiver }}</a-tag>
+                  </div>
+                  <div>cc <a-tag color="purple">{{ record.cc || '无抄送人' }}</a-tag></div>
                 </div>
                 <div class="flex items-center justify-between gap-2">
                   <a-tag v-if="record.category">{{ record.category }}</a-tag>
@@ -178,10 +180,18 @@
               </a-form-item>
               <!-- 分类 -->
               <a-form-item :feedback="true" label="类型" field="category">
-                <a-input
+                <a-select
                     v-model="form.category"
-                    :placeholder="$t('请输入类型')"
-                ></a-input>
+                    :placeholder="$t('请选择类型')"
+                >
+                  <a-option
+                      v-for="(item, index) in ['工作', '个人', '通知', '其他']"
+                      :key="index"
+                      :value="item"
+                  >
+                    {{ item }}
+                  </a-option>
+                </a-select>
               </a-form-item>
               <a-form-item :feedback="true" label="发送者" field="category">
                 <a-input

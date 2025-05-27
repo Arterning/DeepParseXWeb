@@ -6,10 +6,11 @@
         <a-tabs>
           <a-tab-pane key="1" title="基本信息">
             <TextDetail v-if="info.type === 'text'" :info="info" />
-            <ExcelDetail v-if="info.type === 'excel'" :info="info" />
-            <PdfDetail v-if="info.type === 'pdf'" :info="info" />
-            <PictureDetail v-if="info.type == 'picture'" :info="info" />
-            <MediaDetail v-if="info.type == 'media'" :info="info" />
+            <ExcelDetail v-else-if="info.type === 'excel'" :info="info" />
+            <PdfDetail v-else-if="info.type === 'pdf'" :info="info" />
+            <PictureDetail v-else-if="info.type == 'picture'" :info="info" />
+            <MediaDetail v-else-if="info.type == 'media'" :info="info" />
+            <TextDetail v-else :info="info" />
           </a-tab-pane>
           <a-tab-pane key="2" title="知识图谱">
             <a-skeleton :loading="extractGraphLoading" :animation="true">

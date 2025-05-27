@@ -100,7 +100,7 @@
                         appendix: record.name,
                       }
                     })
-                    ">{{ record.name }}</a-link>
+                    ">{{ record.title }}</a-link>
                 </div>
                 <a-tag>{{ record.type?.toUpperCase() }}</a-tag>
               </div>
@@ -168,9 +168,18 @@
               :label="$t('data.doc.form.type')"
               field="type"
             >
-              <a-input
-                v-model="form.type"
-              ></a-input>
+                <a-select
+                    v-model="form.type"
+                    :placeholder="$t('请选择类型')"
+                >
+                  <a-option
+                      v-for="(item, index) in ['文本', 'PDF', 'EXCEL', '图片', '视频', '音频', '其他']"
+                      :key="index"
+                      :value="item"
+                  >
+                    {{ item }}
+                  </a-option>
+                </a-select>
             </a-form-item>
             <a-form-item
               :label="$t('data.doc.form.desc')"
@@ -368,7 +377,7 @@
   const formDefaultValues: SysDocReq = {
     name: '',
     title: '',
-    type: '',
+    type: '文本',
     desc: '',
     file: undefined,
     content: undefined,
