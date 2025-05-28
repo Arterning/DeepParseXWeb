@@ -11,15 +11,26 @@
 
       <a-space style="padding-top: 22px" />
 
-      <a-row>
-        <a-col>
-          <a-progress :percent="progress" :style="{ width: '100%' }" >
-            <template v-slot:text="scope">
-                进度 {{ scope.percent * 100 }}%
-            </template>
-          </a-progress>
-        </a-col>
-      </a-row>
+      <!-- 任务队列列表 -->
+      <a-list :data="uploadTasks" :hoverable="true">
+        <template #header>上传任务列表</template>
+        <template #item="{ item }">
+          <a-list-item>
+            <div class="flex justify-between w-full">
+              <div class="flex items-center space-x-4">
+                <icon-file />
+                <div>
+                  <div>{{ item.title }}</div>
+                  <div class="text-sm text-gray-500">{{ formatFileSize(item.size) }}</div>
+                </div>
+              </div>
+              <div class="w-1/3">
+                <a-progress :percent="item.progress" />
+              </div>
+            </div>
+          </a-list-item>
+        </template>
+      </a-list>
 
       <a-space style="padding-top: 22px" />
       <a-row>
@@ -109,9 +120,32 @@ const beforeUpload = (file: File): Promise<boolean> => {
   });
 };
 
+// 定义上传任务队列
+interface UploadTask {
+  id: string;
+  uid: string;
+  title: string;
+  size: number;
+  progress: number;
+  eventSource: EventSource;
+}
+
+const uploadTasks = ref<UploadTask[]>([]);
+
+// 文件大小格式化函数
+const formatFileSize = (bytes: number) => {
+  if (bytes === 0) return '0 B';
+  const k = 1024;
+  const sizes = ['B', 'KB', 'MB', 'GB', 'TB'];
+  const i = Math.floor(Math.log(bytes) / Math.log(k));
+  return `${(bytes / Math.pow(k, i)).toFixed(2)} ${sizes[i]}`;
+};
+
 const customRequest = (option: RequestOption): UploadRequest => {
   const { onProgress, onError, onSuccess, fileItem } = option;
   const xhr = new XMLHttpRequest();
+  
+
   if (xhr.upload) {
     xhr.upload.onprogress = function (event) {
       let percent = 0;
@@ -121,9 +155,11 @@ const customRequest = (option: RequestOption): UploadRequest => {
       onProgress(percent, event);
     };
   }
+  
   xhr.onerror = function error(e) {
     onError(e);
   };
+  
   xhr.onload = async function onload() {
     if (xhr.status < 200 || xhr.status >= 300) {
       Message.error(t('导入失败'));
@@ -134,6 +170,22 @@ const customRequest = (option: RequestOption): UploadRequest => {
     const res = JSON.parse(xhr.response);
     const { data } = res;
     const { id } = data;
+    
+    
+    // 创建新的任务项
+    const taskItem: UploadTask = {
+      id,
+      uid: '',
+      title: fileItem.file.name,
+      size: fileItem.file.size,
+      progress: 0,
+      eventSource: new EventSource(''), // 初始化时不需要实际的 EventSource
+    };
+    
+    // 添加到任务队列
+    const taskIndex = uploadTasks.value.length;
+    uploadTasks.value.push(taskItem);
+
     await fetchData();
 
     const uid = await executeTask("upload_handle_file", {
@@ -141,6 +193,10 @@ const customRequest = (option: RequestOption): UploadRequest => {
         id,
       },
     });
+
+    // 更新任务UID
+    const task = uploadTasks.value[taskIndex];
+    task.uid = uid;
 
     const BASE = import.meta.env.VITE_API_BASE_URL;
     let url = `/api/v1/tasks/${uid}/sse`;
@@ -152,15 +208,15 @@ const customRequest = (option: RequestOption): UploadRequest => {
 
     eventSource.onmessage = (event: any) => {
         const esd = JSON.parse(event.data);
-        progress.value = esd.progress;
+        task.progress = esd.progress;
     };
+
+    task.eventSource = eventSource;
 
     eventSource.onerror = () => {
         console.error("SSE 连接错误");
         eventSource.close();
     };
-
-
 
     return onSuccess(xhr.response);
   };
