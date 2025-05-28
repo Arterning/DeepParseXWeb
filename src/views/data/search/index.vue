@@ -19,7 +19,7 @@
               <icon-search />
             </template>
           </a-input>
-          <a-button type="primary" class="p-5 rounded-md">搜索</a-button>
+          <a-button type="primary" class="p-5 rounded-md" @click="handleInput">搜索</a-button>
           <a-button type="outline" class="p-5 rounded-md" @click="higherSearch">高级搜索</a-button>
         </a-input-group>
         <a-collapse :active-key="collapseBtn" style="border: none">
@@ -358,7 +358,7 @@
               <a-list-item-meta>
                 <template #title>
                   <a @click="handleResultClick(result)">
-                    <span v-html="highlightedHit(result.name)"></span>
+                    <span v-html="highlightedHit(result.title)"></span>
                   </a>
                 </template>
               </a-list-item-meta>

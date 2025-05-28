@@ -73,7 +73,7 @@
                                     </div>
                                 </template>
                                 <div class="flex gap-1" v-if="compare">
-                                    <iframe v-if="info.type === 'pdf'" :src="buildSrcURL(info.file)" frameborder="0"
+                                    <iframe :src="buildSrcURL(info.file)" frameborder="0"
                                         class="h-[500px] w-1/2 "></iframe>
                                     <div class="w-1/2">
                                         <a-scrollbar style="height:500px;overflow: auto;">
