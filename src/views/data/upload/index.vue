@@ -2,19 +2,24 @@
   <a-layout class="flex-layout">
     <Breadcrumb />
     <a-card :title="$t('menu.data.upload')" class="general-card">
-      <a-card :style="{ width: '100%', marginBottom: '20px' }" title="上传选项">
+      <a-card :style="{ width: '100%', marginBottom: '20px' }" title="上传选项" class="info-card">
         <a-space size="large">
           <a-checkbox v-model="uploadDirectory" :default-checked="false">上传目录</a-checkbox>
         </a-space>
       </a-card>
       <a-upload multiple draggable :directory="uploadDirectory" :custom-request="customRequest" />
 
+      <a-space style="padding-top: 22px" />
 
-      <a-progress :percent="progress" :style="{ width: '100%' }" v-if="progress > 0">
-          <template v-slot:text="scope">
-              进度 {{ scope.percent * 100 }}%
-          </template>
-      </a-progress>
+      <a-row>
+        <a-col>
+          <a-progress :percent="progress" :style="{ width: '100%' }" >
+            <template v-slot:text="scope">
+                进度 {{ scope.percent * 100 }}%
+            </template>
+          </a-progress>
+        </a-col>
+      </a-row>
 
       <a-space style="padding-top: 22px" />
       <a-row>

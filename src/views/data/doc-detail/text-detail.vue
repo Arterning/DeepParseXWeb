@@ -1,11 +1,11 @@
 <template>
     <div class="container">
-        <a-layout style="padding: 0 18px">
+        <a-layout class="flex-layout">
             <a-card class="general-card">
                 <template #title>
-                    <!-- <a-space size="large">
+                    <a-space size="large">
                         {{ info.title }}
-                    </a-space> -->
+                    </a-space>
                 </template>
                 <div class="content">
                     <a-card class="info-card">
@@ -15,8 +15,11 @@
                             </div>
                         </template>
                         <a-descriptions :column="1">
-                            <a-descriptions-item label="标题">
+                            <a-descriptions-item label="文件原名">
                                 {{ info.title }}
+                            </a-descriptions-item>
+                            <a-descriptions-item label="文件名">
+                                {{ info.name }}
                             </a-descriptions-item>
                             <a-descriptions-item label="用户账号">
                                 <div v-if="!info.account_pwd">未提取</div>
