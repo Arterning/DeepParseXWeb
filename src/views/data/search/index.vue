@@ -354,10 +354,10 @@
         <div v-else class="searchResults" style="width: 100%">
           <div class="tip">搜索到{{ total }}个结果</div>
           <a-list :max-height="450" :scrollbar="true" :loading="loading">
-            <a-list-item v-for="result in searchResults" :key="result.id" class="ResultItem">
+            <a-list-item v-for="result in searchResults" :key="result.id" class="ResultItem" @click="handleResultClick(result)">
               <a-list-item-meta>
                 <template #title>
-                  <a @click="handleResultClick(result)">
+                  <a>
                     <span v-html="highlightedHit(result.title)"></span>
                   </a>
                 </template>
@@ -518,38 +518,43 @@ onMounted(loadSearchHistory);
 
 // 搜索结果跳转
 const handleResultClick = (item: { entity_type: string; id: any }) => {
-  // router.push({ name: 'appClientMenus', params: { id } });
-  if (item.entity_type === 'document') {
+    
     router.push({
-      name: 'DataDocDetail',
-      query: { docId: item.id },
+      name: 'DocDetail',
+      params: { id: item.id },
     });
-    // window.open(window.origin + '/data/doc-detail?docId='+item.id);
-  }
 
-  if (item.entity_type === 'person') {
-    router.push({
-      name: 'DataPersonDetail',
-      query: { personId: item.id },
-    });
-  }
-
-  if (item.entity_type === 'org') {
-    router.push({
-      name: 'DataOrgDetail',
-      query: { orgId: item.id },
-    });
-  }
-
-  if (item.entity_type === 'subject') {
-    router.push({
-      name: 'DataSubjectDetail',
-      query: { subjectId: item.id },
-    });
-  }
-
-  handleEnter();
-  visible.value = false;
+    if (item.entity_type === 'document') {
+      router.push({
+        name: 'DocDetail',
+        params: { id: item.id },
+      });
+      // window.open(window.origin + '/data/doc-detail?docId='+item.id);
+    }
+  
+    if (item.entity_type === 'person') {
+      router.push({
+        name: 'DocDetail',
+        query: { personId: item.id },
+      });
+    }
+  
+    if (item.entity_type === 'org') {
+      router.push({
+        name: 'DocDetail',
+        query: { orgId: item.id },
+      });
+    }
+  
+    if (item.entity_type === 'subject') {
+      router.push({
+        name: 'DocDetail',
+        query: { subjectId: item.id },
+      });
+    }
+  
+    handleEnter();
+    visible.value = false;
 };
 
 const highlightedHit = (hit: string | undefined) => {
@@ -647,7 +652,7 @@ const onPageSizeChange = () => {
 
 .history-item:hover,
 .ResultItem:hover {
-  // background-color: #f0f0f0;
+  background-color: #00424D;
   opacity: 1.5;
   cursor: pointer;
   color: rgb(22, 93, 255);

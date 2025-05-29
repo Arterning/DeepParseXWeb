@@ -12,7 +12,7 @@
       <a-space style="padding-top: 22px" />
 
       <!-- 任务队列列表 -->
-      <a-list :data="uploadTasks" :hoverable="true">
+      <a-list :bordered="false" :data="uploadTasks" :hoverable="true">
         <template #header>上传任务列表</template>
         <template #item="{ item }">
           <a-list-item>
@@ -24,8 +24,13 @@
                   <div class="text-sm text-gray-500">{{ formatFileSize(item.size) }}</div>
                 </div>
               </div>
+              {{ item.stage }} 
               <div class="w-1/3">
-                <a-progress :percent="item.progress" />
+                <a-progress :percent="item.progress" >
+                  <template v-slot:text="scope" >
+                    进度 {{scope.percent * 100}}%
+                  </template>
+                </a-progress>
               </div>
             </div>
           </a-list-item>
@@ -35,7 +40,7 @@
       <a-space style="padding-top: 22px" />
       <a-row>
         <a-col>
-          <a-list :data="hotDocs" :hoverable="true" :loading="loading">
+          <a-list :bordered="false" :data="hotDocs" :hoverable="true" :loading="loading">
             <template #header> 最新文件 </template>
             <template #item="{ item, index }">
               <a-list-item :key="index" class="ResultItem" @click="
@@ -126,6 +131,7 @@ interface UploadTask {
   title?: string;
   size?: number;
   progress: number;
+  stage: string;
   eventSource: EventSource;
 }
 
@@ -176,6 +182,7 @@ const customRequest = (option: RequestOption): UploadRequest => {
     const taskItem: UploadTask = {
       id,
       uid: '',
+      stage: '解析文件..',
       title: fileItem?.file?.name,
       size: fileItem?.file?.size,
       progress: 0,
@@ -209,6 +216,7 @@ const customRequest = (option: RequestOption): UploadRequest => {
     eventSource.onmessage = (event: any) => {
         const esd = JSON.parse(event.data);
         task.progress = esd.progress;
+        task.stage = esd.stage;
     };
 
     task.eventSource = eventSource;

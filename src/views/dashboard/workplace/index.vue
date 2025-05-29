@@ -1,13 +1,14 @@
 <template>
-  <div class="flex-layout">
+  <div class="container">
+    <Breadcrumb />
     <div class="left-side">
-      <div class="panel">
-        <Banner />
-        <Search />
-        <DataPanel />
-        <Footer />
-      </div>
+      <Banner />
+      <Search />
+      <DataPanel />
     </div>
+  </div>
+  <div class="footer">
+    <Footer />
   </div>
 </template>
 

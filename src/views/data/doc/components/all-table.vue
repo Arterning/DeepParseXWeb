@@ -1,6 +1,6 @@
 <template>
   <a-layout class="flex-layout">
-    <a-card :title="$t('所有文件')" class="general-card">
+    <a-card :title="$t('文件管理')" class="general-card">
       <a-row>
         <a-col :flex="62">
           <a-form
@@ -114,6 +114,12 @@
               </div>
             </div> -->
           </template>
+          <template #created_time="{ record }">
+              {{ tableDateFormat(record.created_time) }}
+            </template>
+            <template #doc_time="{ record }">
+              {{ tableDateFormat(record.doc_time) }}
+            </template>
           <template #operate="{ record }">
             <a-space>
               <a-tooltip content="修改">
@@ -342,11 +348,12 @@
       ellipsis: true,
     },
     {
-      title: t('data.doc.columns.type'),
+      title: t('类型'),
       dataIndex: 'type',
       slotName: 'type',
       ellipsis: true,
       tooltip: true,
+      width: 80,
     },
     {
       title: t('文件时间'),
@@ -376,7 +383,7 @@
       title: t('data.doc.columns.operate'),
       dataIndex: 'operate',
       slotName: 'operate',
-      width: 150,
+      // width: 150,
       align: 'center',
     },
   ]);

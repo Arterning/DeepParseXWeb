@@ -1,5 +1,5 @@
 <template>
-  <div class="w-[80%] flex flex-col mx-auto mt-4">
+  <div class="w-[80%] flex flex-col mx-auto banner">
       <!-- <a-input-group class="flex gap-2"> -->
       
       <!-- <a-button type="primary" class="p-5 rounded-md" @click="handleInput">搜索</a-button> -->
@@ -16,7 +16,7 @@
         <div class="tip">最近搜索</div>
         <span class="del" @click="clearHistory">清除全部</span>
       </div>
-      <a-list style="margin-top: 10px" :max-height="580" :scrollbar="true">
+      <a-list style="margin-top: 10px" :max-height="580" :scrollbar="true" v-if="historyItems.length > 0">
         <a-list-item v-for="(item, index) in historyItems" :key="item" class="history-item"
           @click="historyHandle(item)">
           <icon-history />
@@ -29,10 +29,10 @@
     <div v-else class="searchResults">
       <div class="tip">搜索到{{ total }}个结果</div>
       <a-list :max-height="450" :scrollbar="true" :loading="loading">
-        <a-list-item v-for="result in searchResults" :key="result.id" class="ResultItem">
+        <a-list-item v-for="result in searchResults" :key="result.id" class="ResultItem" @click="handleResultClick(result)">
           <a-list-item-meta>
             <template #title>
-              <a @click="handleResultClick(result)">
+              <a>
                 <span v-html="highlightedHit(result.title)"></span>
               </a>
             </template>
@@ -141,32 +141,37 @@
   
   // 搜索结果跳转
   const handleResultClick = (item: { entity_type: string; id: any }) => {
-    // router.push({ name: 'appClientMenus', params: { id } });
+    
+    router.push({
+      name: 'DocDetail',
+      params: { id: item.id },
+    });
+
     if (item.entity_type === 'document') {
       router.push({
-        name: 'DataDocDetail',
-        query: { docId: item.id },
+        name: 'DocDetail',
+        params: { id: item.id },
       });
       // window.open(window.origin + '/data/doc-detail?docId='+item.id);
     }
   
     if (item.entity_type === 'person') {
       router.push({
-        name: 'DataPersonDetail',
+        name: 'DocDetail',
         query: { personId: item.id },
       });
     }
   
     if (item.entity_type === 'org') {
       router.push({
-        name: 'DataOrgDetail',
+        name: 'DocDetail',
         query: { orgId: item.id },
       });
     }
   
     if (item.entity_type === 'subject') {
       router.push({
-        name: 'DataSubjectDetail',
+        name: 'DocDetail',
         query: { subjectId: item.id },
       });
     }
@@ -204,9 +209,6 @@
     }
   };
   
-  const handleReset = () => {
-    console.log('handleReset');
-  };
   
   const onPageSizeChange = () => {
     console.log('onPageSizeChange');
@@ -214,6 +216,16 @@
   </script>
   
   <style scoped lang="less">
+  .banner {
+    width: 100%;
+    padding: 20px 20px 0 20px;
+    background-color: var(--color-bg-2);
+    border-radius: 4px 4px 0 0;
+  }
+
+  :deep(.arco-icon-home) {
+    margin-right: 6px;
+  }
   .nav-btn {
     display: flex;
     justify-content: center;
@@ -269,7 +281,7 @@
   
   .history-item:hover,
   .ResultItem:hover {
-    // background-color: #f0f0f0;
+    background-color: #00424D;
     opacity: 1.5;
     cursor: pointer;
     color: rgb(22, 93, 255);
