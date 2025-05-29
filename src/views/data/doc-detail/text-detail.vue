@@ -7,39 +7,38 @@
                         {{ info.title }}
                     </a-space>
                 </template>
+                
                 <div class="content">
-                    <a-card class="info-card">
-                        <template #title>
-                            <div class="flex gap-5 items-center">
-                                {{ $t('文件信息') }}
-                            </div>
-                        </template>
-                        <a-descriptions :column="1">
-                            <a-descriptions-item label="文件原名">
-                                {{ info.title }}
-                            </a-descriptions-item>
-                            <a-descriptions-item label="文件名">
-                                {{ info.name }}
-                            </a-descriptions-item>
-                            <a-descriptions-item label="用户账号">
-                                <div v-if="!info.account_pwd">未提取</div>
-                                <div v-if="info.account_pwd === '[]'">无</div>
-                                <div v-else v-html="user"></div>
-                            </a-descriptions-item>
-                        </a-descriptions>
-                    </a-card>
+                    <a-collapse>
+                        <a-collapse-item header="文件信息" key="1">
+                            <a-descriptions :column="1">
+                                <a-descriptions-item label="文件原名">
+                                    {{ info.title }}
+                                </a-descriptions-item>
+                                <a-descriptions-item label="文件名">
+                                    {{ info.name }}
+                                </a-descriptions-item>
+                                <a-descriptions-item label="用户账号">
+                                    <div v-if="!info.account_pwd">未提取</div>
+                                    <div v-if="info.account_pwd === '[]'">无</div>
+                                    <div v-else v-html="user"></div>
+                                </a-descriptions-item>
+                            </a-descriptions>
+                        </a-collapse-item>
 
-                    <a-space style="padding-top: 22px" />
-                    <a-card>
-                        <template #title>
-                            <div class="flex gap-5 items-center">
-                                {{ $t('摘要') }}
-                            </div>
-                        </template>
-                        <p class="text-xl max-w-6xl whitespace-pre-wrap break-words p-4 rounded-lg">
-                            {{ descMD }}
-                        </p>
-                    </a-card>
+                        <a-collapse-item header="摘要" key="2">
+                            <a-card class="info-card">
+                                <template #title>
+                                    <div class="flex gap-5 items-center">
+                                        {{ $t('摘要') }}
+                                    </div>
+                                </template>
+                                <p class="text-xl max-w-6xl whitespace-pre-wrap break-words p-4 rounded-lg">
+                                    {{ descMD }}
+                                </p>
+                            </a-card>
+                        </a-collapse-item>
+                    </a-collapse>
 
                     <a-space style="padding-top: 22px" />
 

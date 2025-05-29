@@ -1,6 +1,5 @@
 <template>
     <a-layout class="flex-layout">
-      <Breadcrumb />
       <a-card :title="$t('邮件')" class="general-card">
         <a-row>
           <a-col :flex="62">
@@ -41,6 +40,15 @@
                   <a-input
                     v-model="formModel.email_to"
                     :placeholder="$t('搜索收件人')"
+                    @keyup.enter="search"
+                  />
+                </a-form-item>
+              </a-col>
+              <a-col :span="8">
+                <a-form-item :label="$t('抄送人')" field="email_to">
+                  <a-input
+                    v-model="formModel.cc"
+                    :placeholder="$t('搜索抄送人')"
                     @keyup.enter="search"
                   />
                 </a-form-item>
@@ -268,6 +276,7 @@
         email_subject: undefined,
         email_from: undefined,
         email_to: undefined,
+        cc: undefined,
         email_time: undefined,
       };
     };

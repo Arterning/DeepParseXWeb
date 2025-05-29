@@ -1,6 +1,5 @@
 <template>
     <a-layout class="flex-layout">
-      <Breadcrumb />
       <a-card :title="$t('邮箱')" class="general-card">
         <a-row>
           <a-col :flex="62">
