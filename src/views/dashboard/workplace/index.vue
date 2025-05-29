@@ -3,6 +3,7 @@
     <div class="left-side">
       <div class="panel">
         <Banner />
+        <Search />
         <DataPanel />
         <Footer />
       </div>
@@ -14,6 +15,7 @@
   import Footer from '@/components/footer/index.vue';
   import Banner from './components/banner.vue';
   import DataPanel from './components/data-panel.vue';
+  import Search from './components/search.vue';
 </script>
 
 <script lang="ts">
