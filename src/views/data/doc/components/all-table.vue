@@ -137,7 +137,9 @@
             {{ rowIndex + 1 }}
           </template> -->
           <template #title="{ record }">
-            <a-tag class="cursor-pointer" @click="
+            <span v-if="record.status === 0" class="circle"></span>
+            <span v-else class="circle pass"></span>
+            <span class="cursor-pointer" @click="
               router.push({
                 name: 'DocDetail',
                 params: { 
@@ -147,7 +149,8 @@
                   appendix: record.name,
                 }
               })
-              ">{{ record.title }}</a-tag>
+              ">{{ record.title }}
+            </span>
             <!-- <div class="flex flex-col gap-2">
               <div class="flex gap-2 justify-between items-center">
                 <div class="text-gray-500">
@@ -164,12 +167,44 @@
               </div>
             </div> -->
           </template>
+          
+          <template #type="{ record }">
+            <a-space>
+              <a-avatar
+                v-if="record.type === '图片'"
+                :size="16"
+                shape="square"
+              >
+                <img
+                  alt="avatar"
+                  src="//p3-armor.byteimg.com/tos-cn-i-49unhts6dw/581b17753093199839f2e327e726b157.svg~tplv-49unhts6dw-image.image"
+                />
+              </a-avatar>
+              <a-avatar
+                v-else-if="record.type === '媒体'"
+                :size="16"
+                shape="square"
+              >
+                <img
+                  alt="avatar"
+                  src="//p3-armor.byteimg.com/tos-cn-i-49unhts6dw/77721e365eb2ab786c889682cbc721c1.svg~tplv-49unhts6dw-image.image"
+                />
+              </a-avatar>
+              <a-avatar v-else :size="16" shape="square">
+                <img
+                  alt="avatar"
+                  src="//p3-armor.byteimg.com/tos-cn-i-49unhts6dw/ea8b09190046da0ea7e070d83c5d1731.svg~tplv-49unhts6dw-image.image"
+                />
+              </a-avatar>
+              {{ record.type }}
+            </a-space>
+          </template>
           <template #created_time="{ record }">
               {{ tableDateFormat(record.created_time) }}
-            </template>
-            <template #doc_time="{ record }">
-              {{ tableDateFormat(record.doc_time) }}
-            </template>
+          </template>
+          <template #doc_time="{ record }">
+            {{ tableDateFormat(record.doc_time) }}
+          </template>
           <template #operate="{ record }">
             <a-space>
               <a-tooltip content="修改">
@@ -178,7 +213,7 @@
                 </a-link>
               </a-tooltip>
               <a-tooltip content="查看">
-                <a-link @click="ViewApi(record.id)">
+                <a-link @click="ViewApi(record.id, record.title)">
                   <icon-unordered-list  style="font-size:16"/>
                 </a-link>
               </a-tooltip>                  
@@ -380,12 +415,12 @@
     await fetchApiDetail(pk);
     openNewOrEdit.value = true;
   };
-  const ViewApi = async (pk: number) => {
+  const ViewApi = async (pk: number, title: string) => {
     operateRow.value = pk;
-    drawerTitle.value = t('查看');
-    await fetchApiDetail(pk);
-    openView.value = true;
-    // router.push({name: 'DocDetail', params: { id: pk }});
+    // drawerTitle.value = t('查看');
+    // await fetchApiDetail(pk);
+    // openView.value = true;
+    router.push({name: 'DocDetail', params: { id: pk }, query: { appendix: title }});
   };
   const DeleteApi = () => {
     drawerTitle.value = t('data.doc.columns.delete.drawer');
@@ -426,7 +461,7 @@
       slotName: 'type',
       ellipsis: true,
       tooltip: true,
-      width: 80,
+      width: 100,
     },
     {
       title: t('文件时间'),
@@ -605,7 +640,7 @@
 
 <script lang="ts">
   export default {
-    name: 'TextTable',
+    name: 'DocTable',
   };
 </script>
 

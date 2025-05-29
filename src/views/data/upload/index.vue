@@ -4,6 +4,16 @@
     <a-card :title="$t('menu.data.upload')" class="general-card">
       <a-card :style="{ width: '100%', marginBottom: '20px' }" title="上传选项" class="info-card">
         <a-space size="large">
+          <!-- 选择语言 -->
+          <a-select v-model="uploadLanguage" style="width: 200px" :placeholder="$t('选择语言')">
+            <a-option
+                v-for="(item, index) in ['中文简体', '中文繁体', '日语', '西班牙语', '阿拉伯语', '韩语']"
+                :key="index"
+                :value="item"
+            >
+              {{ item }}
+            </a-option>
+          </a-select>
           <a-checkbox v-model="uploadDirectory" :default-checked="false">上传目录</a-checkbox>
         </a-space>
       </a-card>
@@ -87,6 +97,7 @@ import { executeTask } from '@/api/task';
 const { t } = useI18n();
 
 const uploadDirectory = ref(false);
+const uploadLanguage = ref('中文简体');
 const { loading, setLoading } = useLoading(true);
 const hotDocs = ref<SysDocRes[]>([]);
 
