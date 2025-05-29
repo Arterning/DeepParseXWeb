@@ -18,10 +18,8 @@
                                 <a-descriptions-item label="文件名">
                                     {{ info.name }}
                                 </a-descriptions-item>
-                                <a-descriptions-item label="用户账号">
-                                    <div v-if="!info.account_pwd">未提取</div>
-                                    <div v-if="info.account_pwd === '[]'">无</div>
-                                    <div v-else v-html="user"></div>
+                                <a-descriptions-item label="状态">
+                                    {{ info.status }}
                                 </a-descriptions-item>
                             </a-descriptions>
                         </a-collapse-item>
@@ -70,21 +68,6 @@ import { marked } from 'marked';
 
 const props = defineProps(['info']);
 const compare = ref<boolean>(true);
-
-const user = computed(() => {
-    if (!props.info.account_pwd) return '';
-    const data = JSON.parse(props.info.account_pwd);
-    console.log();
-
-    let str = '';
-    for (let i = 0; i < data.length; i += 1) {
-        const set = Object.values(data[i])
-        str += `${set[0] ? set[0] : '-'} | ${set[1] ? set[1] : '-'}<br/>`
-    }
-
-    // return marked(props.info.account_pwd); 
-    return str;
-})
 
 
 const descMD = computed(() => {

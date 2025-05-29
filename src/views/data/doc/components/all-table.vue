@@ -137,8 +137,7 @@
             {{ rowIndex + 1 }}
           </template> -->
           <template #title="{ record }">
-            <span v-if="record.status === 0" class="circle"></span>
-            <span v-else class="circle pass"></span>
+            
             <span class="cursor-pointer" @click="
               router.push({
                 name: 'DocDetail',
@@ -204,6 +203,11 @@
           </template>
           <template #doc_time="{ record }">
             {{ tableDateFormat(record.doc_time) }}
+          </template>
+          <!-- status -->
+          <template #status="{ record }">
+            <span v-if="record.status === 1" class="circle"></span>
+            <span v-else class="circle pass"></span>
           </template>
           <template #operate="{ record }">
             <a-space>
@@ -470,6 +474,9 @@
       sortable: {
         sortDirections: ['ascend', 'descend']
       },
+      width: 100,
+      ellipsis: true,
+      tooltip: true,
     },
     {
       title: t('上传日期'),
@@ -478,12 +485,24 @@
       sortable: {
         sortDirections: ['ascend', 'descend']
       },
+      width: 100,
+      ellipsis: true,
+      tooltip: true,
     },
     // 上传用户
     {
       title: t('上传用户'),
       dataIndex: 'created_user',
       slotName: 'created_user',
+      ellipsis: true,
+      tooltip: true,
+    },
+    // 状态
+    {
+      title: t('状态'),
+      dataIndex: 'status',
+      slotName: 'status',
+      width: 100,
       ellipsis: true,
       tooltip: true,
     },
