@@ -28,7 +28,7 @@
           <a-list-item>
             <div class="flex justify-between w-full">
               <div class="flex items-center space-x-4">
-                <icon-file />
+                 <component :is="getSvgByFileName(item.title)" class="w-6 h-6" />
                 <div>
                   <div>{{ item.title }}</div>
                   <div class="text-sm text-gray-500">{{ formatFileSize(item.size) }}</div>
@@ -64,8 +64,9 @@
                 })
                 ">
                 <div class="flex justify-between cursor-pointer">
-                  <div>
-                    <icon-file style="font-size: large" /> {{ item.title }}
+                  <div class="flex items-center space-x-2">
+                    <component :is="getSvgByType(item.type)" class="w-10 h-10" />
+                    <div>{{ item.title }}</div>
                   </div>
                   <a-tag>上传于 {{ item.created_time }}</a-tag>
                 </div>
@@ -90,6 +91,7 @@ import { useI18n } from 'vue-i18n';
 import { computed, reactive, ref, nextTick, onMounted } from 'vue';
 import Footer from '@/components/footer/index.vue';
 import { getToken } from '@/utils/auth';
+import {getSvgByType, getSvgByFileName} from '@/utils/doc';
 import { queryRecentDocs, SysDocRes } from '@/api/doc';
 import useLoading from '@/hooks/loading';
 import { executeTask } from '@/api/task';
@@ -139,6 +141,7 @@ interface UploadTask {
   id: string;
   uid: string;
   title?: string;
+  type?: string;
   size?: number;
   progress: number;
   stage: string;
@@ -193,6 +196,7 @@ const customRequest = (option: RequestOption): UploadRequest => {
       id,
       uid: '',
       stage: '解析文件..',
+      type: 'PDF',
       title: fileItem?.file?.name,
       size: fileItem?.file?.size,
       progress: 0,
