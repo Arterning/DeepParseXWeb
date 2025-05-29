@@ -104,7 +104,6 @@ const hotDocs = ref<SysDocRes[]>([]);
     await fetchData();
   })
 
-const progress = ref(0);
 
 const beforeUpload = (file: File): Promise<boolean> => {
   if (uploadDirectory.value) {
@@ -124,8 +123,8 @@ const beforeUpload = (file: File): Promise<boolean> => {
 interface UploadTask {
   id: string;
   uid: string;
-  title: string;
-  size: number;
+  title?: string;
+  size?: number;
   progress: number;
   eventSource: EventSource;
 }
@@ -197,7 +196,7 @@ const customRequest = (option: RequestOption): UploadRequest => {
 
     // 更新任务UID
     const task = uploadTasks.value[taskIndex];
-    task.uid = uid;
+    task.uid = uid as any;
 
     const BASE = import.meta.env.VITE_API_BASE_URL;
     let url = `/api/v1/tasks/${uid}/sse`;
@@ -223,6 +222,8 @@ const customRequest = (option: RequestOption): UploadRequest => {
   };
   const formData = new FormData();
   formData.append('file', fileItem.file as Blob);
+  formData.append('last_modified', new Date(fileItem.file?.lastModified).toISOString());
+  formData.append('size', fileItem.file?.size);
   const token = getToken();
   let url = '/api/v1/sys/upload';
   if (import.meta.env.VITE_API_BASE_URL) {

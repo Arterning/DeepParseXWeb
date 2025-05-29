@@ -86,21 +86,22 @@
           <!-- <template #index="{ rowIndex }">
             {{ rowIndex + 1 }}
           </template> -->
-          <template #name="{ record }">
-            <div class="flex flex-col gap-2">
+          <template #title="{ record }">
+            <a-tag class="cursor-pointer" @click="
+              router.push({
+                name: 'DocDetail',
+                params: { 
+                  id: record.id,
+                },
+                query: {
+                  appendix: record.name,
+                }
+              })
+              ">{{ record.title }}</a-tag>
+            <!-- <div class="flex flex-col gap-2">
               <div class="flex gap-2 justify-between items-center">
                 <div class="text-gray-500">
-                  <a-link @click="
-                    router.push({
-                      name: 'DocDetail',
-                      params: { 
-                        id: record.id,
-                      },
-                      query: {
-                        appendix: record.name,
-                      }
-                    })
-                    ">{{ record.title }}</a-link>
+                  
                 </div>
                 <a-tag>{{ record.type?.toUpperCase() }}</a-tag>
               </div>
@@ -111,7 +112,7 @@
                 <a-tag >{{ tableDateFormat(record.created_time) }}</a-tag>
                 <a-tag v-if="record.updated_time">{{ tableDateFormat(record.updated_time) }}</a-tag>
               </div>
-            </div>
+            </div> -->
           </template>
           <template #operate="{ record }">
             <a-space>
@@ -329,33 +330,48 @@
     //   width: 100
     // },
     {
+      title: t('data.doc.columns.title'),
+      dataIndex: 'title',
+      slotName: 'title',
+      ellipsis: true,
+    },
+    {
       title: t('data.doc.columns.name'),
       dataIndex: 'name',
       slotName: 'name',
       ellipsis: true,
     },
-    // {
-    //   title: t('data.doc.columns.title'),
-    //   dataIndex: 'title',
-    //   slotName: 'title',
-    //   ellipsis: true,
-    // },
-    // {
-    //   title: t('data.doc.columns.desc'),
-    //   dataIndex: 'desc',
-    //   slotName: 'desc',
-    //   ellipsis: true,
-    //   tooltip: true,
-    // },
-    // {
-    //   title: t('data.doc.columns.createdtime'),
-    //   dataIndex: 'created_time',
-    //   slotName: 'created_time',
-    //   sortable: {
-    //     sortDirections: ['ascend', 'descend']
-    //   },
-    //   width: 180
-    // },
+    {
+      title: t('data.doc.columns.type'),
+      dataIndex: 'type',
+      slotName: 'type',
+      ellipsis: true,
+      tooltip: true,
+    },
+    {
+      title: t('文件时间'),
+      dataIndex: 'doc_time',
+      slotName: 'doc_time',
+      sortable: {
+        sortDirections: ['ascend', 'descend']
+      },
+    },
+    {
+      title: t('上传日期'),
+      dataIndex: 'created_time',
+      slotName: 'created_time',
+      sortable: {
+        sortDirections: ['ascend', 'descend']
+      },
+    },
+    // 上传用户
+    {
+      title: t('上传用户'),
+      dataIndex: 'created_user',
+      slotName: 'created_user',
+      ellipsis: true,
+      tooltip: true,
+    },
     {
       title: t('data.doc.columns.operate'),
       dataIndex: 'operate',
