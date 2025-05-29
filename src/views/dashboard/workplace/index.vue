@@ -3,8 +3,8 @@
     <Breadcrumb />
     <div class="left-side">
       <Banner />
-      <Search />
       <DataPanel />
+      <Search />
     </div>
   </div>
   <div class="footer">

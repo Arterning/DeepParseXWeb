@@ -1,5 +1,5 @@
 <template>
-  <a-grid :cols="24" :row-gap="16" class="panel">
+  <a-grid :cols="48" :row-gap="16" class="panel">
     <a-grid-item
       :span="{ xs: 12, sm: 12, md: 12, lg: 12, xl: 12, xxl: 6 }"
       class="panel-col"

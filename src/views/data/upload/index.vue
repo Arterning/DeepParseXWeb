@@ -24,11 +24,10 @@
                   <div class="text-sm text-gray-500">{{ formatFileSize(item.size) }}</div>
                 </div>
               </div>
-              {{ item.stage }} 
               <div class="w-1/3">
                 <a-progress :percent="item.progress" >
                   <template v-slot:text="scope" >
-                    进度 {{scope.percent * 100}}%
+                    进度 {{scope.percent * 100 }}% ({{ item.stage }})
                   </template>
                 </a-progress>
               </div>

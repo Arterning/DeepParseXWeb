@@ -10,11 +10,56 @@
           >
             <a-row :gutter="16">
               <a-col :span="8">
+                <a-form-item :label="$t('data.doc.form.title')" field="title">
+                  <a-input
+                    @keyup.enter="search"
+                    v-model="formModel.title"
+                    :placeholder="$t('输入文件原名')"
+                  />
+                </a-form-item>
+              </a-col>
+              <a-col :span="8">
                 <a-form-item :label="$t('data.doc.form.name')" field="name">
                   <a-input
                     @keyup.enter="search"
                     v-model="formModel.name"
                     :placeholder="$t('data.doc.form.name.placeholder')"
+                  />
+                </a-form-item>
+              </a-col>
+              <a-col :span="8">
+                <a-form-item
+                  :label="$t('data.doc.form.type')"
+                  field="type"
+                >
+                  <a-select
+                      v-model="form.type"
+                      :placeholder="$t('请选择类型')"
+                  >
+                    <a-option
+                        v-for="(item, index) in ['文本', 'PDF', '表格', '图片', '媒体', '其他']"
+                        :key="index"
+                        :value="item"
+                    >
+                      {{ item }}
+                    </a-option>
+                  </a-select>
+              </a-form-item>
+              </a-col>
+              <a-col :span="8">
+                <a-form-item :label="$t('来源搜索')" field="tokens">
+                  <a-input
+                    @keyup.enter="search"
+                    v-model="formModel.tokens"
+                    :placeholder="$t('输入文件来源')"
+                  />
+                </a-form-item>
+              </a-col>
+              <a-col :span="8">
+                <a-form-item :label="$t('内容搜索')" field="tokens">
+                  <a-range-picker
+                    v-model="formModel.rangeValue"
+                    style="width: 254px;"
                   />
                 </a-form-item>
               </a-col>
@@ -50,7 +95,7 @@
       </a-row>
       <a-divider class="mt-0"/>
       <a-space :size="'medium'">
-        <a-button type="primary" @click="NewApi()">
+        <a-button type="primary" @click="NewApi()" size="small">
           <template #icon>
             <icon-plus />
           </template>
@@ -60,20 +105,25 @@
           :disabled="deleteButtonStatus()"
           status="danger"
           @click="DeleteApi"
+          size="small"
         >
           <template #icon>
             <icon-minus />
           </template>
           {{ $t('data.doc.button.delete') }}
         </a-button>
+        <SettingTable
+          :columns="columns"
+          :storageKey="storageKey"
+          @update-columns="updateVisibleColumns"
+        />
       </a-space>
       <div class="content">
-        
         <a-table
           v-model:selected-keys="rowSelectKeys"
           :bordered="false"
           column-resizable
-          :columns="columns"
+          :columns="visibleColumns"
           :data="renderData"
           :loading="loading"
           :pagination="pagination"
@@ -243,7 +293,7 @@
     TableData,
   } from '@arco-design/web-vue';
   import { useI18n } from 'vue-i18n';
-  import { computed, reactive, ref } from 'vue';
+  import { computed, reactive, ref, onMounted } from 'vue';
   import useLoading from '@/hooks/loading';
   import {
     createSysDoc,
@@ -258,12 +308,34 @@
   import { Pagination } from '@/types/global';
   import { useRouter } from 'vue-router';
   import { tableDateFormat } from '@/utils/date';
-  import { cleanMarkdown } from '@/utils/string';
+  import SettingTable from '@/components/setting-table/index.vue';
+
+
 
 
   const { t } = useI18n();
   const { loading, setLoading } = useLoading(true);
   const router = useRouter();
+  const storageKey = "docTable";
+
+  // 列表展示
+  const visibleColumns = ref<TableColumnData[]>([]);
+
+  const updateVisibleColumns = (selectedColumns: string[]) => {
+    visibleColumns.value = columns.value.filter((column) => {
+      return column.dataIndex && selectedColumns.includes(column.dataIndex);
+    });
+  };
+
+  onMounted(() => {
+    const savedColumns = localStorage.getItem(storageKey);
+    if (savedColumns) {
+      updateVisibleColumns(JSON.parse(savedColumns));
+    } else {
+      visibleColumns.value = columns.value; // 默认全部显示
+    }
+  });
+
 
   // 表单
   const generateFormModel = () => {
@@ -272,6 +344,7 @@
       title: undefined,
       type: undefined,
       tokens: undefined,
+      rangeValue: ['', ''],
     };
   };
   const formModel = ref(generateFormModel());

@@ -1,5 +1,5 @@
 <template>
-  <div class="w-[80%] flex flex-col mx-auto banner">
+  <div class="w-[80%] flex flex-col mx-auto banner min-h-[50vh]">
       <!-- <a-input-group class="flex gap-2"> -->
       
       <!-- <a-button type="primary" class="p-5 rounded-md" @click="handleInput">搜索</a-button> -->
