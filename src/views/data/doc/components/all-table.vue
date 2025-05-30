@@ -168,35 +168,7 @@
           </template>
           
           <template #type="{ record }">
-            <a-space>
-              <a-avatar
-                v-if="record.type === '图片'"
-                :size="16"
-                shape="square"
-              >
-                <img
-                  alt="avatar"
-                  src="//p3-armor.byteimg.com/tos-cn-i-49unhts6dw/581b17753093199839f2e327e726b157.svg~tplv-49unhts6dw-image.image"
-                />
-              </a-avatar>
-              <a-avatar
-                v-else-if="record.type === '媒体'"
-                :size="16"
-                shape="square"
-              >
-                <img
-                  alt="avatar"
-                  src="//p3-armor.byteimg.com/tos-cn-i-49unhts6dw/77721e365eb2ab786c889682cbc721c1.svg~tplv-49unhts6dw-image.image"
-                />
-              </a-avatar>
-              <a-avatar v-else :size="16" shape="square">
-                <img
-                  alt="avatar"
-                  src="//p3-armor.byteimg.com/tos-cn-i-49unhts6dw/ea8b09190046da0ea7e070d83c5d1731.svg~tplv-49unhts6dw-image.image"
-                />
-              </a-avatar>
-              {{ record.type }}
-            </a-space>
+            <component :is="getSvgByType(record.type)" class="w-10 h-10" />
           </template>
           <template #created_time="{ record }">
               {{ tableDateFormat(record.created_time) }}
@@ -228,11 +200,11 @@
                   <icon-unordered-list  style="font-size:16"/>
                 </a-link>
               </a-tooltip>                  
-              <a-tooltip content="隐藏">
+              <!-- <a-tooltip content="隐藏">
                 <a-link @click="HideApi(record.id)">
                   <icon-eye-invisible  style="font-size:16"/>
                 </a-link>
-              </a-tooltip>
+              </a-tooltip> -->
             </a-space>
           </template>
         </a-table>
@@ -355,7 +327,7 @@
   import { useRouter } from 'vue-router';
   import { tableDateFormat } from '@/utils/date';
   import SettingTable from '@/components/setting-table/index.vue';
-
+  import {getSvgByType, getSvgByFileName} from '@/utils/doc';
 
 
 
