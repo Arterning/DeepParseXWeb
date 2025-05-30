@@ -206,8 +206,15 @@
           </template>
           <!-- status -->
           <template #status="{ record }">
-            <span v-if="record.status === 1" class="circle"></span>
-            <span v-else class="circle pass"></span>
+            <a-tag v-if="record.status === 0" :color="`orange`" bordered>
+              {{ $t(`处理中`) }}
+            </a-tag>
+            <a-tag v-if="record.status === 1" :color="`green`" bordered>
+              {{ $t(`admin.menu.form.status.${record.status}`) }}
+            </a-tag>
+            <a-tag v-else :color="`red`" bordered>
+              {{ $t(`解析失败`) }}
+            </a-tag>
           </template>
           <template #operate="{ record }">
             <a-space>

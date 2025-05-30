@@ -26,7 +26,15 @@
             {{ info.created_user }}
         </a-descriptions-item>
         <a-descriptions-item label="状态">
-            {{ info.status }}
+            <a-tag v-if="info.status === 0" :color="`orange`" bordered>
+              {{ $t(`处理中`) }}
+            </a-tag>
+            <a-tag v-if="info.status === 1" :color="`green`" bordered>
+              {{ $t(`admin.menu.form.status.${info.status}`) }}
+            </a-tag>
+            <a-tag v-else :color="`red`" bordered>
+              {{ $t(`解析失败`) }}
+            </a-tag>
         </a-descriptions-item>
     </a-descriptions>
 </template>

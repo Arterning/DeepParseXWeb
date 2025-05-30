@@ -9,16 +9,6 @@
                 </template>
                 
                 <div class="content">
-                    <a-collapse>
-                        <a-collapse-item header="文件总结" key="2">
-                            <p class="text-xl max-w-6xl whitespace-pre-wrap break-words p-4 rounded-lg">
-                                {{ descMD }}
-                            </p>
-                        </a-collapse-item>
-                    </a-collapse>
-
-                    <a-space style="padding-top: 22px" />
-
                     <a-card class="info-card">
                         <template #title>
                             <div class="flex justify-between items-center">

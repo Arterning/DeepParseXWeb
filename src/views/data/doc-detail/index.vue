@@ -10,6 +10,7 @@
             <PdfDetail v-else-if="info.type === 'PDF'" :info="info" />
             <PictureDetail v-else-if="info.type == '图片'" :info="info" />
             <MediaDetail v-else-if="info.type == '媒体'" :info="info" />
+            <EmailDetail v-else-if="info.type == '邮件'" :mailData="info.email_msg" />
             <TextDetail v-else :info="info" />
           </a-tab-pane>
           <a-tab-pane key="2" title="基本信息">
@@ -69,6 +70,7 @@ import PdfDetail from './pdf-detail.vue';
 import ExcelDetail from './excel-detail.vue';
 import PictureDetail from './picture-detail.vue';
 import MediaDetail from './media-detail.vue';
+import EmailDetail from './email-detail.vue';
 import GraphControls from './GraphControls.vue';
 import KnowledgeGraph from './KnowledgeGraph.vue';
 
