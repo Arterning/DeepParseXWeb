@@ -8,34 +8,6 @@
                     </a-space>
                 </template>
                 <div class="content">
-                    <a-card class="info-card">
-                        <template #title>
-                            <div class="flex gap-5 items-center">
-                                {{ $t('文件信息') }}
-                            </div>
-                        </template>
-                        <a-descriptions :column="1">
-                            <a-descriptions-item label="标题">
-                                {{ info.title }}
-                            </a-descriptions-item>
-                            <a-descriptions-item label="状态">
-                                {{ info.status }}
-                            </a-descriptions-item>
-                        </a-descriptions>
-                    </a-card>
-
-                    <a-space style="padding-top: 22px" />
-                    <a-card>
-                        <template #title>
-                            <div class="flex gap-5 items-center">
-                                {{ $t('摘要') }}
-                            </div>
-                        </template>
-                        <p class="text-xl max-w-6xl whitespace-pre-wrap break-words p-4 rounded-lg">
-                            {{ descMD }}
-                        </p>
-                    </a-card>
-
                     <a-space style="padding-top: 22px" />
 
                     <a-card class="info-card">

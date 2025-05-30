@@ -10,31 +10,10 @@
                 
                 <div class="content">
                     <a-collapse>
-                        <a-collapse-item header="文件信息" key="1">
-                            <a-descriptions :column="1">
-                                <a-descriptions-item label="文件原名">
-                                    {{ info.title }}
-                                </a-descriptions-item>
-                                <a-descriptions-item label="文件名">
-                                    {{ info.name }}
-                                </a-descriptions-item>
-                                <a-descriptions-item label="状态">
-                                    {{ info.status }}
-                                </a-descriptions-item>
-                            </a-descriptions>
-                        </a-collapse-item>
-
-                        <a-collapse-item header="摘要" key="2">
-                            <a-card class="info-card">
-                                <template #title>
-                                    <div class="flex gap-5 items-center">
-                                        {{ $t('摘要') }}
-                                    </div>
-                                </template>
-                                <p class="text-xl max-w-6xl whitespace-pre-wrap break-words p-4 rounded-lg">
-                                    {{ descMD }}
-                                </p>
-                            </a-card>
+                        <a-collapse-item header="文件总结" key="2">
+                            <p class="text-xl max-w-6xl whitespace-pre-wrap break-words p-4 rounded-lg">
+                                {{ descMD }}
+                            </p>
                         </a-collapse-item>
                     </a-collapse>
 

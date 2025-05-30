@@ -4,7 +4,7 @@
     <div class="general-card">
       <a-card v-if="info" class="content-box" :loading="loading">
         <a-tabs>
-          <a-tab-pane key="1" title="基本信息">
+          <a-tab-pane key="1" title="文件内容">
             <TextDetail v-if="info.type === '文本'" :info="info" />
             <ExcelDetail v-else-if="info.type === '表格'" :info="info" />
             <PdfDetail v-else-if="info.type === 'PDF'" :info="info" />
@@ -12,7 +12,22 @@
             <MediaDetail v-else-if="info.type == '媒体'" :info="info" />
             <TextDetail v-else :info="info" />
           </a-tab-pane>
-          <a-tab-pane key="2" title="知识图谱">
+          <a-tab-pane key="2" title="基本信息">
+            <BasicInfo :info="info" />
+          </a-tab-pane>
+          <a-tab-pane key="3" title="文件总结">
+            <a-card class="info-card">
+                <template #title>
+                    <div class="flex gap-5 items-center">
+                        {{ $t('摘要') }}
+                    </div>
+                </template>
+                <p class="text-xl max-w-6xl whitespace-pre-wrap break-words p-4 rounded-lg">
+                    {{ info.desc }}
+                </p>
+            </a-card>
+          </a-tab-pane>
+          <a-tab-pane key="4" title="知识图谱">
             <a-skeleton :loading="extractGraphLoading" :animation="true">
               <a-space direction="vertical" :style="{width:'100%'}" size="large">
                 <a-skeleton-line :rows="3" />
@@ -48,6 +63,7 @@ import useLoading from '@/hooks/loading';
 import { onMounted, ref } from 'vue';
 import { useRoute } from 'vue-router';
 import Footer from '@/components/footer/index.vue';
+import BasicInfo from './basic-info.vue';
 import TextDetail from './text-detail.vue';
 import PdfDetail from './pdf-detail.vue';
 import ExcelDetail from './excel-detail.vue';
