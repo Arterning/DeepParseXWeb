@@ -1,9 +1,18 @@
 <template>
   <a-layout class="flex-layout">
     <Breadcrumb />
-    <a-card :title="$t('menu.data.upload')" class="general-card">
-      <a-card :style="{ width: '100%', marginBottom: '20px' }" title="上传选项" class="info-card">
+    <a-card :title="$t('')" class="general-card">
+      <a-card class="my-10 info-card">
+        <template #title>
+          <div class="flex justify-between items-center">
+          </div>
+        </template>
         <a-space size="large">
+          <img
+            alt="上传选项"
+            src="@/assets/images/upload.png"
+            style="width:2rem"
+          />
           <!-- 选择语言 -->
           <a-select v-model="uploadLanguage" style="width: 200px" :placeholder="$t('选择语言')">
             <a-option
