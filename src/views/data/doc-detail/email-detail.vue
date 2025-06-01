@@ -84,7 +84,7 @@
   import { queryMailMsgDetail, MailMsgRes } from '@/api/mailmsg';
 
   interface Props {
-    mailData: MailMsgRes;
+    mailData?: MailMsgRes;
   }
   
   const props = defineProps<Props>();

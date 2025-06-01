@@ -20,7 +20,7 @@
             <a-card class="info-card">
                 <template #title>
                     <div class="flex gap-5 items-center">
-                        {{ $t('摘要') }}
+                        <ReactSvg class="w-8 h-8" />
                     </div>
                 </template>
                 <p class="text-xl max-w-6xl whitespace-pre-wrap break-words p-4 rounded-lg">
@@ -35,10 +35,10 @@
                 <a-skeleton-shape />
               </a-space>
             </a-skeleton>
-            <div class="flex flex-col h-screen bg-gray-900 text-gray-100" v-if="!extractGraphLoading">
+            <div class="flex flex-col h-screen" v-if="!extractGraphLoading">
               <div class="flex flex-col flex-1 overflow-hidden">
                 <GraphControls 
-                  class="bg-gray-800 p-2 border-b border-gray-700"
+                  class="p-2 border-b"
                   :initial-data="graphData"
                   @extract-graph="handleExtractGraph"
                   @dataChange="handleDataChange"
@@ -50,6 +50,9 @@
                 />
               </div>
             </div>
+          </a-tab-pane>
+
+          <a-tab-pane key="5" title="问问AI">
           </a-tab-pane>
         </a-tabs>
       </a-card>
@@ -64,6 +67,7 @@ import useLoading from '@/hooks/loading';
 import { onMounted, ref } from 'vue';
 import { useRoute } from 'vue-router';
 import Footer from '@/components/footer/index.vue';
+import ReactSvg from '@/assets/svg/react.svg';
 import BasicInfo from './basic-info.vue';
 import TextDetail from './text-detail.vue';
 import PdfDetail from './pdf-detail.vue';

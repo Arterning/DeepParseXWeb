@@ -234,5 +234,5 @@ watch(() => props.graphData, (newData) => {
 </script>
 
 <template>
-  <div ref="container" class="w-full h-full bg-gray-900"></div>
+  <div ref="container" class="w-full h-full  rounded-lg"></div>
 </template>

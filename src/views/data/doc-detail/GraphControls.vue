@@ -206,7 +206,7 @@ const showAddRelationModal = ref(false);
       </div>
     </a-modal>
 
-    <div class="bg-gray-700 p-4 rounded-lg shadow flex justify-between">
+    <div class="p-4 rounded-lg shadow flex justify-between">
       <!-- <h3 class="text-lg font-semibold text-cyan-400 mb-3">操作</h3> -->
       <div class="flex gap-2">
 

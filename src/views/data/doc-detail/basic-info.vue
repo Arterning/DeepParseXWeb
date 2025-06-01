@@ -1,5 +1,11 @@
 <template>
-    <a-descriptions :column="2">
+    <a-card class="info-card">
+        <template #title>
+            <div class="flex gap-5 items-center">
+                <InfoSvg class="w-8 h-8"/>
+            </div>
+        </template>
+        <a-descriptions :column="2">
         <a-descriptions-item label="文件原名">
             {{ info.title }}
         </a-descriptions-item>
@@ -37,9 +43,11 @@
             </a-tag>
         </a-descriptions-item>
     </a-descriptions>
+    </a-card>
 </template>
 
 <script lang="ts" setup>
+import InfoSvg from '@/assets/svg/info.svg';
 
 const props = defineProps(['info']);
 
