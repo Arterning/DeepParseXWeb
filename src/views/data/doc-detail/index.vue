@@ -17,22 +17,12 @@
             <BasicInfo :info="info" />
           </a-tab-pane>
           <a-tab-pane key="3" title="文件总结">
-            <a-card class="info-card">
-                <template #title>
-                    <div class="flex gap-5 items-center">
-                        <ReactSvg class="w-8 h-8" />
-                    </div>
-                </template>
-                <p class="text-xl max-w-6xl whitespace-pre-wrap break-words p-4 rounded-lg">
-                    {{ info.desc }}
-                </p>
-            </a-card>
+            <FileDescription :info="info" />
           </a-tab-pane>
           <a-tab-pane key="4" title="知识图谱">
             <a-skeleton :loading="extractGraphLoading" :animation="true">
               <a-space direction="vertical" :style="{width:'100%'}" size="large">
-                <a-skeleton-line :rows="3" />
-                <a-skeleton-shape />
+                <a-skeleton-line :rows="8" />
               </a-space>
             </a-skeleton>
             <div class="flex flex-col h-screen" v-if="!extractGraphLoading">
@@ -79,6 +69,7 @@ import EmailDetail from './email-detail.vue';
 import GraphControls from './GraphControls.vue';
 import KnowledgeGraph from './KnowledgeGraph.vue';
 import DocAIChat from './components/DocAIChat.vue';
+import FileDescription from './components/FileDescription.vue';
 
 const graphData = ref({
   nodes: [],
