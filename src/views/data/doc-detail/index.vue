@@ -53,6 +53,7 @@
           </a-tab-pane>
 
           <a-tab-pane key="5" title="问问AI">
+            <DocAIChat :doc-info="info" />
           </a-tab-pane>
         </a-tabs>
       </a-card>
@@ -77,6 +78,7 @@ import MediaDetail from './media-detail.vue';
 import EmailDetail from './email-detail.vue';
 import GraphControls from './GraphControls.vue';
 import KnowledgeGraph from './KnowledgeGraph.vue';
+import DocAIChat from './components/DocAIChat.vue';
 
 const graphData = ref({
   nodes: [],

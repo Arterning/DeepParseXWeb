@@ -154,7 +154,7 @@
 <template>
   <div class="chat-container">
     <div ref="contentBox" class="chat-content">
-      <h1 class="start-tip" v-if="props.session.messages.length===0">有什么可以帮助的？</h1>
+      <h1 class="start-tip" v-if="props?.session?.messages?.length===0">有什么可以帮助的？</h1>
       <template v-for="(message, index) in props.session.messages" :key="index">
         <Message
           :message="message"
