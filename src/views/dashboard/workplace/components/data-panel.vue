@@ -5,15 +5,10 @@
       class="panel-col"
     >
       <a-space>
-        <a-avatar :size="54" class="col-avatar">
-          <img
-            alt="avatar"
-            src="//p3-armor.byteimg.com/tos-cn-i-49unhts6dw/288b89194e657603ff40db39e8072640.svg~tplv-49unhts6dw-image.image"
-          />
-        </a-avatar>
+        <AssetSvg class="w-16 h-16"/>
         <a-statistic
           :precision="1"
-          :title="$t('workplace.onlineContent')"
+          :title="$t('文件总数')"
           :value="373.5"
           :value-from="0"
           animation
@@ -30,14 +25,9 @@
       class="panel-col"
     >
       <a-space>
-        <a-avatar :size="54" class="col-avatar">
-          <img
-            alt="avatar"
-            src="//p3-armor.byteimg.com/tos-cn-i-49unhts6dw/fdc66b07224cdf18843c6076c2587eb5.svg~tplv-49unhts6dw-image.image"
-          />
-        </a-avatar>
+        <DocumentSvg class="w-16 h-16"/>
         <a-statistic
-          :title="$t('workplace.putIn')"
+          :title="$t('PDF')"
           :value="368"
           :value-from="0"
           animation
@@ -54,14 +44,9 @@
       class="panel-col"
     >
       <a-space>
-        <a-avatar :size="54" class="col-avatar">
-          <img
-            alt="avatar"
-            src="//p3-armor.byteimg.com/tos-cn-i-49unhts6dw/77d74c9a245adeae1ec7fb5d4539738d.svg~tplv-49unhts6dw-image.image"
-          />
-        </a-avatar>
+        <TextSvg class="w-16 h-16"/>
         <a-statistic
-          :title="$t('workplace.newDay')"
+          :title="$t('文本')"
           :value="8874"
           :value-from="0"
           animation
@@ -79,15 +64,10 @@
       style="border-right: none"
     >
       <a-space>
-        <a-avatar :size="54" class="col-avatar">
-          <img
-            alt="avatar"
-            src="//p3-armor.byteimg.com/tos-cn-i-49unhts6dw/c8b36e26d2b9bb5dbf9b74dd6d7345af.svg~tplv-49unhts6dw-image.image"
-          />
-        </a-avatar>
+        <MediaSvg class="w-16 h-16"/>
         <a-statistic
           :precision="1"
-          :title="$t('workplace.newFromYesterday')"
+          :title="$t('媒体')"
           :value="2.8"
           :value-from="0"
           animation
@@ -105,7 +85,12 @@
   </a-grid>
 </template>
 
-<script lang="ts" setup></script>
+<script lang="ts" setup>
+import TextSvg from '@/assets/svg/text.svg';
+import DocumentSvg from '@/assets/svg/document.svg';
+import MediaSvg from '@/assets/svg/media.svg';
+import AssetSvg from '@/assets/svg/asset.svg';
+</script>
 
 <style lang="less" scoped>
   .arco-grid.panel {

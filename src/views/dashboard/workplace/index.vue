@@ -2,7 +2,7 @@
   <div class="container">
     <Breadcrumb />
     <div class="left-side">
-      <Banner />
+      <!-- <Banner /> -->
       <DataPanel />
       <Search />
     </div>
