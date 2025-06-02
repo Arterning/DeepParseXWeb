@@ -1,9 +1,13 @@
 <template>
-  <a-button :shape="'circle'" class="nav-btn" type="outline" @click="handleClick">
-    <template #icon>
+  <a-input 
+    v-model="searchQuery"
+    placeholder="搜索"
+    allow-clear
+    class="rounded-lg p-2 w-[50vw]"  @keyup.enter="handleClick">
+    <template #append>
       <icon-search />
     </template>
-  </a-button>
+  </a-input>
   <a-modal v-model:visible="visible" :footer="false" @ok="handleOk" @cancel="handleCancel" fullscreen>
     <template #title>
       <a-space direction="vertical" size="large" class="modal-title">
@@ -70,6 +74,7 @@ const router = useRouter(); // 使用 Vue Router
 const handleClick = () => {
   visible.value = true;
   showHistory.value = !searchQuery.value;
+  handleInput();
 };
 
 const handleOk = () => {

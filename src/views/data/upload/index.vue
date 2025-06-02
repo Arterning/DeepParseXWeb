@@ -1,6 +1,6 @@
 <template>
-  <a-layout class="flex-layout">
-    <Breadcrumb />
+  <a-layout class="flex-layout mt-8">
+    <!-- <Breadcrumb /> -->
     <a-card :title="$t('')" class="general-card">
       <a-card class="my-10 info-card">
         <template #title>

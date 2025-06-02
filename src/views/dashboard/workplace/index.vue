@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <Breadcrumb />
+    <!-- <Breadcrumb /> -->
     <div class="left-side">
       <!-- <Banner /> -->
       <DataPanel />
