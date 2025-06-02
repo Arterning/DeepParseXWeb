@@ -2,7 +2,7 @@
 
   import { onMounted, onUnmounted, ref } from 'vue';
   import { useDateFormat, useNow } from '@vueuse/core';
-
+  import RobotIconSvg from '@/assets/svg/robot-icon.svg';
   import Chat from './components/chat/index.vue';
   import SessionItem from './components/sessionitem/index.vue';
   import { ChatSession } from './components/types';
@@ -100,15 +100,11 @@
 </script>
 
 <template>
-  <a-button :shape="'circle'" class="nav-btn" type="primary" @click="handleOpen" >
-    <template #icon>
-      <icon-robot />
-    </template>
-  </a-button>
+  <RobotIconSvg class="h-12 w-12 cursor-pointer" @click="handleOpen" />
 
   <a-modal v-model:visible="visible" :footer="false" fullscreen>
     <template #title>
-      <h3>AI助手 (o゜▽゜)o☆</h3>
+      <h3>AI助手</h3>
     </template>
 
     <div class="layout-content">
