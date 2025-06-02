@@ -24,13 +24,18 @@ export interface SysDocRes extends SysDocReq {
 }
 
 export interface SysDocQueryRes {
-  id: number;
-  name: string;
-  title?: string;
-  type?: string;
-  desc?: string;
-  content?: string;
-  hit?: string;
+  items: {
+    id: number;
+    name: string;
+    title?: string;
+    type?: string;
+    desc?: string;
+    content?: string;
+    hit?: string;
+  }[];
+  total: number;
+  page: number;
+  size: number;
 }
 
 export interface SysDocParams {
@@ -63,7 +68,7 @@ export function querySysDocList(params: SysDocParams): Promise<SysDocListRes> {
   });
 }
 
-export function searchSysDocList(params: SysDocParams): Promise<SysDocQueryRes[]> {
+export function searchSysDocList(params: SysDocParams): Promise<SysDocQueryRes> {
   return axios.get('/api/v1/sys/docs/search', {
     params,
     paramsSerializer: (obj) => {

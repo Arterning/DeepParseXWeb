@@ -78,8 +78,9 @@
         const results = await searchSysDocList({
           tokens: searchQuery.value,
         });
-        searchResults.value = results;
-        total.value = searchResults.value.length;
+        searchResults.value = results.items;
+        total.value = results.total;
+        // console.log("total", total.value);
         saveHistory();
       } catch (error) {
         console.error('搜索失败:', error);
@@ -189,30 +190,35 @@
   
   const pageChange = async (current: number) => {
     try {
-      loading.value = true;
-      //   const results = await search({
-      //     q: searchQuery.value,
-      //     current: (current - 1) * pageSize.value,
-      //     pageSize: pageSize.value,
-      //     search_after: search_after.value,
-      //   });
-      //   searchResults.value = results.items;
-      //   total.value = results.total;
-      //   search_after.value = results.search_after;
-      // } catch (error) {
-      //   console.error('搜索失败:', error);
-      // } finally {
-      //   loading.value = false;
-      // }
+        loading.value = true;
+        const results = await searchSysDocList({
+          tokens: searchQuery.value, page: current, size: pageSize.value 
+        });
+        searchResults.value = results.items;
+        total.value = results.total;
+    } catch (error) {
+        console.error('搜索失败:', error);
     } finally {
-      /* empty */
+        loading.value = false;
     }
-  };
-  
-  
-  const onPageSizeChange = () => {
-    console.log('onPageSizeChange');
-  };
+}
+
+
+const onPageSizeChange = async (_pageSize: number) => {
+    try {
+        loading.value = true;
+        const results = await searchSysDocList({
+          tokens: searchQuery.value, page: 0, size: _pageSize 
+        });
+        searchResults.value = results.items;
+        total.value = results.total;
+        pageSize.value = _pageSize; // 更新页面大小
+    } catch (error) {
+        console.error('搜索失败:', error);
+    } finally {
+        loading.value = false;
+    }
+};
   </script>
   
   <style scoped lang="less">
@@ -281,7 +287,7 @@
   
   .history-item:hover,
   .ResultItem:hover {
-    background-color: #00424D;
+    background-color: var(--color-bg-3);
     opacity: 1.5;
     cursor: pointer;
     color: rgb(22, 93, 255);

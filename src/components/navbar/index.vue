@@ -32,7 +32,7 @@
       <li>
         <AIChat />
       </li>
-      <li>
+      <!-- <li>
         <a-tooltip :content="$t('settings.language')">
           <a-button
             :shape="'circle'"
@@ -60,7 +60,7 @@
             </a-doption>
           </template>
         </a-dropdown>
-      </li>
+      </li> -->
       <li>
         <a-tooltip
           :content="
