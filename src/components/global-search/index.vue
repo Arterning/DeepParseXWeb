@@ -8,7 +8,7 @@
       @input="handleInput"
     >
       <template #append>
-        <icon-search />
+        <icon-search class="cursor-pointer" @click="handleInput"/>
       </template>
     </a-input>
     <!-- 搜索结果 -->
