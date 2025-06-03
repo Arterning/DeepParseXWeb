@@ -1,31 +1,37 @@
 <template>
-  <a-input 
-    v-model="searchQuery"
-    placeholder="搜索"
-    allow-clear
-    class="rounded-lg p-2 w-[50vw]"  @input="handleInput">
-    <template #append>
-      <icon-search />
-    </template>
-  </a-input>
-  <div v-if="searchQuery && searchResults?.length > 0"  class="searchResults">
-    <div class="result-count">搜索到{{ searchResults?.length }}个结果</div>
-
-    <a-list :max-height="500">
-      <a-list-item v-for="result in searchResults" :key="result.id">
-        <a-list-item-meta>
-          <template #title>
-            <a-link class="ResultItem" @click="handleResultClick(result)">{{ result.name }}</a-link>
-          </template>
-          <template #description>
-            <span v-html="highlightedHit(result.hit)"></span>
-          </template>
-          <template #avatar>
-            <a-avatar shape="square">{{ result.type?.toUpperCase() }}</a-avatar>
-          </template>
-        </a-list-item-meta>
-      </a-list-item>
-    </a-list>
+  <div class="search-container">
+    <a-input 
+      v-model="searchQuery"
+      placeholder="搜索"
+      allow-clear
+      class="rounded-lg p-2 w-[50vw]"  
+      @input="handleInput"
+    >
+      <template #append>
+        <icon-search />
+      </template>
+    </a-input>
+    <!-- 搜索结果 -->
+    <div v-if="searchQuery && searchResults?.length > 0" class="search-results-dropdown">
+      <a-card class="results-card">
+        <div class="result-count">搜索到{{ searchResults?.length }}个结果</div>
+        <a-list :max-height="500">
+          <a-list-item v-for="result in searchResults" :key="result.id" class="cursor-pointer"  @click="handleResultClick(result)">
+            <a-list-item-meta>
+              <template #title>
+                <a-link class="ResultItem">{{ result.title }}</a-link>
+              </template>
+              <template #description>
+                <span v-html="highlightedHit(result.hit)"></span>
+              </template>
+              <template #avatar>
+                <a-avatar shape="square">{{ result.type?.toUpperCase() }}</a-avatar>
+              </template>
+            </a-list-item-meta>
+          </a-list-item>
+        </a-list>
+      </a-card>
+    </div>
   </div>
 </template>
 
@@ -160,5 +166,37 @@ const highlightedHit = (hit: string | undefined) => {
 
 .searchResults {
   margin-top: 0;
+}
+
+.search-container {
+  position: relative;
+  display: inline-block;
+}
+
+.search-results-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  margin-top: 4px;
+}
+
+.results-card {
+  background-color: var(--color-bg-2);
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.result-count {
+  margin-bottom: 1rem;
+  color: var(--color-text-2);
+}
+
+.ResultItem:hover {
+  color: rgb(var(--primary-6));
+  opacity: 1.5;
+  cursor: pointer;
 }
 </style>
