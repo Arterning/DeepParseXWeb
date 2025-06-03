@@ -216,31 +216,40 @@
           :on-before-ok="beforeSubmit"
           :title="drawerTitle"
           :visible="openNewOrEdit"
-          :width="550"
+          :width="850"
           @cancel="cancelReq"
           @ok="submitNewOrEdit"
         >
           <a-form ref="formRef" :model="form">
-            <a-form-item
-              :feedback="true"
-              :label="$t('data.doc.form.title')"
-              field="title"
-            >
-              <a-input
-                v-model="form.title"
-                :placeholder="$t('data.doc.form.name.placeholder')"
-              ></a-input>
-            </a-form-item>
-            <a-form-item
-              :feedback="true"
-              :label="$t('data.doc.form.name')"
-              field="name"
-            >
-              <a-input
-                v-model="form.name"
-              ></a-input>
-            </a-form-item>
-            <a-form-item
+            <a-row :gutter="24">
+              <a-col :span="12">
+                <a-form-item
+                  :feedback="true"
+                  :label="$t('data.doc.form.title')"
+                  field="title"
+                >
+                  <a-input
+                    v-model="form.title"
+                    :placeholder="$t('data.doc.form.name.placeholder')"
+                  ></a-input>
+                </a-form-item>
+              </a-col>
+              <a-col :span="12">
+                <a-form-item
+                  :feedback="true"
+                  :label="$t('data.doc.form.name')"
+                  field="name"
+                >
+                <a-input
+                  v-model="form.name"
+                ></a-input>
+              </a-form-item>
+              </a-col>
+            </a-row>
+
+            <a-row :gutter="24">
+              <a-col :span="12">
+                <a-form-item
               :label="$t('data.doc.form.type')"
               field="type"
             >
@@ -257,22 +266,50 @@
                   </a-option>
                 </a-select>
             </a-form-item>
-            <a-form-item
+              </a-col>
+              <a-col :span="12">
+                <!-- 文件来源 -->
+                <a-form-item
+                  :label="$t('文件来源')"
+                  field="source"
+                >
+                  <a-input
+                    v-model="form.source"
+                  ></a-input>
+                </a-form-item>
+              </a-col>
+              
+            </a-row>
+
+
+            <a-row :gutter="24">
+              <a-col :span="12">
+                <a-form-item
               :label="$t('data.doc.form.desc')"
               field="desc"
             >
               <a-textarea
                 v-model="form.desc"
+                auto-size
+                style="overflow: scroll; max-height: 300px;"
               ></a-textarea>
             </a-form-item>
-            <a-form-item
+              </a-col>
+              <a-col :span="12">
+                <a-form-item
               :label="$t('data.doc.form.content')"
               field="content"
             >
               <a-textarea
                 v-model="form.content"
+                auto-size
+                style="overflow: scroll; max-height: 300px;"
               ></a-textarea>
             </a-form-item>
+              </a-col>
+              
+            </a-row>
+
           </a-form>
         </a-modal>
         <a-modal
