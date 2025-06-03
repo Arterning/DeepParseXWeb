@@ -33,7 +33,7 @@
                   field="type"
                 >
                   <a-select
-                      v-model="form.type"
+                      v-model="formModel.doc_type"
                       :placeholder="$t('请选择类型')"
                   >
                     <a-option
@@ -47,16 +47,16 @@
               </a-form-item>
               </a-col>
               <a-col :span="8">
-                <a-form-item :label="$t('来源搜索')" field="tokens">
+                <a-form-item :label="$t('来源搜索')" field="source">
                   <a-input
                     @keyup.enter="search"
-                    v-model="formModel.tokens"
+                    v-model="formModel.source"
                     :placeholder="$t('输入文件来源')"
                   />
                 </a-form-item>
               </a-col>
               <a-col :span="8">
-                <a-form-item :label="$t('内容搜索')" field="tokens">
+                <a-form-item :label="$t('时间搜索')" field="rangeValue">
                   <a-range-picker
                     v-model="formModel.rangeValue"
                     style="width: 254px;"
@@ -64,10 +64,10 @@
                 </a-form-item>
               </a-col>
               <a-col :span="8">
-                <a-form-item :label="$t('内容搜索')" field="tokens">
+                <a-form-item :label="$t('内容搜索')" field="content">
                   <a-input
                     @keyup.enter="search"
-                    v-model="formModel.tokens"
+                    v-model="formModel.content"
                     :placeholder="$t('内容搜索')"
                   />
                 </a-form-item>
@@ -360,7 +360,7 @@
     return {
       name: undefined,
       title: undefined,
-      type: undefined,
+      doc_type: undefined,
       tokens: undefined,
       rangeValue: ['', ''],
     };
