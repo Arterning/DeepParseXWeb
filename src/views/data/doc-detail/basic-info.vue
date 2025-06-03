@@ -42,6 +42,10 @@
               {{ $t(`解析失败`) }}
             </a-tag>
         </a-descriptions-item>
+        <!-- 错误信息 -->
+        <a-descriptions-item label="错误信息" v-if="info.status === 2">
+            {{ info.error_msg }}
+        </a-descriptions-item>
     </a-descriptions>
     </a-card>
 </template>
