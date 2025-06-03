@@ -103,7 +103,7 @@
           </a-button>
         </a-tooltip>
       </li>
-      <li>
+      <!-- <li>
         <a-tooltip :content="$t('settings.title')">
           <a-button
             :shape="'circle'"
@@ -116,7 +116,7 @@
             </template>
           </a-button>
         </a-tooltip>
-      </li>
+      </li> -->
       <li>
         <a-dropdown trigger="click">
           <a-avatar
@@ -140,7 +140,7 @@
               </a-space>
             </a-doption>
             <a-doption>
-              <a-space @click="$router.push({ name: 'Setting' })">
+              <a-space @click="setVisible">
                 <icon-settings />
                 <span> 用户设置 </span>
               </a-space>

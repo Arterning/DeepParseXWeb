@@ -35,6 +35,7 @@
                   <a-select
                       v-model="formModel.doc_type"
                       :placeholder="$t('请选择类型')"
+                      :allow-clear="false"
                   >
                     <a-option
                         v-for="(item, index) in ['文本', 'PDF', '表格', '图片', '媒体', '其他']"

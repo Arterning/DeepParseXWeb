@@ -1,5 +1,5 @@
 <template>
-  <a-grid :cols="48" :row-gap="16" class="panel">
+  <a-grid :cols="72" :row-gap="16" class="panel">
     <a-grid-item
       :span="{ xs: 12, sm: 12, md: 12, lg: 12, xl: 12, xxl: 6 }"
       class="panel-col"
@@ -15,7 +15,7 @@
           show-group-separator
         >
           <template #suffix>
-            W+ <span class="unit">{{ $t('workplace.pecs') }}</span>
+            <span class="unit">{{ $t('workplace.pecs') }}</span>
           </template>
         </a-statistic>
       </a-space>
@@ -64,6 +64,48 @@
       style="border-right: none"
     >
       <a-space>
+        <ExcelSvg class="w-16 h-16"/>
+        <a-statistic
+          :precision="1"
+          :title="$t('表格')"
+          :value="2.8"
+          :value-from="0"
+          animation
+        >
+          <template #suffix>
+            %
+            <icon-caret-up class="up-icon" />
+          </template>
+        </a-statistic>
+      </a-space>
+    </a-grid-item>
+    <a-grid-item
+      :span="{ xs: 12, sm: 12, md: 12, lg: 12, xl: 12, xxl: 6 }"
+      class="panel-col"
+      style="border-right: none"
+    >
+      <a-space>
+        <PictureSvg class="w-16 h-16"/>
+        <a-statistic
+          :precision="1"
+          :title="$t('图片')"
+          :value="2.8"
+          :value-from="0"
+          animation
+        >
+          <template #suffix>
+            %
+            <icon-caret-up class="up-icon" />
+          </template>
+        </a-statistic>
+      </a-space>
+    </a-grid-item>
+    <a-grid-item
+      :span="{ xs: 12, sm: 12, md: 12, lg: 12, xl: 12, xxl: 6 }"
+      class="panel-col"
+      style="border-right: none"
+    >
+      <a-space>
         <MediaSvg class="w-16 h-16"/>
         <a-statistic
           :precision="1"
@@ -90,6 +132,9 @@ import TextSvg from '@/assets/svg/text.svg';
 import DocumentSvg from '@/assets/svg/document.svg';
 import MediaSvg from '@/assets/svg/media.svg';
 import AssetSvg from '@/assets/svg/asset.svg';
+import PictureSvg from '@/assets/svg/picture.svg';
+import MailSvg from '@/assets/svg/email.svg';
+import ExcelSvg from '@/assets/svg/excel.svg';
 </script>
 
 <style lang="less" scoped>
