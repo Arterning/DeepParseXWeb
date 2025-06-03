@@ -291,7 +291,7 @@
               <a-textarea
                 v-model="form.desc"
                 auto-size
-                style="overflow: scroll; max-height: 300px;"
+                style="overflow: scroll; max-height: 300px; min-height: 300px;"
               ></a-textarea>
             </a-form-item>
               </a-col>
@@ -303,11 +303,51 @@
               <a-textarea
                 v-model="form.content"
                 auto-size
-                style="overflow: scroll; max-height: 300px;"
+                style="overflow: scroll; max-height: 300px; min-height: 300px;"
               ></a-textarea>
             </a-form-item>
               </a-col>
               
+            </a-row>
+
+            <a-row :gutter="24">
+              <a-form-item :label="$t('标签')" field="tags">
+                <a-space wrap>
+                  <a-tag
+                    v-for="(tag, index) of tags"
+                    :key="index"
+                    :closable="index >= 0"
+                    @close="handleRemove(tag)"
+                  >
+                    {{ tag }}
+                  </a-tag>
+
+                  <a-input
+                    v-if="showInput"
+                    ref="inputRef"
+                    v-model.trim="inputVal"
+                    :style="{ width: '90px' }"
+                    size="mini"
+                    @keyup.enter="handleAdd"
+                    @blur="handleAdd"
+                  />
+                  <a-tag
+                    v-else
+                    :style="{
+                      width: '90px',
+                      backgroundColor: 'var(--color-fill-2)',
+                      border: '1px dashed var(--color-fill-3)',
+                      cursor: 'pointer',
+                    }"
+                    @click="handleEdit"
+                  >
+                    <template #icon>
+                      <icon-plus />
+                    </template>
+                    添加标签
+                  </a-tag>
+                </a-space>
+              </a-form-item>
             </a-row>
 
           </a-form>
@@ -349,7 +389,7 @@
     TableData,
   } from '@arco-design/web-vue';
   import { useI18n } from 'vue-i18n';
-  import { computed, reactive, ref, onMounted } from 'vue';
+  import { computed, reactive, ref, onMounted, nextTick } from 'vue';
   import useLoading from '@/hooks/loading';
   import {
     createSysDoc,
@@ -548,6 +588,7 @@
     desc: '',
     file: undefined,
     content: undefined,
+    tags: [],
   };
   const form = reactive<SysDocReq>({ ...formDefaultValues });
   const buttonStatus = ref<string>();
@@ -671,6 +712,41 @@
       // @ts-ignore
       form[key] = data[key];
     });
+
+    form.tags = data.tags.map((item: Record<any, any>) => item.name);
+
+    if (form.tags) {
+      tags.value = [...form.tags];
+    }
+  };
+
+  const tags = ref<string[]>([]);
+  const inputRef = ref<HTMLInputElement>();
+  const showInput = ref(false);
+  const inputVal = ref('');
+
+  const handleRemove = (key: string) => {
+    tags.value = tags.value.filter((tag) => tag !== key);
+    form.tags = form.tags?.filter((tag) => tag !== key);
+  };
+
+  const handleEdit = () => {
+    showInput.value = true;
+
+    nextTick(() => {
+      if (inputRef.value) {
+        inputRef.value.focus();
+      }
+    });
+  };
+
+  const handleAdd = () => {
+    if (inputVal.value) {
+      tags.value.push(inputVal.value);
+      form.tags?.push(inputVal.value);
+      inputVal.value = '';
+    }
+    showInput.value = false;
   };
 </script>
 

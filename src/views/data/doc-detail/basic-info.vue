@@ -31,6 +31,13 @@
         <a-descriptions-item label="创建人">
             {{ info.created_user }}
         </a-descriptions-item>
+        <a-descriptions-item label="文件标签">
+            <a-space wrap>
+                <a-tag v-for="tag of info.tags" :key="tag.id">
+                {{ tag.name }}
+                </a-tag>
+            </a-space>
+        </a-descriptions-item>
         <a-descriptions-item label="状态">
             <a-tag v-if="info.status === 0" :color="`orange`" bordered>
               {{ $t(`处理中`) }}

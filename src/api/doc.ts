@@ -11,6 +11,7 @@ export interface SysDocReq {
   type?: string;
   file?: string;
   doc_data?: Record<string, any>[];
+  tags?: string [];
 }
 
 export interface SysDocRes extends SysDocReq {
