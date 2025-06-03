@@ -12,9 +12,14 @@
       </template>
     </a-input>
     <!-- 搜索结果 -->
-    <div v-if="searchQuery && searchResults?.length > 0" class="search-results-dropdown">
+    <div v-if="searchQuery && searchResults?.length > 0 && showResults" class="search-results-dropdown">
       <a-card class="results-card">
-        <div class="result-count">搜索到{{ searchResults?.length }}个结果</div>
+        <template #extra>
+          <div class="flex gap-6 items-center justify-between">
+            <div>搜索到{{ searchResults?.length }}个结果</div>
+            <icon-close class="close-icon" @click="handleClose" />
+          </div>
+        </template>
         <a-list :max-height="500">
           <a-list-item v-for="result in searchResults" :key="result.id" class="cursor-pointer"  @click="handleResultClick(result)">
             <a-list-item-meta>
@@ -55,13 +60,16 @@ const historyItems = ref<string[]>([]);
 const searchResults = ref();
 const searchQuery = ref('');
 const router = useRouter(); // 使用 Vue Router
+const showResults = ref(true);
 
 
 const handleInput = async () => {
   if (!searchQuery.value) {
     showHistory.value = true;
+    showResults.value = false;
   } else {
     showHistory.value = false;
+    showResults.value = true;
     try {
       const results = await searchSysDocList({
         tokens: searchQuery.value,
@@ -73,6 +81,9 @@ const handleInput = async () => {
   }
 };
 
+const handleClose = () => {
+  showResults.value = false;
+};
 
 
 const loadSearchHistory = () => {
@@ -207,5 +218,14 @@ const highlightedHit = (hit: string | undefined) => {
   color: rgb(var(--primary-6));
   opacity: 1.5;
   cursor: pointer;
+}
+.close-icon {
+  cursor: pointer;
+  color: var(--color-text-2);
+  transition: color 0.2s;
+}
+
+.close-icon:hover {
+  color: var(--color-text-1);
 }
 </style>
