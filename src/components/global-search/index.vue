@@ -19,8 +19,17 @@
           <a-list-item v-for="result in searchResults" :key="result.id" class="cursor-pointer"  @click="handleResultClick(result)">
             <a-list-item-meta>
               <template #title>
-                <a-link class="ResultItem">{{ result.title }}</a-link>
+              <a>
+                <span v-html="highlightedHit(result.title)"></span>
+              </a>
+            </template>
+              <a-list-item-meta>
+              <template #title>
+                <a>
+                  <span v-html="highlightedHit(result.title)"></span>
+                </a>
               </template>
+            </a-list-item-meta>
               <template #description>
                 <span v-html="highlightedHit(result.hit)"></span>
               </template>
@@ -86,7 +95,7 @@ const highlightedHit = (hit: string | undefined) => {
   if (!hit) {
     return "";
   }
-  return hit.replace(/<b>(.*?)<\/b>/g, `<b style="color: yellow;">$1</b>`);
+  return hit.replace(/<b>(.*?)<\/b>/g, `<b style="color: aqua;">$1</b>`);
 }
 </script>
 
