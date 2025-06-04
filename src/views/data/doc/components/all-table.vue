@@ -391,12 +391,16 @@
           <template #title> 选择收藏位置 </template>
           <div>
             <a-select
+              v-model="collectionSelect"
               :style="{ width: '100%', marginBottom: '15px' }"
               placeholder="请选择需要保存的收藏夹"
             >
-              <a-option>Beijing</a-option>
-              <a-option>Shanghai</a-option>
-              <a-option>Guangzhou</a-option>
+              <a-option
+                v-for="item of collectionOptions"
+                :key="item.value"
+                :value="item.value"
+                >{{ item.name }}
+              </a-option>
             </a-select>
             <a-button style="width: 100%;" @click="router.push({name: 'Collection'})">
               <div>
@@ -436,6 +440,10 @@
     SysDocRes,
     updateSysDoc,
   } from '@/api/doc';
+  import {
+  queryStarCollectionList,
+  StarCollectionRes,
+  } from '@/api/starCollection';
   import { Pagination } from '@/types/global';
   import { useRouter } from 'vue-router';
   import { tableDateFormat } from '@/utils/date';
@@ -531,8 +539,20 @@
     })
   };
 
-  const CollectionApi = (pk: number) => {
+  const collectionSelect = ref();
+  const collections = ref<StarCollectionRes[]>([]);
+  const collectionOptions = computed(() => {
+    return collections.value.map((item) => {
+      return {
+        value: item.id,
+        label: item.name,
+      };
+    });
+  });
+  const CollectionApi = async (pk: number) => {
     collectView.value = true;
+    const res = await queryStarCollectionList({});
+    collections.value = res.items;
   };
 
   const columns = computed<TableColumnData[]>(() => [
