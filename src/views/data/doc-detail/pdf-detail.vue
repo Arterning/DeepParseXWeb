@@ -7,7 +7,7 @@
                         <template #title>
                             <div class="flex justify-between items-center">
                                 <div class="flex gap-3">
-                                    {{ $t('内容') }}
+                                    <ScanSvg />
                                 </div>
                                 <a-switch v-model="compare">
                                     <template #checked>
@@ -48,7 +48,8 @@
 
 <script lang="ts" setup>
 import { computed, ref } from 'vue';
-import { marked } from 'marked';
+import ScanSvg from '@/assets/svg/scan.svg';
+import InfoSvg from '@/assets/svg/info.svg';
 
 const props = defineProps(['info']);
 const compare = ref<boolean>(true);
@@ -62,12 +63,6 @@ const buildSrcURL = (file: string) => {
     }
     return url;
 }
-
-
-const descMD = computed(() => {
-    if (!props.info.desc) return '';
-    return marked(props.info.desc) as string;
-})
 
 </script>
 

@@ -9,7 +9,7 @@
 </script>
 
 <template>
-  <a-card hoverable class="session-item" :class="active? 'active-item': ''">
+  <div hoverable class="session-item border-2 rounded-lg cursor-pointer p-2" :class="active? 'active-item': ''">
     <div class="row">
       <div class="name">{{ props.session.topic }}</div>
       <div class="btn-wrapper">
@@ -27,15 +27,15 @@
       <div class="time">{{ props.session.updatedAt }}</div>
     </div>
   
-  </a-card>
+  </div>
 </template>
 
 <style lang="less" scoped>
 
   .active-item{
-    border-color: #13c2c2;
+    border-color: #2971CF;
     .name{
-      color: #13c2c2;
+      color: #2971CF;
     }
   }
   .session-item {
