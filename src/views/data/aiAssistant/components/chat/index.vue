@@ -17,6 +17,7 @@
     hiddenHeader?: boolean;
     darkMode?: boolean;
     isLoading?: boolean
+    docId?: number;
   }>();
   const emits = defineEmits(['save', 'loading']);
   const textareaRef = ref<HTMLTextAreaElement>();
@@ -59,7 +60,7 @@
     callback: (response: string, status: string) => void
   ): Promise<void> {
     try {
-      const answer = await chat({ question });
+      const answer = await chat({ question, doc_id: props.docId  });
       // const answer = "根据提供的上下文信息，没有直接提到线性层定义的公式。提供的信息主要涉及一个全新的数字电视发射机的提供情况，以及线性增强的说明和相关服务信息。线性层定义公式通常与深度学习或神经网络中的线性变换相关，但这些内容在给定的文本中并未提及。\n\n如果需要线性层定义的公式，可以从神经网络的基础知识中找到，一个简单的线性层定义公式可以表示为：\n\n\\[ y = Wx + b \\]\n\n其中：\n- \\( y \\) 是线性变换后的输出。\n- \\( W \\) 是权重矩阵。\n- \\( x \\) 是输入向量。\n- \\( b \\) 是偏置向量。\n\n这个公式表示通过权重矩阵 \\( W \\) 对输入 \\( x \\) 进行线性变换，并加上偏置 \\( b \\)，得到最终的输出 \\( y \\)。但请注意，这是根据一般知识给出的，不是根据提供的特定上下文信息。"
       const count = Math.ceil(answer.length / 10); // 分10段输出
       return new Promise((resolve) => {

@@ -137,19 +137,19 @@ const showAddRelationModal = ref(false);
           <div>
             <label class="block text-sm font-medium text-gray-300 mb-1">ID (可选)</label>
             <input v-model="newNode.id"
-              class="w-full bg-gray-600 border border-gray-500 rounded px-3 py-2 text-white focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+              class="w-full border border-gray-500 rounded px-3 py-2 text-white focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
               placeholder="自动生成" />
           </div>
           <div>
             <label class="block text-sm font-medium text-gray-300 mb-1">名称*</label>
             <input v-model="newNode.label"
-              class="w-full bg-gray-600 border border-gray-500 rounded px-3 py-2 text-white focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+              class="w-full  border border-gray-500 rounded px-3 py-2 text-white focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
               required placeholder="节点名称" />
           </div>
           <div>
             <label class="block text-sm font-medium text-gray-300 mb-1">类型</label>
             <select v-model="newNode.type"
-              class="w-full bg-gray-600 border border-gray-500 rounded px-3 py-2 text-white focus:ring-2 focus:ring-cyan-500 focus:border-transparent">
+              class="w-full  border border-gray-500 rounded px-3 py-2 text-white focus:ring-2 focus:ring-cyan-500 focus:border-transparent">
               <option value="人物">人物</option>
               <option value="组织">组织</option>
               <option value="地点">地点</option>
@@ -206,7 +206,7 @@ const showAddRelationModal = ref(false);
       </div>
     </a-modal>
 
-    <div class="p-4 rounded-lg shadow flex justify-between">
+    <div class="bg-gray-200 p-4 rounded-lg shadow flex justify-between">
       <!-- <h3 class="text-lg font-semibold text-cyan-400 mb-3">操作</h3> -->
       <div class="flex gap-2">
 
@@ -247,13 +247,13 @@ const showAddRelationModal = ref(false);
         <div>
           <!-- <label class="block text-sm font-medium text-gray-300 mb-1">搜索节点</label> -->
           <input v-model="searchTerm"
-            class="bg-gray-600 border border-gray-500 rounded px-3 py-2 text-white focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+            class="bg-gray-500 border border-gray-500 rounded px-3 py-2 text-white focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
             placeholder="搜索ID或名称" />
         </div>
         <div>
           <!-- <label class="block text-sm font-medium text-gray-300 mb-1">节点类型</label> -->
           <select v-model="filterType"
-            class="bg-gray-600 border border-gray-500 rounded px-3 py-2 text-white focus:ring-2 focus:ring-cyan-500 focus:border-transparent">
+            class="bg-gray-500 border border-gray-500 rounded px-3 py-2 text-white focus:ring-2 focus:ring-cyan-500 focus:border-transparent">
             <option value="all">所有类型</option>
             <option value="人物">人物</option>
             <option value="组织">组织</option>
@@ -265,7 +265,7 @@ const showAddRelationModal = ref(false);
         <div>
           <!-- <label class="block text-sm font-medium text-gray-300 mb-1">关系类型</label> -->
           <input v-model="filterRelation"
-            class="bg-gray-600 border border-gray-500 rounded px-3 py-2 text-white focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+            class="bg-gray-500 border border-gray-500 rounded px-3 py-2 text-white focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
             placeholder="输入关系类型" />
         </div>
       </div>

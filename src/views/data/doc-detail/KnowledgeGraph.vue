@@ -234,5 +234,6 @@ watch(() => props.graphData, (newData) => {
 </script>
 
 <template>
-  <div ref="container" class="w-full h-full  rounded-lg"></div>
+  <a-empty v-if="!graphData.nodes.length"/>
+  <div v-else ref="container" class="w-full h-full rounded-lg"></div>
 </template>

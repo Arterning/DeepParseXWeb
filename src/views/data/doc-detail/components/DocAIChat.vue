@@ -3,6 +3,7 @@
     <Chat
       :session="activeSession"
       :loading="isWaitingForResponse"
+      :docId="docInfo.id"
       @save="saveSessions"
       @loading="handleLoading"
     />

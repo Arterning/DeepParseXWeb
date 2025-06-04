@@ -6,6 +6,7 @@
         <a-button type="primary" @click="handleExtractSummary" :loading="loading">提取文件总结</a-button>
       </div>
     </template>
+    <a-skeleton-line v-if="loading" :rows="8" />
     <p class="text-xl max-w-6xl whitespace-pre-wrap break-words p-4 rounded-lg">
       {{ description }}
     </p>
@@ -15,7 +16,7 @@
 <script lang="ts" setup>
 import { ref } from 'vue';
 import ReactSvg from '@/assets/svg/react.svg';
-import { chat } from '@/api/ai';
+import { summarize } from '@/api/ai';
 
 const props = defineProps<{
   info: any;
@@ -27,8 +28,8 @@ const description = ref(props.info.desc || '');
 const handleExtractSummary = async () => {
   loading.value = true;
   try {
-    const response = await chat({
-      question: `请根据以下文件内容生成一个简洁的摘要：\n${props.info.content}`
+    const response = await summarize({
+      id: props.info.id,
     });
     description.value = response;
   } catch (error) {

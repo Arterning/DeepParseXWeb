@@ -15,10 +15,11 @@
           </a-tab-pane>
           <a-tab-pane key="2" title="基本信息">
             <BasicInfo :info="info" />
+            <FileDescription :info="info" class="mt-2"/>
           </a-tab-pane>
-          <a-tab-pane key="3" title="文件总结">
+          <!-- <a-tab-pane key="3" title="文件总结">
             <FileDescription :info="info" />
-          </a-tab-pane>
+          </a-tab-pane> -->
           <a-tab-pane key="4" title="知识图谱">
             <a-skeleton :loading="extractGraphLoading" :animation="true">
               <a-space direction="vertical" :style="{width:'100%'}" size="large">
