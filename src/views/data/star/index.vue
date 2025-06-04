@@ -71,10 +71,10 @@
         :visible="openNewOrEdit"
         :title="drawerTitle"
         @cancel="cancelReq"
+        :on-before-ok="beforeSubmit"
         @ok="submitNewOrEdit"
         :closable="false"
         :width="550"
-        :on-before-ok="beforeSubmit"
       >
         <a-form ref="formRef" :model="form">
           <a-form-item
@@ -128,6 +128,16 @@ const formRef = ref();
 const openNewOrEdit = ref(false);
 const drawerTitle = ref('');
 const buttonStatus = ref<'new' | 'edit'>();
+
+// const handleOk = async () => {
+//     try {
+//       await formRef.value?.validate();
+//       await submitNewOrEdit();
+//     } catch (error) {
+//       return false;
+//     }
+//     return true;
+//   };
 
 // 加载收藏夹列表
 const fetchCollections = async () => {
@@ -184,12 +194,12 @@ const EditStarCollection = async (id: number) => {
 
 // 表单提交前校验
 const beforeSubmit = async (done: (closed: boolean) => void) => {
-  try {
-    await formRef.value?.validate();
-    done(false);
-  } catch (error) {
+  const res = await formRef.value?.validate();
+  if (!res) {
+    // 关闭对话框
     done(true);
   }
+  done(false);
 };
 
 // 提交表单
