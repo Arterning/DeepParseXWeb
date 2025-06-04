@@ -3,10 +3,16 @@ import qs from 'query-string';
 
 export interface StarCollectionReq {
   name: string;
+  description?: string;
 }
 
 export interface StarCollectionRes extends StarCollectionReq {
   id: number;
+  docs: {
+    id: number;
+    name: string;
+    type: string;
+  }[];
 }
 
 export interface StarCollectionParams {
