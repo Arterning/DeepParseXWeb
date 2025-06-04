@@ -1,5 +1,7 @@
 <script lang="ts" setup>
   import { computed } from 'vue';
+
+  import RobotIconSvg from '@/assets/svg/robot-icon.svg';
   import { Message } from '../types';
 
   // message：接受消息对象，展示消息内容和头像，并且根据角色调整消息位置。
@@ -14,12 +16,10 @@
 
 </script>
 <template>
-  <div class="flex items-start gap-x-2 overflow-auto min-w-96" 
+  <div class="flex items-start gap-x-2 overflow-auto min-w-96 mt-2" 
     :class="message.sender === 'user'? 'justify-end': 'justify-start'">
-    <a-avatar v-if="message.sender === 'bot'" class="avator">
-      <IconRobot />
-    </a-avatar>
-    <div class="pt-2">
+    <RobotIconSvg v-if="message.sender === 'bot'" class="h-20 w-20"/>
+    <div>
       <div v-if="message.status==='waiting'">
         <a-spin />
       </div>

@@ -222,7 +222,7 @@
   .chat-content{
     padding: 0.5rem;
     overflow-y: scroll;
-    height: calc(100vh - 34rem);
+    height: calc(100vh - 24rem);
   }
   .start-tip{
     text-align: center;
