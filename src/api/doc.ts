@@ -6,6 +6,7 @@ import type { MailMsgRes } from '@/api/mailmsg';
 export interface SysDocReq {
   name: string;
   title?: string;
+  source?: string;
   desc?: string;
   content?: string;
   type?: string;

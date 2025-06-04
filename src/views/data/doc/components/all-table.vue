@@ -200,7 +200,13 @@
                 <a-link @click="ViewApi(record.id, record.title)">
                   <icon-unordered-list  style="font-size:16"/>
                 </a-link>
-              </a-tooltip>                  
+              </a-tooltip>  
+              <!-- 收藏 -->
+              <a-tooltip content="收藏">
+                <a-link @click="CollectionApi(record.id)">
+                  <icon-star style="font-size:16"/>
+                </a-link>
+              </a-tooltip>
               <!-- <a-tooltip content="隐藏">
                 <a-link @click="HideApi(record.id)">
                   <icon-eye-invisible  style="font-size:16"/>
@@ -376,6 +382,35 @@
         >
           <!-- <GeneralDetail :info="form"/> -->
         </a-modal>
+        <!--    收藏弹窗 -->
+        <a-modal
+          :visible="collectView"
+          @ok="handleCollectOk"
+          @cancel="handleCollectCancel"
+        >
+          <template #title> 选择收藏位置 </template>
+          <div>
+            <a-select
+              :style="{ width: '100%', marginBottom: '15px' }"
+              placeholder="请选择需要保存的收藏夹"
+            >
+              <a-option>Beijing</a-option>
+              <a-option>Shanghai</a-option>
+              <a-option>Guangzhou</a-option>
+            </a-select>
+            <a-button style="width: 100%;" @click="router.push({name: 'Collection'})">
+              <div>
+                新建收藏夹
+              </div>
+              <div>
+                <icon-plus />
+              </div>
+            </a-button>
+          </div>
+          <!-- <template #footer>
+            <a-button type="primary" style="width: 100%;" @ok="handleOk">收藏</a-button>
+          </template> -->
+        </a-modal>
       </div>
     </a-card>
   </a-layout>
@@ -438,6 +473,9 @@
     return {
       name: undefined,
       title: undefined,
+      source: undefined,
+      content: undefined,
+      type: undefined,
       doc_type: undefined,
       tokens: undefined,
       rangeValue: ['', ''],
@@ -492,6 +530,11 @@
       return item.id !== pk
     })
   };
+
+  const CollectionApi = (pk: number) => {
+    collectView.value = true;
+  };
+
   const columns = computed<TableColumnData[]>(() => [
     // {
     //   title: 'ID',
@@ -588,6 +631,7 @@
     desc: '',
     file: undefined,
     content: undefined,
+    source: undefined,
     tags: [],
   };
   const form = reactive<SysDocReq>({ ...formDefaultValues });
@@ -747,6 +791,16 @@
       inputVal.value = '';
     }
     showInput.value = false;
+  };
+
+  const collectView = ref(false);
+
+  const handleCollectOk = async () => {
+    collectView.value = false;
+  };
+
+  const handleCollectCancel = () => {
+    collectView.value = false;
   };
 </script>
 
