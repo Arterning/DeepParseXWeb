@@ -439,11 +439,11 @@
     SysDocReq,
     SysDocRes,
     updateSysDoc,
+    collectDoc,
   } from '@/api/doc';
   import {
   queryStarCollectionList,
   StarCollectionRes,
-  collectDoc,
   } from '@/api/starCollection';
   import { Pagination } from '@/types/global';
   import { useRouter } from 'vue-router';
