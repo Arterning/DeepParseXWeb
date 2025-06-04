@@ -25,7 +25,7 @@
       class="panel-col"
     >
       <a-space>
-        <DocumentSvg class="w-16 h-16"/>
+        <Pdfsvg class="w-16 h-16"/>
         <a-statistic
           :title="$t('PDF')"
           :value="368"
@@ -129,7 +129,7 @@
 
 <script lang="ts" setup>
 import TextSvg from '@/assets/svg/text.svg';
-import DocumentSvg from '@/assets/svg/document.svg';
+import PdfSvg from '@/assets/svg/pdf.svg';
 import MediaSvg from '@/assets/svg/media.svg';
 import AssetSvg from '@/assets/svg/asset.svg';
 import PictureSvg from '@/assets/svg/picture.svg';

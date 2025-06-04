@@ -20,7 +20,7 @@
   import { useI18n } from 'vue-i18n';
   // import bannerImage from '@/assets/images/login-banner.png';
   import RobotSvg from '@/assets/svg/robot.svg';
-  import DocumentSvg from '@/assets/svg/document.svg';
+  import PdfSvg from '@/assets/svg/pdf.svg';
   import SubjectSvg from '@/assets/svg/subject.svg';
 
   const { t } = useI18n();
@@ -33,7 +33,7 @@
     {
       slogan: t('login.banner.slogan2'),
       subSlogan: t('login.banner.subSlogan2'),
-      component: DocumentSvg,
+      component: PdfSvg,
     },
     {
       slogan: t('login.banner.slogan3'),

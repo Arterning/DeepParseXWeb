@@ -42,10 +42,10 @@
             <a-tag v-if="info.status === 0" :color="`orange`" bordered>
               {{ $t(`处理中`) }}
             </a-tag>
-            <a-tag v-if="info.status === 1" :color="`green`" bordered>
+            <a-tag v-else-if="info.status === 1" :color="`green`" bordered>
               {{ $t(`admin.menu.form.status.${info.status}`) }}
             </a-tag>
-            <a-tag v-else :color="`red`" bordered>
+            <a-tag v-else-if="info.status === 2" :color="`red`" bordered>
               {{ $t(`解析失败`) }}
             </a-tag>
         </a-descriptions-item>
