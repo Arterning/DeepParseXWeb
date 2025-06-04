@@ -38,7 +38,7 @@
                       :allow-clear="false"
                   >
                     <a-option
-                        v-for="(item, index) in ['文本', 'PDF', '表格', '图片', '媒体', '其他']"
+                        v-for="(item, index) in ['文本', 'PDF', '表格', '图片', '媒体', 'PPT', '文档']"
                         :key="index"
                         :value="item"
                     >

@@ -19,9 +19,10 @@
                         </template>
                         <div class="flex gap-1" v-if="compare">
                             <a-scrollbar style="height:500px;overflow: auto;">
-                                <p class="text-xl max-w-6xl whitespace-pre-wrap break-words p-4 rounded-lg">
+                                <!-- <p class="text-xl max-w-6xl whitespace-pre-wrap break-words p-4 rounded-lg">
                                         {{ info.content }}
-                                </p>
+                                </p> -->
+                                <MdPreview theme="dark" previewTheme="github" :model-value="info.content" class="p-2 rounded-lg" />
                             </a-scrollbar>
                         </div>
                     </a-card>

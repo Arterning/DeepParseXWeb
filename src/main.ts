@@ -4,6 +4,8 @@ import { Modal } from '@arco-design/web-vue';
 import ArcoVueIcon from '@arco-design/web-vue/es/icon';
 import { InstallCodeMirror } from 'codemirror-editor-vue3';
 import globalComponents from '@/components';
+import { MdPreview  } from 'md-editor-v3';
+import 'md-editor-v3/lib/preview.css';
 import vue3TreeOrg from 'vue3-tree-org';
 import router from './router';
 import store from './store';
@@ -30,5 +32,6 @@ app.use(i18n);
 app.use(globalComponents);
 app.use(directive);
 app.use(InstallCodeMirror);
+app.component('MdPreview', MdPreview);
 app.mount('#app');
 
