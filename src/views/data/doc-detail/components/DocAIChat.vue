@@ -12,8 +12,8 @@
 <script lang="ts" setup>
 import { ref, onMounted, onUnmounted } from 'vue';
 import { useDateFormat, useNow } from '@vueuse/core';
-import Chat from '@/components/aichat/components/chat/index.vue';
-import { ChatSession } from '@/components/aichat/components/types';
+import Chat from '@/views/data/aiAssistant/components/chat/index.vue';
+import { ChatSession } from '@/views/data/aiAssistant/components/types';
 
 const props = defineProps<{
   docInfo: any; // 文档信息
