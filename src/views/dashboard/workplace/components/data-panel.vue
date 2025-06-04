@@ -25,7 +25,7 @@
       class="panel-col"
     >
       <a-space>
-        <Pdfsvg class="w-16 h-16"/>
+        <PdfSvg class="w-16 h-16"/>
         <a-statistic
           :title="$t('PDF')"
           :value="368"
