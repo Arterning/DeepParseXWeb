@@ -40,7 +40,7 @@
   }
   .session-item {
     margin-bottom: 0.5rem;
-    cursor: default;
+    cursor: pointer;
     .row{
       display: flex;
       align-items: center;

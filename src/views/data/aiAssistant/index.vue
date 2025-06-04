@@ -1,14 +1,21 @@
 <template>
-  <a-layout class="flex-layout">
+  <a-layout class="flex-layout" style="padding: 0 18px">
     <Breadcrumb />
-    <a-card :title="$t('AI助手')" class="general-card">
+    <a-card :title="$t('')" class="general-card">
       <div>
         <div class="layout-content">
           <div class="layout-sider">
+
             <div class="btn-line">
-              <div class="delete-btn">
+
+              <div class="flex gap-2 mt-2">
+                <a-button type="text" long @click="handleCreateSession">
+                  <icon-plus />
+                  <span> 新建对话 </span>
+                </a-button>
+
                 <a-button
-                  v-if="sessionList && sessionList.length > 1"
+                  v-if="sessionList && sessionList.length > 0"
                   type="text"
                   long
                   @click="handleClearSession"
@@ -17,12 +24,7 @@
                   <span> 清空对话 </span>
                 </a-button>
               </div>
-              <div class="add-btn">
-                <a-button type="text" long @click="handleCreateSession">
-                  <span> 新建对话 </span>
-                  <icon-plus />
-                </a-button>
-              </div>
+              
             </div>
 
             <div class="session-list">

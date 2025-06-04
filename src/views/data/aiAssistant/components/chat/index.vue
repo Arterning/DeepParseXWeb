@@ -170,34 +170,34 @@
     </div>
     <div class="chat-footer">
       <a-divider class="mt-0"/>
-          <div class="chat-input">
-            <textarea
-              ref="textareaRef"
-              class="input"
-              v-model="message"
-              placeholder="输入要询问的内容（同时按下Shift与Enter可换行）"
-              @keydown="handleKeyPress"
-            />
-            <div class="button">
-              <a-button
-                @click="sendMessage"
-                v-show="message.trim() && !isLoading"
-                shape="circle"
-                type="primary"
-              >
-                <icon-send />
-              </a-button>
-              
-              <a-button
-                v-show="isLoading"
-                @click="terminatConnection"
-                status="warning"
-                shape="circle"
-              >
-                <icon-record-stop />
-              </a-button>
-            </div>
-          </div>
+      <div class="chat-input">
+        <textarea
+          ref="textareaRef"
+          class="input"
+          v-model="message"
+          placeholder="输入要询问的内容（同时按下Shift与Enter可换行）"
+          @keydown="handleKeyPress"
+        />
+        <div class="button">
+          <a-button
+            @click="sendMessage"
+            v-show="message.trim() && !isLoading"
+            shape="circle"
+            type="primary"
+          >
+            <icon-send />
+          </a-button>
+          
+          <a-button
+            v-show="isLoading"
+            @click="terminatConnection"
+            status="warning"
+            shape="circle"
+          >
+            <icon-record-stop />
+          </a-button>
+        </div>
+      </div>
     </div>
 
   </div>
@@ -229,6 +229,8 @@
     font-weight: bold;
     font-size: x-larger;
   }
+
+
   .chat-footer{
     flex-direction: column;
     display: flex;
