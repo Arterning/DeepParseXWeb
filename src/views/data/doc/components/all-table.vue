@@ -399,7 +399,7 @@
                 v-for="item of collectionOptions"
                 :key="item.value"
                 :value="item.value"
-                >{{ item.name }}
+                >{{ item.label }}
               </a-option>
             </a-select>
             <a-button style="width: 100%;" @click="router.push({name: 'Collection'})">
@@ -443,6 +443,7 @@
   import {
   queryStarCollectionList,
   StarCollectionRes,
+  collectDoc,
   } from '@/api/starCollection';
   import { Pagination } from '@/types/global';
   import { useRouter } from 'vue-router';
@@ -550,6 +551,7 @@
     });
   });
   const CollectionApi = async (pk: number) => {
+    operateRow.value = pk;
     collectView.value = true;
     const res = await queryStarCollectionList({});
     collections.value = res.items;
@@ -816,7 +818,13 @@
   const collectView = ref(false);
 
   const handleCollectOk = async () => {
+    if (!collectionSelect.value) {
+      Message.error('请选择收藏夹');
+      return;
+    }
+    await collectDoc({ id: operateRow.value, collection_id: collectionSelect.value });
     collectView.value = false;
+    Message.success('收藏成功');
   };
 
   const handleCollectCancel = () => {
