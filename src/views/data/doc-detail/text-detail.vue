@@ -20,7 +20,7 @@
                                 <!-- <p class="text-xl max-w-6xl whitespace-pre-wrap break-words p-4 rounded-lg">
                                         {{ info.content }}
                                 </p> -->
-                                <MdPreview  previewTheme="github" :model-value="info.content" class="p-2 rounded-lg" />
+                                <MdPreview :theme="theme" previewTheme="github" :model-value="info.content" class="p-2 rounded-lg" />
                             </a-scrollbar>
                         </div>
                     </a-card>
@@ -33,98 +33,19 @@
 <script lang="ts" setup>
 import { computed, ref } from 'vue';
 import ScanSvg from '@/assets/svg/scan.svg';
+import { useAppStore } from '@/store';
+
+const appStore = useAppStore();
 
 const props = defineProps(['info']);
 const compare = ref<boolean>(true);
 
+const theme = computed(() => {
+    return appStore.theme;
+});
 
 </script>
 
 <style lang="less" scoped>
-.content-box {
-    width: 70vw;
-    height: 360px;
-    overflow: auto;
-    background-color: var(--color-bg-1);
-    padding: 0 1rem;
-}
 
-// .desc{
-// //  line-height: 1rem;
-// }
-
-.flex {
-    display: flex;
-}
-
-.media-box {
-    background: #f3f3f3;
-    position: relative;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 70vw;
-
-    .media-icon {
-        position: absolute;
-        font-size: 3rem;
-        color: #555;
-    }
-}
-
-.email-title {
-    font-weight: bold;
-    font-size: 1.5rem;
-}
-
-.email-label {
-    min-width: 3rem;
-    text-align: justify;
-    text-align-last: justify;
-    margin-right: 1rem;
-}
-
-.email-person {
-    color: rgb(var(--primary-6));
-}
-
-.mb-1 {
-    margin-bottom: 0.5rem;
-}
-
-.mb-2 {
-    margin-bottom: 1rem;
-}
-
-.image {
-    cursor: pointer;
-}
-
-.video {
-    width: 100%;
-    z-index: 1;
-}
-
-
-::-webkit-scrollbar {
-    width: 0.5rem;
-    height: 0.5rem;
-    display: block;
-}
-
-/* 设置滚动条轨道的背景色 */
-::-webkit-scrollbar-track {
-    background: transparent;
-}
-
-/* 设置滚动条滑块的颜色 */
-::-webkit-scrollbar-thumb {
-    background: #999;
-    border-radius: 1rem;
-}
-
-/* 设置滚动条滑块在悬停时的颜色 */
-::-webkit-scrollbar-thumb:hover {
-    background: #777;
-}
 </style>
