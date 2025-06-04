@@ -54,7 +54,6 @@
 
 <script lang="ts" setup>
 import { computed, ref } from 'vue';
-import { marked } from 'marked';
 
 const props = defineProps(['info']);
 const compare = ref<boolean>(true);
@@ -69,12 +68,6 @@ const buildSrcURL = (file: string) => {
     return url;
 }
 
-
-
-const descMD = computed(() => {
-    if (!props.info.desc) return '';
-    return marked(props.info.desc) as string;
-})
 
 </script>
 

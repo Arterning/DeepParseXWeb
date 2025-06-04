@@ -1,22 +1,6 @@
 <template>
-    <a-card class="info-card" title="基础信息">
-        <a-descriptions :column="1">
-            <a-descriptions-item label="标题">
-                {{ props.info.title }}
-            </a-descriptions-item>
-            <a-descriptions-item label="简介">
-                {{ props.info.desc }}
-            </a-descriptions-item>
-            <!-- <a-descriptions-item label="原始文件">
-                <a-link @click="handleView(props.info.file)">查看</a-link>
-            </a-descriptions-item> -->
-        </a-descriptions>
-    </a-card>
-
-    <a-space style="padding-top: 22px" />
-
     <a-card class="info-card" title="内容">
-        <a-row :gutter="24" class="my-10">
+        <a-row :gutter="24" class="mb-10">
             <a-col :span="24" >
                 <a-input class="p-3" v-model="term" @press-enter="search" placeholder="搜索" />
             </a-col>

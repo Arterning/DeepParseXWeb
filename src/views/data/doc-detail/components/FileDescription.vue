@@ -7,9 +7,10 @@
       </div>
     </template>
     <a-skeleton-line v-if="loading" :rows="8" />
-    <p class="text-xl max-w-6xl whitespace-pre-wrap break-words p-4 rounded-lg">
+    <!-- <p class="text-xl max-w-6xl whitespace-pre-wrap break-words p-4 rounded-lg">
       {{ description }}
-    </p>
+    </p> -->
+    <MdPreview theme="light" previewTheme="github" :model-value="description" class="p-2 rounded-lg" />
   </a-card>
 </template>
 
@@ -23,7 +24,7 @@ const props = defineProps<{
 }>();
 
 const loading = ref(false);
-const description = ref(props.info.desc || '');
+const description = ref(props.info.desc || '点击提取按钮，提取文件总结🚀');
 
 const handleExtractSummary = async () => {
   loading.value = true;

@@ -4,17 +4,15 @@
             <a-card class="general-card">
                 <template #title>
                     <a-space size="large">
-                        {{ info.title }}
+                        <span class="font-bold">{{ info.title }}</span>
                     </a-space>
                 </template>
                 
                 <div class="content">
                     <a-card class="info-card">
                         <template #title>
-                            <div class="flex justify-between items-center">
-                                <div class="flex gap-3">
-                                    {{ $t('内容') }}
-                                </div>
+                            <div class="flex justify-end items-center">
+                                <ScanSvg class="w-8 h-8"/>
                             </div>
                         </template>
                         <div class="flex gap-1" v-if="compare">
@@ -22,7 +20,7 @@
                                 <!-- <p class="text-xl max-w-6xl whitespace-pre-wrap break-words p-4 rounded-lg">
                                         {{ info.content }}
                                 </p> -->
-                                <MdPreview theme="dark" previewTheme="github" :model-value="info.content" class="p-2 rounded-lg" />
+                                <MdPreview  previewTheme="github" :model-value="info.content" class="p-2 rounded-lg" />
                             </a-scrollbar>
                         </div>
                     </a-card>
@@ -34,16 +32,11 @@
 
 <script lang="ts" setup>
 import { computed, ref } from 'vue';
-import { marked } from 'marked';
+import ScanSvg from '@/assets/svg/scan.svg';
 
 const props = defineProps(['info']);
 const compare = ref<boolean>(true);
 
-
-const descMD = computed(() => {
-    if (!props.info.desc) return '';
-    return marked(props.info.desc) as string;
-})
 
 </script>
 

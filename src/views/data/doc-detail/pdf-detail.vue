@@ -6,9 +6,7 @@
                     <a-card class="info-card">
                         <template #title>
                             <div class="flex justify-between items-center">
-                                <div class="flex gap-3">
-                                    <ScanSvg />
-                                </div>
+                                <ScanSvg class="w-8 h-8"/>
                                 <a-switch v-model="compare">
                                     <template #checked>
                                         比对
