@@ -22,6 +22,7 @@ export default {
   'menu.workplace': '首页',
   'menu.work': '工作台',
   'menu.work.tag': '我的标签',
+  'menu.work.collection': '我的收藏',
   'menu.search': '数据搜索',
   'menu.admin': '系统管理',
   'menu.automation': '系统自动化',

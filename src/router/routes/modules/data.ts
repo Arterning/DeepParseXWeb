@@ -138,6 +138,18 @@ const DASHBOARD: AppRouteRecordRaw = {
           hideInMenu: false,
         },
       },
+      // 收藏
+      {
+        path: 'collection',
+        name: 'Collection',
+        component: () => import('@/views/data/star/index.vue'),
+        meta: {
+          locale: '收藏',
+          requiresAuth: true,
+          roles: ['*'],
+          hideInMenu: false,
+        },
+      },
     {
       path: 'search',
       name: 'search',
