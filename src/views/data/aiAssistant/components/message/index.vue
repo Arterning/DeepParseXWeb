@@ -16,9 +16,12 @@
 
 </script>
 <template>
-  <div class="flex items-start gap-x-2 overflow-auto min-w-96 mt-2" 
+  <div class="flex items-center gap-x-2 overflow-auto min-w-3xl mt-2" 
     :class="message.sender === 'user'? 'justify-end': 'justify-start'">
-    <RobotIconSvg v-if="message.sender === 'bot'" class="h-20 w-20"/>
+    <a-avatar v-if="message.sender === 'bot'" class="bg-transparent">
+      <RobotIconSvg class="h-20 w-20"/>
+    </a-avatar>
+    <!-- <RobotIconSvg v-if="message.sender === 'bot'" class="h-20 w-20"/> -->
     <div>
       <div v-if="message.status==='waiting'">
         <a-spin />
