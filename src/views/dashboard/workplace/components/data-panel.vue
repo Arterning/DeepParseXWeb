@@ -8,7 +8,7 @@
         <AssetSvg class="w-16 h-16"/>
         <a-statistic
           :title="$t('文件总数')"
-          :value="dashboardCount.all"
+          :value="docNumber"
           :value-from="0"
           animation
           show-group-separator
@@ -27,7 +27,7 @@
         <PdfSvg class="w-16 h-16"/>
         <a-statistic
           :title="$t('PDF')"
-          :value="dashboardCount.group.PDF"
+          :value="pdfNumber"
           :value-from="0"
           animation
           show-group-separator
@@ -46,7 +46,7 @@
         <TextSvg class="w-16 h-16"/>
         <a-statistic
           :title="$t('文本')"
-          :value="dashboardCount.group.文本"
+          :value="textNumber"
           :value-from="0"
           animation
           show-group-separator
@@ -66,7 +66,7 @@
         <ExcelSvg class="w-16 h-16"/>
         <a-statistic
           :title="$t('表格')"
-          :value="dashboardCount.group.表格"
+          :value="excelNumber"
           :value-from="0"
           animation
         >
@@ -85,7 +85,7 @@
         <PictureSvg class="w-16 h-16"/>
         <a-statistic
           :title="$t('图片')"
-          :value="dashboardCount.group.图片"
+          :value="pictureNumber"
           :value-from="0"
           animation
         >
@@ -104,7 +104,7 @@
         <MediaSvg class="w-16 h-16"/>
         <a-statistic
           :title="$t('媒体')"
-          :value="dashboardCount.group.媒体"
+          :value="mediaNumber"
           :value-from="0"
           animation
         >
@@ -131,12 +131,21 @@ import MailSvg from '@/assets/svg/email.svg';
 import ExcelSvg from '@/assets/svg/excel.svg';
 import { queyDashboard, DashboardRes } from '@/api/dashboard';
 
-const dashboardCount = ref<DashboardRes>({
-  
-})
+
+const docNumber = ref<number>(0);
+const textNumber = ref<number>(0);
+const pdfNumber = ref<number>(0);
+const mediaNumber = ref<number>(0);
+const excelNumber = ref<number>(0);
+const pictureNumber = ref<number>(0);
 const fetchDashboardApi = async () => {
     const res = await queyDashboard();
-    dashboardCount.value = res;
+    docNumber.value = res.all;
+    textNumber.value = res.group.文本;
+    pdfNumber.value = res.group.PDF;
+    mediaNumber.value = res.group.媒体;
+    excelNumber.value = res.group.表格;
+    pictureNumber.value = res.group.图片;
     // console.log(dashboardCount.value);
 };
 
