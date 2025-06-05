@@ -822,7 +822,7 @@
       Message.error('请选择收藏夹');
       return;
     }
-    await collectDoc({ id: operateRow.value, collection_id: collectionSelect.value });
+    await collectDoc({ doc_id: operateRow.value, collection_id: collectionSelect.value });
     collectView.value = false;
     Message.success('收藏成功');
   };

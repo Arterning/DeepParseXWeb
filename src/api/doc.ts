@@ -117,13 +117,10 @@ export function extractGraphData(pk: number) {
   return axios.get(`/api/v1/sys/docs/build_graph/${pk}`);
 }
 
-export function extractUserCount(params: number[]) {
-  return axios.post(`/api/v1/sys/account_pwd`, params);
-}
 
 // collectDoc
 export function collectDoc(params: {
-  id: number;
+  doc_id: number;
   collection_id: number;
 }) {
   return axios.post(`/api/v1/sys/docs/collect`, params);
