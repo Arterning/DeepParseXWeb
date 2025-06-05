@@ -7,9 +7,8 @@
       <a-space>
         <AssetSvg class="w-16 h-16"/>
         <a-statistic
-          :precision="1"
           :title="$t('文件总数')"
-          :value="373.5"
+          :value="dashboardCount.all"
           :value-from="0"
           animation
           show-group-separator
@@ -28,7 +27,7 @@
         <PdfSvg class="w-16 h-16"/>
         <a-statistic
           :title="$t('PDF')"
-          :value="368"
+          :value="dashboardCount.group.PDF"
           :value-from="0"
           animation
           show-group-separator
@@ -47,7 +46,7 @@
         <TextSvg class="w-16 h-16"/>
         <a-statistic
           :title="$t('文本')"
-          :value="8874"
+          :value="dashboardCount.group.文本"
           :value-from="0"
           animation
           show-group-separator
@@ -66,16 +65,14 @@
       <a-space>
         <ExcelSvg class="w-16 h-16"/>
         <a-statistic
-          :precision="1"
           :title="$t('表格')"
-          :value="2.8"
+          :value="dashboardCount.group.表格"
           :value-from="0"
           animation
         >
-          <template #suffix>
-            %
-            <icon-caret-up class="up-icon" />
-          </template>
+        <template #suffix>
+          <span class="unit">{{ $t('workplace.pecs') }}</span>
+        </template>
         </a-statistic>
       </a-space>
     </a-grid-item>
@@ -87,16 +84,14 @@
       <a-space>
         <PictureSvg class="w-16 h-16"/>
         <a-statistic
-          :precision="1"
           :title="$t('图片')"
-          :value="2.8"
+          :value="dashboardCount.group.图片"
           :value-from="0"
           animation
         >
-          <template #suffix>
-            %
-            <icon-caret-up class="up-icon" />
-          </template>
+        <template #suffix>
+          <span class="unit">{{ $t('workplace.pecs') }}</span>
+        </template>
         </a-statistic>
       </a-space>
     </a-grid-item>
@@ -108,16 +103,14 @@
       <a-space>
         <MediaSvg class="w-16 h-16"/>
         <a-statistic
-          :precision="1"
           :title="$t('媒体')"
-          :value="2.8"
+          :value="dashboardCount.group.媒体"
           :value-from="0"
           animation
         >
-          <template #suffix>
-            %
-            <icon-caret-up class="up-icon" />
-          </template>
+        <template #suffix>
+          <span class="unit">{{ $t('workplace.pecs') }}</span>
+        </template>
         </a-statistic>
       </a-space>
     </a-grid-item>
@@ -128,6 +121,7 @@
 </template>
 
 <script lang="ts" setup>
+import { computed, ref } from 'vue';
 import TextSvg from '@/assets/svg/text.svg';
 import PdfSvg from '@/assets/svg/pdf.svg';
 import MediaSvg from '@/assets/svg/media.svg';
@@ -135,6 +129,18 @@ import AssetSvg from '@/assets/svg/asset.svg';
 import PictureSvg from '@/assets/svg/picture.svg';
 import MailSvg from '@/assets/svg/email.svg';
 import ExcelSvg from '@/assets/svg/excel.svg';
+import { queyDashboard, DashboardRes } from '@/api/dashboard';
+
+const dashboardCount = ref<DashboardRes>({
+  
+})
+const fetchDashboardApi = async () => {
+    const res = await queyDashboard();
+    dashboardCount.value = res;
+    console.log(dashboardCount.value);
+};
+
+fetchDashboardApi();
 </script>
 
 <style lang="less" scoped>
