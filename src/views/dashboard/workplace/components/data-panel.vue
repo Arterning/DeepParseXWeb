@@ -121,7 +121,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, ref } from 'vue';
+import { computed, ref, onMounted } from 'vue';
 import TextSvg from '@/assets/svg/text.svg';
 import PdfSvg from '@/assets/svg/pdf.svg';
 import MediaSvg from '@/assets/svg/media.svg';
@@ -137,10 +137,11 @@ const dashboardCount = ref<DashboardRes>({
 const fetchDashboardApi = async () => {
     const res = await queyDashboard();
     dashboardCount.value = res;
-    console.log(dashboardCount.value);
+    // console.log(dashboardCount.value);
 };
 
-fetchDashboardApi();
+onMounted(fetchDashboardApi);
+// fetchDashboardApi();
 </script>
 
 <style lang="less" scoped>

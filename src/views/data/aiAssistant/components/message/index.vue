@@ -28,7 +28,7 @@
       </div>
       <MdPreview v-else-if="message.status==='success'&&message.sender==='bot'" class="bg-slate-200 p-2 rounded-lg"  :preview-theme="'github'" :model-value="messageContent" ></MdPreview>        
       <MdPreview v-else-if="message.status==='success'&&message.sender==='user'" class="bg-slate-200 p-2 rounded-lg" :preview-theme="'github'" :model-value="messageContent" ></MdPreview> 
-      <MdPreview v-else-if="message.status==='failure'" class="fail-response" :model-value="messageContent" />
+      <MdPreview v-else-if="message.status==='failure'" class="bg-slate-200 p-2 rounded-lg" :model-value="messageContent" />
     </div>
     <a-avatar v-if="message.sender === 'user'" class="avator">
       <IconUser />
