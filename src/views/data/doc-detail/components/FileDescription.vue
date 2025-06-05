@@ -10,14 +10,21 @@
     <!-- <p class="text-xl max-w-6xl whitespace-pre-wrap break-words p-4 rounded-lg">
       {{ description }}
     </p> -->
-    <MdPreview theme="light" previewTheme="github" :model-value="description" class="p-2 rounded-lg" />
+    <MdPreview :theme=theme previewTheme="github" :model-value="description" class="p-2 rounded-lg" />
   </a-card>
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import ReactSvg from '@/assets/svg/react.svg';
 import { summarize } from '@/api/ai';
+import { useAppStore } from '@/store';
+
+const appStore = useAppStore();
+
+const theme = computed(() => {
+    return appStore.theme;
+});
 
 const props = defineProps<{
   info: any;

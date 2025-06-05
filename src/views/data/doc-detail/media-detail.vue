@@ -4,7 +4,7 @@
             <a-card class="general-card">
                 <template #title>
                     <a-space size="large">
-                        {{ info.title }}
+                        <span class="font-bold">{{ info.title }}</span>
                     </a-space>
                 </template>
                 <div class="content">
@@ -35,7 +35,7 @@
                                     <!-- <p class="text-xl max-w-6xl whitespace-pre-wrap break-words p-4 rounded-lg">
                                         {{ info.content }}
                                     </p> -->
-                                    <MdPreview theme="dark" previewTheme="github" :model-value="info.content" class="p-2 rounded-lg" />
+                                    <MdPreview :theme="theme" previewTheme="github" :model-value="info.content" class="p-2 rounded-lg" />
                                 </a-scrollbar>
                             </div>
                         </div>
@@ -44,7 +44,7 @@
                                 <!-- <p class="text-xl max-w-6xl whitespace-pre-wrap break-words p-4 rounded-lg">
                                         {{ info.content }}
                                 </p> -->
-                                <MdPreview theme="dark" previewTheme="github" :model-value="info.content" class="p-2 rounded-lg" />
+                                <MdPreview :theme="theme" previewTheme="github" :model-value="info.content" class="p-2 rounded-lg" />
                             </a-scrollbar>
                         </div>
                     </a-card>
@@ -56,6 +56,14 @@
 
 <script lang="ts" setup>
 import { computed, ref } from 'vue';
+import { useAppStore } from '@/store';
+
+const appStore = useAppStore();
+
+const theme = computed(() => {
+    return appStore.theme;
+});
+
 
 const props = defineProps(['info']);
 const compare = ref<boolean>(true);

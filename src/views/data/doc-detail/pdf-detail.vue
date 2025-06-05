@@ -25,7 +25,7 @@
                                     <!-- <p class="text-xl max-w-6xl whitespace-pre-wrap break-words p-4 rounded-lg">
                                         {{ info.content }}
                                     </p> -->
-                                    <MdPreview theme="dark" previewTheme="github" :model-value="info.content" class="p-2 rounded-lg" />
+                                    <MdPreview :theme="theme"  previewTheme="github" :model-value="info.content" class="p-2 rounded-lg" />
                                 </a-scrollbar>
                             </div>
                         </div>
@@ -34,7 +34,7 @@
                                 <!-- <p class="text-xl max-w-6xl whitespace-pre-wrap break-words p-4 rounded-lg">
                                     {{ info.content }}
                                 </p> -->
-                                <MdPreview theme="dark" previewTheme="github" :model-value="info.content" class="p-2 rounded-lg" />
+                                <MdPreview :theme="theme"  previewTheme="github" :model-value="info.content" class="p-2 rounded-lg" />
                             </a-scrollbar>
                         </div>
                     </a-card>
@@ -48,6 +48,13 @@
 import { computed, ref } from 'vue';
 import ScanSvg from '@/assets/svg/scan.svg';
 import InfoSvg from '@/assets/svg/info.svg';
+import { useAppStore } from '@/store';
+
+const appStore = useAppStore();
+
+const theme = computed(() => {
+    return appStore.theme;
+});
 
 const props = defineProps(['info']);
 const compare = ref<boolean>(true);

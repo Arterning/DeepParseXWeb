@@ -72,6 +72,8 @@ import KnowledgeGraph from './KnowledgeGraph.vue';
 import DocAIChat from './components/DocAIChat.vue';
 import FileDescription from './components/FileDescription.vue';
 
+
+
 const graphData = ref({
   nodes: [],
   edges: []

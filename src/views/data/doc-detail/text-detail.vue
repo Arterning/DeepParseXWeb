@@ -15,7 +15,7 @@
                                 <ScanSvg class="w-8 h-8"/>
                             </div>
                         </template>
-                        <div class="flex gap-1" v-if="compare">
+                        <div>
                             <a-scrollbar style="height:500px;overflow: auto;">
                                 <!-- <p class="text-xl max-w-6xl whitespace-pre-wrap break-words p-4 rounded-lg">
                                         {{ info.content }}
@@ -38,7 +38,6 @@ import { useAppStore } from '@/store';
 const appStore = useAppStore();
 
 const props = defineProps(['info']);
-const compare = ref<boolean>(true);
 
 const theme = computed(() => {
     return appStore.theme;
