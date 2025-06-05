@@ -2,19 +2,20 @@
   <a-layout class="flex-layout">
     <Breadcrumb />
     <a-card :title="$t('')" class="general-card pt-8">
+      <a-tag v-for="tag in renderData" :key="tag.id" @click="handleTagClick(tag)" :color="getRandomColor()" class="cursor-pointer mx-2 text-lg font-semibold">{{ tag.name }}</a-tag>
       <div class="flex flex-wrap gap-4">
-        <a-card v-for="tag in renderData" :key="tag.id" class="tag-card w-64 hover:shadow-lg transition-shadow duration-300">
+        <a-card v-for="doc in tagDocuments" :key="doc.id" class="tag-card mt-4 w-64 hover:shadow-lg transition-shadow duration-300">
           <template #title>
-            <div class="text-lg font-semibold">{{ tag.name }}</div>
+            <div class="text-lg font-semibold">{{ doc.title }}</div>
           </template>
           <div class="flex flex-col gap-2">
             <div class="flex items-center gap-2 text-gray-600">
               <icon-calendar />
-              <span>{{ tag.created_at }}</span>
+              <span>{{ doc.type }}</span>
             </div>
             <div class="flex items-center gap-2 text-gray-600">
               <icon-file />
-              <span>{{ tag.doc_count || 0 }} 个文件</span>
+              <span>{{ doc.doc_count || 0 }} 个文件</span>
             </div>
           </div>
           <template #extra>
@@ -29,16 +30,15 @@
           </template>
         </a-card>
       </div>
-      <div class="flex justify-center mt-4">
+      <!-- <div class="flex justify-center mt-4">
         <a-pagination
           v-model:current="pagination.current"
           v-model:page-size="pagination.pageSize"
           :total="pagination.total"
           show-total
-          show-jumper
           @change="handlePageChange"
         />
-      </div>
+      </div> -->
     </a-card>
     <Footer />
   </a-layout>
@@ -113,7 +113,45 @@ const fetchTagList = async (params: TagParams = {}) => {
 // 初始化加载数据
 fetchTagList();
 
-// 其他原有的方法保持不变...
+const COLORS_CUSTOM = [
+  '#f53f3f',
+  '#7816ff',
+  '#00b42a',
+  '#165dff',
+  '#ff7d00',
+  '#eb0aa4',
+  '#7bc616',
+  '#86909c',
+  '#b71de8',
+  '#0fc6c2',
+  '#ffb400',
+  '#168cff',
+  '#ff5722',
+];
+
+const getRandomColor = () => {
+  return COLORS_CUSTOM[Math.floor(Math.random() * COLORS_CUSTOM.length)];
+};
+
+interface TagDocument {
+  id: number;
+  title: string;
+  name: string;
+  type: string;
+}
+
+const selectedTag = ref<TagRes | null>(null);
+const tagDocuments = ref<TagDocument[]>([]);
+const handleTagClick = async (tag: TagRes) => {
+  selectedTag.value = tag;
+  // 这里可以添加更多逻辑，比如跳转到标签详情页
+  // Message.success(`点击了标签: ${tag.name}`);
+
+  const res = await queryTagDetail(tag.id);
+  console.log('queryTagDetail res', res);
+  tagDocuments.value = res.docs || [];
+  console.log('tagDocuments.value', tagDocuments.value);
+};
 </script>
 
 <style scoped>

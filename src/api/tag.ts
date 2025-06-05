@@ -7,6 +7,12 @@ export interface TagReq {
 
 export interface TagRes extends TagReq {
   id: number;
+  docs: {
+    id: number;
+    title: string;
+    name: string;
+    type: string;
+  }[];
 }
 
 export interface TagParams {
