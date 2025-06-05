@@ -2,7 +2,9 @@
   <a-layout class="flex-layout">
     <Breadcrumb />
     <a-card :title="$t('')" class="general-card pt-8">
-      <a-tag v-for="tag in renderData" :key="tag.id" @click="handleTagClick(tag)" :color="getRandomColor()" class="cursor-pointer mx-2 text-lg font-semibold">{{ tag.name }}</a-tag>
+      <div class="flex flex-wrap">
+        <a-tag v-for="tag in renderData" :key="tag.id" @click="handleTagClick(tag)" :color="getRandomColor(tag.id)" class="cursor-pointer mx-2 text-lg font-semibold">{{ tag.name }}</a-tag>
+      </div>
       <div class="flex flex-wrap gap-4">
         <a-card v-for="doc in tagDocuments" :key="doc.id" class="tag-card mt-4 w-64 hover:shadow-lg transition-shadow duration-300">
           <template #title>
@@ -10,12 +12,11 @@
           </template>
           <div class="flex flex-col gap-2">
             <div class="flex items-center gap-2 text-gray-600">
-              <icon-calendar />
-              <span>{{ doc.type }}</span>
+              <component :is="getSvgByType(doc.type)" class="w-10 h-10" />
             </div>
             <div class="flex items-center gap-2 text-gray-600">
-              <icon-file />
-              <span>{{ doc.doc_count || 0 }} 个文件</span>
+              <icon-calendar />
+              <span>{{ tableDateFormat(doc?.doc_time) }}</span>
             </div>
           </div>
           <template #extra>
@@ -61,6 +62,7 @@ import {
   updateTag,
 } from '@/api/tag';
 import { Pagination } from '@/types/global';
+import { getSvgByType, getSvgByFileName} from '@/utils/doc';
 
 const { t } = useI18n();
 const { loading, setLoading } = useLoading(true);
@@ -129,8 +131,11 @@ const COLORS_CUSTOM = [
   '#ff5722',
 ];
 
-const getRandomColor = () => {
-  return COLORS_CUSTOM[Math.floor(Math.random() * COLORS_CUSTOM.length)];
+const getRandomColor = (id: number) => {
+  if (id === selectedTag.value?.id) {
+    return COLORS_CUSTOM[Math.floor(Math.random() * COLORS_CUSTOM.length)];
+  }
+  return '#86909c';
 };
 
 interface TagDocument {
@@ -151,6 +156,10 @@ const handleTagClick = async (tag: TagRes) => {
   console.log('queryTagDetail res', res);
   tagDocuments.value = res.docs || [];
   console.log('tagDocuments.value', tagDocuments.value);
+};
+
+const isSelected = (tag: TagRes) => {
+  return selectedTag.value && selectedTag.value.id === tag.id;
 };
 </script>
 
