@@ -140,7 +140,9 @@ const fetchDashboardApi = async () => {
     // console.log(dashboardCount.value);
 };
 
-onMounted(fetchDashboardApi);
+onMounted(async () => {
+  await fetchDashboardApi();
+});
 // fetchDashboardApi();
 </script>
 
