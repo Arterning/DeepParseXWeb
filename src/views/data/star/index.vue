@@ -110,9 +110,11 @@ import {
   StarCollectionRes,
   updateStarCollection,
 } from '@/api/starCollection';
+import { useRouter } from 'vue-router';
 
 const { t } = useI18n();
 const { loading, setLoading } = useLoading(true);
+const router = useRouter();
 
 // 收藏夹列表
 const collections = ref<StarCollectionRes[]>([]);
@@ -231,7 +233,7 @@ const removeFromCollection = async (docId: number) => {
 // 点击文件卡片
 const handleDocClick = (doc: { id: number; name: string; type: string }) => {
   // 这里可以实现跳转到文件详情页的逻辑
-  Message.info(`查看文件：${doc.name}`);
+  router.push({name: 'DocDetail', params: { id: doc.id }, query: { appendix: doc.title }});
 };
 
 // 取消操作

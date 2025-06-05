@@ -6,29 +6,28 @@
         <a-tag v-for="tag in renderData" :key="tag.id" @click="handleTagClick(tag)" :color="getRandomColor(tag.id)" class="cursor-pointer mx-2 text-lg font-semibold">{{ tag.name }}</a-tag>
       </div>
       <div class="flex flex-wrap gap-4">
-        <a-card v-for="doc in tagDocuments" :key="doc.id" class="tag-card mt-4 w-64 hover:shadow-lg transition-shadow duration-300">
-          <template #title>
-            <div class="text-lg font-semibold">{{ doc.title }}</div>
-          </template>
-          <div class="flex flex-col gap-2">
-            <div class="flex items-center gap-2 text-gray-600">
+        <a-card v-for="doc in tagDocuments" :key="doc.id" hoverable :bordered="false" @click="handleDocClick(doc)" class="tag-card cursor-pointer mt-4 w-64 hover:shadow-lg transition-shadow duration-300">
+          <div class="flex flex-col items-start gap-2 p-2">
+            <div class="flex items-center gap-2">
               <component :is="getSvgByType(doc.type)" class="w-10 h-10" />
+              <div class="text-lg font-semibold">{{ doc.title }}</div>
             </div>
+            
             <div class="flex items-center gap-2 text-gray-600">
               <icon-calendar />
               <span>{{ tableDateFormat(doc?.doc_time) }}</span>
             </div>
           </div>
-          <template #extra>
-            <!-- <div class="flex gap-2">
-              <a-button type="text" size="small" @click="EditTag(tag.id)">
-                <icon-edit />
-              </a-button>
-              <a-button type="text" size="small" status="danger" @click="DeleteTag(tag.id)">
-                <icon-delete />
-              </a-button>
-            </div> -->
-          </template>
+          <!-- <template #extra>
+              <div class="flex gap-2">
+                <a-button type="text" size="small" @click="EditTag(tag.id)">
+                  <icon-edit />
+                </a-button>
+                <a-button type="text" size="small" status="danger" @click="DeleteTag(tag.id)">
+                  <icon-delete />
+                </a-button>
+              </div>
+            </template> -->
         </a-card>
       </div>
       <!-- <div class="flex justify-center mt-4">
@@ -63,9 +62,12 @@ import {
 } from '@/api/tag';
 import { Pagination } from '@/types/global';
 import { getSvgByType, getSvgByFileName} from '@/utils/doc';
+import { tableDateFormat } from '@/utils/date';
+import { useRouter } from 'vue-router';
 
 const { t } = useI18n();
 const { loading, setLoading } = useLoading(true);
+const router = useRouter();
 
 // 表单
 const generateFormModel = () => {
@@ -160,6 +162,11 @@ const handleTagClick = async (tag: TagRes) => {
 
 const isSelected = (tag: TagRes) => {
   return selectedTag.value && selectedTag.value.id === tag.id;
+};
+
+const handleDocClick = (doc: TagDocument) => {
+  // 这里可以添加更多逻辑，比如跳转到文档详情页
+  router.push({name: 'DocDetail', params: { id: doc.id }, query: { appendix: doc.title }});
 };
 </script>
 
