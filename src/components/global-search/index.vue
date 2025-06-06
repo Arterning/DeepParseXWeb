@@ -7,8 +7,9 @@
       class="rounded-lg p-2 w-[50vw]"  
       @input="handleInput"
     >
-      <template #append>
-        <icon-search class="cursor-pointer" @click="handleInput"/>
+      <template #prefix>
+        <icon-loading v-if="searchLoading" />
+        <icon-search v-else class="cursor-pointer" @click="handleInput"/>
       </template>
     </a-input>
     <!-- 搜索结果 -->
@@ -61,6 +62,7 @@ const searchResults = ref();
 const searchQuery = ref('');
 const router = useRouter(); // 使用 Vue Router
 const showResults = ref(true);
+const searchLoading = ref(false);
 
 
 const handleInput = async () => {
@@ -70,6 +72,7 @@ const handleInput = async () => {
   } else {
     showHistory.value = false;
     showResults.value = true;
+    searchLoading.value = true;
     try {
       const results = await searchSysDocList({
         tokens: searchQuery.value,
@@ -77,6 +80,8 @@ const handleInput = async () => {
       searchResults.value = results.items;
     } catch (error) {
       // console.error('搜索失败:', error);
+    } finally {
+      searchLoading.value = false;
     }
   }
 };
@@ -100,6 +105,7 @@ onMounted(loadSearchHistory);
 // 搜索结果跳转
 const handleResultClick = (item: { id: number }) => {
   router.push({ name: 'DocDetail', params: { id: item.id } });
+  showResults.value = false;
 };
 
 const highlightedHit = (hit: string | undefined) => {
