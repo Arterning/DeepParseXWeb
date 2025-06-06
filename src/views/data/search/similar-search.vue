@@ -34,7 +34,7 @@
             </a-list-item-meta>
             <a-list-item-meta>
                 <template #description>
-                <span v-html="highlightedHit(result.hit)"></span>
+                <span v-html="highlightedHit(result.content)"></span>
                 </template>
             </a-list-item-meta>
             </a-list-item>
@@ -50,7 +50,7 @@
   import { ref, onMounted, reactive } from 'vue';
   //   import { result } from 'lodash';
   import { useRouter } from 'vue-router';
-  import { searchSysDocList } from '@/api/doc';
+  import { searchSimilarDocList } from '@/api/doc';
   // import { SearchItem, SearchRes, search } from '@/api/dashboard';
   
   const visible = ref(true);
@@ -71,8 +71,8 @@
       showHistory.value = false;
       loading.value = true;
       try {
-        const results = await searchSysDocList({
-          tokens: searchQuery.value,
+        const results = await searchSimilarDocList({
+          query: searchQuery.value,
         });
         searchResults.value = results.items;
         total.value = results.total;
@@ -187,8 +187,8 @@
   const pageChange = async (current: number) => {
     try {
         loading.value = true;
-        const results = await searchSysDocList({
-          tokens: searchQuery.value, page: current, size: pageSize.value 
+        const results = await searchSimilarDocList({
+          query: searchQuery.value, page: current, size: pageSize.value 
         });
         searchResults.value = results.items;
         total.value = results.total;
@@ -203,8 +203,8 @@
 const onPageSizeChange = async (_pageSize: number) => {
     try {
         loading.value = true;
-        const results = await searchSysDocList({
-          tokens: searchQuery.value, page: 0, size: _pageSize 
+        const results = await searchSimilarDocList({
+          query: searchQuery.value, page: 0, size: _pageSize 
         });
         searchResults.value = results.items;
         total.value = results.total;

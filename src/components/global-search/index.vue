@@ -4,7 +4,7 @@
       v-model="searchQuery"
       placeholder="搜索"
       allow-clear
-      class="rounded-lg p-2 w-[50vw]"  
+      class="rounded-lg w-[50vw]"  
       @input="handleInput"
     >
       <template #prefix>

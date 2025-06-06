@@ -43,6 +43,7 @@ export interface SysDocQueryRes {
 export interface SysDocParams {
   name?: string;
   title?: string;
+  query?: string;
   tokens?: string;
   likeq?: string;
   content?: string;
@@ -72,6 +73,15 @@ export function querySysDocList(params: SysDocParams): Promise<SysDocListRes> {
 
 export function searchSysDocList(params: SysDocParams): Promise<SysDocQueryRes> {
   return axios.get('/api/v1/sys/docs/search', {
+    params,
+    paramsSerializer: (obj) => {
+      return qs.stringify(obj);
+    },
+  });
+}
+
+export function searchSimilarDocList(params: SysDocParams): Promise<SysDocQueryRes> {
+  return axios.get('/api/v1/sys/docs/similar_search', {
     params,
     paramsSerializer: (obj) => {
       return qs.stringify(obj);
