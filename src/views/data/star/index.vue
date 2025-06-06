@@ -242,8 +242,8 @@ const cancelReq = () => {
 };
 
 // 初始化加载
-onMounted(() => {
-  fetchCollections();
+onMounted(async () => {
+  await fetchCollections();
   selectedCollection.value = collections.value.length > 0 ? collections.value[0].id : undefined;
   console.log("selectedCollection.value", selectedCollection.value);
   if (selectedCollection.value) {

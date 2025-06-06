@@ -47,7 +47,7 @@
 <script lang="ts" setup>
 import { Message } from '@arco-design/web-vue';
 import { useI18n } from 'vue-i18n';
-import { reactive, ref } from 'vue';
+import { reactive, ref, onMounted } from 'vue';
 import useLoading from '@/hooks/loading';
 import Footer from '@/components/footer/index.vue';
 import {
@@ -114,8 +114,15 @@ const fetchTagList = async (params: TagParams = {}) => {
   }
 };
 
-// 初始化加载数据
-fetchTagList();
+
+onMounted(async () => {
+  // 初始化加载数据
+  await fetchTagList();
+  selectedTag.value = renderData.value && renderData.value.length > 0 && renderData.value[0];
+  const res = await queryTagDetail(selectedTag.value.id);
+  tagDocuments.value = res.docs || [];
+})
+
 
 const COLORS_CUSTOM = [
   '#f53f3f',
