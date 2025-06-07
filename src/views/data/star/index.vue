@@ -1,99 +1,87 @@
 <template>
-  <a-layout class="flex-layout">
-    <Breadcrumb />
-    <a-card :title="$t('我的收藏')" class="general-card">
-      <!-- 顶部收藏夹选择区域 -->
-      <div class="flex justify-between items-center mb-6">
-        <div class="flex items-center gap-4 flex-1">
-          <a-select
-            v-model="selectedCollection"
-            :style="{ width: '300px' }"
-            placeholder="选择收藏夹"
-            allow-clear
-            @change="handleCollectionChange"
-          >
-            <a-option
-              v-for="collection in collections"
-              :key="collection.id"
-              :value="collection.id"
-            >
-              {{ collection.name }}
-            </a-option>
-          </a-select>
-          <a-button type="primary" @click="NewStarCollection">
-            <template #icon>
-              <icon-plus />
-            </template>
-            新建收藏夹
-          </a-button>
-          <a-button v-if="selectedCollection" @click="EditStarCollection(selectedCollection)">
-            <template #icon>
-              <icon-edit />
-            </template>
-            编辑收藏夹
-          </a-button>
-        </div>
+  <a-layout class="h-full">
+    <!-- 左侧收藏夹列表 -->
+    <a-layout-sider width="250" class="rounded-lg p-4 mt-4 ml-4 max-h-[calc(100vh-200px)] overflow-y-auto">
+      <div class="flex justify-between items-center mb-4">
+        <!-- <span class="font-bold">我的收藏夹</span> -->
+        <a-button type="text" @click="NewStarCollection" size="small">
+          <icon-plus />
+        </a-button>
       </div>
-
-      <!-- 文件卡片展示区域 -->
-      <div v-if="selectedCollection && currentCollection?.docs?.length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        <a-card
-          v-for="doc in currentCollection.docs"
-          :key="doc.id"
-          class="doc-card hover:shadow-lg transition-shadow duration-300"
-          :style="{ cursor: 'pointer' }"
-          @click="handleDocClick(doc)"
+      <a-menu
+        :selected-keys="[String(selectedCollection)]"
+        @menu-item-click="handleCollectionChange"
+      >
+        <a-menu-item
+          v-for="collection in collections"
+          :key="collection.id"
         >
-          <div class="flex items-start gap-3">
-            <div class="flex-1">
-              <h3 class="text-lg font-medium mb-2">{{ doc.name }}</h3>
-              <div class="flex items-center gap-2 text-gray-500">
+          <div class="flex justify-between items-center">
+            <span>{{ collection.name }}</span>
+            <icon-edit
+              class="text-gray-400 hover:text-primary"
+              @click.stop="EditStarCollection(collection.id)"
+            />
+          </div>
+        </a-menu-item>
+      </a-menu>
+    </a-layout-sider>
+
+    <!-- 右侧内容展示 -->
+    <a-layout-content class="p-6 overflow-auto">
+      <a-card :title="currentCollection?.name || '收藏夹内容'" class="general-card">
+        <!-- 文件卡片展示区域 -->
+        <div v-if="currentCollection?.docs?.length > 0"
+             class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <a-card
+            v-for="doc in currentCollection.docs"
+            :key="doc.id"
+            class="doc-card hover:shadow-lg transition-shadow duration-300"
+            :style="{ cursor: 'pointer' }"
+            @click="handleDocClick(doc)"
+          >
+            <div class="flex items-start gap-3">
+              <div class="flex-1">
+                <h3 class="text-lg font-medium mb-2">{{ doc.name }}</h3>
                 <a-tag>{{ doc.type }}</a-tag>
               </div>
-            </div>
-            <a-button
-              type="text"
-              status="danger"
-              class="hover:text-red-600"
-              @click.stop="removeFromCollection(doc.id)"
-            >
-              <template #icon>
+              <a-button
+                type="text"
+                status="danger"
+                class="hover:text-red-600"
+                @click.stop="removeFromCollection(doc.id)"
+              >
                 <icon-delete />
-              </template>
-            </a-button>
-          </div>
-        </a-card>
-      </div>
-      <a-empty v-else description="暂无收藏文件" />
+              </a-button>
+            </div>
+          </a-card>
+        </div>
+        <a-empty v-else description="暂无收藏文件" />
+      </a-card>
+    </a-layout-content>
 
-      <!-- 新增/编辑收藏夹弹窗 -->
-      <a-modal
-        :visible="openNewOrEdit"
-        :title="drawerTitle"
-        @cancel="cancelReq"
-        :on-before-ok="beforeSubmit"
-        @ok="submitNewOrEdit"
-        :closable="false"
-        :width="550"
-      >
-        <a-form ref="formRef" :model="form">
-          <a-form-item
-            field="name"
-            label="名称"
-            :rules="[{ required: true, message: 'required' }]"
-            :feedback="true"
-          >
-            <a-input v-model="form.name"></a-input>
-          </a-form-item>
-          <a-form-item field="description" label="描述">
-            <a-textarea v-model="form.description" />
-          </a-form-item>
-        </a-form>
-      </a-modal>
-    </a-card>
-    <Footer />
+    <!-- 弹窗部分保持不变 -->
+    <a-modal
+      :visible="openNewOrEdit"
+      :title="drawerTitle"
+      @cancel="cancelReq"
+      :on-before-ok="beforeSubmit"
+      @ok="submitNewOrEdit"
+      :closable="false"
+      :width="550"
+    >
+      <a-form ref="formRef" :model="form">
+        <a-form-item field="name" label="名称" :rules="[{ required: true, message: 'required' }]" :feedback="true">
+          <a-input v-model="form.name" />
+        </a-form-item>
+        <a-form-item field="description" label="描述">
+          <a-textarea v-model="form.description" />
+        </a-form-item>
+      </a-form>
+    </a-modal>
   </a-layout>
 </template>
+
 
 <script lang="ts" setup>
 import { Message } from '@arco-design/web-vue';
