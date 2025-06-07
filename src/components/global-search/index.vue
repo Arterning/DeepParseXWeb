@@ -112,7 +112,7 @@ const highlightedHit = (hit: string | undefined) => {
   if (!hit) {
     return "";
   }
-  return hit.replace(/<b>(.*?)<\/b>/g, `<b style="color: aqua;">$1</b>`);
+  return hit.replace(/<b>(.*?)<\/b>/g, `<b style="color: #F6B17A;">$1</b>`);
 }
 </script>
 

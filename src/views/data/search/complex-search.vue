@@ -561,7 +561,7 @@
     if (!hit) {
       return '';
     }
-    return hit.replace(/<b>(.*?)<\/b>/g, `<b style="color: aqua;">$1</b>`);
+    return hit.replace(/<b>(.*?)<\/b>/g, `<b style="color: #F6B17A;">$1</b>`);
   };
   
   const pageChange = async (current: number) => {
@@ -631,7 +631,7 @@
     height: 100%;
   
     .tip {
-      color: aqua;
+      color: #F6B17A;
       padding: 8px;
     }
   }

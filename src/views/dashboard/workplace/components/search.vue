@@ -4,7 +4,7 @@
       
       <!-- <a-button type="primary" class="p-5 rounded-md" @click="handleInput">搜索</a-button> -->
       <!-- </a-input-group> -->
-      <a-input v-model="searchQuery" class="p-3 w-full rounded-lg" placeholder="搜索您感兴趣的内容" allow-clear
+      <a-input v-model="searchQuery" class=" w-[50vw] mx-auto rounded-lg" placeholder="搜索您感兴趣的内容" allow-clear
         @input="handleInput" @keyup.enter="handleEnter">
         <template #prefix>
           <icon-search />
@@ -185,7 +185,7 @@
     if (!hit) {
       return '';
     }
-    return hit.replace(/<b>(.*?)<\/b>/g, `<b style="color: aqua;">$1</b>`);
+    return hit.replace(/<b>(.*?)<\/b>/g, `<b style="color: #F6B17A;">$1</b>`);
   };
   
   const pageChange = async (current: number) => {
@@ -266,8 +266,9 @@ const onPageSizeChange = async (_pageSize: number) => {
     height: 100%;
   
     .tip {
-      color: aqua;
+      color: #F6B17A;
       padding: 8px;
+      font-weight: bold;
     }
   }
   
