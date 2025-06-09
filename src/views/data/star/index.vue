@@ -17,7 +17,7 @@
           :key="collection.id"
         >
           <div class="flex justify-between items-center">
-            <span>{{ collection.name }}</span>
+            <span class="overflow-hidden whitespace-nowrap text-ellipsis max-w-[8rem]">{{ collection.name }}</span>
             <icon-edit
               class="text-gray-400 hover:text-primary"
               @click.stop="EditStarCollection(collection.id)"

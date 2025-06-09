@@ -189,11 +189,11 @@
   }
 
   .link-activated {
-    background-color: #2e6fd0;
+    background-color: #2971CF;
 
-    // .tag-link {
-    //   color: #13c2c2;
-    // }
+    .tag-link {
+      color: #e0e0e0;
+    }
 
     // & + .arco-tag-close-btn {
     //   color: #13c2c2;
@@ -224,6 +224,5 @@
     overflow: hidden;
     white-space: nowrap;
     max-width: 10rem;
-    // display:block;
   }
 </style>
