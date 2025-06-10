@@ -1,6 +1,6 @@
 <template>
   <a-layout class="flex-layout" style="padding: 0 18px">
-    <Breadcrumb />
+    <!-- <Breadcrumb /> -->
     <a-card :title="$t('')" class="general-card">
       <div>
         <div class="layout-content">

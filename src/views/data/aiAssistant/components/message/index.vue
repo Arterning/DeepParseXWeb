@@ -16,23 +16,31 @@
 
 </script>
 <template>
-  <div class="flex items-center gap-x-2 overflow-auto min-w-3xl mt-2" 
+  <div class="flex items-center gap-x-2 overflow-auto min-w-[50rem] mt-2" 
     :class="message.sender === 'user'? 'justify-end': 'justify-start'">
-    <a-avatar v-if="message.sender === 'bot'" class="bg-transparent">
-      <RobotIconSvg class="h-20 w-20"/>
-    </a-avatar>
-    <!-- <RobotIconSvg v-if="message.sender === 'bot'" class="h-20 w-20"/> -->
-    <div>
+    
+    <!-- 机器人头像 - 设置固定宽度并防止压缩 -->
+    <div class="flex-shrink-0 w-12" v-if="message.sender === 'bot'">
+      <a-avatar>
+        <RobotIconSvg class="h-12 w-12"/>
+      </a-avatar>
+    </div>
+
+    <div class="max-w-[calc(100%-4rem)] overflow-auto">
       <div v-if="message.status==='waiting'">
         <a-spin />
       </div>
-      <MdPreview v-else-if="message.status==='success'&&message.sender==='bot'" class="bg-slate-200 p-2 rounded-lg"  :preview-theme="'github'" :model-value="messageContent" ></MdPreview>        
-      <MdPreview v-else-if="message.status==='success'&&message.sender==='user'" class="bg-slate-200 p-2 rounded-lg" :preview-theme="'github'" :model-value="messageContent" ></MdPreview> 
-      <MdPreview v-else-if="message.status==='failure'" class="bg-slate-200 p-2 rounded-lg" :model-value="messageContent" />
+      <MdPreview v-else-if="message.status==='success'&&message.sender==='bot'" theme="dark" class="bg-slate-700 p-2 rounded-lg"  :preview-theme="'github'" :model-value="messageContent" ></MdPreview>        
+      <MdPreview v-else-if="message.status==='success'&&message.sender==='user'" theme="dark" class="bg-slate-700 p-2 rounded-lg" :preview-theme="'github'" :model-value="messageContent" ></MdPreview> 
+      <MdPreview v-else-if="message.status==='failure'" theme="dark" class="bg-slate-700 p-2 rounded-lg" :model-value="messageContent" />
     </div>
-    <a-avatar v-if="message.sender === 'user'" class="avator">
-      <IconUser />
-    </a-avatar>
+    
+    <!-- 用户头像 - 设置固定宽度并防止压缩 -->
+    <div class="flex-shrink-0 w-12" v-if="message.sender === 'user'">
+      <a-avatar class="avator">
+        <IconUser />
+      </a-avatar>
+    </div>
   </div>
 </template>
 

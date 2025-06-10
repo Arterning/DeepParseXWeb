@@ -153,7 +153,7 @@
 </script>
 
 <template>
-  <div class="chat-container">
+  <div class="flex flex-col h-full overflow-auto p-2">
     <div ref="contentBox" class="chat-content">
       <h1 class="start-tip" v-if="props?.session?.messages?.length===0">有什么可以帮助的？</h1>
       <template v-for="(message, index) in props.session.messages" :key="index">
@@ -205,14 +205,6 @@
 </template>
 
 <style lang="less" scoped>  
-  .chat-container{
-    padding: 1.25rem 0;
-    min-width: 720px;
-    display: flex;
-    align-items: center;
-    height: 100%;
-    flex-direction: column;
-  }
   // .chat-header{
   //   height: 2rem;
   //   text-overflow: ellipsis;
