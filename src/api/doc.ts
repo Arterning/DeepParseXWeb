@@ -127,6 +127,11 @@ export function extractGraphData(pk: number) {
   return axios.get(`/api/v1/sys/docs/build_graph/${pk}`);
 }
 
+// 提取内容
+export function extractText(pk: number) {
+  return axios.get(`/api/v1/sys/docs/extract_text/${pk}`);
+}
+
 
 // collectDoc
 export function collectDoc(params: {
