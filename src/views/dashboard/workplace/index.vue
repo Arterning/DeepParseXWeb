@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="container general-card">
     <!-- <Breadcrumb /> -->
     <div class="left-side">
       <!-- <Banner /> -->
@@ -24,7 +24,7 @@
 
 <style lang="less" scoped>
   .container {
-    background-color: var(--color-fill-0);
+    // background-color: var(--color-fill-0);
     padding: 16px 20px;
     padding-bottom: 0;
   }
@@ -40,7 +40,7 @@
   }
 
   .panel {
-    background-color: var(--color-bg-2);
+    // background-color: var(--color-bg-2);
     border-radius: 4px;
   }
 
