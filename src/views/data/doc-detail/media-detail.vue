@@ -35,7 +35,7 @@
                                     <!-- <p class="text-xl max-w-6xl whitespace-pre-wrap break-words p-4 rounded-lg">
                                         {{ info.content }}
                                     </p> -->
-                                    <MdPreview :theme="theme" previewTheme="github" :model-value="info.content" class="p-2 rounded-lg" />
+                                    <MdPreview :theme="theme" previewTheme="github" :model-value="info.content || ''" class="p-2 rounded-lg" />
                                 </a-scrollbar>
                             </div>
                         </div>
@@ -44,7 +44,7 @@
                                 <!-- <p class="text-xl max-w-6xl whitespace-pre-wrap break-words p-4 rounded-lg">
                                         {{ info.content }}
                                 </p> -->
-                                <MdPreview :theme="theme" previewTheme="github" :model-value="info.content" class="p-2 rounded-lg" />
+                                <MdPreview :theme="theme" previewTheme="github" :model-value="info.content || ''" class="p-2 rounded-lg" />
                             </a-scrollbar>
                         </div>
                     </a-card>
