@@ -22,24 +22,34 @@
                                         原文
                                     </template>
                                 </a-switch>
-                                <a-button>重新提取</a-button>
+                                <a-button @click="extract">重新提取</a-button>
                             </div>
                         </template>
                         <div class="flex gap-1" v-if="compare">
                             <a-image class="w-1/2" height="480" fit="contain"
                                     :src="buildSrcURL(info.file)" />
                             <div class="w-1/2">
-                                <a-scrollbar style="height:500px;overflow: auto;">
+                                <a-skeleton :loading="loading" :animation="true">
+                                    <a-space direction="vertical" :style="{width:'100%'}" size="large">
+                                        <a-skeleton-line :rows="8" />
+                                    </a-space>
+                                </a-skeleton>
+                                <a-scrollbar v-if="!loading" style="height:500px;overflow: auto;">
                                     <!-- <p class="text-xl max-w-6xl whitespace-pre-wrap break-words p-4 rounded-lg">
                                         {{ info.content }}
                                     </p> -->
-                                    <MdPreview :theme="theme" previewTheme="github" :model-value="info.content || ''" class="p-2 rounded-lg" />
+                                    <MdPreview :theme="theme" previewTheme="github" :model-value="markdownContent" class="p-2 rounded-lg" />
                                 </a-scrollbar>
                             </div>
                         </div>
                         <div v-else>
-                            <a-scrollbar style="height:500px;overflow: auto;">
-                                <MdPreview :theme="theme" previewTheme="github" :model-value="info.content || ''" class="p-2 rounded-lg" />
+                            <a-skeleton :loading="loading" :animation="true">
+                                <a-space direction="vertical" :style="{width:'100%'}" size="large">
+                                    <a-skeleton-line :rows="8" />
+                                </a-space>
+                            </a-skeleton>
+                            <a-scrollbar v-if="!loading" style="height:500px;overflow: auto;">
+                                <MdPreview :theme="theme" previewTheme="github" :model-value="markdownContent" class="p-2 rounded-lg" />
                             </a-scrollbar>
                         </div>
                     </a-card>
@@ -52,6 +62,7 @@
 <script lang="ts" setup>
 import { computed, ref } from 'vue';
 import { useAppStore } from '@/store';
+import { extractText } from '@/api/doc';
 
 const appStore = useAppStore();
 
@@ -72,9 +83,21 @@ const buildSrcURL = (file: string) => {
     return url;
 }
 
+const markdownContent = ref(props.info.content || '');
 
+const loading = ref<boolean>(false);
+const extract = () => {
+    loading.value = true;
+    extractText(props.info.id).then((res) => {
+        markdownContent.value = res;
+        loading.value = false;
+    }).catch(() => {
+        loading.value = false;
+    });
+}
 </script>
 
 <style lang="less" scoped>
+
 
 </style>

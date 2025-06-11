@@ -3,7 +3,7 @@
         <a-layout style="padding: 0 18px">
             <a-card class="general-card">
                 <div class="content">
-                    <a-card class="info-card" :loading="loading">
+                    <a-card class="info-card">
                         <template #title>
                             <div class="flex justify-between items-center">
                                 <ScanSvg class="w-8 h-8"/>
@@ -21,7 +21,12 @@
                         <div class="flex gap-1" v-if="compare">
                             <iframe :src="buildSrcURL(info.file)" frameborder="0" class="h-[500px] w-1/2 "></iframe>
                             <div class="w-1/2">
-                                <a-scrollbar style="height:500px;overflow: auto;">
+                                <a-skeleton :loading="loading" :animation="true">
+                                    <a-space direction="vertical" :style="{width:'100%'}" size="large">
+                                        <a-skeleton-line :rows="8" />
+                                    </a-space>
+                                </a-skeleton>
+                                <a-scrollbar v-if="!loading" style="height:500px;overflow: auto;">
                                     <!-- <p class="text-xl max-w-6xl whitespace-pre-wrap break-words p-4 rounded-lg">
                                         {{ info.content }}
                                     </p> -->
@@ -30,7 +35,12 @@
                             </div>
                         </div>
                         <div v-else>
-                            <a-scrollbar style="height:500px;overflow: auto;">
+                            <a-skeleton :loading="loading" :animation="true">
+                                <a-space direction="vertical" :style="{width:'100%'}" size="large">
+                                    <a-skeleton-line :rows="8" />
+                                </a-space>
+                            </a-skeleton>
+                            <a-scrollbar v-if="!loading" style="height:500px;overflow: auto;">
                                 <!-- <p class="text-xl max-w-6xl whitespace-pre-wrap break-words p-4 rounded-lg">
                                     {{ info.content }}
                                 </p> -->

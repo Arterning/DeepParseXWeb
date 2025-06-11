@@ -32,7 +32,7 @@
 
       <!-- 任务队列列表 -->
       <a-list :bordered="false" :data="uploadTasks" :hoverable="true">
-        <template #header>上传任务列表</template>
+        <template #header>上传任务</template>
         <template #item="{ item }">
           <a-list-item>
             <div class="flex justify-between w-full">
@@ -154,7 +154,7 @@ interface UploadTask {
   size?: number;
   progress: number;
   stage: string;
-  eventSource: EventSource;
+  eventSource?: EventSource;
 }
 
 const uploadTasks = ref<UploadTask[]>([]);
@@ -209,7 +209,7 @@ const customRequest = (option: RequestOption): UploadRequest => {
       title: fileItem?.file?.name,
       size: fileItem?.file?.size,
       progress: 0,
-      eventSource: new EventSource(''), // 初始化时不需要实际的 EventSource
+      eventSource: null, // 初始化时不需要实际的 EventSource
     };
     
     // 添加到任务队列
@@ -223,6 +223,8 @@ const customRequest = (option: RequestOption): UploadRequest => {
         id,
       },
     });
+
+    // console.log("触发任务", uid)
 
     // 更新任务UID
     const task = uploadTasks.value[taskIndex];
@@ -242,12 +244,12 @@ const customRequest = (option: RequestOption): UploadRequest => {
         task.stage = esd.stage;
     };
 
-    task.eventSource = eventSource;
-
     eventSource.onerror = () => {
         console.error("SSE 连接错误");
         eventSource.close();
     };
+
+    task.eventSource = eventSource;
 
     return onSuccess(xhr.response);
   };
