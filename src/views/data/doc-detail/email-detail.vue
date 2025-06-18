@@ -53,7 +53,7 @@
         </div>
 
         <!-- 抄送信息 -->
-        <div v-if="mailData.cc" class="mb-6">
+        <div v-if="mailData?.cc" class="mb-6">
           <h2 class="text-sm font-medium text-gray-600 mb-2">抄送</h2>
           <div class="flex flex-wrap gap-2">
             <!--            <a-tag v-for="(cc, index) in mailData?.cc" :key="index" type="gray">-->
