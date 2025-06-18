@@ -218,7 +218,7 @@ const customRequest = (option: RequestOption): UploadRequest => {
     const taskIndex = uploadTasks.value.length;
     uploadTasks.value.push(taskItem);
 
-    await fetchData();
+    
 
     await parseDoc(id);
 
@@ -235,10 +235,14 @@ const customRequest = (option: RequestOption): UploadRequest => {
 
     const eventSource = new EventSource(url);
 
-    eventSource.onmessage = (event: any) => {
+    eventSource.onmessage = async (event: any) => {
         const esd = JSON.parse(event.data);
         task.progress = esd.progress;
         task.stage = esd.stage;
+
+        if (task.progress === 1) {
+          await fetchData();
+        }
     };
 
     eventSource.onerror = () => {

@@ -746,6 +746,7 @@
   
   // 事件: 分页
   const onPageChange = async (current: number) => {
+    pagination.current = current;
     await fetchApiList({ page: current, size: pagination.pageSize });
   };
 
@@ -759,6 +760,8 @@
   const search = async () => {
     await fetchApiList({
       ...formModel.value,
+      page: pagination.current,
+      size: pagination.pageSize,
     } as unknown as SysDocParams);
   };
 
