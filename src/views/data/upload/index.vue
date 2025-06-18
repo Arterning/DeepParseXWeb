@@ -46,7 +46,9 @@
               <div class="w-1/3">
                 <a-progress :percent="item.progress" >
                   <template v-slot:text="scope" >
-                    进度 {{scope.percent * 100 }}% ({{ item.stage }})
+                    <icon-check v-if="scope.percent == 1"/>
+                    <icon-loading v-if="scope.percent < 1"/> 
+                    {{scope.percent * 100 }}% {{ item.stage }}
                   </template>
                 </a-progress>
               </div>
@@ -103,7 +105,7 @@ import { getToken } from '@/utils/auth';
 import {getSvgByType, getSvgByFileName} from '@/utils/doc';
 import { queryRecentDocs, SysDocRes } from '@/api/doc';
 import useLoading from '@/hooks/loading';
-import { executeTask } from '@/api/task';
+import { parseDoc } from '@/api/doc';
 
 const { t } = useI18n();
 
@@ -209,7 +211,7 @@ const customRequest = (option: RequestOption): UploadRequest => {
       title: fileItem?.file?.name,
       size: fileItem?.file?.size,
       progress: 0,
-      eventSource: null, // 初始化时不需要实际的 EventSource
+      eventSource: undefined, // 初始化时不需要实际的 EventSource
     };
     
     // 添加到任务队列
@@ -218,22 +220,17 @@ const customRequest = (option: RequestOption): UploadRequest => {
 
     await fetchData();
 
-    const uid = await executeTask("upload_handle_file", {
-      "kwargs": {
-        id,
-      },
-    });
+    await parseDoc(id);
 
     // console.log("触发任务", uid)
 
     // 更新任务UID
     const task = uploadTasks.value[taskIndex];
-    task.uid = uid as any;
 
     const BASE = import.meta.env.VITE_API_BASE_URL;
-    let url = `/api/v1/tasks/${uid}/sse`;
+    let url = `/api/v1/sys/upload/sse/${id}`;
     if (BASE) {
-        url = `${BASE}/api/v1/tasks/${uid}/sse`;
+        url = `${BASE}/api/v1/sys/upload/sse/${id}`;
     }
 
     const eventSource = new EventSource(url);

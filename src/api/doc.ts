@@ -140,3 +140,9 @@ export function collectDoc(params: {
 }) {
   return axios.post(`/api/v1/sys/docs/collect`, params);
 }
+
+
+// 解析文件
+export function parseDoc(pk: number) {
+  return axios.post(`/api/v1/sys/upload/parse/${pk}`);
+}
