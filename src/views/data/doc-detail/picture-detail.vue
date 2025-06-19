@@ -3,16 +3,19 @@
         <a-layout style="padding: 0 18px">
             <a-card class="general-card">
                 <template #title>
-                    <a-space size="large">
+                    <div class="flex justify-start gap-3 items-center">
+                        
+                        <a-image fit="contain" :src="buildSrcURL(info.file)" class="w-16 h-12" />
+
                         <span class="font-bold">{{ info.title }}</span>
-                    </a-space>
+                    </div>
                 </template>
                 <div class="content">
                     <a-card class="info-card">
                         <template #title>
                             <div class="flex justify-between items-center">
                                 <div class="flex gap-3">
-                                    {{ $t('内容') }}
+                                    
                                 </div>
                                 <a-switch v-model="compare">
                                     <template #checked>
@@ -72,7 +75,7 @@
                                         />
                                     </div>
 
-                                    <a-image fit="cover" :src="buildSrcURL(info.file)" ref="previewRef" style="display: none;" />
+                                    
                                     
                                 </a-scrollbar>
                             </div>

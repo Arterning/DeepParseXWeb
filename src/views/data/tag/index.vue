@@ -3,6 +3,7 @@
     <Breadcrumb />
     <a-card :title="$t('')" class="general-card pt-8">
       <div class="flex flex-wrap">
+        <a-empty v-if="renderData.length == 0"/>
         <a-tag v-for="tag in renderData" :key="tag.id" @click="handleTagClick(tag)" :color="getRandomColor(tag.id)" class="cursor-pointer mx-2 text-lg font-semibold">{{ tag.name }}</a-tag>
       </div>
       <div class="flex flex-wrap gap-4">
@@ -118,7 +119,10 @@ const fetchTagList = async (params: TagParams = {}) => {
 onMounted(async () => {
   // 初始化加载数据
   await fetchTagList();
-  selectedTag.value = renderData.value && renderData.value.length > 0 && renderData.value[0];
+  selectedTag.value = renderData.value && renderData.value.length > 0 ? renderData.value[0] : null;
+  if (!selectedTag.value) {
+    return;
+  }
   const res = await queryTagDetail(selectedTag.value.id);
   tagDocuments.value = res.docs || [];
 })
