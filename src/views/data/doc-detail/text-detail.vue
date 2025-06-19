@@ -20,7 +20,8 @@
                                 <!-- <p class="text-xl max-w-6xl whitespace-pre-wrap break-words p-4 rounded-lg">
                                         {{ info.content }}
                                 </p> -->
-                                <MdPreview :theme="theme" previewTheme="github" :model-value="info.content || ''" class="p-2 rounded-lg" />
+                                <div v-html="info.content" v-if="info.file_suffix == '.html'"></div>
+                                <MdPreview v-else :theme="theme" previewTheme="github" :model-value="info.content || ''" class="p-2 rounded-lg" />
                             </a-scrollbar>
                         </div>
                     </a-card>

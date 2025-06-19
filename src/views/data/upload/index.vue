@@ -2,7 +2,21 @@
   <a-layout class="flex-layout mt-8">
     <!-- <Breadcrumb /> -->
     <a-card :title="$t('')" class="general-card">
-      <a-card class="my-10 info-card">
+
+      <div class="flex gap-5 p-6">
+        <span class="font-bold">上传模式</span>
+        <a-switch v-model="uploadDirectory" :default-checked="false">
+          <template #checked>
+              目录
+          </template>
+          <template #unchecked>
+              单个
+          </template>
+        </a-switch>
+      </div>
+      
+      
+      <!-- <a-card class="my-10 w-1/4 info-card">
         <template #title>
           <div class="flex justify-between items-center">
           </div>
@@ -13,7 +27,6 @@
             src="@/assets/images/upload.png"
             style="width:2rem"
           />
-          <!-- 选择语言 -->
           <a-select v-model="uploadLanguage" style="width: 200px" :placeholder="$t('选择语言')">
             <a-option
                 v-for="(item, index) in ['中文简体', '中文繁体', '日语', '西班牙语', '阿拉伯语', '韩语']"
@@ -23,16 +36,17 @@
               {{ item }}
             </a-option>
           </a-select>
-          <a-checkbox v-model="uploadDirectory" :default-checked="false">上传目录</a-checkbox>
+          <a-switch v-model="uploadDirectory" :default-checked="false"></a-switch>
         </a-space>
-      </a-card>
+      </a-card> -->
+      
       <a-upload multiple draggable :directory="uploadDirectory" :custom-request="customRequest" />
 
       <a-space style="padding-top: 22px" />
 
       <!-- 任务队列列表 -->
-      <a-list :bordered="false" :data="uploadTasks" :hoverable="true">
-        <template #header>上传任务</template>
+      <a-list :bordered="false" :data="uploadTasks" :hoverable="true" v-if="uploadTasks.length > 0">
+        <!-- <template #header>上传任务</template> -->
         <template #item="{ item }">
           <a-list-item>
             <div class="flex justify-between w-full">
