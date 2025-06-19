@@ -26,9 +26,9 @@
                             </div>
                         </template>
                         <div class="flex gap-1" v-if="compare">
-                            <div class="w-1/2">
-                                <icon-music class="media-icon" />
-                                <video :src="buildSrcURL(info.file)" class="video" controls></video>
+                            <div class="w-1/2 h-[500px]">
+                                <!-- <icon-music class="media-icon" /> -->
+                                <video :src="buildSrcURL(info.file)" class="w-full h-full" controls></video>
                             </div>
                             <div class="w-1/2">
                                 <a-skeleton :loading="loading" :animation="true">
