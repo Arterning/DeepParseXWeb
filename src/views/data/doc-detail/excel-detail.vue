@@ -18,6 +18,10 @@
             <a-table :columns="columns" :data="filteredData" column-resizable :hoverable="false"
                 :bordered="{ cell: true }" :ellipsis="true" :scroll="scrollPercent" />
         </div>
+
+        <div class="mt-2">
+            <VueOfficeExcel :src="buildSrcURL(props.info?.file)" style="height: 80vh; width: 80vw;"/>
+        </div>
     </a-card>
 
 </template>
@@ -25,6 +29,7 @@
 <script lang="ts" setup>
 import {  SysDocRes } from '@/api/doc';
 import { PropType, computed, ref, watchEffect } from 'vue';
+import VueOfficeExcel from '@vue-office/excel'
 
 const term = ref('')
 const data = ref<Record<string, any>[]>([])
@@ -80,13 +85,13 @@ watchEffect(() => {
     filteredData.value = data.value;
 })
 
-const handleView = (file: string) => {
+const buildSrcURL = (file?: string) => {
     let url;
     if (import.meta.env.VITE_API_BASE_URL) {
-        url = `${import.meta.env.VITE_API_BASE_URL}/${file}`;
+        url = `${import.meta.env.VITE_API_BASE_URL}/api/v1/sys/docs/preview/${file}`;
     } else {
-        url = `${window.origin}/${file}`;
+        url = `${window.origin}/api/v1/sys/docs/preview/${file}`;
     }
-    window.open(url)
+    return url;
 }
 </script>
