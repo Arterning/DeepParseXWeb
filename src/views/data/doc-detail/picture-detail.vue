@@ -26,8 +26,9 @@
                             </div>
                         </template>
                         <div class="flex gap-1" v-if="compare">
-                            <a-image class="w-1/2" height="480" fit="contain"
-                                    :src="buildSrcURL(info.file)" />
+                            <div class="w-1/2">
+                                <a-image fit="cover" :src="buildSrcURL(info.file)" />
+                            </div>
                             <div class="w-1/2">
                                 <a-skeleton :loading="loading" :animation="true">
                                     <a-space direction="vertical" :style="{width:'100%'}" size="large">
