@@ -8,7 +8,7 @@ export default {
   'login.form.login.staff.errMsg': '此用户禁止后台管理登录',
   'login.form.login.success': '欢迎使用',
   'login.form.userName.placeholder': '用户名：test/admin',
-  'login.form.password.placeholder': '密码：123456',
+  'login.form.password.placeholder': '密码：',
   'login.form.captcha.placeholder': '请输入验证码',
   'login.form.rememberPassword': '记住密码',
   'login.form.forgetPassword': '忘记密码',

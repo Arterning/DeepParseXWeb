@@ -8,7 +8,7 @@ export default {
   'login.form.login.staff.errMsg': 'This user is disabled admin login',
   'login.form.login.success': 'Welcome',
   'login.form.userName.placeholder': 'username:test/admin',
-  'login.form.password.placeholder': 'password:123456',
+  'login.form.password.placeholder': 'password',
   'login.form.captcha.placeholder': 'Please enter a verification code',
   'login.form.rememberPassword': 'remember password',
   'login.form.forgetPassword': 'forgot password',

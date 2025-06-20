@@ -2,206 +2,206 @@
   <a-layout class="flex-layout">
     <Breadcrumb />
     <a-card :title="$t('menu.admin.sysUser')" class="general-card">
-      <a-row>
-        <a-col :flex="62">
-          <a-form
-            :auto-label-width="true"
-            :model="formModel"
-            label-align="right"
+        <a-row>
+          <a-col :flex="62">
+            <a-form
+              :auto-label-width="true"
+              :model="formModel"
+              label-align="right"
+            >
+              <a-row :gutter="16">
+                <a-col :span="6">
+                  <a-form-item :label="$t('admin.user.form.dept')" field="name">
+                    <a-tree-select
+                      v-model="formAddUser.dept_id"
+                      :allow-clear="true"
+                      :allow-search="true"
+                      :data="deptTreeData"
+                      :field-names="selectDeptTreeFieldNames"
+                      :loading="loading"
+                      :placeholder="$t('admin.user.form.dept.placeholder')"
+                    ></a-tree-select>
+                  </a-form-item>
+                </a-col>
+                <a-col :span="6">
+                  <a-form-item
+                    :label="$t('admin.user.form.username')"
+                    field="leader"
+                  >
+                    <a-input
+                      v-model="formModel.username"
+                      :placeholder="$t('admin.user.form.username.placeholder')"
+                    />
+                  </a-form-item>
+                </a-col>
+                <a-col :span="6">
+                  <a-form-item
+                    :label="$t('admin.user.form.phone')"
+                    field="phone"
+                  >
+                    <a-input
+                      v-model="formModel.phone"
+                      :placeholder="$t('admin.user.form.phone.placeholder')"
+                    />
+                  </a-form-item>
+                </a-col>
+                <a-col :span="6">
+                  <a-form-item
+                    :label="$t('admin.user.form.status')"
+                    field="status"
+                  >
+                    <a-select
+                      v-model="formModel.status"
+                      :options="statusOptions"
+                      :placeholder="$t('admin.user.form.selectDefault')"
+                      allow-clear
+                      @clear="resetStatus"
+                    />
+                  </a-form-item>
+                </a-col>
+              </a-row>
+            </a-form>
+          </a-col>
+          <a-divider direction="vertical" style="height: 30px" />
+          <a-col :span="6">
+            <a-space :size="'medium'" direction="horizontal">
+              <a-button type="primary" @click="search">
+                <template #icon>
+                  <icon-search />
+                </template>
+                {{ $t('admin.user.form.search') }}
+              </a-button>
+              <a-button @click="resetSelect">
+                <template #icon>
+                  <icon-refresh />
+                </template>
+                {{ $t('admin.user.form.reset') }}
+              </a-button>
+            </a-space>
+          </a-col>
+        </a-row>
+        <a-divider />
+        <a-button type="primary" @click="AddUser()">
+          <template #icon>
+            <icon-plus />
+          </template>
+          {{ $t('admin.user.button.add') }}
+        </a-button>
+        <a-alert :type="'warning'" style="margin: 20px 0 20px 0">
+          {{ $t('admin.user.alert.superuser') }}
+        </a-alert>
+        <div class="content">
+          <a-table
+            :bordered="false"
+            :columns="columns"
+            :data="renderData"
+            :loading="loading"
+            :pagination="pagination"
+            :scroll="{ x: 2100 }"
+            :size="'medium'"
+            row-key="id"
+            @page-change="onPageChange"
+            @page-size-change="onPageSizeChange"
           >
-            <a-row :gutter="16">
-              <a-col :span="6">
-                <a-form-item :label="$t('admin.user.form.dept')" field="name">
-                  <a-tree-select
-                    v-model="formAddUser.dept_id"
-                    :allow-clear="true"
-                    :allow-search="true"
-                    :data="deptTreeData"
-                    :field-names="selectDeptTreeFieldNames"
-                    :loading="loading"
-                    :placeholder="$t('admin.user.form.dept.placeholder')"
-                  ></a-tree-select>
-                </a-form-item>
-              </a-col>
-              <a-col :span="6">
-                <a-form-item
-                  :label="$t('admin.user.form.username')"
-                  field="leader"
-                >
-                  <a-input
-                    v-model="formModel.username"
-                    :placeholder="$t('admin.user.form.username.placeholder')"
-                  />
-                </a-form-item>
-              </a-col>
-              <a-col :span="6">
-                <a-form-item
-                  :label="$t('admin.user.form.phone')"
-                  field="phone"
-                >
-                  <a-input
-                    v-model="formModel.phone"
-                    :placeholder="$t('admin.user.form.phone.placeholder')"
-                  />
-                </a-form-item>
-              </a-col>
-              <a-col :span="6">
-                <a-form-item
-                  :label="$t('admin.user.form.status')"
-                  field="status"
-                >
-                  <a-select
-                    v-model="formModel.status"
-                    :options="statusOptions"
-                    :placeholder="$t('admin.user.form.selectDefault')"
-                    allow-clear
-                    @clear="resetStatus"
-                  />
-                </a-form-item>
-              </a-col>
-            </a-row>
-          </a-form>
-        </a-col>
-        <a-divider direction="vertical" style="height: 30px" />
-        <a-col :span="6">
-          <a-space :size="'medium'" direction="horizontal">
-            <a-button type="primary" @click="search">
-              <template #icon>
-                <icon-search />
-              </template>
-              {{ $t('admin.user.form.search') }}
-            </a-button>
-            <a-button @click="resetSelect">
-              <template #icon>
-                <icon-refresh />
-              </template>
-              {{ $t('admin.user.form.reset') }}
-            </a-button>
-          </a-space>
-        </a-col>
-      </a-row>
-      <a-divider class="mt-0"/>
-      <a-button type="primary" @click="AddUser()">
-        <template #icon>
-          <icon-plus />
-        </template>
-        {{ $t('admin.user.button.add') }}
-      </a-button>
-      <a-alert :type="'warning'" style="margin: 20px 0 20px 0">
-        {{ $t('admin.user.alert.superuser') }}
-      </a-alert>
-      <div class="content">
-        <a-table
-          :bordered="false"
-          :columns="columns"
-          :data="renderData"
-          :loading="loading"
-          :pagination="pagination"
-          :scroll="{ x: 2100 }"
-          :size="'medium'"
-          row-key="id"
-          @page-change="onPageChange"
-          @page-size-change="onPageSizeChange"
-        >
-          <template #dept="{ record }">
-            {{ record.dept?.name }}
-          </template>
-          <template #roles="{ record }">
-            <a-popconfirm
-              :content="$t('admin.user.columns.updateUserRoles.placeholder')"
-              @ok="updateRole(record.username, record.id)"
-            >
-              <a-input-tag
-                :model-value="roleNameList(record.roles)"
-                :readonly="true"
-              />
-            </a-popconfirm>
-          </template>
-          <template #avatar="{ record }">
-            <a-avatar
-              v-if="record.avatar"
-              :image-url="record.avatar"
-              trigger-type="mask"
-              @click="updateAvatar(record.username)"
-            >
-              <template #trigger-icon>
-                <IconEdit />
-              </template>
-            </a-avatar>
-            <a-avatar
-              v-else
+            <template #dept="{ record }">
+              {{ record.dept?.name }}
+            </template>
+            <template #roles="{ record }">
+              <a-popconfirm
+                :content="$t('admin.user.columns.updateUserRoles.placeholder')"
+                @ok="updateRole(record.username, record.id)"
+              >
+                <a-input-tag
+                  :model-value="roleNameList(record.roles)"
+                  :readonly="true"
+                />
+              </a-popconfirm>
+            </template>
+            <template #avatar="{ record }">
+              <a-avatar
+                v-if="record.avatar"
+                :image-url="record.avatar"
+                trigger-type="mask"
+                @click="updateAvatar(record.username)"
+              >
+                <template #trigger-icon>
+                  <IconEdit />
+                </template>
+              </a-avatar>
+              <a-avatar
+                v-else
               :style="{ backgroundColor: getRandomColor(record.username) }"
-              trigger-type="mask"
-              @click="updateAvatar(record.username)"
-            >
-              {{ record.username[0] }}
-              <template #trigger-icon>
-                <IconEdit />
-              </template>
-            </a-avatar>
-          </template>
-          <template #status="{ record }">
-            <a-switch
-              v-model:model-value="record.status"
-              :checked-text="$t(`admin.user.form.status.${record.status}`)"
-              :checked-value="1"
-              :disabled="switchStatus"
-              :loading="loading"
-              :unchecked-text="$t(`admin.user.form.status.${record.status}`)"
-              :unchecked-value="0"
-              @change="changeStatus(record.id)"
-            />
-          </template>
-          <template #is_superuser="{ record }">
-            <a-switch
-              v-model:model-value="record.is_superuser"
-              :checked-text="
-                $t(`admin.user.columns.switch.${record.is_superuser}`)
-              "
-              :disabled="switchStatus"
-              :loading="loading"
-              :unchecked-text="
-                $t(`admin.user.columns.switch.${record.is_superuser}`)
-              "
-              @change="changeSuper(record.id)"
-            />
-          </template>
-          <template #is_staff="{ record }">
-            <a-switch
-              v-model:model-value="record.is_staff"
-              :checked-text="
-                $t(`admin.user.columns.switch.${record.is_staff}`)
-              "
-              :disabled="switchStatus"
-              :loading="loading"
-              :unchecked-text="
-                $t(`admin.user.columns.switch.${record.is_staff}`)
-              "
-              @change="changeStaff(record.id)"
-            />
-          </template>
-          <template #is_multi_login="{ record }">
-            <a-switch
-              v-model:model-value="record.is_multi_login"
-              :checked-text="
-                $t(`admin.user.columns.switch.${record.is_multi_login}`)
-              "
-              :disabled="switchStatus"
-              :loading="loading"
-              :unchecked-text="
-                $t(`admin.user.columns.switch.${record.is_multi_login}`)
-              "
-              @change="changeMultiLogin(record.id)"
-            />
-          </template>
+                trigger-type="mask"
+                @click="updateAvatar(record.username)"
+              >
+                {{ record.username[0] }}
+                <template #trigger-icon>
+                  <IconEdit />
+                </template>
+              </a-avatar>
+            </template>
+            <template #status="{ record }">
+              <a-switch
+                v-model:model-value="record.status"
+                :checked-text="$t(`admin.user.form.status.${record.status}`)"
+                :checked-value="1"
+                :disabled="switchStatus"
+                :loading="loading"
+                :unchecked-text="$t(`admin.user.form.status.${record.status}`)"
+                :unchecked-value="0"
+                @change="changeStatus(record.id)"
+              />
+            </template>
+            <template #is_superuser="{ record }">
+              <a-switch
+                v-model:model-value="record.is_superuser"
+                :checked-text="
+                  $t(`admin.user.columns.switch.${record.is_superuser}`)
+                "
+                :disabled="switchStatus"
+                :loading="loading"
+                :unchecked-text="
+                  $t(`admin.user.columns.switch.${record.is_superuser}`)
+                "
+                @change="changeSuper(record.id)"
+              />
+            </template>
+            <template #is_staff="{ record }">
+              <a-switch
+                v-model:model-value="record.is_staff"
+                :checked-text="
+                  $t(`admin.user.columns.switch.${record.is_staff}`)
+                "
+                :disabled="switchStatus"
+                :loading="loading"
+                :unchecked-text="
+                  $t(`admin.user.columns.switch.${record.is_staff}`)
+                "
+                @change="changeStaff(record.id)"
+              />
+            </template>
+            <template #is_multi_login="{ record }">
+              <a-switch
+                v-model:model-value="record.is_multi_login"
+                :checked-text="
+                  $t(`admin.user.columns.switch.${record.is_multi_login}`)
+                "
+                :disabled="switchStatus"
+                :loading="loading"
+                :unchecked-text="
+                  $t(`admin.user.columns.switch.${record.is_multi_login}`)
+                "
+                @change="changeMultiLogin(record.id)"
+              />
+            </template>
           <template #join_time="{ record }">
             {{ tableDateFormat(record.join_time) }}
           </template>
           <template #last_login_time="{ record }">
             {{ tableDateFormat(record.last_login_time) }}
           </template>
-          <template #operate="{ record }">
-            <a-space>
+            <template #operate="{ record }">
+              <a-space>
               <a-tooltip :content="$t(`admin.user.columns.edit`)">
                 <a-link @click="EditUser(record.username)">
                   <icon-edit style="font-size:16"/>
@@ -212,245 +212,309 @@
                   <icon-delete style="font-size:16"/>
                 </a-link>
               </a-tooltip>
-            </a-space>
-          </template>
-        </a-table>
-      </div>
-      <div class="content-modal">
-        <a-modal
-          :closable="false"
-          :on-before-ok="handleAvatarBeforeOk"
-          :title="drawerTitle"
-          :visible="openAvatar"
-          @cancel="closeAvatar"
-          @ok="submitUserAvatar"
-        >
-          <a-form ref="formAvatarRef" :model="formAvatar">
-            <a-form-item
-              :feedback="true"
-              :label="$t('admin.user.form.avatar')"
-              :rules="[
-                {
-                  required: true,
-                  message: $t('admin.user.form.avatar.required'),
-                },
-              ]"
-              :tooltip="$t('admin.user.form.avatar.help')"
-              field="url"
-            >
-              <a-input
-                v-model="formAvatar.url"
-                :placeholder="$t('admin.user.form.avatar.placeholder')"
-              />
-            </a-form-item>
-          </a-form>
-        </a-modal>
-        <a-modal
-          :closable="false"
-          :on-before-ok="handleUserInfoBeforeOk"
-          :title="drawerTitle"
-          :visible="openEdit"
-          @cancel="closeEdit"
-          @ok="submitUserInfo"
-        >
-          <a-form ref="formUserInfoRef" :model="formUserInfo">
-            <a-form-item :label="$t('admin.user.form.dept')" field="dept_id">
-              <a-tree-select
-                v-model="formUserInfo.dept_id"
-                :allow-clear="true"
-                :allow-search="true"
-                :data="deptTreeData"
-                :field-names="selectDeptTreeFieldNames"
-                :loading="loading"
-                :placeholder="$t('admin.user.form.dept.placeholder')"
-              ></a-tree-select>
-            </a-form-item>
-            <a-form-item
-              :feedback="true"
-              :label="$t('admin.user.form.username')"
-              :rules="[
-                {
-                  required: true,
-                  message: $t('admin.user.form.username.required'),
-                },
-              ]"
-              field="username"
-            >
-              <a-input
-                v-model="formUserInfo.username"
-                :placeholder="$t('admin.user.form.username.placeholder')"
-              />
-            </a-form-item>
-            <a-form-item
-              :feedback="true"
-              :label="$t('admin.user.form.nickname')"
-              :rules="[
-                {
-                  required: true,
-                  message: $t('admin.user.form.nickname.required'),
-                },
-              ]"
-              field="nickname"
-            >
-              <a-input
-                v-model="formUserInfo.nickname"
-                :placeholder="$t('admin.user.form.nickname.placeholder')"
-              />
-            </a-form-item>
-            <a-form-item
-              :feedback="true"
-              :label="$t('admin.user.form.email')"
-              :rules="[
-                {
-                  required: true,
-                  message: $t('admin.user.form.email.required'),
-                },
-              ]"
-              field="email"
-            >
-              <a-input
-                v-model="formUserInfo.email"
-                :placeholder="$t('admin.user.form.email.placeholder')"
-              />
-            </a-form-item>
-          </a-form>
-        </a-modal>
-        <a-modal
-          :closable="false"
-          :title="`${$t('modal.title.tips')}`"
-          :visible="openDelete"
-          :width="360"
-          @cancel="closeDelete"
-          @ok="submitDeleteUser"
-        >
-          <a-space>
-            <icon-exclamation-circle-fill size="24" style="color: #e6a23c" />
-            {{ $t('modal.title.tips.delete') }}
-          </a-space>
-        </a-modal>
-        <a-modal
-          :closable="false"
-          :title="drawerTitle"
-          :visible="openEditUserRole"
-          @cancel="closeEditUserRole"
-          @ok="submitUserRole"
-        >
-          <a-select
-            v-model="formUserRole.roles"
-            :allow-clear="true"
-            :loading="loading"
-            :multiple="true"
-            :options="roleOptions"
-            :placeholder="$t('admin.user.form.role.placeholder')"
-            :width="360"
-          ></a-select>
-        </a-modal>
-        <a-modal
-          :closable="false"
-          :on-before-ok="handlerAddUserBeforeOk"
-          :title="drawerTitle"
-          :visible="openAdd"
-          :width="580"
-          @cancel="closeAdd"
-          @ok="submitAddUser"
-        >
-          <a-form ref="formAddUserRef" :model="formAddUser">
-            <a-form-item
-              :label="$t('admin.user.form.dept')"
-              :rules="[
-                {
-                  required: true,
-                  message: $t('admin.user.form.dept.required'),
-                },
-              ]"
-              field="dept_id"
-            >
-              <a-tree-select
-                v-model="formAddUser.dept_id"
-                :allow-clear="true"
-                :allow-search="true"
-                :data="deptTreeData"
-                :field-names="selectDeptTreeFieldNames"
-                :loading="loading"
-                :placeholder="$t('admin.user.form.dept.placeholder')"
-              ></a-tree-select>
-            </a-form-item>
-            <a-form-item
-              :feedback="true"
-              :label="$t('admin.user.form.username')"
-              :rules="[
-                {
-                  required: true,
-                  message: $t('admin.user.form.username.required'),
-                },
-              ]"
-              field="username"
-            >
-              <a-input
-                v-model="formAddUser.username"
-                :placeholder="$t('admin.user.form.username.placeholder')"
-              />
-            </a-form-item>
-            <a-form-item
-              :feedback="true"
-              :label="$t('admin.user.form.password')"
-              :rules="[
-                {
-                  required: true,
-                  message: $t('admin.user.form.password.required'),
-                },
-              ]"
-              field="password"
-            >
-              <a-input-password
-                v-model="formAddUser.password"
-                :placeholder="$t('admin.user.form.password.placeholder')"
-              />
-            </a-form-item>
-            <a-form-item
-              :feedback="true"
-              :label="$t('admin.user.form.email')"
-              :rules="[
-                {
-                  required: true,
-                  message: $t('admin.user.form.email.required'),
-                },
-              ]"
-              field="email"
-            >
-              <a-input
-                v-model="formAddUser.email"
-                :placeholder="$t('admin.user.form.email.placeholder')"
-              />
-            </a-form-item>
 
-            <a-form-item
-              :feedback="true"
-              :label="$t('admin.user.form.role')"
-              :rules="[
-                {
-                  required: true,
-                  message: $t('admin.user.form.role.required'),
-                },
-              ]"
-              field="roles"
-            >
-              <a-select
-                v-model="formAddUser.roles"
-                :allow-clear="true"
-                :loading="loading"
-                :multiple="true"
-                :options="roleOptions"
-                :placeholder="$t('admin.user.form.role.placeholder')"
-                :width="360"
-              ></a-select>
-            </a-form-item>
-          </a-form>
-        </a-modal>
-      </div>
-    </a-card>
+              <a-link @click="ResetPass(record.id)">
+                <icon-compass style="font-size:16"/>
+              </a-link>
+
+              </a-space>
+              
+            </template>
+          </a-table>
+        </div>
+        <div class="content-modal">
+          <a-modal
+            :closable="false"
+            :on-before-ok="handleAvatarBeforeOk"
+            :title="drawerTitle"
+            :visible="openAvatar"
+            @cancel="closeAvatar"
+            @ok="submitUserAvatar"
+          >
+            <a-form ref="formAvatarRef" :model="formAvatar">
+              <a-form-item
+                :feedback="true"
+                :label="$t('admin.user.form.avatar')"
+                :rules="[
+                  {
+                    required: true,
+                    message: $t('admin.user.form.avatar.required'),
+                  },
+                ]"
+                :tooltip="$t('admin.user.form.avatar.help')"
+                field="url"
+              >
+                <a-input
+                  v-model="formAvatar.url"
+                  :placeholder="$t('admin.user.form.avatar.placeholder')"
+                />
+              </a-form-item>
+            </a-form>
+          </a-modal>
+          <a-modal
+            :closable="false"
+            :on-before-ok="handleUserInfoBeforeOk"
+            :title="drawerTitle"
+            :visible="openEdit"
+            @cancel="closeEdit"
+            @ok="submitUserInfo"
+          >
+            <a-form ref="formUserInfoRef" :model="formUserInfo">
+              <a-form-item :label="$t('admin.user.form.dept')" field="dept_id">
+                <a-tree-select
+                  v-model="formUserInfo.dept_id"
+                  :allow-clear="true"
+                  :allow-search="true"
+                  :data="deptTreeData"
+                  :field-names="selectDeptTreeFieldNames"
+                  :loading="loading"
+                  :placeholder="$t('admin.user.form.dept.placeholder')"
+                ></a-tree-select>
+              </a-form-item>
+              <a-form-item
+                :feedback="true"
+                :label="$t('admin.user.form.username')"
+                :rules="[
+                  {
+                    required: true,
+                    message: $t('admin.user.form.username.required'),
+                  },
+                ]"
+                field="username"
+              >
+                <a-input
+                  v-model="formUserInfo.username"
+                  :placeholder="$t('admin.user.form.username.placeholder')"
+                />
+              </a-form-item>
+              <a-form-item
+                :feedback="true"
+                :label="$t('admin.user.form.nickname')"
+                :rules="[
+                  {
+                    required: true,
+                    message: $t('admin.user.form.nickname.required'),
+                  },
+                ]"
+                field="nickname"
+              >
+                <a-input
+                  v-model="formUserInfo.nickname"
+                  :placeholder="$t('admin.user.form.nickname.placeholder')"
+                />
+              </a-form-item>
+              <a-form-item
+                :feedback="true"
+                :label="$t('admin.user.form.email')"
+                :rules="[
+                  {
+                    required: true,
+                    message: $t('admin.user.form.email.required'),
+                  },
+                ]"
+                field="email"
+              >
+                <a-input
+                  v-model="formUserInfo.email"
+                  :placeholder="$t('admin.user.form.email.placeholder')"
+                />
+              </a-form-item>
+            </a-form>
+          </a-modal>
+          <a-modal
+            :closable="false"
+            :title="`${$t('modal.title.tips')}`"
+            :visible="openDelete"
+            :width="360"
+            @cancel="closeDelete"
+            @ok="submitDeleteUser"
+          >
+            <a-space>
+              <icon-exclamation-circle-fill size="24" style="color: #e6a23c" />
+              {{ $t('modal.title.tips.delete') }}
+            </a-space>
+          </a-modal>
+          <a-modal
+            :closable="false"
+            :title="`${$t('修改密码')}`"
+            :visible="openResetPass"
+            @cancel="closeResetPass"
+            @ok="submitResetPass"
+          >
+          <a-form ref="formResetPassRef" :model="resetPassInfo">
+              <a-form-item
+                :feedback="true"
+                :label="$t('旧密码')"
+                :rules="[
+                  {
+                    required: true,
+                    message: $t('旧密码不能为空'),
+                  },
+                ]"
+                field="old_password"
+              >
+                <a-input
+                  v-model="resetPassInfo.old_password"
+                  :placeholder="$t('输入旧密码')"
+                />
+              </a-form-item>
+              <a-form-item
+                :feedback="true"
+                :label="$t('新密码')"
+                :rules="[
+                  {
+                    required: true,
+                    message: $t('新密码不能为空'),
+                  },
+                ]"
+                field="new_password"
+              >
+                <a-input
+                  v-model="resetPassInfo.new_password"
+                  :placeholder="$t('输入新密码')"
+                />
+              </a-form-item>
+              <a-form-item
+                :feedback="true"
+                :label="$t('新密码')"
+                :rules="[
+                  {
+                    required: true,
+                    message: $t('新密码不能为空'),
+                  },
+                ]"
+                field="new_password"
+              >
+                <a-input
+                  v-model="resetPassInfo.confirm_password"
+                  :placeholder="$t('重新输入新密码')"
+                />
+              </a-form-item>
+            </a-form>
+          </a-modal>
+          <a-modal
+            :closable="false"
+            :title="drawerTitle"
+            :visible="openEditUserRole"
+            @cancel="closeEditUserRole"
+            @ok="submitUserRole"
+          >
+            <a-select
+              v-model="formUserRole.roles"
+              :allow-clear="true"
+              :loading="loading"
+              :multiple="true"
+              :options="roleOptions"
+              :placeholder="$t('admin.user.form.role.placeholder')"
+              :width="360"
+            ></a-select>
+          </a-modal>
+          <a-modal
+            :closable="false"
+            :on-before-ok="handlerAddUserBeforeOk"
+            :title="drawerTitle"
+            :visible="openAdd"
+            :width="580"
+            @cancel="closeAdd"
+            @ok="submitAddUser"
+          >
+            <a-form ref="formAddUserRef" :model="formAddUser">
+              <a-form-item
+                :label="$t('admin.user.form.dept')"
+                :rules="[
+                  {
+                    required: true,
+                    message: $t('admin.user.form.dept.required'),
+                  },
+                ]"
+                field="dept_id"
+              >
+                <a-tree-select
+                  v-model="formAddUser.dept_id"
+                  :allow-clear="true"
+                  :allow-search="true"
+                  :data="deptTreeData"
+                  :field-names="selectDeptTreeFieldNames"
+                  :loading="loading"
+                  :placeholder="$t('admin.user.form.dept.placeholder')"
+                ></a-tree-select>
+              </a-form-item>
+              <a-form-item
+                :feedback="true"
+                :label="$t('admin.user.form.username')"
+                :rules="[
+                  {
+                    required: true,
+                    message: $t('admin.user.form.username.required'),
+                  },
+                ]"
+                field="username"
+              >
+                <a-input
+                  v-model="formAddUser.username"
+                  :placeholder="$t('admin.user.form.username.placeholder')"
+                />
+              </a-form-item>
+              <a-form-item
+                :feedback="true"
+                :label="$t('admin.user.form.password')"
+                :rules="[
+                  {
+                    required: true,
+                    message: $t('admin.user.form.password.required'),
+                  },
+                ]"
+                field="password"
+              >
+                <a-input-password
+                  v-model="formAddUser.password"
+                  :placeholder="$t('admin.user.form.password.placeholder')"
+                />
+              </a-form-item>
+              <a-form-item
+                :feedback="true"
+                :label="$t('admin.user.form.email')"
+                :rules="[
+                  {
+                    required: true,
+                    message: $t('admin.user.form.email.required'),
+                  },
+                ]"
+                field="email"
+              >
+                <a-input
+                  v-model="formAddUser.email"
+                  :placeholder="$t('admin.user.form.email.placeholder')"
+                />
+              </a-form-item>
+
+              <a-form-item
+                :feedback="true"
+                :label="$t('admin.user.form.role')"
+                :rules="[
+                  {
+                    required: true,
+                    message: $t('admin.user.form.role.required'),
+                  },
+                ]"
+                field="roles"
+              >
+                <a-select
+                  v-model="formAddUser.roles"
+                  :allow-clear="true"
+                  :loading="loading"
+                  :multiple="true"
+                  :options="roleOptions"
+                  :placeholder="$t('admin.user.form.role.placeholder')"
+                  :width="360"
+                ></a-select>
+              </a-form-item>
+            </a-form>
+          </a-modal>
+        </div>
+      </a-card>
     <Footer />
-  </a-layout>
+    </a-layout>
 </template>
 
 <script lang="ts" setup>
@@ -474,6 +538,7 @@
     deleteUser,
     getUser,
     getUserList,
+    resetPass,
     SysUserAddReq,
     SysUserAvatarReq,
     SysUserInfoReq,
@@ -536,6 +601,11 @@
     email: '',
     phone: undefined,
   });
+  const resetPassInfo = reactive({
+    old_password: '',
+    new_password: '',
+    confirm_password: '',
+  })
   const formUserRole = reactive<SysUserRoleReq>({
     roles: [],
   });
@@ -600,6 +670,9 @@
     operateUsername.value = username;
     await fetchUser(username);
     openDelete.value = true;
+  };
+  const ResetPass = async (pk: number) => {
+    openResetPass.value = true;
   };
   const updateAvatar = async (username: string) => {
     operateUsername.value = username;
@@ -734,6 +807,7 @@
   const openAdd = ref<boolean>(false);
   const openEdit = ref<boolean>(false);
   const openDelete = ref<boolean>(false);
+  const openResetPass = ref<boolean>(false);
   const openAvatar = ref<boolean>(false);
   const openEditUserRole = ref<boolean>(false);
   const formAvatarRef = ref();
@@ -754,6 +828,9 @@
   const closeDelete = () => {
     openDelete.value = false;
   };
+  const closeResetPass = () => {
+    openResetPass.value = false;
+  }
   const closeEditUserRole = () => {
     formUserRole.roles = [];
     openEditUserRole.value = false;
@@ -984,6 +1061,18 @@
       setLoading(false);
     }
   };
+
+  const submitResetPass = async () => {
+    setLoading(true);
+    try {
+      await resetPass(resetPassInfo);
+      closeResetPass();
+    } catch (error) {
+      // console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  }
 
   // 添加用户
   const submitAddUser = async () => {

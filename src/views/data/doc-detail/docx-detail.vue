@@ -19,8 +19,10 @@
                             </div>
                         </template>
                         <div class="flex gap-1" v-if="compare">
-                            <!-- <iframe :src="buildSrcURL(info.file)" frameborder="0" class="h-[500px] w-1/2 "></iframe> -->
-                            <div class="w-1/2 h-[500px]">
+                            
+                            <iframe v-if="info.file_suffix == '.doc'" class="h-[500px] w-1/2 " :src="buildSrcURL(info.file)" frameborder="0" ></iframe>
+
+                            <div v-else class="w-1/2 h-[500px]">
                                 <!-- <vue-office-docx :src="buildSrcURL(info.file)" /> -->
                                 <!-- 动态组件渲染 -->
                                 <component 

@@ -139,7 +139,7 @@
           selected-keys={selectedKey.value}
           auto-open-selected={true}
           level-indent={34}
-          style="height: 100%; width:100%;"
+          class="menu"
           onCollapse={setCollapse}
         >
           {renderSubMenu()}
@@ -150,6 +150,16 @@
 </script>
 
 <style lang="less" scoped>
+  .menu {
+    height: 100%; 
+    width:100%;
+    font-weight:300;
+  }
+
+  .arco-menu .arco-menu-item.arco-menu-selected, .arco-menu .arco-menu-group-title.arco-menu-selected, .arco-menu .arco-menu-pop-header.arco-menu-selected, .arco-menu .arco-menu-inline-header.arco-menu-selected {
+      font-weight: 900;
+  }
+
   :deep(.arco-menu-inner) {
     .arco-menu-inline-header {
       display: flex;

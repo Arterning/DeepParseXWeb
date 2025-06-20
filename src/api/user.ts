@@ -149,3 +149,7 @@ export function addUser(data: SysUserAddReq): Promise<SysUserNoRelationRes> {
 export function deleteUser(username: string) {
   return axios.delete(`/api/v1/sys/users/${username}`);
 }
+
+export function resetPass(data: any): any {
+  return axios.post('/api/v1/sys/users/password/reset', data);
+}
