@@ -22,5 +22,12 @@
 <script setup lang="ts">
 import TextSearch from './text-search.vue';
 import SimilarSearch from './similar-search.vue';
+import { onActivated } from 'vue';
+import { changeTheme } from '@/hooks/theme';
+
+
+onActivated(() => {
+  changeTheme();
+})
 
 </script>

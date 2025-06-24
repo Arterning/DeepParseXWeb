@@ -1,8 +1,17 @@
 <template>
-  <a-layout-footer class="footer">FBA</a-layout-footer>
+  <a-layout-footer class="footer">启迪数据智能</a-layout-footer>
 </template>
 
-<script lang="ts" setup></script>
+<script lang="ts" setup>
+import { onActivated } from 'vue';
+import { changeTheme } from '@/hooks/theme';
+
+
+onActivated(() => {
+  changeTheme();
+})
+
+</script>
 
 <style lang="less" scoped>
   .footer {

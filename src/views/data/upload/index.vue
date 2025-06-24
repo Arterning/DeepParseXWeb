@@ -14,7 +14,7 @@
           </template>
         </a-switch>
       </div>
-      
+
       
       <!-- <a-card class="my-10 w-1/4 info-card">
         <template #title>
@@ -120,6 +120,13 @@ import {getSvgByType, getSvgByFileName} from '@/utils/doc';
 import { queryRecentDocs, SysDocRes } from '@/api/doc';
 import useLoading from '@/hooks/loading';
 import { parseDoc } from '@/api/doc';
+import { onActivated } from 'vue';
+import { changeTheme } from '@/hooks/theme';
+
+
+onActivated(() => {
+  changeTheme();
+})
 
 const { t } = useI18n();
 

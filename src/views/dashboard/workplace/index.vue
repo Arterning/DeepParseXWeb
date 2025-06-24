@@ -1,7 +1,7 @@
 <template>
-  <div class="container general-card">
+  <div class="container">
     <!-- <Breadcrumb /> -->
-    <div class="left-side">
+    <div class="left-side general-card h-screen">
       <!-- <Banner /> -->
       <DataPanel />
       <Search />
@@ -14,12 +14,12 @@
 
 <script lang="ts" setup>
   import Footer from '@/components/footer/index.vue';
-  import Banner from './components/banner.vue';
   import DataPanel from './components/data-panel.vue';
   import Search from './components/search.vue';
 </script>
 
 <script lang="ts">
+
 </script>
 
 <style lang="less" scoped>

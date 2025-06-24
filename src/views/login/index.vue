@@ -6,7 +6,7 @@
         src="@/assets/images/logo.png"
         style="width:2rem"
       />
-      <div class="logo-text">数据治理平台</div>
+      <div class="logo-text">启迪数据智能</div>
     </div>
     <LoginBanner />
     <div class="content">
