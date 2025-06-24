@@ -20,14 +20,7 @@
 </template>
 
 <script setup lang="ts">
+import Footer from '@/components/footer/index.vue';
 import TextSearch from './text-search.vue';
 import SimilarSearch from './similar-search.vue';
-import { onActivated } from 'vue';
-import { changeTheme } from '@/hooks/theme';
-
-
-onActivated(() => {
-  changeTheme();
-})
-
 </script>

@@ -15,3 +15,7 @@ export const changeTheme = () => {
       });
   }
 }
+
+export const changeThemeColor = (color: string) => {
+  const themeStore = useAppStore();
+}

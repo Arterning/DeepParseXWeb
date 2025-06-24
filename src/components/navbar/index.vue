@@ -7,28 +7,33 @@
           src="@/assets/images/logo.png"
           style="width:2rem"
         />
-        <a-typography-title
+        <div
           :heading="5"
-          :style="{ margin: 0, fontSize: '18px' }"
-        >
-          数据治理平台
-        </a-typography-title>
+          :style="{ margin: 0, fontSize: '20px'}"
+          class="cursor-pointer font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-slate-200"
+          >
+          启迪数据智能
+        </div>
+
         <icon-menu-fold
           v-if="!topMenu && appStore.device === 'mobile'"
           style="font-size: 22px; cursor: pointer"
           @click="toggleDrawerMenu"
         />
+
+        
       </a-space>
     </div>
-    <div class="center-side">
-      <Menu v-if="topMenu" />
+
+    
+    <div class="mx-auto">
+      <!-- <Menu v-if="topMenu" /> -->
+      <a-tooltip :content="$t('settings.search')" >
+        <GlobalSearch />
+      </a-tooltip>
     </div>
+    
     <ul class="right-side">
-      <li>
-        <a-tooltip :content="$t('settings.search')">
-          <GlobalSearch />
-        </a-tooltip>
-      </li>
       <li>
         <AIChat />
       </li>
@@ -224,6 +229,7 @@
   .navbar {
     display: flex;
     justify-content: space-between;
+    align-items: center;
     height: 100%;
     background-color: var(--color-bg-2);
     border-bottom: 1px solid var(--color-border);

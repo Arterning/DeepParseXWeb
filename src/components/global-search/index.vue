@@ -4,7 +4,7 @@
       v-model="searchQuery"
       placeholder="搜索"
       allow-clear
-      class="rounded-lg w-[50vw]"  
+      class="rounded-lg w-[20vw]"  
       @input="handleInput"
     >
       <template #prefix>
@@ -196,7 +196,6 @@ const highlightedHit = (hit: string | undefined) => {
 
 .search-container {
   position: relative;
-  display: inline-block;
 }
 
 .search-results-dropdown {
@@ -233,5 +232,5 @@ const highlightedHit = (hit: string | undefined) => {
 
 .close-icon:hover {
   color: var(--color-text-1);
-}
+  }
 </style>
