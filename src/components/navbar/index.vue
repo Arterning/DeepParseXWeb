@@ -2,11 +2,30 @@
   <div class="navbar">
     <div class="left-side">
       <a-space>
-        <img
-          alt="logo"
-          src="@/assets/images/logo.png"
-          style="width:2rem"
-        />
+        <div class="relative overflow-hidden p-2 rounded-lg text-white group">
+          <!-- <span class="relative z-10"></span> -->
+          
+          <!-- 顶部流动条 -->
+          <span class="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-blue-500 to-transparent animate-flow-x"></span>
+          
+          <!-- 右侧流动条 -->
+          <span class="absolute top-0 right-0 bottom-0 w-[2px] bg-gradient-to-b from-transparent via-blue-500 to-transparent animate-flow-y delay-100"></span>
+          
+          <!-- 底部流动条 -->
+          <span class="absolute bottom-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-blue-500 to-transparent animate-flow-x delay-200"></span>
+          
+          <!-- 左侧流动条 -->
+          <span class="absolute top-0 left-0 bottom-0 w-[2px] bg-gradient-to-b from-transparent via-blue-500 to-transparent animate-flow-y delay-300"></span>
+          
+          <!-- 按钮底色 -->
+          <span class="absolute inset-[2px] rounded-md z-0"></span>
+
+          <img
+            alt="logo"
+            src="@/assets/images/logo.png"
+            style="width:2rem"
+          />
+        </div>
         <div
           :heading="5"
           :style="{ margin: 0, fontSize: '20px'}"
@@ -29,8 +48,8 @@
     <div class="mx-auto">
       <!-- <Menu v-if="topMenu" /> -->
       <a-tooltip :content="$t('settings.search')" >
-        <GlobalSearch />
-      </a-tooltip>
+          <GlobalSearch />
+        </a-tooltip>
     </div>
     
     <ul class="right-side">
@@ -289,4 +308,19 @@
       margin-top: 0;
     }
   }
+
+  @keyframes flow-x {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(100%); }
+    }
+    @keyframes flow-y {
+      0% { transform: translateY(-100%); }
+      100% { transform: translateY(100%); }
+    }
+    .animate-flow-x {
+      animation: flow-x 2s linear infinite;
+    }
+    .animate-flow-y {
+      animation: flow-y 2s linear infinite;
+    }
 </style>

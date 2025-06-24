@@ -1,9 +1,8 @@
 <template>
   <a-layout class="flex-layout">
-    <Breadcrumb />
+    <!-- <Breadcrumb /> -->
     <div class="general-card">
       <AllTable />
-      
     </div>
     <Footer />
   </a-layout>

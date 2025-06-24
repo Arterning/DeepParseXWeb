@@ -58,6 +58,7 @@
         </div>
         <a-empty v-else description="暂无收藏文件" />
       </a-card>
+      <Footer />
     </a-layout-content>
 
     <!-- 弹窗部分保持不变 -->
@@ -80,6 +81,7 @@
       </a-form>
     </a-modal>
   </a-layout>
+  
 </template>
 
 

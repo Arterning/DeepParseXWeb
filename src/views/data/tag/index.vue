@@ -1,6 +1,5 @@
 <template>
   <a-layout class="flex-layout">
-    <Breadcrumb />
     <a-card :title="$t('')" class="general-card pt-8">
       <div class="flex flex-wrap">
         <a-empty v-if="renderData.length == 0"/>
