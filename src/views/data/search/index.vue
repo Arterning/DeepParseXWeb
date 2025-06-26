@@ -3,7 +3,7 @@
     <a-layout style="padding: 0 18px">
       <!-- <Breadcrumb :items="[$t('menu.data'), $t('搜索')]" /> -->
       <a-card :title="$t(' ')" class="general-card min-h-screen">
-        <a-tabs default-active-key="2">
+        <a-tabs default-active-key="1">
           <a-tab-pane key="1" title="分词检索">
             <TextSearch />
           </a-tab-pane>

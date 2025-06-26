@@ -20,7 +20,7 @@
             {{ info.type }}
         </a-descriptions-item>
         <a-descriptions-item label="文件大小">
-            {{ info.size }}
+            {{ formatFileSize(info.size) }}
         </a-descriptions-item>
         <a-descriptions-item label="创建时间">
             {{ info.created_time }}
@@ -59,6 +59,7 @@
 
 <script lang="ts" setup>
 import InfoSvg from '@/assets/svg/info.svg';
+import { formatFileSize } from '@/utils/doc';
 
 const props = defineProps(['info']);
 

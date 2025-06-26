@@ -1,56 +1,53 @@
 <template>
   <a-layout class="flex-layout">
-    <Breadcrumb />
-    <div class="general-card">
-      <a-card v-if="info" class="content-box" :loading="loading">
-        <a-tabs>
-          <a-tab-pane key="1" title="文件内容">
-            <TextDetail v-if="info.type === '文本'" :info="info" />
-            <ExcelDetail v-else-if="info.type === '表格'" :info="info" />
-            <PdfDetail v-else-if="info.type === 'PDF'" :info="info" />
-            <PictureDetail v-else-if="info.type == '图片'" :info="info" />
-            <MediaDetail v-else-if="info.type == '媒体'" :info="info" />
-            <EmailDetail v-else-if="info.type == '邮件'" :mailData="info.email_msg" />
-            <DocxDetail v-else-if="info.type == '文档'" :info="info" file-type="docx"/>
-            <DocxDetail v-else-if="info.type == 'PPT'" :info="info" file-type="pptx"/>
-            <TextDetail v-else :info="info" />
-          </a-tab-pane>
-          <a-tab-pane key="2" title="基本信息">
-            <BasicInfo :info="info" />
-            <FileDescription :info="info" class="mt-2"/>
-          </a-tab-pane>
-          <!-- <a-tab-pane key="3" title="文件总结">
-            <FileDescription :info="info" />
-          </a-tab-pane> -->
-          <a-tab-pane key="4" title="知识图谱">
-            <a-skeleton :loading="extractGraphLoading" :animation="true">
-              <a-space direction="vertical" :style="{width:'100%'}" size="large">
-                <a-skeleton-line :rows="8" />
-              </a-space>
-            </a-skeleton>
-            <div class="flex flex-col h-screen" v-if="!extractGraphLoading">
-              <div class="flex flex-col flex-1 overflow-hidden">
-                <GraphControls 
-                  class="p-2 border-b"
-                  :initial-data="graphData"
-                  @extract-graph="handleExtractGraph"
-                  @dataChange="handleDataChange"
-                />
-                <KnowledgeGraph 
-                  class="flex-1" 
-                  :graph-data="graphData" 
-                  @dataChange="handleDataChange"
-                />
-              </div>
+    <a-card v-if="info" class="general-card" :loading="loading">
+      <a-tabs>
+        <a-tab-pane key="1" title="文件内容">
+          <TextDetail v-if="info.type === '文本'" :info="info" />
+          <ExcelDetail v-else-if="info.type === '表格'" :info="info" />
+          <PdfDetail v-else-if="info.type === 'PDF'" :info="info" />
+          <PictureDetail v-else-if="info.type == '图片'" :info="info" />
+          <MediaDetail v-else-if="info.type == '媒体'" :info="info" />
+          <EmailDetail v-else-if="info.type == '邮件'" :mailData="info.email_msg" />
+          <DocxDetail v-else-if="info.type == '文档'" :info="info" file-type="docx"/>
+          <DocxDetail v-else-if="info.type == 'PPT'" :info="info" file-type="pptx"/>
+          <TextDetail v-else :info="info" />
+        </a-tab-pane>
+        <a-tab-pane key="2" title="基本信息">
+          <BasicInfo :info="info" />
+          <FileDescription :info="info" class="mt-2"/>
+        </a-tab-pane>
+        <!-- <a-tab-pane key="3" title="文件总结">
+          <FileDescription :info="info" />
+        </a-tab-pane> -->
+        <a-tab-pane key="4" title="知识图谱">
+          <a-skeleton :loading="extractGraphLoading" :animation="true">
+            <a-space direction="vertical" :style="{width:'100%'}" size="large">
+              <a-skeleton-line :rows="8" />
+            </a-space>
+          </a-skeleton>
+          <div class="flex flex-col h-screen" v-if="!extractGraphLoading">
+            <div class="flex flex-col flex-1 overflow-hidden">
+              <GraphControls 
+                class="p-2 border-b"
+                :initial-data="graphData"
+                @extract-graph="handleExtractGraph"
+                @dataChange="handleDataChange"
+              />
+              <KnowledgeGraph 
+                class="flex-1" 
+                :graph-data="graphData" 
+                @dataChange="handleDataChange"
+              />
             </div>
-          </a-tab-pane>
+          </div>
+        </a-tab-pane>
 
-          <a-tab-pane key="5" title="问问AI">
-            <DocAIChat :doc-info="info" />
-          </a-tab-pane>
-        </a-tabs>
-      </a-card>
-    </div>
+        <a-tab-pane key="5" title="问问AI">
+          <DocAIChat :doc-info="info" />
+        </a-tab-pane>
+      </a-tabs>
+    </a-card>
   </a-layout>
   <Footer />
 </template>

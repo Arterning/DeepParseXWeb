@@ -167,6 +167,10 @@
               </div>
             </div> -->
           </template>
+
+          <template #size="{ record }">
+            {{ formatFileSize(record.size) }}
+          </template>
           
           <template #type="{ record }">
             <component :is="getSvgByType(record.type)" class="w-10 h-10" />
@@ -449,7 +453,7 @@
   import { useRouter } from 'vue-router';
   import { tableDateFormat } from '@/utils/date';
   import SettingTable from '@/components/setting-table/index.vue';
-  import {getSvgByType, getSvgByFileName} from '@/utils/doc';
+  import {getSvgByType, formatFileSize} from '@/utils/doc';
 
 
 
@@ -590,13 +594,21 @@
       width: 100,
     },
     {
+      title: t('大小'),
+      dataIndex: 'size',
+      slotName: 'size',
+      ellipsis: true,
+      tooltip: true,
+      width: 100,
+    },
+    {
       title: t('文件时间'),
       dataIndex: 'doc_time',
       slotName: 'doc_time',
       sortable: {
         sortDirections: ['ascend', 'descend']
       },
-      width: 100,
+      width: 160,
       ellipsis: true,
       tooltip: true,
     },
@@ -607,7 +619,7 @@
       sortable: {
         sortDirections: ['ascend', 'descend']
       },
-      width: 100,
+      width: 150,
       ellipsis: true,
       tooltip: true,
     },
@@ -624,7 +636,6 @@
       title: t('状态'),
       dataIndex: 'status',
       slotName: 'status',
-      width: 100,
       ellipsis: true,
       tooltip: true,
     },
