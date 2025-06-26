@@ -137,11 +137,8 @@
   import dagre from 'cytoscape-dagre';
   import { TableColumnData } from '@arco-design/web-vue/es/table/interface';
   import { values } from 'lodash';
-  import nodeDialog from '@/views/data/person-detail/nodeDialog.vue';
   import avatarView from '@/views/data/person-detail/avatarView.vue';
   import { IconSearch } from '@arco-design/web-vue/es/icon';
-  import { IconClose } from '@arco-design/web-vue/es/icon';
-  import { text } from 'stream/consumers';
 
     // 新增：定义弹窗状态
     const showAvatarModal = ref(false);

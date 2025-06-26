@@ -68,7 +68,7 @@
                 <a-form-item field="name" label="出生日期">
                   <a-range-picker show-time :time-picker-props="{
                     defaultValue: ['00:00:00', '00:00:00'],
-                  }" style="width: 380px" @change="onChangeRangePicker" @select="onSelectRangePicker" />
+                  }" style="width: 380px" />
                 </a-form-item>
               </a-col>
             </a-row>

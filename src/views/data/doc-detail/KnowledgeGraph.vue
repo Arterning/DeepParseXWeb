@@ -131,7 +131,7 @@ const initGraph = () => {
 
   // 添加交互事件
   cy.value.on('select', 'node, edge', (event) => {
-    selectedElements.value = event.target.map(el => el.id());
+    selectedElements.value = event.target.map((el: any) => el.id());
   });
 
   cy.value.on('unselect', 'node, edge', () => {

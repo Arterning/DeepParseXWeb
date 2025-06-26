@@ -21,13 +21,13 @@
         <a-form-item label="创建时间">
           <a-date-picker v-model="form.createTime" show-time />
         </a-form-item>
-        <a-form-item label="组织标签">
+        <!-- <a-form-item label="组织标签">
           <a-select v-model="form.tags" mode="tags" style="width: 100%">
             <a-select-option v-for="tag in tagOptions" :key="tag" :value="tag">
               {{ tag }}
             </a-select-option>
           </a-select>
-        </a-form-item>
+        </a-form-item> -->
         <a-form-item label="组织介绍">
           <a-textarea v-model="form.introduction" :rows="4" />
         </a-form-item>
@@ -85,7 +85,7 @@
 
               <!-- 创建时间 -->
               <a-descriptions-item :label="'创建时间:'">
-                {{ organizationInfo.created_time }}
+                {{ organizationInfo.create_time }}
               </a-descriptions-item>
 
               <!-- 组织标签 -->
@@ -187,7 +187,7 @@
   };
 
   onMounted(async () => {
-    chinaMap();
+    // chinaMap();
     const paramsId = useRoute().params.id;
     const res = await querySysOrgDetail(Number(paramsId));
 
@@ -249,93 +249,93 @@
     },
   ]);
 
-  const chinaMap = () => {
-    const initMap = echarts.init(document.getElementById('map'));
-    echarts.registerMap('china', china);
-    const options = {
-      title: {
-        text: '中国地图',
-      },
-      tooltip: {
-        trigger: 'item',
-        formatter: '{b}<br/>{c} (销量)',
-      },
-      toolbox: {
-        show: true,
-        orient: 'vertical',
-        left: 'right',
-        top: 'center',
-        feature: {
-          dataView: { readOnly: false },
-          restore: {},
-          saveAsImage: {},
-        },
-      },
-      visualMap: {
-        min: 0,
-        max: 1000,
-        text: ['High', 'Low'],
-        realtime: false,
-        calculable: true,
-        inRange: {
-          color: ['lightskyblue', 'yellow', 'orangered'],
-        },
-      },
-      // geo: {
-      //   map: 'china',
-      // },
-      series: [
-        {
-          coordinateSystem: 'geo',
-          name: '中国',
-          type: 'map',
-          mapLocation: { x: '0%', y: '0%', width: '100%', height: '140%' },
-          map: 'china',
-          label: {
-            show: false,
-          },
-          data: [
-            { name: '北京市', value: 200 },
-            { name: '天津市', value: 320 },
-            { name: '河北省', value: 240 },
-            { name: '山西省', value: 520 },
-            { name: '内蒙古自治区', value: 120 },
-            { name: '辽宁省', value: 210 },
-            { name: '吉林省', value: 620 },
-            { name: '黑龙江省', value: 20 },
-            { name: '上海市', value: 220 },
-            { name: '江苏省', value: 820 },
-            { name: '浙江省', value: 320 },
-            { name: '安徽省', value: 520 },
-            { name: '福建省', value: 120 },
-            { name: '江西省', value: 620 },
-            { name: '山东省', value: 920 },
-            { name: '河南省', value: 220 },
-            { name: '湖北省', value: 720 },
-            { name: '湖南省', value: 210 },
-            { name: '广东省', value: 20 },
-            { name: '广西壮族自治区', value: 20 },
-            { name: '海南省', value: 240 },
-            { name: '重庆市', value: 20 },
-            { name: '四川省', value: 240 },
-            { name: '贵州省', value: 420 },
-            { name: '云南省', value: 320 },
-            { name: '西藏自治区', value: 20 },
-            { name: '陕西省', value: 240 },
-            { name: '甘肃省', value: 920 },
-            { name: '青海省', value: 720 },
-            { name: '宁夏回族自治区', value: 120 },
-            { name: '新疆维吾尔自治区', value: 420 },
-            { name: '台湾省', value: 230 },
-            { name: '香港特别行政区', value: 420 },
-            { name: '澳门特别行政区', value: 210 },
-          ],
-        },
-      ],
-    };
+  // const chinaMap = () => {
+  //   const initMap = echarts.init(document.getElementById('map'));
+  //   echarts.registerMap('china', china);
+  //   const options = {
+  //     title: {
+  //       text: '中国地图',
+  //     },
+  //     tooltip: {
+  //       trigger: 'item',
+  //       formatter: '{b}<br/>{c} (销量)',
+  //     },
+  //     toolbox: {
+  //       show: true,
+  //       orient: 'vertical',
+  //       left: 'right',
+  //       top: 'center',
+  //       feature: {
+  //         dataView: { readOnly: false },
+  //         restore: {},
+  //         saveAsImage: {},
+  //       },
+  //     },
+  //     visualMap: {
+  //       min: 0,
+  //       max: 1000,
+  //       text: ['High', 'Low'],
+  //       realtime: false,
+  //       calculable: true,
+  //       inRange: {
+  //         color: ['lightskyblue', 'yellow', 'orangered'],
+  //       },
+  //     },
+  //     // geo: {
+  //     //   map: 'china',
+  //     // },
+  //     series: [
+  //       {
+  //         coordinateSystem: 'geo',
+  //         name: '中国',
+  //         type: 'map',
+  //         mapLocation: { x: '0%', y: '0%', width: '100%', height: '140%' },
+  //         map: 'china',
+  //         label: {
+  //           show: false,
+  //         },
+  //         data: [
+  //           { name: '北京市', value: 200 },
+  //           { name: '天津市', value: 320 },
+  //           { name: '河北省', value: 240 },
+  //           { name: '山西省', value: 520 },
+  //           { name: '内蒙古自治区', value: 120 },
+  //           { name: '辽宁省', value: 210 },
+  //           { name: '吉林省', value: 620 },
+  //           { name: '黑龙江省', value: 20 },
+  //           { name: '上海市', value: 220 },
+  //           { name: '江苏省', value: 820 },
+  //           { name: '浙江省', value: 320 },
+  //           { name: '安徽省', value: 520 },
+  //           { name: '福建省', value: 120 },
+  //           { name: '江西省', value: 620 },
+  //           { name: '山东省', value: 920 },
+  //           { name: '河南省', value: 220 },
+  //           { name: '湖北省', value: 720 },
+  //           { name: '湖南省', value: 210 },
+  //           { name: '广东省', value: 20 },
+  //           { name: '广西壮族自治区', value: 20 },
+  //           { name: '海南省', value: 240 },
+  //           { name: '重庆市', value: 20 },
+  //           { name: '四川省', value: 240 },
+  //           { name: '贵州省', value: 420 },
+  //           { name: '云南省', value: 320 },
+  //           { name: '西藏自治区', value: 20 },
+  //           { name: '陕西省', value: 240 },
+  //           { name: '甘肃省', value: 920 },
+  //           { name: '青海省', value: 720 },
+  //           { name: '宁夏回族自治区', value: 120 },
+  //           { name: '新疆维吾尔自治区', value: 420 },
+  //           { name: '台湾省', value: 230 },
+  //           { name: '香港特别行政区', value: 420 },
+  //           { name: '澳门特别行政区', value: 210 },
+  //         ],
+  //       },
+  //     ],
+  //   };
 
-    initMap.setOption(options);
-  };
+  //   initMap.setOption(options);
+  // };
 
   // 组织修改表单
   const form = reactive({
