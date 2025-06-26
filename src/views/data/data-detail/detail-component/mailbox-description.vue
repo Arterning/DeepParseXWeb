@@ -28,8 +28,7 @@
   import { queryMailBoxDetail } from '@/api/mailbox';
   import { useRoute } from 'vue-router';
 
-  const email = ref({
-  });
+  const email = ref<any>();
 
   onBeforeMount(async () => {
     const route = useRoute();

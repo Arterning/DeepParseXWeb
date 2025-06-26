@@ -3,6 +3,8 @@ import qs from 'query-string';
 
 export interface MailBoxReq {
   name: string;
+  country?: string;
+  other_info?: string;
 }
 
 export interface MailBoxRes extends MailBoxReq {

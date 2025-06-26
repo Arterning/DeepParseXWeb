@@ -25,8 +25,7 @@
     scandal.value = reactive(res);
   });
 
-  const scandal = ref({
-  });
+  const scandal = ref<any>();
 </script>
 
 <style scoped>

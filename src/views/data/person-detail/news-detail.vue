@@ -18,13 +18,6 @@
               @search="handleSearch"
             />
           </a-col>
-          <a-col :span="14">
-            <a-range-picker
-              v-model="dateRange"
-              style="width: 100%"
-              @change="handleDateChange"
-            />
-          </a-col>
         </a-row>
 
         <!-- 数据表格 -->
@@ -32,7 +25,6 @@
           :columns="columns"
           :data="filteredData"
           :filter-icon-align-left="alignLeft"
-          @sorter-change="handleSort"
         />
       </a-space>
         </a-col>
@@ -113,21 +105,12 @@ const searchKeyword = ref('');
 const dateRange = ref<[Date | null, Date | null]>([null, null]);
 const sortOrder = ref<'ascend' | 'descend'>('ascend');
 
-// 处理排序
-const handleSort = (dataIndex: string, order: string) => {
-  sortOrder.value = order;
-};
-
 
 // 处理搜索
 const handleSearch = (value: string) => {
   searchKeyword.value = value;
 };
 
-// 切换排序方式
-const toggleSortOrder = () => {
-  sortOrder.value = sortOrder.value === 'ascend' ? 'descend' : 'ascend';
-};
 
 const isValidDate = (d: unknown): d is Date => {
   return d instanceof Date && !Number.isNaN(d.getTime());
@@ -263,7 +246,6 @@ const currentCase = ref('Horizontal Tree');
   };
 
   onMounted(() => {
-    TagCloud('.wordClouds', texts1, options1);
     initPieChart();
     initBarChart();
     initBarCharts();
@@ -422,7 +404,6 @@ const currentCase = ref('Horizontal Tree');
     animationEasing: 'cubicOut'
 };
   myBarChart.resize();
-  myBarChart.setOption(option);
 };
   const initPopChart = () => {
     // if (!chartRef.value) return
@@ -541,11 +522,7 @@ const currentCase = ref('Horizontal Tree');
     width: 100%;
     height: 100px;
   }
-  /deep/.__tagcloud {
-    width: 100% !important;
-    height: 100% !important;
-    font-size: 20px;
-  }
+  
   .second {
     width: 100%;
     display: flex;
@@ -602,7 +579,4 @@ const currentCase = ref('Horizontal Tree');
   }
 }
 
-  /deep/.--tagcloud .tagcloud--item :hover {
-    background-color: #999999 !important;
-  }
 </style>

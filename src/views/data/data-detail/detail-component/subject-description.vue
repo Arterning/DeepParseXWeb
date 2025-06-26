@@ -28,8 +28,7 @@
     subject.value = reactive(res);
   });
 
-  const subject = ref({
-  });
+  const subject = ref<any>();
 </script>
 
 <style scoped>

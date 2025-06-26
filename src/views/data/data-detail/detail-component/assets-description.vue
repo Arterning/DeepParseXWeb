@@ -30,8 +30,7 @@
   import { useRoute } from 'vue-router';
   import { querySysAssetsDetail } from '@/api/assets';
 
-  const assets = ref({
-  });
+  const assets = ref<any>();
 
   onBeforeMount(async () => {
     const route = useRoute();

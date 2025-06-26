@@ -1,7 +1,7 @@
 <template>
   <a-layout class="h-full">
     <!-- 左侧收藏夹列表 -->
-    <a-layout-sider width="250" class="rounded-lg p-4 mt-4 ml-4 max-h-[calc(100vh-150px)] overflow-y-auto">
+    <a-layout-sider :width=250 class="rounded-lg p-4 mt-4 ml-4 max-h-[calc(100vh-150px)] overflow-y-auto">
       <div class="flex justify-between items-center mb-4">
         <!-- <span class="font-bold">我的收藏夹</span> -->
         <a-button type="text" @click="NewStarCollection" size="small">
@@ -31,7 +31,7 @@
     <a-layout-content class="p-6 overflow-auto">
       <a-card :title="currentCollection?.name || '收藏夹内容'" class="general-card h-full">
         <!-- 文件卡片展示区域 -->
-        <div v-if="currentCollection?.docs?.length > 0"
+        <div v-if="currentCollection?.docs?.length &&  currentCollection?.docs?.length > 0"
              class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           <a-card
             v-for="doc in currentCollection.docs"
@@ -221,7 +221,7 @@ const removeFromCollection = async (docId: number) => {
 };
 
 // 点击文件卡片
-const handleDocClick = (doc: { id: number; name: string; type: string }) => {
+const handleDocClick = (doc: Record<string ,any>) => {
   // 这里可以实现跳转到文件详情页的逻辑
   router.push({name: 'DocDetail', params: { id: doc.id }, query: { appendix: doc.title }});
 };

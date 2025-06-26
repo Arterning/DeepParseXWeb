@@ -9,4 +9,5 @@ export interface ChatSession {
   topic: string;
   messages: Message[]; // 假设 Message 也是一个需要定义的类型
   updatedAt: string;
+  context?: string;
 }

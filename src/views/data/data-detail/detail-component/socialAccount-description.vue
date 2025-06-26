@@ -46,8 +46,7 @@
     social.value = reactive(res);
   });
 
-  const social = ref({
-  });
+  const social = ref<any>();
 </script>
 
 <style scoped>

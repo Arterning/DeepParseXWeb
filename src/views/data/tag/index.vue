@@ -155,6 +155,7 @@ interface TagDocument {
   title: string;
   name: string;
   type: string;
+  doc_time: string;
 }
 
 const selectedTag = ref<TagRes | null>(null);

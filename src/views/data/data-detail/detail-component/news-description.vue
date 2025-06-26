@@ -46,8 +46,7 @@
     news.value = reactive(res);
   });
 
-  const news = ref({
-  });
+  const news = ref<any>();
 </script>
 
 <style scoped>

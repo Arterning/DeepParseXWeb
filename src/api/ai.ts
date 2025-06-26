@@ -2,7 +2,7 @@ import axios from 'axios';
 
 export interface Prompt {
   question: string;
-  docId?: number;
+  doc_id?: number;
 }
 
 

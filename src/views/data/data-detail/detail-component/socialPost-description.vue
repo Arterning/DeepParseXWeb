@@ -26,8 +26,7 @@
     post.value = reactive(res);
   });
 
-  const post = ref({
-  });
+  const post = ref<any>();
 </script>
 
 <style scoped>
