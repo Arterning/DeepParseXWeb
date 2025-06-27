@@ -77,3 +77,13 @@ export const formatFileSize = (bytes: number) => {
     const i = Math.floor(Math.log(bytes) / Math.log(k));
     return `${(bytes / (k ** i)).toFixed(2)} ${sizes[i]}`;
 };
+
+export const buildSrcURL = (file: string) => {
+    let url;
+    if (import.meta.env.VITE_API_BASE_URL) {
+        url = `${import.meta.env.VITE_API_BASE_URL}/api/v1/sys/docs/preview/${file}`;
+    } else {
+        url = `${window.origin}/api/v1/sys/docs/preview/${file}`;
+    }
+    return url;
+}

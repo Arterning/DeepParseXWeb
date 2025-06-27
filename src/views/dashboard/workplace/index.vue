@@ -5,6 +5,7 @@
       <!-- <Banner /> -->
       <DataPanel />
       <Search />
+      <DocCarousel />
     </div>
   </div>
   <div class="footer">
@@ -16,6 +17,7 @@
   import Footer from '@/components/footer/index.vue';
   import DataPanel from './components/data-panel.vue';
   import Search from './components/search.vue';
+  import DocCarousel from './components/doc-carousel.vue';
 </script>
 
 <script lang="ts">

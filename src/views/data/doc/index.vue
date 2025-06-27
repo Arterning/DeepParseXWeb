@@ -1,7 +1,7 @@
 <template>
   <a-layout class="flex-layout">
     <!-- <Breadcrumb /> -->
-    <div class="general-card">
+    <div class="general-card mt-8">
       <AllTable />
     </div>
     <Footer />

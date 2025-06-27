@@ -1,7 +1,7 @@
 <template>
   <a-layout class="flex-layout">
-    <a-card :title="$t('')" class="general-card pt-8">
-      <div class="flex flex-wrap">
+    <a-card :title="$t('')" class="general-card mt-8">
+      <div class="flex flex-wrap mt-6">
         <a-empty v-if="renderData.length == 0"/>
         <a-tag v-for="tag in renderData" :key="tag.id" @click="handleTagClick(tag)" :color="getRandomColor(tag.id)" class="cursor-pointer mx-2 text-lg font-semibold">{{ tag.name }}</a-tag>
       </div>

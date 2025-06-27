@@ -1,8 +1,8 @@
 <template>
   <div class="container">
-    <a-layout style="padding: 0 18px">
+    <a-layout class="flex-layout">
       <!-- <Breadcrumb :items="[$t('menu.data'), $t('搜索')]" /> -->
-      <a-card :title="$t(' ')" class="general-card min-h-screen">
+      <a-card :title="$t(' ')" class="general-card mt-8 min-h-screen">
         <a-tabs default-active-key="1">
           <a-tab-pane key="1" title="分词检索">
             <TextSearch />

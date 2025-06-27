@@ -1,10 +1,10 @@
 <template>
-  <div class="w-[80%] flex flex-col mx-auto banner min-h-[50vh]">
+  <div class="w-[80%] flex flex-col mx-auto banner mt-8">
       <!-- <a-input-group class="flex gap-2"> -->
       
       <!-- <a-button type="primary" class="p-5 rounded-md" @click="handleInput">搜索</a-button> -->
       <!-- </a-input-group> -->
-      <a-input v-model="searchQuery" class=" w-[50vw] mx-auto rounded-lg" placeholder="搜索您感兴趣的内容" allow-clear
+      <a-input v-model="searchQuery" class="w-[30vw] mx-auto rounded-lg" placeholder="搜索" allow-clear
         @input="handleInput" @keyup.enter="handleEnter">
         <template #prefix>
           <icon-search />

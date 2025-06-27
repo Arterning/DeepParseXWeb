@@ -82,7 +82,7 @@
                             <div class="w-1/2">
                                 <a-skeleton :loading="loading" :animation="true">
                                     <a-space direction="vertical" :style="{width:'100%'}" size="large">
-                                        <a-skeleton-line :rows="8" />
+                                        <a-skeleton-line :rows="16" />
                                     </a-space>
                                 </a-skeleton>
                                 <a-scrollbar v-if="!loading" style="height:800px;overflow: auto;">
@@ -96,7 +96,7 @@
                         <div v-else>
                             <a-skeleton :loading="loading" :animation="true">
                                 <a-space direction="vertical" :style="{width:'100%'}" size="large">
-                                    <a-skeleton-line :rows="8" />
+                                    <a-skeleton-line :rows="16" />
                                 </a-space>
                             </a-skeleton>
                             <a-scrollbar v-if="!loading" style="height:800px;overflow: auto;">

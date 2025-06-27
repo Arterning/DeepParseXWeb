@@ -45,12 +45,12 @@
     </div>
 
     
-    <div class="mx-auto">
-      <!-- <Menu v-if="topMenu" /> -->
+    <!-- <div class="mx-auto">
+      <Menu v-if="topMenu" />
       <a-tooltip :content="$t('settings.search')" >
           <GlobalSearch />
         </a-tooltip>
-    </div>
+    </div> -->
     
     <ul class="right-side">
       <li>
