@@ -2,8 +2,9 @@
   import { computed } from 'vue';
 
   import RobotIconSvg from '@/assets/svg/robot-icon.svg';
+  import { useAppStore } from '@/store';
   import { Message } from '../types';
-
+  
   // message：接受消息对象，展示消息内容和头像，并且根据角色调整消息位置。
   const props = defineProps<{
     message: Message;
@@ -13,6 +14,8 @@
   const messageContent = computed(()=>{
     return props.message.content;
   })
+
+  const themeStore = useAppStore();
 
 </script>
 <template>
@@ -30,9 +33,9 @@
       <div v-if="message.status==='waiting'">
         <a-spin />
       </div>
-      <MdPreview v-else-if="message.status==='success'&&message.sender==='bot'" theme="dark" class="bg-slate-700 p-2 rounded-lg"  :preview-theme="'github'" :model-value="messageContent" ></MdPreview>        
-      <MdPreview v-else-if="message.status==='success'&&message.sender==='user'" theme="dark" class="bg-slate-700 p-2 rounded-lg" :preview-theme="'github'" :model-value="messageContent" ></MdPreview> 
-      <MdPreview v-else-if="message.status==='failure'" theme="dark" class="bg-slate-700 p-2 rounded-lg" :model-value="messageContent" />
+      <MdPreview v-else-if="message.status==='success'&&message.sender==='bot'" :theme="themeStore.theme" class="p-2 rounded-lg"  :preview-theme="'github'" :model-value="messageContent" ></MdPreview>        
+      <MdPreview v-else-if="message.status==='success'&&message.sender==='user'" :theme="themeStore.theme"  class="p-2 rounded-lg" :preview-theme="'github'" :model-value="messageContent" ></MdPreview> 
+      <MdPreview v-else-if="message.status==='failure'" :theme="themeStore.theme"  class="p-2 rounded-lg" :model-value="messageContent" />
     </div>
     
     <!-- 用户头像 - 设置固定宽度并防止压缩 -->
