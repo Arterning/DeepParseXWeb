@@ -453,7 +453,7 @@
   import { useRouter } from 'vue-router';
   import { tableDateFormat } from '@/utils/date';
   import SettingTable from '@/components/setting-table/index.vue';
-  import {getSvgByType, formatFileSize} from '@/utils/doc';
+  import { getSvgByType, formatFileSize } from '@/utils/doc';
 
 
 

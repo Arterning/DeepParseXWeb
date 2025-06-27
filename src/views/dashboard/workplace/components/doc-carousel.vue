@@ -22,16 +22,17 @@
                     }
                 })
             ">
-            <img
+            <a-image
                 v-if="item.type === '图片'"
                 :src="buildSrcURL(item.file || '')"
+                class="w-1/2 h-1/2"
             />
             <component v-else :is="getSvgByFileName(item.title || '')" />
             <div class="flex flex-col justify-center items-center">
                 <span class="text-lg font-semibold">{{ item.title }}</span>
                 <span class="text-sm text-gray-400">{{ item.desc }}</span>
                 <!-- 上传日期 -->
-                <span class="text-sm text-gray-400">上传于 {{ item.created_time }}</span>
+                <span class="text-sm text-gray-400">上传于 {{ tableDateFormat(item.created_time || '') }}</span>
             </div>
         </div>
       </a-carousel-item>
@@ -43,6 +44,7 @@
     import { queryRecentDocs, SysDocRes } from '@/api/doc';
     import useLoading from '@/hooks/loading';
     import { getSvgByFileName, buildSrcURL } from '@/utils/doc';
+    import { tableDateFormat } from '@/utils/date';
 
 
     const hotDocs = ref<SysDocRes[]>([]);  

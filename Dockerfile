@@ -1,13 +1,8 @@
-FROM node:18.19.0-buster-slim AS build
+FROM fba_ui_base AS build
 
 WORKDIR /fba_ui
-
 COPY . .
-
-RUN rm -rf node_modules
-RUN npm --registry https://registry.npmmirror.com install -g pnpm
-RUN pnpm config set registry https://registry.npmmirror.com \
-    && pnpm install && pnpm run build
+RUN pnpm run build
 
 FROM nginx
 

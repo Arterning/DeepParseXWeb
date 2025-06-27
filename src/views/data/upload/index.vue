@@ -91,9 +91,12 @@
                 <div class="flex justify-between cursor-pointer">
                   <div class="flex items-center space-x-2">
                     <component :is="getSvgByType(item.type)" class="w-10 h-10" />
-                    <div>{{ item.title }}</div>
+                    <div class="flex flex-col gap-1">
+                      <div>{{ item.title }}</div>
+                      <div>{{ formatFileSize(item.size) }}</div>
+                    </div>
                   </div>
-                  <a-tag>上传于 {{ item.created_time }}</a-tag>
+                  <a-tag>{{item.created_user}} 上传于 {{ tableDateFormat(item.created_time) }}</a-tag>
                 </div>
               </a-list-item>
             </template>
@@ -122,6 +125,7 @@ import useLoading from '@/hooks/loading';
 import { parseDoc } from '@/api/doc';
 import { onActivated } from 'vue';
 import { changeTheme } from '@/hooks/theme';
+import { tableDateFormat } from '@/utils/date';
 
 
 onActivated(() => {
