@@ -3,7 +3,7 @@
       :autoPlay="true"
       animation-name="card"
       indicator-position="outer"
-      class="mt-8 mx-auto"
+      class="mt-20 mx-auto"
       :style="{
         width: '80%',
         height: '340px',

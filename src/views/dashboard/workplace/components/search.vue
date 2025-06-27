@@ -1,33 +1,14 @@
 <template>
   <div class="w-[80%] flex flex-col mx-auto banner mt-8">
-      <!-- <a-input-group class="flex gap-2"> -->
-      
-      <!-- <a-button type="primary" class="p-5 rounded-md" @click="handleInput">搜索</a-button> -->
-      <!-- </a-input-group> -->
       <a-input v-model="searchQuery" class="w-[30vw] mx-auto rounded-lg" placeholder="搜索" allow-clear
-        @input="handleInput" @keyup.enter="handleEnter">
+        @input="handleInput">
         <template #prefix>
           <icon-search />
         </template>
       </a-input>
 
-    <div v-if="!searchQuery" v-show="showHistory" class="history w-full">
-      <div v-if="historyItems.length > 0" class="history-header">
-        <div class="tip">最近搜索</div>
-        <span class="del" @click="clearHistory">清除全部</span>
-      </div>
-      <a-list style="margin-top: 10px" :max-height="580" :scrollbar="true" v-if="historyItems.length > 0">
-        <a-list-item v-for="(item, index) in historyItems" :key="item" class="history-item"
-          @click="historyHandle(item)">
-          <icon-history />
-          <span class="time">{{ item }}</span>
-          <icon-delete type="close" class="delete-icon" @click.stop="deleteHistoryItem(index)" />
-        </a-list-item>
-      </a-list>
-    </div>
-
-    <div v-else class="searchResults">
-      <div class="tip">搜索到{{ total }}个结果</div>
+    <div v-if="searchQuery" class="searchResults">
+      <div class="tip">"{{ searchQuery }}"搜索到{{ total }}个结果</div>
       <a-list :max-height="450" :scrollbar="true" :loading="loading">
         <a-list-item v-for="result in searchResults" :key="result.id" class="ResultItem" @click="handleResultClick(result)">
           <a-list-item-meta>
@@ -81,7 +62,6 @@
         searchResults.value = results.items;
         total.value = results.total;
         // console.log("total", total.value);
-        saveHistory();
       } catch (error) {
         console.error('搜索失败:', error);
       } finally {
@@ -90,45 +70,6 @@
     }
   };
   
-  const handleEnter = () => {
-    if (searchQuery.value) {
-      saveHistory();
-    }
-  };
-  
-  const saveHistory = () => {
-    // 如果搜索历史中已经存在该记录，则先删除它
-    const index = historyItems.value.indexOf(searchQuery.value);
-    if (index !== -1) {
-      historyItems.value.splice(index, 1);
-    }
-    // 将新记录插入到数组的第一个位置
-    historyItems.value.unshift(searchQuery.value);
-  
-    // 只保留最多5条历史记录
-    if (historyItems.value.length > 8) {
-      historyItems.value = historyItems.value.slice(0, 8);
-    }
-  
-    localStorage.setItem('searchHistory', JSON.stringify(historyItems.value));
-  };
-  
-  const historyHandle = (item: any) => {
-    searchQuery.value = item;
-    handleEnter();
-    handleInput();
-  };
-  
-  
-  const clearHistory = () => {
-    historyItems.value = [];
-    localStorage.removeItem('searchHistory');
-  };
-  
-  const deleteHistoryItem = (index: number) => {
-    historyItems.value.splice(index, 1);
-    localStorage.setItem('searchHistory', JSON.stringify(historyItems.value));
-  };
   
   const loadSearchHistory = () => {
     const storedHistory = localStorage.getItem('searchHistory');
@@ -177,7 +118,6 @@
       });
     }
   
-    handleEnter();
     visible.value = false;
   };
   
