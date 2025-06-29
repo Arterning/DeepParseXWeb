@@ -1,5 +1,5 @@
 <template>
-  <a-layout-footer class="footer">启迪数据智能</a-layout-footer>
+  <a-layout-footer class="footer">燕启智能数据治理平台</a-layout-footer>
 </template>
 
 <script lang="ts" setup>

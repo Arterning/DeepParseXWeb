@@ -23,7 +23,8 @@ export interface SysDocRes extends SysDocReq {
   email_time?: string;
   graph_data?: GraphData;
   email_msg?: MailMsgRes;
-  created_time?: string;
+  created_time: string;
+  created_user?: string;
 }
 
 export interface SysDocQueryRes {

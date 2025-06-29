@@ -1,6 +1,6 @@
 export default {
   'login.form.title': 'Login',
-  'login.form.sub_title': '启迪数据智能',
+  'login.form.sub_title': '燕启智能数据治理平台',
   'login.form.username.errMsg': 'Username cannot be empty',
   'login.form.password.errMsg': 'Password cannot be empty',
   'login.form.captcha.errMsg': 'Captcha cannot be empty',

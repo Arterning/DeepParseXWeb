@@ -31,7 +31,7 @@
           :style="{ margin: 0, fontSize: '20px'}"
           class="cursor-pointer font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-slate-200"
           >
-          启迪数据智能
+          燕启智能数据治理平台
         </div>
 
         <icon-menu-fold

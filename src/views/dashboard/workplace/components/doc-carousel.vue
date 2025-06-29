@@ -27,12 +27,13 @@
                 :src="buildSrcURL(item.file || '')"
                 class="w-1/2 h-1/2"
             />
-            <component v-else :is="getSvgByFileName(item.title || '')" />
+            <component v-else :is="getSvgByFileName(item.title || '')" class="w-36 h-36" />
             <div class="flex flex-col justify-center items-center">
-                <span class="text-lg font-semibold">{{ item.title }}</span>
+                <span class="text-lg font-semibold dark:text-white max-w-[300px]">{{ item.title }}</span>
                 <span class="text-sm text-gray-400">{{ item.desc }}</span>
+                <span class="text-sm text-gray-400">上传人：{{ item.created_user }}</span>
                 <!-- 上传日期 -->
-                <span class="text-sm text-gray-400">上传于 {{ tableDateFormat(item.created_time || '') }}</span>
+                <span class="text-sm text-gray-400">上传于 {{ tableDateFormat(item.created_time) }}</span>
             </div>
         </div>
       </a-carousel-item>
