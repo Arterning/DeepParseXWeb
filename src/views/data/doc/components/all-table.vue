@@ -233,6 +233,7 @@
             :key="record.id"
             class="hover:shadow-lg transition-shadow duration-300 rounded-lg"
             :hoverable="true"
+            :loading="loading"
           >
             <div class="flex items-start gap-3" v-if="record">
               <component :is="getSvgByType(record.type || '')" class="w-12 h-12 flex-shrink-0" />

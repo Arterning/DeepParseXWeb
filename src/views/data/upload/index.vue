@@ -61,7 +61,8 @@
                 <a-progress :percent="item.progress" >
                   <template v-slot:text="scope" >
                     <icon-check v-if="scope.percent == 1"/>
-                    <icon-loading v-if="scope.percent < 1"/> 
+                    <icon-exclamation-circle v-if="item.stage == '处理失败'"/>
+                    <icon-loading v-if="scope.percent > 0 && scope.percent < 1"/> 
                     {{scope.percent * 100 }}% {{ item.stage }}
                   </template>
                 </a-progress>
