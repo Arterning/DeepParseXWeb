@@ -25,6 +25,8 @@ export interface SysDocRes extends SysDocReq {
   email_msg?: MailMsgRes;
   created_time: string;
   created_user?: string;
+  size: number;
+  status?: number;
 }
 
 export interface SysDocQueryRes {

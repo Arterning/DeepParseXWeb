@@ -118,9 +118,30 @@
           :storageKey="storageKey"
           @update-columns="updateVisibleColumns"
         />
+        <a-radio-group v-model="viewMode" size="small">
+          <a-radio value="table">
+            <template #radio="{ checked }">
+              <a-space :size="4">
+                <icon-list :style="{ color: checked ? 'rgb(var(--primary-6))' : '' }" />
+                <span v-if="checked">表格</span>
+              </a-space>
+            </template>
+          </a-radio>
+          <a-radio value="card">
+            <template #radio="{ checked }">
+              <a-space :size="4">
+                <icon-apps :style="{ color: checked ? 'rgb(var(--primary-6))' : '' }" />
+                <span v-if="checked">卡片</span>
+              </a-space>
+            </template>
+          </a-radio>
+      </a-radio-group>
       </a-space>
+
+      
       <div class="content">
         <a-table
+          v-if="viewMode === 'table'"
           v-model:selected-keys="rowSelectKeys"
           :bordered="false"
           column-resizable
@@ -151,21 +172,6 @@
               })
               ">{{ record.title }}
             </span>
-            <!-- <div class="flex flex-col gap-2">
-              <div class="flex gap-2 justify-between items-center">
-                <div class="text-gray-500">
-                  
-                </div>
-                <a-tag>{{ record.type?.toUpperCase() }}</a-tag>
-              </div>
-              <p class="text-gray-500 max-w-[300px]">
-                {{ record.desc }}
-              </p>
-              <div class="flex items-center justify-between gap-2">
-                <a-tag >{{ tableDateFormat(record.created_time) }}</a-tag>
-                <a-tag v-if="record.updated_time">{{ tableDateFormat(record.updated_time) }}</a-tag>
-              </div>
-            </div> -->
           </template>
 
           <template #size="{ record }">
@@ -219,6 +225,101 @@
             </a-space>
           </template>
         </a-table>
+
+         <!-- 卡片视图 -->
+         <div v-if="viewMode === 'card'" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+          <a-card 
+            v-for="record in renderData" 
+            :key="record.id"
+            class="hover:shadow-lg transition-shadow duration-300 rounded-lg"
+            :hoverable="true"
+          >
+            <div class="flex items-start gap-3" v-if="record">
+              <component :is="getSvgByType(record.type || '')" class="w-12 h-12 flex-shrink-0" />
+              <div class="flex-1 min-w-0">
+                <div class="flex justify-between items-start">
+                  <a-tooltip :content="record.title">
+                    <a-link 
+                      class="text-lg font-medium truncate block max-w-[180px]"
+                      @click="router.push({
+                        name: 'DocDetail',
+                        params: { id: record.id },
+                        query: { appendix: record.name }
+                      })"
+                    >
+                      {{ record.title }}
+                    </a-link>
+                  </a-tooltip>
+                  <a-space>
+                    <a-tooltip content="修改">
+                      <a-link @click="EditApi(record.id)">
+                        <icon-edit />
+                      </a-link>
+                    </a-tooltip>
+                    <a-tooltip content="收藏">
+                      <a-link @click="CollectionApi(record.id)">
+                        <icon-star />
+                      </a-link>
+                    </a-tooltip>
+                  </a-space>
+                </div>
+                <div class="text-sm text-gray-500 mt-1">
+                  {{ formatFileSize(record.size) }}
+                </div>
+                <div class="text-sm text-gray-500 mt-1">
+                  {{ tableDateFormat(record.created_time) }}
+                </div>
+                <div class="mt-2">
+                  <a-tag v-if="record.status === 0" :color="`orange`" size="small">
+                    {{ $t(`处理中`) }}
+                  </a-tag>
+                  <a-tag v-else-if="record.status === 1" :color="`green`" size="small">
+                    {{ $t(`admin.menu.form.status.${record.status}`) }}
+                  </a-tag>
+                  <a-tag v-else :color="`red`" size="small">
+                    {{ $t(`解析失败`) }}
+                  </a-tag>
+                </div>
+              </div>
+            </div>
+            <!-- 新增的摘要信息部分 -->
+            <div class="mt-3 flex-1">
+              <div class="text-sm text-gray-600 line-clamp-3" :title="record.desc">
+                {{ record.desc || '暂无摘要信息' }}
+              </div>
+            </div>
+
+            <!-- 底部标签区域（如果有的话） -->
+            <div class="mt-2 flex flex-wrap gap-1" v-if="record.tags && record.tags.length">
+              <a-tag 
+                v-for="(tag, index) in record.tags.slice(0, 3)" 
+                :key="index" 
+                size="small"
+                class="truncate max-w-[80px]"
+                :title="tag"
+              >
+                {{ tag }}
+              </a-tag>
+              <a-tag size="small" v-if="record.tags.length > 3">+{{ record.tags.length - 3 }}</a-tag>
+            </div>
+            
+          </a-card>
+        </div>
+
+        <!-- 分页器 -->
+        <div v-if="viewMode === 'card'" class="mt-4 flex justify-end">
+          <a-pagination
+            v-model:current="pagination.current"
+            v-model:page-size="pagination.pageSize"
+            :total="pagination.total || 0"
+            show-total
+            show-jumper
+            show-page-size
+            @change="onPageChange"
+            @page-size-change="onPageSizeChange"
+          />
+        </div>
+
       </div>
       <div class="content-modal">
         <a-modal
@@ -461,6 +562,7 @@
   const { loading, setLoading } = useLoading(true);
   const router = useRouter();
   const storageKey = "docTable";
+  const viewMode = ref('card');
 
   // 列表展示
   const visibleColumns = ref<TableColumnData[]>([]);
