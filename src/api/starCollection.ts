@@ -11,6 +11,7 @@ export interface StarCollectionRes extends StarCollectionReq {
   docs: {
     id: number;
     name: string;
+    title: string;
     type: string;
   }[];
 }

@@ -1,7 +1,7 @@
 <template>
   <a-layout class="h-full">
     <!-- 左侧收藏夹列表 -->
-    <a-layout-sider :width=250 class="rounded-lg p-4 mt-4 ml-4 max-h-[calc(100vh-150px)] overflow-y-auto">
+    <a-layout-sider :width=230 class="rounded-lg p-4 mt-4 ml-4 max-h-[calc(100vh-150px)] overflow-y-auto">
       <div class="flex justify-between items-center mb-4">
         <!-- <span class="font-bold">我的收藏夹</span> -->
         <a-button type="text" @click="NewStarCollection" size="small">
@@ -16,12 +16,18 @@
           v-for="collection in collections"
           :key="collection.id"
         >
-          <div class="flex justify-between items-center">
+          <div class="flex items-center">
             <span class="overflow-hidden whitespace-nowrap text-ellipsis max-w-[8rem]">{{ collection.name }}</span>
-            <icon-edit
-              class="text-gray-400 hover:text-primary"
-              @click.stop="EditStarCollection(collection.id)"
-            />
+            <div class="ml-auto">
+              <icon-edit
+                class="text-gray-400 hover:text-primary"
+                @click.stop="EditStarCollection(collection.id)"
+              />
+              <icon-delete 
+                class="text-gray-400 hover:text-primary"
+                @click.stop="removeFromCollection(collection.id)"
+              />
+            </div>
           </div>
         </a-menu-item>
       </a-menu>
@@ -36,23 +42,26 @@
           <a-card
             v-for="doc in currentCollection.docs"
             :key="doc.id"
-            class="doc-card hover:shadow-lg transition-shadow duration-300"
+            class="doc-card hover:shadow-lg transition-shadow duration-300 rounded-lg"
             :style="{ cursor: 'pointer' }"
             @click="handleDocClick(doc)"
           >
+            <!-- 取消收藏按钮（固定在右上角） -->
+            <div 
+              class="absolute top-2 right-2 z-10 p-1 rounded-full hover:bg-gray-100 transition-colors"
+              @click.stop="removeFromCollection(doc.id)"
+            >
+              <icon-close class="w-4 h-4 text-gray-500 hover:text-red-500" />
+            </div>
             <div class="flex items-start gap-3">
+              <component :is="getSvgByType(doc.type)" class="w-12 h-12" />
               <div class="flex-1">
-                <h3 class="text-lg font-medium mb-2">{{ doc.name }}</h3>
-                <a-tag>{{ doc.type }}</a-tag>
+                <h3 class="text-lg font-medium mb-2">{{ doc.title }}</h3>
+                <div class="text-gray-500 mb-1 text-sm">
+                  {{ doc.name }}
+                </div>
+                <!-- <a-tag>{{ doc.type }}</a-tag> -->
               </div>
-              <a-button
-                type="text"
-                status="danger"
-                class="hover:text-red-600"
-                @click.stop="removeFromCollection(doc.id)"
-              >
-                <icon-delete />
-              </a-button>
             </div>
           </a-card>
         </div>
@@ -101,6 +110,7 @@ import {
   updateStarCollection,
 } from '@/api/starCollection';
 import { useRouter } from 'vue-router';
+import { getSvgByType } from '@/utils/doc';
 
 const { t } = useI18n();
 const { loading, setLoading } = useLoading(true);
