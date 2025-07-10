@@ -211,8 +211,14 @@
                   <icon-unordered-list  style="font-size:16"/>
                 </a-link>
               </a-tooltip>  
+              <!-- 取消收藏 -->
+              <a-tooltip v-if="record.is_collected" content="取消收藏">
+                <a-link @click="handleUnCollect(record.id)">
+                  <icon-star-fill style="font-size:16"/>
+                </a-link>
+              </a-tooltip>
               <!-- 收藏 -->
-              <a-tooltip content="收藏">
+              <a-tooltip v-else content="收藏">
                 <a-link @click="CollectionApi(record.id)">
                   <icon-star style="font-size:16"/>
                 </a-link>
@@ -236,7 +242,7 @@
             :loading="loading"
           >
             <div class="flex items-start gap-3" v-if="record">
-              <component :is="getSvgByType(record.type || '')" class="w-12 h-12 flex-shrink-0" />
+                <component :is="getSvgByType(record.type || '')" class="w-12 h-12 flex-shrink-0" />
               <div class="flex-1 min-w-0">
                 <div class="flex justify-between items-start">
                   <a-tooltip :content="record.title">
@@ -257,7 +263,12 @@
                         <icon-edit />
                       </a-link>
                     </a-tooltip>
-                    <a-tooltip content="收藏">
+                    <a-tooltip v-if="record.is_collected" content="取消收藏">
+                      <a-link @click="handleUnCollect(record.id)">
+                        <icon-star-fill style="font-size:16"/>
+                      </a-link>
+                    </a-tooltip>
+                    <a-tooltip v-else content="收藏">
                       <a-link @click="CollectionApi(record.id)">
                         <icon-star />
                       </a-link>
@@ -941,7 +952,15 @@
     }
     await collectDoc({ doc_id: operateRow.value, collection_id: collectionSelect.value });
     collectView.value = false;
+    await fetchApiList({ page: pagination.current, size: pagination.pageSize });
     Message.success('收藏成功');
+  };
+
+  const handleUnCollect = async (id: number) => {
+    await collectDoc({ doc_id:id  });
+    collectView.value = false;
+    await fetchApiList({ page: pagination.current, size: pagination.pageSize });
+    Message.success('操作成功');
   };
 
   const handleCollectCancel = () => {

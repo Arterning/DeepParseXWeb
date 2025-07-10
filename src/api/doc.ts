@@ -17,6 +17,7 @@ export interface SysDocReq {
 
 export interface SysDocRes extends SysDocReq {
   id: number;
+  is_collected?: boolean;
   email_from?: string;
   email_to?: string;
   email_subject?: string;
@@ -140,7 +141,7 @@ export function extractText(pk: number) {
 // collectDoc
 export function collectDoc(params: {
   doc_id: number;
-  collection_id: number;
+  collection_id?: number;
 }) {
   return axios.post(`/api/v1/sys/docs/collect`, params);
 }
