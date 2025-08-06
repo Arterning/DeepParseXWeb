@@ -107,7 +107,7 @@
           <a-spin size="large" />
         </div>
         <div v-else>
-          <div class="grid grid-cols-1 gap-4">
+          <div class="grid grid-cols-2 gap-4">
             <div
               v-for="record in renderData"
               :key="record.id"
@@ -227,9 +227,8 @@
               :current="pagination.current"
               :page-size="pagination.pageSize"
               show-total
-              show-jumper
               show-page-size
-              @page-change="onPageChange"
+              @change="onPageChange"
               @page-size-change="onPageSizeChange"
             />
           </div>
@@ -362,7 +361,7 @@
   const rowSelectKeys = ref<number[]>([]);
   const basePagination: Pagination = {
     current: 1,
-    pageSize: 20,
+    pageSize: 10,
     defaultPageSize: 20,
     showTotal: true,
     showPageSize: true,
@@ -438,12 +437,12 @@
         await createMailMsg(form);
         cancelReq();
         Message.success(t('submit.create.success'));
-        await fetchMailMsgList();
+        await fetchData();
       } else {
         await updateMailMsg(operateRow.value, form);
         cancelReq();
         Message.success(t('submit.update.success'));
-        await fetchMailMsgList();
+        await fetchData();
       }
     } catch (error) {
       // console.log(error);
@@ -464,7 +463,7 @@
       await deleteMailMsg({ pk: rowSelectKeys.value });
       cancelReq();
       Message.success(t('submit.delete.success'));
-      await fetchMailMsgList();
+      await fetchData();
       rowSelectKeys.value = [];
     } catch (error) {
       openDelete.value = false;
@@ -476,20 +475,22 @@
   };
 
   // 请求API列表
-  const fetchMailMsgList = async (params: MailMsgParams = {}) => {
+  const fetchData = async () => {
     setLoading(true);
     try {
-      const res = await queryMailMsgList(params);
+      const res = await queryMailMsgList({
+        ...formModel.value,
+        page: pagination.current,
+        size: pagination.pageSize,
+      } as MailMsgParams);
       renderData.value = res.items;
       pagination.total = res.total;
-      pagination.current = params.page;
     } catch (error) {
       // console.log(error);
     } finally {
       setLoading(false);
     }
   };
-  fetchMailMsgList();
 
   // 请求部门详情
   const fetchMailMsgDetail = async (pk: number) => {
@@ -504,22 +505,26 @@
   };
 
   // 事件: 分页
-  const onPageChange = async (current: number) => {
-    await fetchMailMsgList({ page: current, size: pagination.pageSize });
+  const onPageChange = (current: number) => {
+    console.log("current", current);
+    pagination.current = current;
+    fetchData();
   };
 
   // 事件: 分页大小
-  const onPageSizeChange = async (pageSize: number) => {
+  const onPageSizeChange = (pageSize: number) => {
+    pagination.current = 1;
     pagination.pageSize = pageSize;
-    await fetchMailMsgList({ page: 1, size: pageSize });
+    fetchData();
   };
 
   // 搜索
-  const search = async () => {
-    await fetchMailMsgList({
-      ...formModel.value,
-    } as unknown as MailMsgParams);
+  const search = () => {
+    pagination.current = 1;
+    fetchData();
   };
+
+  fetchData();
 
   // 重置
   const resetSelect = () => {
