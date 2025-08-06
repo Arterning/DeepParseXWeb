@@ -1,6 +1,5 @@
 import { createApp } from 'vue';
 import ArcoVue from '@arco-design/web-vue';
-import { Modal } from '@arco-design/web-vue';
 import ArcoVueIcon from '@arco-design/web-vue/es/icon';
 import { InstallCodeMirror } from 'codemirror-editor-vue3';
 import globalComponents from '@/components';
