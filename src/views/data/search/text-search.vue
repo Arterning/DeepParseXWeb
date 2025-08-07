@@ -1,50 +1,118 @@
 <template>
-    <a-input v-model="searchQuery" class="p-3 w-full rounded-lg" placeholder="搜索您感兴趣的内容" allow-clear
-        @input="handleInput" @keyup.enter="handleEnter">
-        <template #prefix>
-            <icon-search />
-        </template>
-        </a-input>
+  <div class="p-4  min-h-screen">
+    <!-- Search Input -->
+    <div class="relative mb-6">
+      <input
+        v-model="searchQuery"
+        type="text"
+        class="w-full pl-12 pr-10 py-4 text-lg bg-white dark:bg-gray-700 border-2 border-gray-200 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-shadow duration-300 shadow-sm hover:shadow-md"
+        placeholder="搜索您感兴趣的内容..."
+        @keyup.enter="handleSearch"
+      />
+      <div
+        class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none"
+      >
+        <icon-search class="text-gray-400" size="24" />
+      </div>
+      <button
+        v-if="searchQuery"
+        class="absolute inset-y-0 right-0 pr-4 flex items-center"
+        @click="searchQuery = ''"
+      >
+        <icon-close-circle class="text-gray-400 hover:text-gray-600" size="20" />
+      </button>
+    </div>
 
-        <div v-if="!searchQuery" v-show="showHistory" class="history w-full">
-            <div v-if="historyItems.length > 0" class="history-header">
-            <div class="tip">最近搜索</div>
-            <span class="del" @click="clearHistory">清除全部</span>
+    <!-- History Section -->
+    <div v-if="!searchQuery && showHistory" class="w-full">
+      <div
+        v-if="historyItems.length > 0"
+        class="flex justify-between items-center mb-3"
+      >
+        <h2 class="text-lg font-semibold text-gray-700">最近搜索</h2>
+        <button
+          class="text-sm text-blue-600 hover:text-blue-800 font-medium"
+          @click="clearHistory"
+        >
+          清除全部
+        </button>
+      </div>
+      <ul v-if="historyItems.length > 0" class="space-y-2">
+        <li
+          v-for="(item, index) in historyItems"
+          :key="item"
+          class="flex items-center justify-between bg-white dark:bg-gray-700 p-3 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200 cursor-pointer"
+          @click="historyHandle(item)"
+        >
+          <div class="flex items-center">
+            <icon-history class="text-gray-500 mr-3" />
+            <span class="text-gray-800 dark:text-gray-200">{{ item }}</span>
+          </div>
+          <button @click.stop="deleteHistoryItem(index)">
+            <icon-delete class="text-gray-400 hover:text-red-500" />
+          </button>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Search Results Section -->
+    <div v-else class="searchResults">
+      <div class="mb-4 text-md text-gray-600">
+        为您找到 {{ total }} 个相关结果
+      </div>
+
+      <div v-if="loading" class="text-center py-10">
+        <a-spin size="large" tip="正在努力搜索中..." />
+      </div>
+
+      <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div
+          v-for="result in searchResults"
+          :key="result.id"
+          class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl hover:-translate-y-1 transition-all duration-300 cursor-pointer"
+          @click="handleResultClick(result)"
+        >
+          <div class="p-6">
+            <div
+              class="tracking-wide text-sm text-blue-500 font-semibold uppercase"
+            >
+              {{ result.entity_type }}
             </div>
-            <a-list style="margin-top: 10px" :max-height="580" :scrollbar="true" v-if="historyItems.length > 0">
-            <a-list-item v-for="(item, index) in historyItems" :key="item" class="history-item"
-                @click="historyHandle(item)">
-                <icon-history />
-                <span class="time">{{ item }}</span>
-                <icon-delete type="close" class="delete-icon" @click.stop="deleteHistoryItem(index)" />
-            </a-list-item>
-            </a-list>
+            <a
+              href="#"
+              class="block mt-1 text-lg leading-tight font-bold text-black hover:underline"
+              v-html="highlightedHit(result.title)"
+            ></a>
+            <p
+              class="mt-2 text-gray-500 text-sm"
+              v-html="highlightedHit(result.hit)"
+            ></p>
+          </div>
         </div>
+      </div>
 
-        <div v-else class="searchResults">
-        <div class="tip">搜索到{{ total }}个结果</div>
-        <a-list :max-height="450" :scrollbar="true" :loading="loading">
-            <a-list-item v-for="result in searchResults" :key="result.id" class="ResultItem" @click="handleResultClick(result)">
-            <a-list-item-meta>
-                <template #title>
-                <a>
-                    <span v-html="highlightedHit(result.title)"></span>
-                </a>
-                </template>
-            </a-list-item-meta>
-            <a-list-item-meta>
-                <template #description>
-                <span v-html="highlightedHit(result.hit)"></span>
-                </template>
-            </a-list-item-meta>
-            </a-list-item>
-        </a-list>
-        </div>
-        
-        <a-pagination 
-            v-model:page-size="pageSize" class="pagination" :total="total" show-total show-jumper
-            show-page-size @change="pageChange" @page-size-change="onPageSizeChange" />
-  </template>
+      <div
+        v-if="!loading && searchResults && searchResults.length === 0"
+        class="text-center py-16"
+      >
+        <a-empty description="没有找到匹配的结果，换个关键词试试？" />
+      </div>
+    </div>
+
+    <!-- Pagination -->
+    <div v-if="total > 0" class="flex justify-center mt-8">
+      <a-pagination
+        v-model:page-size="pageSize"
+        :total="total"
+        show-total
+        show-jumper
+        show-page-size
+        @change="pageChange"
+        @page-size-change="onPageSizeChange"
+      />
+    </div>
+  </div>
+</template>
   
   <script setup lang="ts">
   import { ref, onMounted, reactive } from 'vue';
@@ -64,7 +132,7 @@
   const loading = ref(false);
   const pageSize = ref(10);
   
-  const handleInput = async () => {
+  const handleSearch = async () => {
     if (!searchQuery.value) {
       showHistory.value = true;
     } else {
@@ -86,7 +154,7 @@
     }
   };
   
-  const handleEnter = () => {
+  const handleSaveHistory = () => {
     if (searchQuery.value) {
       saveHistory();
     }
@@ -111,8 +179,8 @@
   
   const historyHandle = (item: any) => {
     searchQuery.value = item;
-    handleEnter();
-    handleInput();
+    handleSaveHistory();
+    handleSearch();
   };
   
   
@@ -144,36 +212,7 @@
       params: { id: item.id },
     });
 
-    if (item.entity_type === 'document') {
-      router.push({
-        name: 'DocDetail',
-        params: { id: item.id },
-      });
-      // window.open(window.origin + '/data/doc-detail?docId='+item.id);
-    }
-  
-    if (item.entity_type === 'person') {
-      router.push({
-        name: 'DocDetail',
-        query: { personId: item.id },
-      });
-    }
-  
-    if (item.entity_type === 'org') {
-      router.push({
-        name: 'DocDetail',
-        query: { orgId: item.id },
-      });
-    }
-  
-    if (item.entity_type === 'subject') {
-      router.push({
-        name: 'DocDetail',
-        query: { subjectId: item.id },
-      });
-    }
-  
-    handleEnter();
+    handleSaveHistory();
     visible.value = false;
   };
   
@@ -218,99 +257,6 @@ const onPageSizeChange = async (_pageSize: number) => {
   </script>
   
   <style scoped lang="less">
-  .banner {
-    width: 100%;
-    padding: 20px 20px 0 20px;
-    background-color: var(--color-bg-2);
-    border-radius: 4px 4px 0 0;
-  }
-
-  :deep(.arco-icon-home) {
-    margin-right: 6px;
-  }
-  .nav-btn {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  
-  .modal-title {
-    width: 100%;
-  }
-  
-  .search {
-    position: relative;
-    width: 100%;
-  }
-  
-  .search:focus {
-    outline: none;
-    box-shadow: none;
-  }
-  
-  .del {
-    cursor: pointer;
-    color: rgb(22, 93, 255);
-  }
-  
-  .time {
-    margin-left: 15px;
-  }
-  
-  .history,
-  .searchResults {
-    height: 100%;
-  
-    .tip {
-      color: #F6B17A;
-      padding: 8px;
-    }
-  }
-  
-  .history-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 10px;
-  }
-  
-  .history-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 5px 0;
-  }
-  
-  .history-item:hover,
-  .ResultItem:hover {
-    background-color: var(--color-bg-3);
-    opacity: 1.5;
-    cursor: pointer;
-    color: rgb(22, 93, 255);
-  }
-  
-  .delete-icon {
-    float: right;
-    cursor: pointer;
-    display: none;
-    color: rgb(22, 93, 255);
-  }
-  
-  .history-item:hover .delete-icon {
-    display: block;
-  }
-  
-  .history {
-    margin-top: 0;
-  }
-  
-  .searchResults {
-    margin-top: 0;
-  }
-  
-  .pagination {
-    margin-top: 20px;
-  }
-  
   </style>
+  
   
