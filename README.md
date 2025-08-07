@@ -1,6 +1,6 @@
 # lda web
 
-Front-end Implementation of lda api
+Front-end Implementation of DeepParseX
 
 Some basic functionality has been implemented, development has been slow, please keep in mind that at the moment it is only intended as a demo of the effect and not for production!
 
