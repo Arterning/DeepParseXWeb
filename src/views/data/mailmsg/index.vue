@@ -27,7 +27,7 @@
                 </a-form-item>
               </a-col>
               <a-col :span="8">
-                <a-form-item :label="$t('发件人')" field="email_from">
+                <a-form-item :label="$t('发件人')" field="sender">
                   <a-input
                     v-model="formModel.sender"
                     :placeholder="$t('搜索发件人')"
@@ -36,7 +36,7 @@
                 </a-form-item>
               </a-col>
               <a-col :span="8">
-                <a-form-item :label="$t('收件人')" field="email_to">
+                <a-form-item :label="$t('收件人')" field="receiver">
                   <a-input
                     v-model="formModel.receiver"
                     :placeholder="$t('搜索收件人')"
@@ -45,7 +45,7 @@
                 </a-form-item>
               </a-col>
               <a-col :span="8">
-                <a-form-item :label="$t('抄送人')" field="email_to">
+                <a-form-item :label="$t('抄送人')" field="cc">
                   <a-input
                     v-model="formModel.cc"
                     :placeholder="$t('搜索抄送人')"
@@ -54,8 +54,8 @@
                 </a-form-item>
               </a-col>
               <a-col :span="8">
-                <a-form-item :label="$t('时间')" field="email_time">
-                  <a-input
+                <a-form-item :label="$t('时间')" field="time">
+                  <a-date-picker
                     v-model="formModel.time"
                     :placeholder="$t('搜索时间')"
                     @keyup.enter="search"
