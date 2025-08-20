@@ -1,4 +1,13 @@
 <template>
+  <div class="container mx-auto p-4">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+      <a-card class="general-card" :title="$t('邮件类型分布')">
+        <VChart :option="pieChartOption" style="height: 300px" />
+      </a-card>
+      <a-card class="general-card" :title="$t('邮箱邮件数量排名')">
+        <VChart :option="barChartOption" style="height: 300px" />
+      </a-card>
+    </div>
     <a-layout class="flex-layout">
       <a-card :title="$t('邮箱')" class="general-card">
         <a-row>
@@ -38,7 +47,7 @@
             </a-space>
           </a-col>
         </a-row>
-        <a-divider class="mt-0"/>
+        <a-divider class="mt-0" />
         <a-space :size="'medium'">
           <a-button type="primary" @click="NewMailBox()">
             <template #icon>
@@ -73,14 +82,20 @@
             @page-size-change="onPageSizeChange"
           >
             <template #index="{ rowIndex }">
-               {{ rowIndex + 1 }} 
+              {{ rowIndex + 1 }}
             </template>
             <template #operate="{ record }">
               <a-space>
-                <a-link @click="EditMailBox(record.id)">
-                  编辑
-                </a-link>
-                <a-link @click="router.push({name: 'DataDetail', params: { id: record.id }, query: { type: 'mailbox' } })">
+                <a-link @click="EditMailBox(record.id)"> 编辑 </a-link>
+                <a-link
+                  @click="
+                    router.push({
+                      name: 'DataDetail',
+                      params: { id: record.id },
+                      query: { type: 'mailbox' },
+                    })
+                  "
+                >
                   查看
                 </a-link>
               </a-space>
@@ -99,10 +114,10 @@
           >
             <a-form ref="formRef" :model="form">
               <a-form-item
-                  :feedback="true"
-                  label="名称"
-                  :rules="[{ required: true, message: 'required' }]"
-                  field="name"
+                :feedback="true"
+                label="名称"
+                :rules="[{ required: true, message: 'required' }]"
+                field="name"
               >
                 <a-input v-model="form.name"></a-input>
               </a-form-item>
@@ -116,8 +131,8 @@
               <!-- other_info -->
               <a-form-item label="其他信息" field="other_info">
                 <a-input
-                    v-model="form.other_info"
-                    :placeholder="$t('请输入其他信息')"
+                  v-model="form.other_info"
+                  :placeholder="$t('请输入其他信息')"
                 ></a-input>
               </a-form-item>
             </a-form>
@@ -139,9 +154,10 @@
       </a-card>
       <Footer />
     </a-layout>
-  </template>
-  
-  <script lang="ts" setup>
+  </div>
+</template>
+
+<script lang="ts" setup>
     import {
       Message,
       SelectOptionData,
@@ -163,11 +179,116 @@
     } from '@/api/mailbox';
     import { Pagination } from '@/types/global';
     import {useRouter} from "vue-router";
-  
+    import { use, graphic } from 'echarts/core';
+    import { CanvasRenderer } from 'echarts/renderers';
+    import { PieChart, BarChart } from 'echarts/charts';
+    import {
+      TitleComponent,
+      TooltipComponent,
+      LegendComponent,
+      GridComponent,
+    } from 'echarts/components';
+    import VChart from 'vue-echarts';
+    import { useAppStore } from '@/store';
+
+    use([
+      CanvasRenderer,
+      PieChart,
+      BarChart,
+      TitleComponent,
+      TooltipComponent,
+      LegendComponent,
+      GridComponent,
+    ]);
+
     const { t } = useI18n();
     const { loading, setLoading } = useLoading(true);
     const router = useRouter();
-  
+    const appStore = useAppStore();
+
+    const pieChartOption = computed(() => {
+      return {
+        tooltip: {
+          trigger: 'item',
+        },
+        legend: {
+          orient: 'vertical',
+          left: 'left',
+          textStyle: {
+            color: appStore.theme === 'dark' ? '#fff' : '#333',
+          },
+        },
+        series: [
+          {
+            name: '邮件类型',
+            type: 'pie',
+            radius: '50%',
+            data: [
+              { value: 1048, name: 'Gmail' },
+              { value: 735, name: 'Outlook' },
+              { value: 580, name: 'Proton' },
+              { value: 484, name: 'Other' },
+            ],
+            emphasis: {
+              itemStyle: {
+                shadowBlur: 10,
+                shadowOffsetX: 0,
+                shadowColor: 'rgba(0, 0, 0, 0.5)',
+              },
+            },
+            label: {
+              color: appStore.theme === 'dark' ? '#fff' : '#333',
+            }
+          },
+        ],
+        color: ['#2d6aDE', '#5ab1ef', '#d8e9f8', '#b9d4f4'],
+      };
+    });
+
+    const barChartOption = computed(() => {
+      return {
+        tooltip: {
+          trigger: 'axis',
+          axisPointer: {
+            type: 'shadow',
+          },
+        },
+        grid: {
+          left: '3%',
+          right: '4%',
+          bottom: '3%',
+          containLabel: true,
+        },
+        xAxis: {
+          type: 'value',
+          boundaryGap: [0, 0.01],
+          axisLabel: {
+            color: appStore.theme === 'dark' ? '#fff' : '#333',
+          },
+        },
+        yAxis: {
+          type: 'category',
+          data: ['user1@example.com', 'user2@example.com', 'user3@example.com', 'user4@example.com', 'user5@example.com'],
+          axisLabel: {
+            color: appStore.theme === 'dark' ? '#fff' : '#333',
+          },
+        },
+        series: [
+          {
+            name: '邮件数量',
+            type: 'bar',
+            data: [18203, 23489, 29034, 104970, 131744],
+            itemStyle: {
+              color: new graphic.LinearGradient(1, 0, 0, 0, [
+                { offset: 0, color: '#2d6aDE' },
+                { offset: 1, color: '#5ab1ef' },
+              ]),
+            },
+          },
+        ],
+      };
+    });
+
     // 表单
     const generateFormModel = () => {
       return {
@@ -267,7 +388,7 @@
         align: 'center',
       },
     ]);
-  
+
     // 对话框
     const openNewOrEdit = ref<boolean>(false);
     const openDelete = ref<boolean>(false);
@@ -282,7 +403,7 @@
     const form = reactive<MailBoxReq>({ ...formDefaultValues });
     const buttonStatus = ref<string>();
     const formRef = ref();
-  
+
     // 表单校验
     const beforeSubmit = async (done: any) => {
       const res = await formRef.value?.validate();
@@ -292,7 +413,7 @@
       }
       done(false);
     };
-  
+
     // 提交按钮
     const submitNewOrEdit = async () => {
       setLoading(true);
@@ -314,12 +435,12 @@
         setLoading(false);
       }
     };
-  
+
     // 删除按钮状态
     const deleteButtonStatus = () => {
       return rowSelectKeys.value?.length === 0;
     };
-  
+
     // 删除按钮
     const submitDelete = async () => {
       setLoading(true);
@@ -337,7 +458,7 @@
         setLoading(false);
       }
     };
-  
+
     // 请求API列表
     const fetchMailBoxList = async (params: MailBoxParams = {}) => {
       setLoading(true);
@@ -353,7 +474,7 @@
       }
     };
     fetchMailBoxList();
-  
+
     // 请求部门详情
     const fetchMailBoxDetail = async (pk: number) => {
       setLoading(true);
@@ -366,35 +487,35 @@
         setLoading(false);
       }
     };
-  
+
     // 事件: 分页
     const onPageChange = async (current: number) => {
       await fetchMailBoxList({ page: current, size: pagination.pageSize });
     };
-  
+
     // 事件: 分页大小
     const onPageSizeChange = async (pageSize: number) => {
       pagination.pageSize = pageSize;
       await fetchMailBoxList({ page: 1, size: pageSize });
     };
-  
+
     // 搜索
     const search = async () => {
       await fetchMailBoxList({
         ...formModel.value,
       } as unknown as MailBoxParams);
     };
-  
+
     // 重置
     const resetSelect = () => {
       formModel.value = generateFormModel();
     };
-  
+
     // 重置方法
     const resetMethod = () => {
       formModel.value.name = undefined;
     };
-  
+
     // 重置表单
     const resetForm = (data: Record<any, any>) => {
       Object.keys(data).forEach((key) => {
@@ -402,17 +523,18 @@
         form[key] = data[key];
       });
     };
-  </script>
-  
-  <script lang="ts">
-    export default {
-      name: 'MailBox',
-    };
-  </script>
-  
-  <style lang="less" scoped>
-    .content {
-      padding-top: 20px;
-    }
-  </style>
+</script>
+
+<script lang="ts">
+  export default {
+    name: 'MailBox',
+  };
+</script>
+
+<style lang="less" scoped>
+  .content {
+    padding-top: 20px;
+  }
+</style>
+
   
