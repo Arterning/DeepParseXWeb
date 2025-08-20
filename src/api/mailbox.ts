@@ -3,6 +3,7 @@ import qs from 'query-string';
 
 export interface MailBoxReq {
   name: string;
+  email_num?: number;
   country?: string;
   other_info?: string;
 }

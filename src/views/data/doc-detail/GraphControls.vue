@@ -130,32 +130,25 @@ const showAddRelationModal = ref(false);
 <template>
   <div class="space-y-4">
     <!-- 添加节点 -->
-    <a-modal v-model:visible="showAddNodeModal" :title="$t('Add Node')" @ok="addNode">
+    <a-modal v-model:visible="showAddNodeModal" :title="$t('添加节点')" @ok="addNode">
       <div class="p-2 rounded-lg shadow">
-        <h3 class="text-lg font-semibold text-cyan-400 mb-3">添加节点</h3>
         <div class="space-y-3">
           <div>
-            <label class="block text-sm font-medium text-gray-300 mb-1">ID (可选)</label>
-            <input v-model="newNode.id"
-              class="w-full border border-gray-500 rounded px-3 py-2 text-white focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
-              placeholder="自动生成" />
+            <a-input v-model="newNode.id"
+              placeholder="ID" />
           </div>
           <div>
-            <label class="block text-sm font-medium text-gray-300 mb-1">名称*</label>
-            <input v-model="newNode.label"
-              class="w-full  border border-gray-500 rounded px-3 py-2 text-white focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+            <a-input v-model="newNode.label"
               required placeholder="节点名称" />
           </div>
           <div>
-            <label class="block text-sm font-medium text-gray-300 mb-1">类型</label>
-            <select v-model="newNode.type"
-              class="w-full  border border-gray-500 rounded px-3 py-2 text-white focus:ring-2 focus:ring-cyan-500 focus:border-transparent">
-              <option value="人物">人物</option>
-              <option value="组织">组织</option>
-              <option value="地点">地点</option>
-              <option value="事件">事件</option>
-              <option value="概念">概念</option>
-            </select>
+            <a-select v-model="newNode.type">
+              <a-option value="人物">人物</a-option>
+              <a-option value="组织">组织</a-option>
+              <a-option value="地点">地点</a-option>
+              <a-option value="事件">事件</a-option>
+              <a-option value="概念">概念</a-option>
+            </a-select>
           </div>
           <!-- <button @click="addNode"
             class="w-full bg-cyan-600 hover:bg-cyan-700 text-white py-2 px-4 rounded transition-colors duration-200 flex items-center justify-center">
@@ -169,12 +162,11 @@ const showAddRelationModal = ref(false);
     <a-modal v-model:visible="showAddRelationModal" :title="$t('添加关系')" @ok="addEdge">
       <!-- 添加关系 -->
       <div class="p-4 rounded-lg shadow">
-        <h3 class="text-lg font-semibold text-cyan-400 mb-3">添加关系</h3>
         <div class="space-y-3">
           <div>
             <label class="block text-sm font-medium text-gray-300 mb-1">源节点</label>
             <select v-model="newEdge.source"
-              class="w-full bg-gray-600 border border-gray-500 rounded px-3 py-2 text-white focus:ring-2 focus:ring-cyan-500 focus:border-transparent">
+              class="w-full dark:bg-gray-600 border border-gray-500 rounded px-3 py-2 dark:text-white focus:ring-2 focus:ring-cyan-500 focus:border-transparent">
               <option value="" disabled>选择源节点</option>
               <option v-for="node in graphData.nodes" :key="node.id" :value="node.id">
                 {{ node.label }} ({{ node.id }})
@@ -184,7 +176,7 @@ const showAddRelationModal = ref(false);
           <div>
             <label class="block text-sm font-medium text-gray-300 mb-1">目标节点</label>
             <select v-model="newEdge.target"
-              class="w-full bg-gray-600 border border-gray-500 rounded px-3 py-2 text-white focus:ring-2 focus:ring-cyan-500 focus:border-transparent">
+              class="w-full dark:bg-gray-600 border border-gray-500 rounded px-3 py-2 dark:text-white focus:ring-2 focus:ring-cyan-500 focus:border-transparent">
               <option value="" disabled>选择目标节点</option>
               <option v-for="node in graphData.nodes" :key="node.id" :value="node.id">
                 {{ node.label }} ({{ node.id }})
@@ -193,8 +185,7 @@ const showAddRelationModal = ref(false);
           </div>
           <div>
             <label class="block text-sm font-medium text-gray-300 mb-1">关系类型*</label>
-            <input v-model="newEdge.label"
-              class="w-full bg-gray-600 border border-gray-500 rounded px-3 py-2 text-white focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+            <a-input v-model="newEdge.label"
               required placeholder="例如: 朋友, 同事, 属于" />
           </div>
           <!-- <button @click="addEdge"
@@ -206,68 +197,56 @@ const showAddRelationModal = ref(false);
       </div>
     </a-modal>
 
-    <div class="bg-gray-200 dark:bg-gray-800 p-4 rounded-lg shadow flex justify-between">
+    <div class="p-4 rounded-lg shadow flex justify-between">
       <!-- <h3 class="text-lg font-semibold text-cyan-400 mb-3">操作</h3> -->
       <div class="flex gap-2">
 
         <!-- 提取知识图谱 -->
         <button @click="emit('extractGraph')"
-          class="bg-indigo-600 hover:bg-indigo-700 text-white p-2 rounded transition-colors duration-200 flex items-center justify-center">
-          <span class="i-heroicons-arrow-path-solid mr-2"></span>
+          class="bg-[#2971CF] hover:bg-blue-700 text-white p-2 rounded transition-colors duration-200 flex items-center justify-center">
+          <span class="i-heroicons-arrow-path-solid"></span>
           提取图谱
         </button>
 
         <button @click="() => (showAddNodeModal = true)"
-          class="bg-cyan-600 hover:bg-cyan-700 text-white p-2 rounded transition-colors duration-200 flex items-center justify-center">
-          <span class="i-heroicons-plus-circle-solid mr-2"></span>
+          class="bg-[#2971CF] hover:bg-blue-700 text-white p-2 rounded transition-colors duration-200 flex items-center justify-center">
+          <span class="i-heroicons-plus-circle-solid"></span>
           添加节点
         </button>
 
 
         <button @click="() => (showAddRelationModal = true)"
-          class="bg-purple-600 hover:bg-purple-700 text-white p-2 rounded transition-colors duration-200 flex items-center justify-center">
-          <span class="i-heroicons-link-solid mr-2"></span>
+          class="bg-[#2971CF] hover:bg-blue-700 text-white p-2 rounded transition-colors duration-200 flex items-center justify-center">
+          <span class="i-heroicons-link-solid"></span>
           添加关系
         </button>
 
         <button @click="emit('dataChange', graphData)"
-          class="bg-blue-600 hover:bg-blue-700 text-white p-2 rounded transition-colors duration-200 flex items-center justify-center">
-          <span class="i-heroicons-arrow-path-solid mr-2"></span>
-          刷新视图
+          class="bg-[#2971CF] hover:bg-blue-700 text-white p-2 rounded transition-colors duration-200 flex items-center justify-center">
+          <span class="i-heroicons-arrow-path-solid"></span>
+          刷新
         </button>
 
-        <button @click="emit('dataChange', { nodes: [], edges: [] })"
-          class="bg-red-600 hover:bg-red-700 text-white p-2 rounded transition-colors duration-200 flex items-center justify-center">
+        <!-- <button @click="emit('dataChange', { nodes: [], edges: [] })"
+          class="bg-red-300 hover:bg-red-700 text-white p-2 rounded transition-colors duration-200 flex items-center justify-center">
           <span class="i-heroicons-trash-solid mr-2"></span>
-          清空图谱
-        </button>
+          清空
+        </button> -->
       </div>
 
-      <div class="flex gap-2">
-        <div>
-          <!-- <label class="block text-sm font-medium text-gray-300 mb-1">搜索节点</label> -->
-          <input v-model="searchTerm"
-            class="bg-gray-500 dark:bg-slate-200 border border-gray-500 rounded px-3 py-2 text-white dark:text-gray-900 focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+      <div class="flex gap-2 ml-auto">
+        <a-input v-model="searchTerm"
             placeholder="搜索ID或名称" />
-        </div>
-        <div>
-          <!-- <label class="block text-sm font-medium text-gray-300 mb-1">节点类型</label> -->
-          <select v-model="filterType"
-            class="bg-gray-500 dark:bg-slate-200 border border-gray-500 rounded px-3 py-2 text-white dark:text-gray-900 focus:ring-2 focus:ring-cyan-500 focus:border-transparent">
-            <option value="all">所有类型</option>
-            <option value="人物">人物</option>
-            <option value="组织">组织</option>
-            <option value="地点">地点</option>
-            <option value="事件">事件</option>
-            <option value="概念">概念</option>
-          </select>
-        </div>
-        <div>
-          <!-- <label class="block text-sm font-medium text-gray-300 mb-1">关系类型</label> -->
-          <input v-model="filterRelation"
-            class="bg-gray-500 dark:bg-slate-200 border border-gray-500 rounded px-3 py-2 text-white dark:text-gray-900 focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+        <a-select v-model="filterType">
+          <a-option value="all">所有类型</a-option>
+          <a-option value="人物">人物</a-option>
+          <a-option value="组织">组织</a-option>
+          <a-option value="地点">地点</a-option>
+          <a-option value="事件">事件</a-option>
+          <a-option value="概念">概念</a-option>
+        </a-select>
+        <a-input v-model="filterRelation"
             placeholder="输入关系类型" />
-        </div>
       </div>
     </div>
 

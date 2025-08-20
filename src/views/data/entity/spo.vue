@@ -192,8 +192,8 @@ const columns = computed<TableColumnData[]>(() => [
     },
     {
         title: t('关系'),
-        dataIndex: 'predictate',
-        slotName: 'predictate',
+        dataIndex: 'predicate',
+        slotName: 'predicate',
         ellipsis: true,
         tooltip: true,
     },
