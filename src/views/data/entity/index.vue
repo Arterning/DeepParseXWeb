@@ -7,7 +7,7 @@
             <template #title>
               <icon-layers /> 实体
             </template>
-            <!-- <EmailMsgTable /> -->
+            <SPOTable />
           </a-tab-pane>
           
           <a-tab-pane key="1">
@@ -32,5 +32,6 @@
   <script setup lang="ts">
   import EmailBoxTable from '@/views/data/mailbox/index.vue'
   import EmailMsgTable from '@/views/data/mailmsg/index.vue'
+  import SPOTable from './spo.vue';
   </script>
   
