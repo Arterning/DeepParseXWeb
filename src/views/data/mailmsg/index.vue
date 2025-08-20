@@ -10,17 +10,17 @@
           >
             <a-row :gutter="16">
               <a-col :span="8">
-                <a-form-item field="name" label="名称">
+                <a-form-item field="name" label="标题">
                   <a-input
                     v-model="formModel.name"
-                    :placeholder="$t('搜索邮件标题')"
+                    :placeholder="$t('搜索标题')"
                   />
                 </a-form-item>
               </a-col>
               <a-col :span="8">
                 <a-form-item :label="$t('主题')" field="title">
                   <a-input
-                    v-model="formModel.title"
+                    v-model="formModel.subject"
                     :placeholder="$t('搜索主题')"
                     @keyup.enter="search"
                   />
@@ -29,7 +29,7 @@
               <a-col :span="8">
                 <a-form-item :label="$t('发件人')" field="email_from">
                   <a-input
-                    v-model="formModel.email_from"
+                    v-model="formModel.sender"
                     :placeholder="$t('搜索发件人')"
                     @keyup.enter="search"
                   />
@@ -38,7 +38,7 @@
               <a-col :span="8">
                 <a-form-item :label="$t('收件人')" field="email_to">
                   <a-input
-                    v-model="formModel.email_to"
+                    v-model="formModel.receiver"
                     :placeholder="$t('搜索收件人')"
                     @keyup.enter="search"
                   />
@@ -56,7 +56,7 @@
               <a-col :span="8">
                 <a-form-item :label="$t('时间')" field="email_time">
                   <a-input
-                    v-model="formModel.email_time"
+                    v-model="formModel.time"
                     :placeholder="$t('搜索时间')"
                     @keyup.enter="search"
                   />
@@ -345,13 +345,13 @@
   const generateFormModel = () => {
     return {
       name: undefined,
-      title: undefined,
-      type: undefined,
+      subject: undefined,
+      category: undefined,
       email_subject: undefined,
-      email_from: undefined,
-      email_to: undefined,
+      sender: undefined,
+      receiver: undefined,
       cc: undefined,
-      email_time: undefined,
+      time: undefined,
     };
   };
   const formModel = ref(generateFormModel());
