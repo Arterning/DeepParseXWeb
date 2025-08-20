@@ -66,41 +66,60 @@
             删除
           </a-button>
         </a-space>
-        <div class="content">
-          <a-table
-            v-model:selected-keys="rowSelectKeys"
-            :bordered="false"
-            column-resizable
-            :columns="columns"
-            :data="renderData"
-            :loading="loading"
-            :pagination="pagination"
-            :row-selection="rowSelection"
-            :size="'medium'"
-            row-key="id"
-            @page-change="onPageChange"
-            @page-size-change="onPageSizeChange"
-          >
-            <template #index="{ rowIndex }">
-              {{ rowIndex + 1 }}
-            </template>
-            <template #operate="{ record }">
-              <a-space>
-                <a-link @click="EditMailBox(record.id)"> 编辑 </a-link>
+        <div class="content mt-4">
+          <div v-if="loading" class="flex justify-center items-center h-64">
+            <a-spin size="large" />
+          </div>
+          <div v-else-if="renderData.length === 0" class="text-center text-gray-500 dark:text-gray-400">
+            暂无数据
+          </div>
+          <div v-else class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            <a-card
+              v-for="item in renderData"
+              :key="item.id"
+              class="rounded-lg shadow-md transition-all duration-300 hover:shadow-lg dark:bg-gray-800"
+              :class="{ 'border-blue-500 border-2': rowSelectKeys.includes(item.id) }"
+              @click="toggleSelection(item.id)"
+            >
+              <div class="flex items-center mb-4">
+                <img :src="getMailboxIcon(item.name)" class="w-8 h-8 mr-3" alt="mailbox icon" />
+                <h3 class="text-lg font-semibold text-gray-800 dark:text-white truncate">{{ item.name }}</h3>
+              </div>
+              <div class="text-sm text-gray-600 dark:text-gray-300">
+                <p class="mb-2">
+                  <icon-email class="mr-2"/>
+                  邮件数量: <span class="font-semibold">{{ item.email_num }}</span>
+                </p>
+                <p>
+                  <icon-location class="mr-2"/>
+                  国家/地区: <span class="font-semibold">{{ item.country }}</span>
+                </p>
+              </div>
+              <template #actions>
+                <a-link @click.stop="EditMailBox(item.id)"> 编辑 </a-link>
                 <a-link
-                  @click="
+                  @click.stop="
                     router.push({
                       name: 'DataDetail',
-                      params: { id: record.id },
+                      params: { id: item.id },
                       query: { type: 'mailbox' },
                     })
                   "
                 >
                   查看
                 </a-link>
-              </a-space>
-            </template>
-          </a-table>
+              </template>
+            </a-card>
+          </div>
+          <div class="flex justify-end mt-4">
+            <a-pagination
+              :total="pagination.total"
+              :current="pagination.current"
+              :page-size="pagination.pageSize"
+              @change="onPageChange"
+              @page-size-change="onPageSizeChange"
+            />
+          </div>
         </div>
         <div class="content-modal">
           <a-modal
@@ -190,6 +209,9 @@
     } from 'echarts/components';
     import VChart from 'vue-echarts';
     import { useAppStore } from '@/store';
+    import GmailIcon from '@/assets/svg/gmail.svg';
+    import OutlookIcon from '@/assets/svg/outlook.svg';
+    import EmailIcon from '@/assets/svg/email.svg';
 
     use([
       CanvasRenderer,
@@ -289,6 +311,25 @@
       };
     });
 
+    const getMailboxIcon = (name: string) => {
+      if (name.toLowerCase().includes('gmail')) {
+        return GmailIcon;
+      }
+      if (name.toLowerCase().includes('outlook')) {
+        return OutlookIcon;
+      }
+      return EmailIcon;
+    };
+
+    const toggleSelection = (id: number) => {
+      const index = rowSelectKeys.value.indexOf(id);
+      if (index > -1) {
+        rowSelectKeys.value.splice(index, 1);
+      } else {
+        rowSelectKeys.value.push(id);
+      }
+    };
+
     // 表单
     const generateFormModel = () => {
       return {
@@ -300,10 +341,6 @@
     const renderData = ref<MailBoxRes[]>([]);
     const operateRow = ref<number>(0);
     const rowSelectKeys = ref<number[]>([]);
-    const rowSelection = reactive({
-      showCheckedAll: true,
-      selectedRowKeys: rowSelectKeys.value,
-    });
     const basePagination: Pagination = {
       current: 1,
       pageSize: 20,
@@ -332,62 +369,6 @@
       drawerTitle.value = t('删除');
       openDelete.value = true;
     };
-    const columns = computed<TableColumnData[]>(() => [
-      {
-        title: 'ID',
-        dataIndex: 'index',
-        slotName: 'index',
-        ellipsis: true,
-        tooltip: true,
-        width: 100,
-      },
-      {
-        title: t('名称'),
-        dataIndex: 'name',
-        slotName: 'name',
-        ellipsis: true,
-        tooltip: true,
-        width: 200,
-      },
-      {
-        // 国家/地区
-        title: t('国家/地区'),
-        dataIndex: 'country',
-        slotName: 'country',
-        ellipsis: true,
-        tooltip: true,
-      },
-      {
-        // 标签
-        title: t('标签'),
-        dataIndex: 'labels',
-        slotName: 'labels',
-        ellipsis: true,
-        tooltip: true,
-      },
-      {
-        // 邮件数量
-        title: t('邮件数量'),
-        dataIndex: 'email_num',
-        slotName: 'email_num',
-        ellipsis: true,
-        tooltip: true,
-      },
-      {
-        // other_info
-        title: t('其他信息'),
-        dataIndex: 'other_info',
-        slotName: 'other_info',
-        ellipsis: true,
-        tooltip: true,
-      },
-      {
-        title: t('操作'),
-        dataIndex: 'operate',
-        slotName: 'operate',
-        align: 'center',
-      },
-    ]);
 
     // 对话框
     const openNewOrEdit = ref<boolean>(false);
