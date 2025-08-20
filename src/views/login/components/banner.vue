@@ -7,7 +7,7 @@
             <div class="carousel-title">{{ item.slogan }}</div>
             <div class="carousel-sub-title">{{ item.subSlogan }}</div>
             <!-- <img :src="item.image" class="carousel-image" /> -->
-            <component :is="item.component" class="carousel-image"/>
+            <component :is="item.component" class="w-32 h-32 mt-4"/>
           </div>
         </a-carousel-item>
       </a-carousel>
