@@ -1,6 +1,6 @@
 <template>
     <a-layout class="flex-layout">
-      <div class="general-card">
+      <div class="general-card py-4">
         <a-tabs default-active-key="1">
 
           <a-tab-pane key="0">

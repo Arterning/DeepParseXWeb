@@ -1,6 +1,6 @@
 <template>
   <a-layout class="flex-layout">
-    <a-card :title="$t('文件管理')" class="general-card">
+    <a-card  class="general-card py-4">
       <a-row>
         <a-col :flex="62">
           <a-form

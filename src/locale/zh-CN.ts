@@ -35,6 +35,7 @@ export default {
   'menu.data': '数据治理',
   'menu.data.tag': '我的标签',
   'menu.data.event': '热点事件',
+  'menu.data.entity': '要素提取',
   'menu.data.mailInfo': '邮件数据',
   'menu.mailInfo.mailbox': '邮箱',
   'menu.mailInfo.mailmsg': '邮件',
