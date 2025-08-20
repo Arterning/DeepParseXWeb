@@ -1,6 +1,6 @@
 <template>
   <a-layout class="flex-layout">
-    <a-card :title="$t('邮件')" class="general-card">
+    <a-card class="general-card">
       <a-row>
         <a-col :flex="62">
           <a-form

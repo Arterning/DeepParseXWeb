@@ -1,6 +1,5 @@
 <template>
     <a-layout class="flex-layout">
-      <Breadcrumb />
       <div class="general-card">
         <a-tabs default-active-key="1">
           

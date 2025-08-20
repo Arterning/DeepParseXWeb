@@ -9,7 +9,7 @@
       </a-card>
     </div>
     <a-layout class="flex-layout">
-      <a-card :title="$t('邮箱')" class="general-card">
+      <a-card class="general-card p-4">
         <a-row>
           <a-col :flex="62">
             <a-form
@@ -73,7 +73,7 @@
           <div v-else-if="renderData.length === 0" class="text-center text-gray-500 dark:text-gray-400">
             暂无数据
           </div>
-          <div v-else class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          <div v-else class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4">
             <a-card
               v-for="item in renderData"
               :key="item.id"
@@ -82,7 +82,7 @@
               @click="toggleSelection(item.id)"
             >
               <div class="flex items-center mb-4">
-                <img :src="getMailboxIcon(item.name)" class="w-8 h-8 mr-3" alt="mailbox icon" />
+                <component :is="getMailboxIcon(item.name)" class="w-8 h-8 mr-3" alt="mailbox icon" />
                 <h3 class="text-lg font-semibold text-gray-800 dark:text-white truncate">{{ item.name }}</h3>
               </div>
               <div class="text-sm text-gray-600 dark:text-gray-300">
