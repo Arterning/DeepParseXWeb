@@ -6,7 +6,7 @@
                     <a-form :auto-label-width="true" :model="formModel" label-align="right">
                         <a-row :gutter="16">
                             <a-col :span="8">
-                                <a-form-item field="subject" label="subject">
+                                <a-form-item field="subject" label="实体名称">
                                     <a-input v-model="formModel.subject" :placeholder="$t('搜索')" />
                                 </a-form-item>
                             </a-col>
@@ -71,6 +71,18 @@
                     <a-form ref="formRef" :model="form">
                         <a-form-item :feedback="true" label="主语" field="subject">
                             <a-input v-model="form.subject"></a-input>
+                        </a-form-item>
+                        <a-form-item :feedback="true" label="主语类型" field="subject">
+                            <a-input v-model="form.subject_type"></a-input>
+                        </a-form-item>
+                        <a-form-item :feedback="true" label="关系" field="subject">
+                            <a-input v-model="form.predictate"></a-input>
+                        </a-form-item>
+                        <a-form-item :feedback="true" label="谓语" field="subject">
+                            <a-input v-model="form.object"></a-input>
+                        </a-form-item>
+                        <a-form-item :feedback="true" label="谓语类型" field="subject">
+                            <a-input v-model="form.object_type"></a-input>
                         </a-form-item>
                     </a-form>
                 </a-modal>
@@ -179,7 +191,7 @@ const columns = computed<TableColumnData[]>(() => [
         tooltip: true,
     },
     {
-        title: t('动作'),
+        title: t('关系'),
         dataIndex: 'predictate',
         slotName: 'predictate',
         ellipsis: true,

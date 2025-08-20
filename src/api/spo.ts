@@ -3,10 +3,10 @@ import qs from 'query-string';
 
 export interface SubjectPredictObjectReq {
   subject: string;
-  subjectType: string;
-  predict: string;
+  subject_type: string;
+  predictate: string;
   object: string;
-  objectType: string;
+  object_type: string;
   doc_id: number;
 }
 
