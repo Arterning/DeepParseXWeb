@@ -75,13 +75,13 @@
                         <a-form-item :feedback="true" label="主语类型" field="subject">
                             <a-input v-model="form.subject_type"></a-input>
                         </a-form-item>
-                        <a-form-item :feedback="true" label="关系" field="subject">
-                            <a-input v-model="form.predictate"></a-input>
+                        <a-form-item :feedback="true" label="关系" field="predicate">
+                            <a-input v-model="form.predicate"></a-input>
                         </a-form-item>
-                        <a-form-item :feedback="true" label="谓语" field="subject">
+                        <a-form-item :feedback="true" label="谓语" field="object">
                             <a-input v-model="form.object"></a-input>
                         </a-form-item>
-                        <a-form-item :feedback="true" label="谓语类型" field="subject">
+                        <a-form-item :feedback="true" label="谓语类型" field="object_type">
                             <a-input v-model="form.object_type"></a-input>
                         </a-form-item>
                     </a-form>
@@ -236,10 +236,10 @@ const cancelReq = () => {
 };
 const formDefaultValues: SubjectPredictObjectReq = {
     subject: '',
-    subjectType: '',
-    predict: '',
+    subject_type: '',
+    predicate: '',
     object: '',
-    objectType: '',
+    object_type: '',
     doc_id: 0,
 };
 const form = reactive<SubjectPredictObjectReq>({ ...formDefaultValues });

@@ -4,7 +4,7 @@ import qs from 'query-string';
 export interface SubjectPredictObjectReq {
   subject: string;
   subject_type: string;
-  predictate: string;
+  predicate: string;
   object: string;
   object_type: string;
   doc_id: number;
