@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue';
+import { computed, ref, watch, onMounted, onUnmounted } from 'vue';
+import screenfull from 'screenfull';
 import type { NodeData, EdgeData, GraphData } from '@/types/graph';
 
 const props = defineProps<{
@@ -7,6 +8,33 @@ const props = defineProps<{
 }>();
 
 const emit = defineEmits(['dataChange', 'extractGraph']);
+
+const isFullscreen = ref(false);
+
+const toggleFullscreen = () => {
+  const element = document.getElementById('knowledge-graph-container');
+  if (screenfull.isEnabled && element) {
+    screenfull.toggle(element);
+  }
+};
+
+const onFullscreenChange = () => {
+  if (screenfull.isEnabled) {
+    isFullscreen.value = screenfull.isFullscreen;
+  }
+};
+
+onMounted(() => {
+  if (screenfull.isEnabled) {
+    screenfull.on('change', onFullscreenChange);
+  }
+});
+
+onUnmounted(() => {
+  if (screenfull.isEnabled) {
+    screenfull.off('change', onFullscreenChange);
+  }
+});
 
 const graphData = ref<GraphData>({
   nodes: [],
@@ -225,6 +253,12 @@ const showAddRelationModal = ref(false);
           class="bg-[#2971CF] hover:bg-blue-700 text-white p-2 rounded transition-colors duration-200 flex items-center justify-center">
           <span class="i-heroicons-arrow-path-solid"></span>
           刷新
+        </button>
+
+        <button @click="toggleFullscreen"
+          class="bg-[#2971CF] hover:bg-blue-700 text-white p-2 rounded transition-colors duration-200 flex items-center justify-center">
+          <span :class="isFullscreen ? 'i-heroicons-arrows-pointing-in-solid' : 'i-heroicons-arrows-pointing-out-solid'"></span>
+          {{ isFullscreen ? '退出全屏' : '全屏' }}
         </button>
 
         <!-- <button @click="emit('dataChange', { nodes: [], edges: [] })"

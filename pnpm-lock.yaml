@@ -118,6 +118,9 @@ importers:
       remixicon:
         specifier: ^4.6.0
         version: 4.6.0
+      screenfull:
+        specifier: ^6.0.2
+        version: 6.0.2
       sortablejs:
         specifier: ^1.15.0
         version: 1.15.3
@@ -182,6 +185,9 @@ importers:
       '@types/nprogress':
         specifier: ^0.2.0
         version: 0.2.3
+      '@types/screenfull':
+        specifier: ^4.1.0
+        version: 4.1.0
       '@types/sortablejs':
         specifier: ^1.15.0
         version: 1.15.8
@@ -1081,6 +1087,10 @@ packages:
 
   '@types/responselike@1.0.3':
     resolution: {integrity: sha512-H/+L+UkTV33uf49PH5pCAUBVPNj2nDBXTN+qS1dOwyyg24l3CcicicCA7ca+HMvJBZcFgl5r8e+RR6elsb4Lyw==}
+
+  '@types/screenfull@4.1.0':
+    resolution: {integrity: sha512-TuFSOzuzGFVCdQmwp+a0/Qim+nJhclaWha18yK/xmjrwdPI7qrfeyoSyPx8MoJP8X5d2MwB4a6d2sZhUjJwz9A==}
+    deprecated: This is a stub types definition. screenfull provides its own type definitions, so you do not need this installed.
 
   '@types/semver@7.5.8':
     resolution: {integrity: sha512-I8EUhyrgfLrcTkzV3TSsGyl1tSuPrEDzr0yd5m90UgNxQkyDXULk3b6MlQqTCpZpNtWe1K0hzclnZkTcLBe2UQ==}
@@ -5717,6 +5727,10 @@ packages:
     resolution: {integrity: sha512-i27Mic4KovM/lnGsy8whRCHhc7VicJajAjTrYg11K9zfZXnYIt4k5F+kZkwjnrhKzLic/HLU4j11mjsz2G/75g==}
     engines: {node: '>= 4'}
 
+  screenfull@6.0.2:
+    resolution: {integrity: sha512-AQdy8s4WhNvUZ6P8F6PB21tSPIYKniic+Ogx0AacBMjKP1GUHN2E9URxQHtCusiwxudnCKkdy4GrHXPPJSkCCw==}
+    engines: {node: ^14.13.1 || >=16.0.0}
+
   scroll-into-view-if-needed@2.2.31:
     resolution: {integrity: sha512-dGCXy99wZQivjmjIqihaBQNjryrz5rueJY7eHfTdyWEiR4ttYpsajb14rn9s5d4DY4EcY6+4+U/maARBXJedkA==}
 
@@ -8149,6 +8163,10 @@ snapshots:
   '@types/responselike@1.0.3':
     dependencies:
       '@types/node': 22.7.4
+
+  '@types/screenfull@4.1.0':
+    dependencies:
+      screenfull: 6.0.2
 
   '@types/semver@7.5.8': {}
 
@@ -13215,6 +13233,8 @@ snapshots:
       ajv: 6.12.6
       ajv-errors: 1.0.1(ajv@6.12.6)
       ajv-keywords: 3.5.2(ajv@6.12.6)
+
+  screenfull@6.0.2: {}
 
   scroll-into-view-if-needed@2.2.31:
     dependencies:
