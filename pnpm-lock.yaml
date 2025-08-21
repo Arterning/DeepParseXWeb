@@ -115,6 +115,9 @@ importers:
       query-string:
         specifier: ^8.0.3
         version: 8.2.0
+      remixicon:
+        specifier: ^4.6.0
+        version: 4.6.0
       sortablejs:
         specifier: ^1.15.0
         version: 1.15.3
@@ -5549,6 +5552,9 @@ packages:
 
   remark@10.0.1:
     resolution: {integrity: sha512-E6lMuoLIy2TyiokHprMjcWNJ5UxfGQjaMSMhV+f4idM625UjjK4j798+gPs5mfjzDE6vL0oFKVeZM6gZVSVrzQ==}
+
+  remixicon@4.6.0:
+    resolution: {integrity: sha512-bKM5odjqE1yzVxEZGJE7F79WHhNrJFIKHXR+GG+P1IWXn8AnJZhl8SbIRDJsNAvIqx4VPkNwjuHfc42tutMDpQ==}
 
   remove-trailing-separator@1.1.0:
     resolution: {integrity: sha512-/hS+Y0u3aOfIETiaiirUFwDBDzmXPvO+jAfKTitUngIPzdKc6Z0LoFjM/CK5PL4C+eKwHohlHAb6H0VFfmmUsw==}
@@ -13063,6 +13069,8 @@ snapshots:
       remark-parse: 6.0.3
       remark-stringify: 6.0.4
       unified: 7.1.0
+
+  remixicon@4.6.0: {}
 
   remove-trailing-separator@1.1.0:
     optional: true
