@@ -23,6 +23,7 @@ const initGraph = () => {
   cy.value = cytoscape({
     container: container.value,
     elements: [],
+    wheelSensitivity: 0.2,
     style: [
       {
         selector: 'node',
