@@ -36,5 +36,19 @@ app.component('MdPreview', MdPreview);
 // 动态设置页面标题
 document.title = import.meta.env.VITE_APP_TITLE || 'DeepParseX';
 
+// 动态设置 favicon
+const setFavicon = (faviconPath: string) => {
+  const link = document.querySelector("link[rel*='icon']") as HTMLLinkElement || 
+              document.createElement('link');
+  link.type = 'image/x-icon';
+  link.rel = 'shortcut icon';
+  link.href = faviconPath;
+  if (!document.querySelector("link[rel*='icon']")) {
+    document.getElementsByTagName('head')[0].appendChild(link);
+  }
+};
+
+setFavicon(import.meta.env.VITE_FAVICON_PATH || '/src/assets/images/logo.png');
+
 app.mount('#app');
 
