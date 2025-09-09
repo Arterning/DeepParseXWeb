@@ -32,5 +32,9 @@ app.use(globalComponents);
 app.use(directive);
 app.use(InstallCodeMirror);
 app.component('MdPreview', MdPreview);
+
+// 动态设置页面标题
+document.title = import.meta.env.VITE_APP_TITLE || 'DeepParseX';
+
 app.mount('#app');
 

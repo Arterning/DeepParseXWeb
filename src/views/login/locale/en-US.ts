@@ -1,6 +1,6 @@
 export default {
   'login.form.title': 'Login',
-  'login.form.sub_title': '燕启智能数据治理平台',
+  'login.form.sub_title': import.meta.env.VITE_APP_TITLE || 'DeepParseX',
   'login.form.username.errMsg': 'Username cannot be empty',
   'login.form.password.errMsg': 'Password cannot be empty',
   'login.form.captcha.errMsg': 'Captcha cannot be empty',
