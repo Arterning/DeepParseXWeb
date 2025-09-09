@@ -1,10 +1,13 @@
 <template>
-  <a-layout-footer class="footer">燕启智能数据治理平台</a-layout-footer>
+  <a-layout-footer class="footer">{{ t('login.form.sub_title') }}</a-layout-footer>
 </template>
 
 <script lang="ts" setup>
 import { onActivated } from 'vue';
 import { changeTheme } from '@/hooks/theme';
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
 
 
 onActivated(() => {

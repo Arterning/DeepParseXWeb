@@ -31,7 +31,7 @@
           :style="{ margin: 0, fontSize: '20px'}"
           class="cursor-pointer font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-slate-200"
           >
-          燕启智能数据治理平台
+          {{ $t('login.form.sub_title') }}
         </div>
 
         <icon-menu-fold
@@ -193,6 +193,7 @@
   import { IconUser } from '@arco-design/web-vue/es/icon';
   import GlobalSearch from '@/components/global-search/index.vue';
   import AIChat from '@/components/aichat/index.vue';
+  import { useI18n } from 'vue-i18n';
 
   const appStore = useAppStore();
   const userStore = useUserStore();
@@ -200,6 +201,7 @@
   const { changeLocale, currentLocale } = useLocale();
   const { isFullscreen, toggle: toggleFullScreen } = useFullscreen();
   const locales = [...LOCALE_OPTIONS];
+  const { t } = useI18n();
   const avatar = computed(() => {
     return userStore.avatar;
   });
