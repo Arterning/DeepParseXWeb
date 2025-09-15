@@ -24,7 +24,7 @@
                   <span> 清空对话 </span>
                 </a-button>
               </div>
-              
+
             </div>
 
             <div class="session-list">
@@ -50,6 +50,40 @@
       </div>
     </a-card>
     <Footer />
+
+    <!-- RAG引用文本抽屉 -->
+    <a-drawer
+      v-model:visible="drawerVisible"
+      title="引用文档"
+      width="500px"
+      placement="right"
+      :closable="true"
+    >
+      <template #title>
+        <div class="drawer-title">
+          <icon-file-text />
+          <span>引用文档</span>
+        </div>
+      </template>
+
+      <div v-if="selectedDoc" class="reference-content">
+        <div class="doc-info">
+          <h3 class="doc-name">{{ selectedDoc.docName }}</h3>
+          <p class="doc-id">文档ID: {{ selectedDoc.docId }}</p>
+        </div>
+
+        <a-divider />
+
+        <div class="chunk-content">
+          <h4>引用内容:</h4>
+          <div class="text-content" v-html="selectedDoc.chunkText"></div>
+        </div>
+      </div>
+
+      <div v-else class="no-content">
+        <a-empty description="暂无引用内容" />
+      </div>
+    </a-drawer>
   </a-layout>
 </template>
 
@@ -69,6 +103,14 @@
   const isWaitingForResponse = ref(false);
 
   const visible = ref(false);
+
+  // RAG引用抽屉相关状态
+  const drawerVisible = ref(false);
+  const selectedDoc = ref<{
+    docId: string;
+    docName: string;
+    chunkText: string;
+  } | null>(null);
 
   const handleOpen = () => {
     visible.value = true;
@@ -134,6 +176,24 @@
     localStorage.setItem('sessionList', JSON.stringify(sessionList.value));
   };
 
+  // 打开引用文档抽屉的方法
+  const openDrawer = (element: HTMLElement) => {
+    const docId = element.getAttribute('data-doc-id');
+    const docName = element.getAttribute('data-doc-name');
+    const chunkText = element.getAttribute('data-chunk-text');
+
+    if (docId && docName && chunkText) {
+      selectedDoc.value = {
+        docId,
+        docName,
+        chunkText: chunkText
+          .replace(/&quot;/g, '"')
+          .replace(/&#39;/g, "'")
+      };
+      drawerVisible.value = true;
+    }
+  };
+
   onMounted(() => {
     // 从本地存储中获取会话列表
     const localSessionList = localStorage.getItem('sessionList');
@@ -144,11 +204,17 @@
     }
     // 默认选中第一个会话
     handleSessionSwitch(sessionList.value[0]);
+
+    // 将openDrawer方法绑定到全局window对象
+    (window as any).openDrawer = openDrawer;
   });
 
   onUnmounted(() => {
     // 组件销毁时保存会话列表到本地存储
     localStorage.setItem('sessionList', JSON.stringify(sessionList.value));
+
+    // 清理全局方法
+    delete (window as any).openDrawer;
   });
 </script>
 
@@ -190,5 +256,58 @@
 
   ::-webkit-scrollbar-thumb:hover {
     background: #e2e2e2;
+  }
+
+  /* 抽屉样式 */
+  .drawer-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .reference-content {
+    padding: 16px 0;
+  }
+
+  .doc-info {
+    margin-bottom: 16px;
+  }
+
+  .doc-name {
+    margin: 0 0 8px 0;
+    color: var(--color-text-1);
+    font-size: 18px;
+    font-weight: 600;
+  }
+
+  .doc-id {
+    margin: 0;
+    color: var(--color-text-3);
+    font-size: 14px;
+  }
+
+  .chunk-content h4 {
+    margin: 0 0 12px 0;
+    color: var(--color-text-2);
+    font-size: 16px;
+    font-weight: 500;
+  }
+
+  .text-content {
+    padding: 16px;
+    background-color: var(--color-fill-2);
+    border-radius: 8px;
+    border-left: 4px solid var(--color-primary-6);
+    line-height: 1.6;
+    color: var(--color-text-1);
+    word-wrap: break-word;
+    white-space: pre-wrap;
+  }
+
+  .no-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 200px;
   }
 </style>
