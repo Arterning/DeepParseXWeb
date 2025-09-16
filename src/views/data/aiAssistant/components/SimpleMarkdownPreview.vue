@@ -106,6 +106,15 @@ function parseMarkdown(text: string): string {
   :deep(ul), :deep(ol) {
     margin: 1em 0;
     padding-left: 2em;
+    list-style: revert !important;
+  }
+
+  :deep(ol) {
+    list-style-type: decimal !important;
+  }
+
+  :deep(ul) {
+    list-style-type: disc !important;
   }
 
   :deep(li) {
