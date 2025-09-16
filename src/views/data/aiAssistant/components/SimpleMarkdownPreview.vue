@@ -42,13 +42,22 @@ function parseMarkdown(text: string): string {
   html = html.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2">$1</a>');
 
   // 处理有序列表
-  html = html.replace(/^\d+\.\s+(.*)$/gm, '<li>$1</li>');
-  html = html.replace(/(<li>.*<\/li>)/s, '<ol>$1</ol>');
+  html = html.replace(/^\d+\.\s+(.*)$/gm, '<ol-item>$1</ol-item>');
 
   // 处理无序列表
-  html = html.replace(/^[-*+]\s+(.*)$/gm, '<li>$1</li>');
-  // 避免重复包装已经在有序列表中的项目
-  html = html.replace(/(?<!<ol>)(<li>(?!.*<\/ol>).*<\/li>)/s, '<ul>$1</ul>');
+  html = html.replace(/^[-*+]\s+(.*)$/gm, '<ul-item>$1</ul-item>');
+
+  // 将连续的有序列表项包装为 ol
+  html = html.replace(/(<ol-item>.*?<\/ol-item>(\s*<ol-item>.*?<\/ol-item>)*)/gs, (match) => {
+    const items = match.replace(/<ol-item>(.*?)<\/ol-item>/g, '<li>$1</li>');
+    return `<ol>${items}</ol>`;
+  });
+
+  // 将连续的无序列表项包装为 ul
+  html = html.replace(/(<ul-item>.*?<\/ul-item>(\s*<ul-item>.*?<\/ul-item>)*)/gs, (match) => {
+    const items = match.replace(/<ul-item>(.*?)<\/ul-item>/g, '<li>$1</li>');
+    return `<ul>${items}</ul>`;
+  });
 
   // 处理换行
   html = html.replace(/\n\n/g, '</p><p>');
