@@ -100,6 +100,88 @@
     <div v-else-if="hasSearched && !analyzing" class="bg-white rounded-lg shadow-sm border flex-1 flex items-center justify-center">
       <a-empty description="暂无分析结果" />
     </div>
+
+    <!-- 详情抽屉 -->
+    <a-drawer
+      v-model:visible="drawerVisible"
+      title="详细信息"
+      placement="right"
+      :width="400"
+      :footer="false"
+    >
+      <!-- 节点详情 -->
+      <div v-if="selectedNode">
+        <div class="space-y-4">
+          <div class="bg-gray-50 p-4 rounded-lg">
+            <h4 class="text-lg font-semibold text-gray-800 mb-2">邮箱节点</h4>
+            <div class="text-2xl font-bold text-blue-600">{{ selectedNode.label }}</div>
+          </div>
+
+          <div class="space-y-3">
+            <div class="flex justify-between items-center py-2 border-b">
+              <span class="text-gray-600">邮件数量</span>
+              <span class="font-semibold">{{ selectedNode.email_count }}</span>
+            </div>
+
+            <div class="flex justify-between items-center py-2 border-b">
+              <span class="text-gray-600">分析层级</span>
+              <span class="font-semibold">
+                <a-tag :color="getLayerColor(selectedNode.layer)">
+                  第 {{ selectedNode.layer }} 层
+                </a-tag>
+              </span>
+            </div>
+
+            <div class="flex justify-between items-center py-2 border-b">
+              <span class="text-gray-600">权重</span>
+              <span class="font-semibold">{{ selectedNode.weight }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 边详情 -->
+      <div v-if="selectedEdge">
+        <div class="space-y-4">
+          <div class="bg-gray-50 p-4 rounded-lg">
+            <h4 class="text-lg font-semibold text-gray-800 mb-2">关系连接</h4>
+            <div class="flex items-center space-x-2">
+              <span class="text-blue-600 font-medium">{{ selectedEdge.source }}</span>
+              <span class="text-gray-400">→</span>
+              <span class="text-blue-600 font-medium">{{ selectedEdge.target }}</span>
+            </div>
+          </div>
+
+          <div class="space-y-3">
+            <div class="flex justify-between items-center py-2 border-b">
+              <span class="text-gray-600">关系类型</span>
+              <span class="font-semibold">
+                <a-tag :color="getRelationTypeColor(selectedEdge.relation_type)">
+                  {{ getRelationTypeText(selectedEdge.relation_type) }}
+                </a-tag>
+              </span>
+            </div>
+
+            <div class="flex justify-between items-center py-2 border-b">
+              <span class="text-gray-600">邮件数量</span>
+              <span class="font-semibold">{{ selectedEdge.email_count }}</span>
+            </div>
+
+            <div class="flex justify-between items-center py-2 border-b">
+              <span class="text-gray-600">关系权重</span>
+              <span class="font-semibold">{{ selectedEdge.weight }}</span>
+            </div>
+
+            <div class="flex justify-between items-center py-2 border-b">
+              <span class="text-gray-600">最新时间</span>
+              <span class="font-semibold">
+                {{ selectedEdge.latest_time ? dayjs(selectedEdge.latest_time).format('YYYY-MM-DD HH:mm:ss') : '-' }}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </a-drawer>
   </div>
 </template>
 
@@ -138,6 +220,11 @@ const analysisResult = ref<AnalyzeRelationshipsRes | null>(null);
 // 图谱
 const graphContainer = ref<HTMLDivElement | null>(null);
 const cy = ref<cytoscape.Core | null>(null);
+
+// 抽屉
+const drawerVisible = ref(false);
+const selectedNode = ref<any>(null);
+const selectedEdge = ref<any>(null);
 
 // 加载邮箱列表
 const loadMailboxes = async () => {
@@ -334,15 +421,47 @@ const renderGraph = () => {
   cy.value.on('tap', 'node', (event) => {
     const node = event.target;
     const data = node.data();
-    Message.info(`邮箱: ${data.label}, 邮件数量: ${data.email_count}, 层级: ${data.layer}`);
+    selectedNode.value = data;
+    selectedEdge.value = null;
+    drawerVisible.value = true;
   });
 
   // 添加边点击事件
   cy.value.on('tap', 'edge', (event) => {
     const edge = event.target;
     const data = edge.data();
-    Message.info(`关系: ${data.source} -> ${data.target}, 权重: ${data.weight}, 邮件数: ${data.email_count}`);
+    selectedEdge.value = data;
+    selectedNode.value = null;
+    drawerVisible.value = true;
   });
+};
+
+// 辅助函数
+const getLayerColor = (layer: number) => {
+  const colors = ['red', 'orange', 'gold', 'green', 'blue', 'purple'];
+  return colors[layer] || 'gray';
+};
+
+const getRelationTypeColor = (type: string) => {
+  switch (type) {
+    case 'send':
+      return 'green';
+    case 'receive':
+      return 'purple';
+    default:
+      return 'gray';
+  }
+};
+
+const getRelationTypeText = (type: string) => {
+  switch (type) {
+    case 'send':
+      return '发送';
+    case 'receive':
+      return '接收';
+    default:
+      return '未知';
+  }
 };
 
 onMounted(() => {
