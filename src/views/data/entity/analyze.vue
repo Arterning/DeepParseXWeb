@@ -11,10 +11,11 @@
           <a-select
             v-model="selectedMailboxes"
             multiple
+            :allow-search="true"
             placeholder="请选择要分析的邮箱"
             class="w-full"
             :loading="loadingMailboxes"
-            @focus="loadMailboxes"
+            @search="handleSearch"
           >
             <a-option v-for="mailbox in mailboxes" :key="mailbox.name" :value="mailbox.name">
               {{ mailbox.name }}
@@ -147,6 +148,22 @@ const loadMailboxes = async () => {
     const res = await queryMailBoxList({
       page: 1,
       size: 10
+    });
+    mailboxes.value = res.items;
+  } catch (error) {
+    Message.error('加载邮箱列表失败');
+  } finally {
+    loadingMailboxes.value = false;
+  }
+};
+
+const handleSearch = async (value: string) => {
+  loadingMailboxes.value = true;
+  try {
+    const res = await queryMailBoxList({
+      page: 1,
+      size: 10,
+      name: value,
     });
     mailboxes.value = res.items;
   } catch (error) {
