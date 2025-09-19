@@ -60,3 +60,36 @@ export function deleteMailBox(params: MailBoxDeleteParams) {
     },
   });
 }
+
+export interface AnalyzeRelationshipsReq {
+  mailboxes: string[];
+  start_time?: string;
+  end_time?: string;
+  max_layers?: number;
+  reference_time?: string;
+}
+
+export interface NodeData {
+  id: string;
+  label: string;
+  email_count: number;
+  layer: number;
+}
+
+export interface EdgeData {
+  source: string;
+  target: string;
+  weight: number;
+  email_count: number;
+  latest_time: string;
+  relation_type: string;
+}
+
+export interface AnalyzeRelationshipsRes {
+  nodes: NodeData[];
+  edges: EdgeData[];
+}
+
+export function analyzeMailboxRelationships(data: AnalyzeRelationshipsReq): Promise<AnalyzeRelationshipsRes> {
+  return axios.post('/api/v1/sys/mailbox/analyze-relationships', data);
+}

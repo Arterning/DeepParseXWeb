@@ -30,6 +30,13 @@
             </template>
             <EmailBoxTable />
           </a-tab-pane>
+
+          <a-tab-pane key="4">
+            <template #title>
+              <icon-chart-line /> 分析
+            </template>
+            <AnalyzeRelationships />
+          </a-tab-pane>
         </a-tabs>
       </div>
       <Footer />
@@ -41,5 +48,6 @@
   import EmailBoxTable from '@/views/data/mailbox/index.vue'
   import EmailMsgTable from '@/views/data/mailmsg/index.vue'
   import SPOTable from './spo.vue';
+  import AnalyzeRelationships from './analyze.vue';
   </script>
   
