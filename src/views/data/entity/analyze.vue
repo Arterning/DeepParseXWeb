@@ -137,6 +137,26 @@
               <span class="font-semibold">{{ selectedNode.weight }}</span>
             </div>
           </div>
+
+          <!-- 相关邮件列表 -->
+          <div class="mt-6">
+            <h5 class="text-md font-semibold text-gray-800 mb-3">相关邮件</h5>
+            <div class="max-h-60 overflow-y-auto space-y-2">
+              <div
+                v-for="email in selectedNode.emails"
+                :key="email.id"
+                class="p-3 bg-gray-50 rounded-lg border hover:bg-gray-100 transition-colors"
+              >
+                <div class="text-sm font-medium text-gray-800 mb-1">{{ email.subject }}</div>
+                <div class="text-xs text-gray-500">
+                  {{ email.time ? dayjs(email.time).format('YYYY-MM-DD HH:mm:ss') : '时间未知' }}
+                </div>
+              </div>
+              <div v-if="!selectedNode.emails || selectedNode.emails.length === 0" class="text-center text-gray-500 py-4">
+                暂无相关邮件
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -179,6 +199,26 @@
               </span>
             </div>
           </div>
+
+          <!-- 相关邮件列表 -->
+          <div class="mt-6">
+            <h5 class="text-md font-semibold text-gray-800 mb-3">相关邮件</h5>
+            <div class="max-h-60 overflow-y-auto space-y-2">
+              <div
+                v-for="email in selectedEdge.emails"
+                :key="email.id"
+                class="p-3 bg-gray-50 rounded-lg border hover:bg-gray-100 transition-colors"
+              >
+                <div class="text-sm font-medium text-gray-800 mb-1">{{ email.subject }}</div>
+                <div class="text-xs text-gray-500">
+                  {{ email.time ? dayjs(email.time).format('YYYY-MM-DD HH:mm:ss') : '时间未知' }}
+                </div>
+              </div>
+              <div v-if="!selectedEdge.emails || selectedEdge.emails.length === 0" class="text-center text-gray-500 py-4">
+                暂无相关邮件
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </a-drawer>
@@ -196,7 +236,8 @@ import {
   analyzeMailboxRelationships,
   type MailBoxRes,
   type AnalyzeRelationshipsReq,
-  type AnalyzeRelationshipsRes
+  type AnalyzeRelationshipsRes,
+  type EmailData
 } from '@/api/mailbox';
 
 cytoscape.use(coseBilkent);
@@ -319,7 +360,8 @@ const renderGraph = () => {
         label: node.label,
         email_count: node.email_count,
         layer: node.layer,
-        weight: node.email_count
+        weight: node.email_count,
+        emails: node.emails
       }
     })),
     ...analysisResult.value.edges.map(edge => ({
@@ -330,7 +372,8 @@ const renderGraph = () => {
         weight: edge.weight,
         email_count: edge.email_count,
         latest_time: edge.latest_time,
-        relation_type: edge.relation_type
+        relation_type: edge.relation_type,
+        emails: edge.emails
       }
     }))
   ];

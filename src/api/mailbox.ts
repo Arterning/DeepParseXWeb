@@ -69,11 +69,18 @@ export interface AnalyzeRelationshipsReq {
   reference_time?: string;
 }
 
+export interface EmailData {
+  id: number;
+  subject: string;
+  time: string | null;
+}
+
 export interface NodeData {
   id: string;
   label: string;
   email_count: number;
   layer: number;
+  emails: EmailData[];
 }
 
 export interface EdgeData {
@@ -83,6 +90,7 @@ export interface EdgeData {
   email_count: number;
   latest_time: string;
   relation_type: string;
+  emails: EmailData[];
 }
 
 export interface AnalyzeRelationshipsRes {
