@@ -4,19 +4,19 @@
     <a-card title="邮箱描述" class="email-card">
       <a-descriptions>
         <a-descriptions-item label="邮件名称">{{
-          mailbox.name
+          mailbox?.name
         }}</a-descriptions-item>
         <a-descriptions-item label="国家/地区">{{
-          mailbox.country
+          mailbox?.country
         }}</a-descriptions-item>
         <a-descriptions-item label="标签">{{
-          mailbox.tags
+          mailbox?.tags
         }}</a-descriptions-item>
         <a-descriptions-item label="邮件数量">{{
-          mailbox.count
+          mailbox?.count
         }}</a-descriptions-item>
         <a-descriptions-item label="其他信息">{{
-          mailbox.other_info
+          mailbox?.other_info
         }}</a-descriptions-item>
       </a-descriptions>
     </a-card>
