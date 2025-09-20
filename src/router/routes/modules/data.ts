@@ -62,7 +62,8 @@ const DASHBOARD: AppRouteRecordRaw = {
     {
       path: 'assets-detail/:id',
       name: 'AssetsDetail',
-      component: () => import('@/views/data/assets/components/assets-detail/index.vue'),
+      component: () =>
+        import('@/views/data/assets/components/assets-detail/index.vue'),
       meta: {
         locale: 'menu.data.assets.detail',
         requiresAuth: true,
@@ -94,150 +95,150 @@ const DASHBOARD: AppRouteRecordRaw = {
       },
     },
     {
-      path: 'data-detail/:id',
-      name: 'DataDetail',
-      component: () => import('@/views/data/data-detail/index.vue'),
+      path: 'mailmsg-detail/:id',
+      name: 'MailMsgDetail',
+      component: () => import('@/views/data/mailmsg-detail/index.vue'),
       meta: {
-        locale: 'menu.data.data.detail',
+        locale: 'menu.data.mailmsg.detail',
         requiresAuth: true,
         roles: ['*'],
         hideInMenu: true,
       },
     },
     {
-        path: 'upload',
-        name: 'Upload',
-        component: () => import('@/views/data/upload/index.vue'),
-        meta: {
-          locale: 'menu.data.upload',
-          requiresAuth: true,
-          roles: ['*'],
-          hideInMenu: false,
-          icon: 'IconUpload',
-        },
+      path: 'upload',
+      name: 'Upload',
+      component: () => import('@/views/data/upload/index.vue'),
+      meta: {
+        locale: 'menu.data.upload',
+        requiresAuth: true,
+        roles: ['*'],
+        hideInMenu: false,
+        icon: 'IconUpload',
       },
-      {
-        path: 'event',
-        name: 'Event',
-        component: () => import('@/views/data/event/index.vue'),
-        meta: {
-          locale: '热点事件',
-          requiresAuth: true,
-          roles: ['*'],
-          hideInMenu: false,
-        },
+    },
+    {
+      path: 'event',
+      name: 'Event',
+      component: () => import('@/views/data/event/index.vue'),
+      meta: {
+        locale: '热点事件',
+        requiresAuth: true,
+        roles: ['*'],
+        hideInMenu: false,
       },
-      {
-        path: 'tag',
-        name: 'Tag',
-        component: () => import('@/views/data/tag/index.vue'),
-        meta: {
-          locale: '我的标签',
-          requiresAuth: true,
-          roles: ['*'],
-          hideInMenu: false,
-        },
+    },
+    {
+      path: 'tag',
+      name: 'Tag',
+      component: () => import('@/views/data/tag/index.vue'),
+      meta: {
+        locale: '我的标签',
+        requiresAuth: true,
+        roles: ['*'],
+        hideInMenu: false,
       },
-      // 收藏
-      {
-        path: 'collection',
-        name: 'Collection',
-        component: () => import('@/views/data/star/index.vue'),
-        meta: {
-          locale: '收藏',
-          requiresAuth: true,
-          roles: ['*'],
-          hideInMenu: false,
-        },
+    },
+    // 收藏
+    {
+      path: 'collection',
+      name: 'Collection',
+      component: () => import('@/views/data/star/index.vue'),
+      meta: {
+        locale: '收藏',
+        requiresAuth: true,
+        roles: ['*'],
+        hideInMenu: false,
       },
-      {
-        path: 'search',
-        name: 'search',
-        component: () => import('@/views/data/search/index.vue'),
-        meta: {
-          locale: '搜索',
-          requiresAuth: true,
-          roles: ['*'],
-          hideInMenu: false,
-        },
+    },
+    {
+      path: 'search',
+      name: 'search',
+      component: () => import('@/views/data/search/index.vue'),
+      meta: {
+        locale: '搜索',
+        requiresAuth: true,
+        roles: ['*'],
+        hideInMenu: false,
       },
-      {
-        path: 'entity',
-        name: 'Entity',
-        component: () => import('@/views/data/entity/index.vue'),
-        meta: {
-          locale: '要素提取',
-          requiresAuth: true,
-          roles: ['*'],
-          hideInMenu: false,
-        },
+    },
+    {
+      path: 'entity',
+      name: 'Entity',
+      component: () => import('@/views/data/entity/index.vue'),
+      meta: {
+        locale: '要素提取',
+        requiresAuth: true,
+        roles: ['*'],
+        hideInMenu: false,
       },
-      {
-        path: 'mail',
-        name: 'Mail',
-        component: () => import('@/views/data/mail/index.vue'),
-        meta: {
-          locale: '邮件数据',
-          requiresAuth: true,
-          roles: ['*'],
-          hideInMenu: false,
-        },
+    },
+    {
+      path: 'mail',
+      name: 'Mail',
+      component: () => import('@/views/data/mail/index.vue'),
+      meta: {
+        locale: '邮件数据',
+        requiresAuth: true,
+        roles: ['*'],
+        hideInMenu: false,
       },
-      {
-        path: 'person',
-        name: 'Person',
-        component: () => import('@/views/data/person/index.vue'),
-        meta: {
-          locale: '人物管理',
-          requiresAuth: true,
-          roles: ['*'],
-          hideInMenu: false,
-        },
+    },
+    {
+      path: 'person',
+      name: 'Person',
+      component: () => import('@/views/data/person/index.vue'),
+      meta: {
+        locale: '人物管理',
+        requiresAuth: true,
+        roles: ['*'],
+        hideInMenu: false,
       },
-      {
-        path: 'subject',
-        name: 'Subject',
-        component: () => import('@/views/data/subject/index.vue'),
-        meta: {
-          locale: '议题管理',
-          requiresAuth: true,
-          roles: ['*'],
-          hideInMenu: false,
-        },
+    },
+    {
+      path: 'subject',
+      name: 'Subject',
+      component: () => import('@/views/data/subject/index.vue'),
+      meta: {
+        locale: '议题管理',
+        requiresAuth: true,
+        roles: ['*'],
+        hideInMenu: false,
       },
-      {
-        path: 'scandal',
-        name: 'Scandal',
-        component: () => import('@/views/data/scandal/index.vue'),
-        meta: {
-          locale: '黑料管理',
-          requiresAuth: true,
-          roles: ['*'],
-          hideInMenu: false,
-        },
+    },
+    {
+      path: 'scandal',
+      name: 'Scandal',
+      component: () => import('@/views/data/scandal/index.vue'),
+      meta: {
+        locale: '黑料管理',
+        requiresAuth: true,
+        roles: ['*'],
+        hideInMenu: false,
       },
-      {
-        path: 'social',
-        name: 'Social',
-        component: () => import('@/views/data/social/index.vue'),
-        meta: {
-          locale: '社交数据',
-          requiresAuth: true,
-          roles: ['*'],
-          hideInMenu: false,
-        },
+    },
+    {
+      path: 'social',
+      name: 'Social',
+      component: () => import('@/views/data/social/index.vue'),
+      meta: {
+        locale: '社交数据',
+        requiresAuth: true,
+        roles: ['*'],
+        hideInMenu: false,
       },
-      {
-        path: 'news',
-        name: 'News',
-        component: () => import('@/views/data/news/index.vue'),
-        meta: {
-          locale: '新闻',
-          requiresAuth: true,
-          roles: ['*'],
-          hideInMenu: false,
-        },
+    },
+    {
+      path: 'news',
+      name: 'News',
+      component: () => import('@/views/data/news/index.vue'),
+      meta: {
+        locale: '新闻',
+        requiresAuth: true,
+        roles: ['*'],
+        hideInMenu: false,
       },
+    },
     {
       path: 'assistant',
       name: 'aiAssistant',

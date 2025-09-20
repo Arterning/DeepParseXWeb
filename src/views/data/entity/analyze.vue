@@ -1,13 +1,15 @@
 <template>
   <div class="h-full flex flex-col space-y-4">
     <!-- 参数设置区域 -->
-    <div class="bg-white p-6 rounded-lg shadow-sm border">
+    <div class="p-6 rounded-lg shadow-sm border">
       <h3 class="text-lg font-semibold mb-4">分析参数设置</h3>
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <!-- 邮箱选择 -->
         <div>
-          <label class="block text-sm font-medium text-gray-700 mb-2">选择邮箱</label>
+          <label class="block text-sm font-medium text-gray-700 mb-2"
+            >选择邮箱</label
+          >
           <a-select
             v-model="selectedMailboxes"
             multiple
@@ -17,7 +19,11 @@
             :loading="loadingMailboxes"
             @search="handleSearch"
           >
-            <a-option v-for="mailbox in mailboxes" :key="mailbox.name" :value="mailbox.name">
+            <a-option
+              v-for="mailbox in mailboxes"
+              :key="mailbox.name"
+              :value="mailbox.name"
+            >
               {{ mailbox.name }}
             </a-option>
           </a-select>
@@ -25,7 +31,9 @@
 
         <!-- 最大分析层级 -->
         <div>
-          <label class="block text-sm font-medium text-gray-700 mb-2">最大分析层级</label>
+          <label class="block text-sm font-medium text-gray-700 mb-2"
+            >最大分析层级</label
+          >
           <a-input-number
             v-model:value="maxLayers"
             :min="1"
@@ -37,7 +45,9 @@
 
         <!-- 开始时间 -->
         <div>
-          <label class="block text-sm font-medium text-gray-700 mb-2">开始时间</label>
+          <label class="block text-sm font-medium text-gray-700 mb-2"
+            >开始时间</label
+          >
           <a-date-picker
             v-model:value="startTime"
             show-time
@@ -48,7 +58,9 @@
 
         <!-- 结束时间 -->
         <div>
-          <label class="block text-sm font-medium text-gray-700 mb-2">结束时间</label>
+          <label class="block text-sm font-medium text-gray-700 mb-2"
+            >结束时间</label
+          >
           <a-date-picker
             v-model:value="endTime"
             show-time
@@ -59,7 +71,9 @@
 
         <!-- 基准时间 -->
         <div class="md:col-span-2">
-          <label class="block text-sm font-medium text-gray-700 mb-2">基准时间（可选）</label>
+          <label class="block text-sm font-medium text-gray-700 mb-2"
+            >基准时间（可选）</label
+          >
           <a-date-picker
             v-model:value="referenceTime"
             show-time
@@ -84,11 +98,15 @@
     </div>
 
     <!-- 分析结果区域 -->
-    <div v-if="analysisResult" class="bg-white rounded-lg shadow-sm border flex-1">
+    <div
+      v-if="analysisResult"
+      class="bg-white rounded-lg shadow-sm border flex-1"
+    >
       <div class="p-4 border-b">
         <h3 class="text-lg font-semibold">分析结果</h3>
         <div class="text-sm text-gray-500 mt-1">
-          节点数量: {{ analysisResult.nodes.length }}，关系数量: {{ analysisResult.edges.length }}
+          节点数量: {{ analysisResult.nodes.length }}，关系数量:
+          {{ analysisResult.edges.length }}
         </div>
       </div>
 
@@ -97,7 +115,10 @@
     </div>
 
     <!-- 无结果提示 -->
-    <div v-else-if="hasSearched && !analyzing" class="bg-white rounded-lg shadow-sm border flex-1 flex items-center justify-center">
+    <div
+      v-else-if="hasSearched && !analyzing"
+      class="bg-white rounded-lg shadow-sm border flex-1 flex items-center justify-center"
+    >
       <a-empty description="暂无分析结果" />
     </div>
 
@@ -114,7 +135,9 @@
         <div class="space-y-4">
           <div class="bg-gray-50 p-4 rounded-lg">
             <h4 class="text-lg font-semibold text-gray-800 mb-2">邮箱节点</h4>
-            <div class="text-2xl font-bold text-blue-600">{{ selectedNode.label }}</div>
+            <div class="text-2xl font-bold text-blue-600">{{
+              selectedNode.label
+            }}</div>
           </div>
 
           <div class="space-y-3">
@@ -147,12 +170,21 @@
                 :key="email.id"
                 class="p-3 bg-gray-50 rounded-lg border hover:bg-gray-100 transition-colors"
               >
-                <div class="text-sm font-medium text-gray-800 mb-1">{{ email.subject }}</div>
+                <div class="text-sm font-medium text-gray-800 mb-1">{{
+                  email.subject
+                }}</div>
                 <div class="text-xs text-gray-500">
-                  {{ email.time ? dayjs(email.time).format('YYYY-MM-DD HH:mm:ss') : '时间未知' }}
+                  {{
+                    email.time
+                      ? dayjs(email.time).format('YYYY-MM-DD HH:mm:ss')
+                      : '时间未知'
+                  }}
                 </div>
               </div>
-              <div v-if="!selectedNode.emails || selectedNode.emails.length === 0" class="text-center text-gray-500 py-4">
+              <div
+                v-if="!selectedNode.emails || selectedNode.emails.length === 0"
+                class="text-center text-gray-500 py-4"
+              >
                 暂无相关邮件
               </div>
             </div>
@@ -166,9 +198,13 @@
           <div class="bg-gray-50 p-4 rounded-lg">
             <h4 class="text-lg font-semibold text-gray-800 mb-2">关系连接</h4>
             <div class="flex items-center space-x-2">
-              <span class="text-blue-600 font-medium">{{ selectedEdge.source }}</span>
+              <span class="text-blue-600 font-medium">{{
+                selectedEdge.source
+              }}</span>
               <span class="text-gray-400">→</span>
-              <span class="text-blue-600 font-medium">{{ selectedEdge.target }}</span>
+              <span class="text-blue-600 font-medium">{{
+                selectedEdge.target
+              }}</span>
             </div>
           </div>
 
@@ -176,7 +212,9 @@
             <div class="flex justify-between items-center py-2 border-b">
               <span class="text-gray-600">关系类型</span>
               <span class="font-semibold">
-                <a-tag :color="getRelationTypeColor(selectedEdge.relation_type)">
+                <a-tag
+                  :color="getRelationTypeColor(selectedEdge.relation_type)"
+                >
                   {{ getRelationTypeText(selectedEdge.relation_type) }}
                 </a-tag>
               </span>
@@ -195,7 +233,13 @@
             <div class="flex justify-between items-center py-2 border-b">
               <span class="text-gray-600">最新时间</span>
               <span class="font-semibold">
-                {{ selectedEdge.latest_time ? dayjs(selectedEdge.latest_time).format('YYYY-MM-DD HH:mm:ss') : '-' }}
+                {{
+                  selectedEdge.latest_time
+                    ? dayjs(selectedEdge.latest_time).format(
+                        'YYYY-MM-DD HH:mm:ss'
+                      )
+                    : '-'
+                }}
               </span>
             </div>
           </div>
@@ -209,12 +253,21 @@
                 :key="email.id"
                 class="p-3 bg-gray-50 rounded-lg border hover:bg-gray-100 transition-colors"
               >
-                <div class="text-sm font-medium text-gray-800 mb-1">{{ email.subject }}</div>
+                <div class="text-sm font-medium text-gray-800 mb-1">{{
+                  email.subject
+                }}</div>
                 <div class="text-xs text-gray-500">
-                  {{ email.time ? dayjs(email.time).format('YYYY-MM-DD HH:mm:ss') : '时间未知' }}
+                  {{
+                    email.time
+                      ? dayjs(email.time).format('YYYY-MM-DD HH:mm:ss')
+                      : '时间未知'
+                  }}
                 </div>
               </div>
-              <div v-if="!selectedEdge.emails || selectedEdge.emails.length === 0" class="text-center text-gray-500 py-4">
+              <div
+                v-if="!selectedEdge.emails || selectedEdge.emails.length === 0"
+                class="text-center text-gray-500 py-4"
+              >
                 暂无相关邮件
               </div>
             </div>
@@ -226,288 +279,288 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, nextTick } from 'vue';
-import { Message } from '@arco-design/web-vue';
-import dayjs, { type Dayjs } from 'dayjs';
-import cytoscape from 'cytoscape';
-import coseBilkent from 'cytoscape-cose-bilkent';
-import {
-  queryMailBoxList,
-  analyzeMailboxRelationships,
-  type MailBoxRes,
-  type AnalyzeRelationshipsReq,
-  type AnalyzeRelationshipsRes,
-  type EmailData
-} from '@/api/mailbox';
+  import { ref, onMounted, nextTick } from 'vue';
+  import { Message } from '@arco-design/web-vue';
+  import dayjs, { type Dayjs } from 'dayjs';
+  import cytoscape from 'cytoscape';
+  import coseBilkent from 'cytoscape-cose-bilkent';
+  import {
+    queryMailBoxList,
+    analyzeMailboxRelationships,
+    type MailBoxRes,
+    type AnalyzeRelationshipsReq,
+    type AnalyzeRelationshipsRes,
+    type EmailData,
+  } from '@/api/mailbox';
 
-cytoscape.use(coseBilkent);
+  cytoscape.use(coseBilkent);
 
-// 表单数据
-const selectedMailboxes = ref<string[]>([]);
-const maxLayers = ref<number>(3);
-const startTime = ref<Dayjs | null>(null);
-const endTime = ref<Dayjs | null>(null);
-const referenceTime = ref<Dayjs | null>(null);
+  // 表单数据
+  const selectedMailboxes = ref<string[]>([]);
+  const maxLayers = ref<number>(3);
+  const startTime = ref<Dayjs | null>(null);
+  const endTime = ref<Dayjs | null>(null);
+  const referenceTime = ref<Dayjs | null>(null);
 
-// 状态
-const loadingMailboxes = ref(false);
-const analyzing = ref(false);
-const hasSearched = ref(false);
+  // 状态
+  const loadingMailboxes = ref(false);
+  const analyzing = ref(false);
+  const hasSearched = ref(false);
 
-// 数据
-const mailboxes = ref<MailBoxRes[]>([]);
-const analysisResult = ref<AnalyzeRelationshipsRes | null>(null);
+  // 数据
+  const mailboxes = ref<MailBoxRes[]>([]);
+  const analysisResult = ref<AnalyzeRelationshipsRes | null>(null);
 
-// 图谱
-const graphContainer = ref<HTMLDivElement | null>(null);
-const cy = ref<cytoscape.Core | null>(null);
+  // 图谱
+  const graphContainer = ref<HTMLDivElement | null>(null);
+  const cy = ref<cytoscape.Core | null>(null);
 
-// 抽屉
-const drawerVisible = ref(false);
-const selectedNode = ref<any>(null);
-const selectedEdge = ref<any>(null);
+  // 抽屉
+  const drawerVisible = ref(false);
+  const selectedNode = ref<any>(null);
+  const selectedEdge = ref<any>(null);
 
-// 加载邮箱列表
-const loadMailboxes = async () => {
-  if (mailboxes.value.length > 0) return;
+  // 加载邮箱列表
+  const loadMailboxes = async () => {
+    if (mailboxes.value.length > 0) return;
 
-  loadingMailboxes.value = true;
-  try {
-    const res = await queryMailBoxList({
-      page: 1,
-      size: 10
+    loadingMailboxes.value = true;
+    try {
+      const res = await queryMailBoxList({
+        page: 1,
+        size: 10,
+      });
+      mailboxes.value = res.items;
+    } catch (error) {
+      Message.error('加载邮箱列表失败');
+    } finally {
+      loadingMailboxes.value = false;
+    }
+  };
+
+  const handleSearch = async (value: string) => {
+    loadingMailboxes.value = true;
+    try {
+      const res = await queryMailBoxList({
+        page: 1,
+        size: 10,
+        name: value,
+      });
+      mailboxes.value = res.items;
+    } catch (error) {
+      Message.error('加载邮箱列表失败');
+    } finally {
+      loadingMailboxes.value = false;
+    }
+  };
+
+  // 开始分析
+  const startAnalysis = async () => {
+    if (selectedMailboxes.value.length === 0) {
+      Message.warning('请先选择邮箱');
+      return;
+    }
+
+    analyzing.value = true;
+    hasSearched.value = true;
+
+    try {
+      const params: AnalyzeRelationshipsReq = {
+        mailboxes: selectedMailboxes.value,
+        max_layers: maxLayers.value,
+      };
+
+      if (startTime.value) {
+        params.start_time = startTime.value.toISOString();
+      }
+
+      if (endTime.value) {
+        params.end_time = endTime.value.toISOString();
+      }
+
+      if (referenceTime.value) {
+        params.reference_time = referenceTime.value.toISOString();
+      }
+
+      analysisResult.value = await analyzeMailboxRelationships(params);
+
+      // 渲染图谱
+      await nextTick();
+      renderGraph();
+
+      Message.success('分析完成');
+    } catch (error) {
+      Message.error('分析失败');
+      analysisResult.value = null;
+    } finally {
+      analyzing.value = false;
+    }
+  };
+
+  // 渲染图谱
+  const renderGraph = () => {
+    if (!graphContainer.value || !analysisResult.value) return;
+
+    // 清理之前的图谱
+    if (cy.value) {
+      cy.value.destroy();
+    }
+
+    const elements = [
+      ...analysisResult.value.nodes.map((node) => ({
+        data: {
+          id: node.id,
+          label: node.label,
+          email_count: node.email_count,
+          layer: node.layer,
+          weight: node.email_count,
+          emails: node.emails,
+        },
+      })),
+      ...analysisResult.value.edges.map((edge) => ({
+        data: {
+          id: `${edge.source}-${edge.target}`,
+          source: edge.source,
+          target: edge.target,
+          weight: edge.weight,
+          email_count: edge.email_count,
+          latest_time: edge.latest_time,
+          relation_type: edge.relation_type,
+          emails: edge.emails,
+        },
+      })),
+    ];
+
+    cy.value = cytoscape({
+      container: graphContainer.value,
+      elements,
+      wheelSensitivity: 0.2,
+      style: [
+        {
+          selector: 'node',
+          style: {
+            'label': 'data(label)',
+            'text-valign': 'center',
+            'text-halign': 'center',
+            'background-color': '#06b6d4',
+            'color': '#ffffff',
+            'text-outline-color': '#0e7490',
+            'text-outline-width': '2px',
+            'width': 'mapData(weight, 0, 100, 30, 80)',
+            'height': 'mapData(weight, 0, 100, 30, 80)',
+            'font-size': '12px',
+            'text-wrap': 'wrap',
+            'text-max-width': '100px',
+            'overlay-opacity': 0,
+            'border-width': 2,
+            'border-color': '#0891b2',
+          },
+        },
+        {
+          selector: 'node[layer = 0]',
+          style: {
+            'background-color': '#dc2626',
+            'border-color': '#b91c1c',
+          },
+        },
+        {
+          selector: 'node[layer = 1]',
+          style: {
+            'background-color': '#ea580c',
+            'border-color': '#c2410c',
+          },
+        },
+        {
+          selector: 'node[layer = 2]',
+          style: {
+            'background-color': '#d97706',
+            'border-color': '#b45309',
+          },
+        },
+        {
+          selector: 'edge',
+          style: {
+            'width': 'mapData(weight, 0, 10, 2, 8)',
+            'line-color': '#64748b',
+            'target-arrow-color': '#64748b',
+            'target-arrow-shape': 'triangle',
+            'curve-style': 'bezier',
+            'opacity': 0.8,
+          },
+        },
+        {
+          selector: 'edge[relation_type = "send"]',
+          style: {
+            'line-color': '#059669',
+            'target-arrow-color': '#059669',
+          },
+        },
+        {
+          selector: 'edge[relation_type = "receive"]',
+          style: {
+            'line-color': '#7c3aed',
+            'target-arrow-color': '#7c3aed',
+          },
+        },
+      ],
+      layout: {
+        name: 'cose-bilkent',
+        animate: false,
+        nodeDimensionsIncludeLabels: true,
+        nodeRepulsion: 8000,
+        idealEdgeLength: 100,
+        edgeElasticity: 0.1,
+      },
     });
-    mailboxes.value = res.items;
-  } catch (error) {
-    Message.error('加载邮箱列表失败');
-  } finally {
-    loadingMailboxes.value = false;
-  }
-};
 
-const handleSearch = async (value: string) => {
-  loadingMailboxes.value = true;
-  try {
-    const res = await queryMailBoxList({
-      page: 1,
-      size: 10,
-      name: value,
+    // 添加节点点击事件
+    cy.value.on('tap', 'node', (event) => {
+      const node = event.target;
+      const data = node.data();
+      selectedNode.value = data;
+      selectedEdge.value = null;
+      drawerVisible.value = true;
     });
-    mailboxes.value = res.items;
-  } catch (error) {
-    Message.error('加载邮箱列表失败');
-  } finally {
-    loadingMailboxes.value = false;
-  }
-};
 
-// 开始分析
-const startAnalysis = async () => {
-  if (selectedMailboxes.value.length === 0) {
-    Message.warning('请先选择邮箱');
-    return;
-  }
+    // 添加边点击事件
+    cy.value.on('tap', 'edge', (event) => {
+      const edge = event.target;
+      const data = edge.data();
+      selectedEdge.value = data;
+      selectedNode.value = null;
+      drawerVisible.value = true;
+    });
+  };
 
-  analyzing.value = true;
-  hasSearched.value = true;
+  // 辅助函数
+  const getLayerColor = (layer: number) => {
+    const colors = ['red', 'orange', 'gold', 'green', 'blue', 'purple'];
+    return colors[layer] || 'gray';
+  };
 
-  try {
-    const params: AnalyzeRelationshipsReq = {
-      mailboxes: selectedMailboxes.value,
-      max_layers: maxLayers.value,
-    };
-
-    if (startTime.value) {
-      params.start_time = startTime.value.toISOString();
+  const getRelationTypeColor = (type: string) => {
+    switch (type) {
+      case 'send':
+        return 'green';
+      case 'receive':
+        return 'purple';
+      default:
+        return 'gray';
     }
+  };
 
-    if (endTime.value) {
-      params.end_time = endTime.value.toISOString();
+  const getRelationTypeText = (type: string) => {
+    switch (type) {
+      case 'send':
+        return '发送';
+      case 'receive':
+        return '接收';
+      default:
+        return '未知';
     }
+  };
 
-    if (referenceTime.value) {
-      params.reference_time = referenceTime.value.toISOString();
-    }
-
-    analysisResult.value = await analyzeMailboxRelationships(params);
-
-    // 渲染图谱
-    await nextTick();
-    renderGraph();
-
-    Message.success('分析完成');
-  } catch (error) {
-    Message.error('分析失败');
-    analysisResult.value = null;
-  } finally {
-    analyzing.value = false;
-  }
-};
-
-// 渲染图谱
-const renderGraph = () => {
-  if (!graphContainer.value || !analysisResult.value) return;
-
-  // 清理之前的图谱
-  if (cy.value) {
-    cy.value.destroy();
-  }
-
-  const elements = [
-    ...analysisResult.value.nodes.map(node => ({
-      data: {
-        id: node.id,
-        label: node.label,
-        email_count: node.email_count,
-        layer: node.layer,
-        weight: node.email_count,
-        emails: node.emails
-      }
-    })),
-    ...analysisResult.value.edges.map(edge => ({
-      data: {
-        id: `${edge.source}-${edge.target}`,
-        source: edge.source,
-        target: edge.target,
-        weight: edge.weight,
-        email_count: edge.email_count,
-        latest_time: edge.latest_time,
-        relation_type: edge.relation_type,
-        emails: edge.emails
-      }
-    }))
-  ];
-
-  cy.value = cytoscape({
-    container: graphContainer.value,
-    elements,
-    wheelSensitivity: 0.2,
-    style: [
-      {
-        selector: 'node',
-        style: {
-          'label': 'data(label)',
-          'text-valign': 'center',
-          'text-halign': 'center',
-          'background-color': '#06b6d4',
-          'color': '#ffffff',
-          'text-outline-color': '#0e7490',
-          'text-outline-width': '2px',
-          'width': 'mapData(weight, 0, 100, 30, 80)',
-          'height': 'mapData(weight, 0, 100, 30, 80)',
-          'font-size': '12px',
-          'text-wrap': 'wrap',
-          'text-max-width': '100px',
-          'overlay-opacity': 0,
-          'border-width': 2,
-          'border-color': '#0891b2'
-        }
-      },
-      {
-        selector: 'node[layer = 0]',
-        style: {
-          'background-color': '#dc2626',
-          'border-color': '#b91c1c'
-        }
-      },
-      {
-        selector: 'node[layer = 1]',
-        style: {
-          'background-color': '#ea580c',
-          'border-color': '#c2410c'
-        }
-      },
-      {
-        selector: 'node[layer = 2]',
-        style: {
-          'background-color': '#d97706',
-          'border-color': '#b45309'
-        }
-      },
-      {
-        selector: 'edge',
-        style: {
-          'width': 'mapData(weight, 0, 10, 2, 8)',
-          'line-color': '#64748b',
-          'target-arrow-color': '#64748b',
-          'target-arrow-shape': 'triangle',
-          'curve-style': 'bezier',
-          'opacity': 0.8
-        }
-      },
-      {
-        selector: 'edge[relation_type = "send"]',
-        style: {
-          'line-color': '#059669',
-          'target-arrow-color': '#059669'
-        }
-      },
-      {
-        selector: 'edge[relation_type = "receive"]',
-        style: {
-          'line-color': '#7c3aed',
-          'target-arrow-color': '#7c3aed'
-        }
-      }
-    ],
-    layout: {
-      name: 'cose-bilkent',
-      animate: false,
-      nodeDimensionsIncludeLabels: true,
-      nodeRepulsion: 8000,
-      idealEdgeLength: 100,
-      edgeElasticity: 0.1
-    }
+  onMounted(() => {
+    loadMailboxes();
   });
-
-  // 添加节点点击事件
-  cy.value.on('tap', 'node', (event) => {
-    const node = event.target;
-    const data = node.data();
-    selectedNode.value = data;
-    selectedEdge.value = null;
-    drawerVisible.value = true;
-  });
-
-  // 添加边点击事件
-  cy.value.on('tap', 'edge', (event) => {
-    const edge = event.target;
-    const data = edge.data();
-    selectedEdge.value = data;
-    selectedNode.value = null;
-    drawerVisible.value = true;
-  });
-};
-
-// 辅助函数
-const getLayerColor = (layer: number) => {
-  const colors = ['red', 'orange', 'gold', 'green', 'blue', 'purple'];
-  return colors[layer] || 'gray';
-};
-
-const getRelationTypeColor = (type: string) => {
-  switch (type) {
-    case 'send':
-      return 'green';
-    case 'receive':
-      return 'purple';
-    default:
-      return 'gray';
-  }
-};
-
-const getRelationTypeText = (type: string) => {
-  switch (type) {
-    case 'send':
-      return '发送';
-    case 'receive':
-      return '接收';
-    default:
-      return '未知';
-  }
-};
-
-onMounted(() => {
-  loadMailboxes();
-});
 </script>

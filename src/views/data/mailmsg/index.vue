@@ -103,7 +103,10 @@
         </a-button>
       </a-space>
       <div class="content">
-        <div v-if="loading" class="w-full h-96 flex justify-center items-center">
+        <div
+          v-if="loading"
+          class="w-full h-96 flex justify-center items-center"
+        >
           <a-spin size="large" />
         </div>
         <div v-else>
@@ -111,10 +114,11 @@
             <div
               v-for="record in renderData"
               :key="record.id"
-              class="flex items-start p-4 bg-white border rounded-lg shadow-sm hover:shadow-lg transition-shadow duration-200"
+              class="flex items-start p-4 border rounded-lg shadow-sm hover:shadow-lg transition-shadow duration-200"
               :class="{
-                'border-blue-500 ring-1 ring-blue-500':
-                  rowSelectKeys.includes(record.id),
+                'border-blue-500 ring-1 ring-blue-500': rowSelectKeys.includes(
+                  record.id
+                ),
               }"
             >
               <div class="mr-4 pt-1">
@@ -126,13 +130,12 @@
               <div class="flex-1 min-w-0">
                 <div class="flex justify-between items-center mb-2">
                   <a-link
-                    class="text-lg font-semibold text-gray-800 truncate hover:text-blue-600"
+                    class="text-lg font-semibold truncate hover:text-blue-600"
                     :title="record.name"
                     @click="
                       router.push({
-                        name: 'DataDetail',
+                        name: 'MailMsgDetail',
                         params: { id: record.id },
-                        query: { type: 'mailmsg' },
                       })
                     "
                   >
@@ -149,21 +152,21 @@
                   <div class="flex items-center">
                     <span class="font-medium text-gray-500">From:</span>
                     <span
-                      class="ml-1.5 bg-gray-100 text-gray-800 px-2 py-0.5 rounded-full"
+                      class="ml-1.5 text-gray-500 px-2 py-0.5 rounded-full"
                       >{{ record.sender }}</span
                     >
                   </div>
                   <div class="flex items-center">
                     <span class="font-medium text-gray-500">To:</span>
                     <span
-                      class="ml-1.5 bg-gray-100 text-gray-800 px-2 py-0.5 rounded-full"
+                      class="ml-1.5 text-gray-500 px-2 py-0.5 rounded-full"
                       >{{ record.receiver }}</span
                     >
                   </div>
                   <div v-if="record.cc" class="flex items-center">
                     <span class="font-medium text-gray-500">CC:</span>
                     <span
-                      class="ml-1.5 bg-gray-100 text-gray-800 px-2 py-0.5 rounded-full"
+                      class="ml-1.5 text-gray-500 px-2 py-0.5 rounded-full"
                       >{{ record.cc }}</span
                     >
                   </div>
@@ -266,10 +269,7 @@
             </a-form-item>
             <!-- 分类 -->
             <a-form-item :feedback="true" label="类型" field="category">
-              <a-select
-                v-model="form.category"
-                :placeholder="$t('请选择类型')"
-              >
+              <a-select v-model="form.category" :placeholder="$t('请选择类型')">
                 <a-option
                   v-for="(item, index) in ['工作', '个人', '通知', '其他']"
                   :key="index"
@@ -498,7 +498,8 @@
     try {
       const res = await queryMailMsgDetail(pk);
       resetForm(res);
-    } catch (error) {      // console.log(error);
+    } catch (error) {
+      // console.log(error);
     } finally {
       setLoading(false);
     }
@@ -506,7 +507,7 @@
 
   // 事件: 分页
   const onPageChange = (current: number) => {
-    console.log("current", current);
+    console.log('current', current);
     pagination.current = current;
     fetchData();
   };
@@ -556,4 +557,3 @@
     padding-top: 20px;
   }
 </style>
-  
