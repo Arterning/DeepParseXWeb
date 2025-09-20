@@ -1,8 +1,8 @@
 <template>
   <div class="h-full flex flex-col space-y-4">
     <!-- 参数设置区域 -->
-    <div class="p-6 rounded-lg shadow-sm border">
-      <h3 class="text-lg font-semibold mb-4">分析参数设置</h3>
+    <div class="p-6 rounded-lg shadow-sm">
+      <h3 class="text-lg font-semibold mb-4 dark:text-white">分析设置</h3>
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <!-- 邮箱选择 -->
@@ -37,7 +37,7 @@
           <a-input-number
             v-model:value="maxLayers"
             :min="1"
-            :max="10"
+            :max="10000"
             placeholder="默认3层"
             class="w-full"
           />
@@ -70,7 +70,7 @@
         </div>
 
         <!-- 基准时间 -->
-        <div class="md:col-span-2">
+        <!-- <div class="md:col-span-2">
           <label class="block text-sm font-medium text-gray-700 mb-2"
             >基准时间（可选）</label
           >
@@ -80,7 +80,7 @@
             placeholder="时间权重计算的基准时间"
             class="w-full"
           />
-        </div>
+        </div> -->
       </div>
 
       <!-- 分析按钮 -->
@@ -98,12 +98,9 @@
     </div>
 
     <!-- 分析结果区域 -->
-    <div
-      v-if="analysisResult"
-      class="bg-white rounded-lg shadow-sm border flex-1"
-    >
-      <div class="p-4 border-b">
-        <h3 class="text-lg font-semibold">分析结果</h3>
+    <div v-if="analysisResult" class="rounded-lg shadow-sm flex-1">
+      <div class="p-4">
+        <h3 class="text-lg font-semibold dark:text-white">分析结果</h3>
         <div class="text-sm text-gray-500 mt-1">
           节点数量: {{ analysisResult.nodes.length }}，关系数量:
           {{ analysisResult.edges.length }}

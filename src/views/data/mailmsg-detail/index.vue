@@ -1,16 +1,9 @@
 <template>
   <a-layout class="flex-layout">
     <Breadcrumb />
-    <div
-      class="h-full flex flex-col bg-white rounded-lg shadow-sm overflow-hidden"
-    >
+    <div class="h-full flex flex-col rounded-lg shadow-sm overflow-hidden">
       <!-- 邮件头部 -->
-      <a-page-header
-        class="border-b border-gray-200 bg-blue-50"
-        title=""
-        :show-back="true"
-        @back="$router.back()"
-      >
+      <a-page-header class="" title="" :show-back="true" @back="$router.back()">
         <template #extra>
           <a-space>
             <a-button type="outline" size="small">回复</a-button>
@@ -60,7 +53,7 @@
         </div>
 
         <!-- 抄送信息 -->
-        <div v-if="true" class="mb-6">
+        <div v-if="mailData?.cc" class="mb-6">
           <h2 class="text-sm font-medium text-gray-600 mb-2">抄送</h2>
           <div class="flex flex-wrap gap-2">
             <!--            <a-tag v-for="(cc, index) in mailData?.cc" :key="index" type="gray">-->
@@ -72,10 +65,7 @@
 
         <!-- 邮件正文 -->
         <div class="border-t border-gray-200 pt-6">
-          <div
-            class="prose max-w-none text-gray-800"
-            v-html="mailData?.original"
-          ></div>
+          <div class="prose max-w-none" v-html="mailData?.original"></div>
         </div>
       </div>
     </div>

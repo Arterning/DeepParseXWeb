@@ -1,6 +1,6 @@
 <template>
   <a-layout class="flex-layout">
-    <a-card  class="general-card py-4">
+    <a-card class="general-card py-4">
       <a-row>
         <a-col :flex="62">
           <a-form
@@ -12,47 +12,52 @@
               <a-col :span="8">
                 <a-form-item :label="$t('data.doc.form.title')" field="title">
                   <a-input
-                    @keyup.enter="search"
                     v-model="formModel.title"
                     :placeholder="$t('输入文件原名')"
+                    @keyup.enter="search"
                   />
                 </a-form-item>
               </a-col>
               <a-col :span="8">
                 <a-form-item :label="$t('data.doc.form.name')" field="name">
                   <a-input
-                    @keyup.enter="search"
                     v-model="formModel.name"
                     :placeholder="$t('data.doc.form.name.placeholder')"
+                    @keyup.enter="search"
                   />
                 </a-form-item>
               </a-col>
               <a-col :span="8">
-                <a-form-item
-                  :label="$t('data.doc.form.type')"
-                  field="type"
-                >
+                <a-form-item :label="$t('data.doc.form.type')" field="type">
                   <a-select
-                      v-model="formModel.doc_type"
-                      :placeholder="$t('请选择类型')"
-                      :allow-clear="false"
+                    v-model="formModel.doc_type"
+                    :placeholder="$t('请选择类型')"
+                    :allow-clear="false"
                   >
                     <a-option
-                        v-for="(item, index) in ['文本', 'PDF', '表格', '图片', '媒体', 'PPT', '文档']"
-                        :key="index"
-                        :value="item"
+                      v-for="(item, index) in [
+                        '文本',
+                        'PDF',
+                        '表格',
+                        '图片',
+                        '媒体',
+                        'PPT',
+                        '文档',
+                      ]"
+                      :key="index"
+                      :value="item"
                     >
                       {{ item }}
                     </a-option>
                   </a-select>
-              </a-form-item>
+                </a-form-item>
               </a-col>
               <a-col :span="8">
                 <a-form-item :label="$t('来源搜索')" field="source">
                   <a-input
-                    @keyup.enter="search"
                     v-model="formModel.source"
                     :placeholder="$t('输入文件来源')"
+                    @keyup.enter="search"
                   />
                 </a-form-item>
               </a-col>
@@ -60,16 +65,16 @@
                 <a-form-item :label="$t('时间搜索')" field="rangeValue">
                   <a-range-picker
                     v-model="formModel.rangeValue"
-                    style="width: 254px;"
+                    style="width: 254px"
                   />
                 </a-form-item>
               </a-col>
               <a-col :span="8">
                 <a-form-item :label="$t('内容搜索')" field="content">
                   <a-input
-                    @keyup.enter="search"
                     v-model="formModel.content"
                     :placeholder="$t('内容搜索')"
+                    @keyup.enter="search"
                   />
                 </a-form-item>
               </a-col>
@@ -94,9 +99,9 @@
           </a-space>
         </a-col>
       </a-row>
-      <a-divider class="mt-0"/>
+      <a-divider class="mt-0" />
       <a-space :size="'medium'">
-        <a-button type="primary" @click="NewApi()" size="small">
+        <a-button type="primary" size="small" @click="NewApi()">
           <template #icon>
             <icon-plus />
           </template>
@@ -105,8 +110,8 @@
         <a-button
           :disabled="deleteButtonStatus()"
           status="danger"
-          @click="DeleteApi"
           size="small"
+          @click="DeleteApi"
         >
           <template #icon>
             <icon-minus />
@@ -115,14 +120,16 @@
         </a-button>
         <SettingTable
           :columns="columns"
-          :storageKey="storageKey"
+          :storage-key="storageKey"
           @update-columns="updateVisibleColumns"
         />
         <a-radio-group v-model="viewMode" size="small">
           <a-radio value="table">
             <template #radio="{ checked }">
               <a-space :size="4">
-                <icon-list :style="{ color: checked ? 'rgb(var(--primary-6))' : '' }" />
+                <icon-list
+                  :style="{ color: checked ? 'rgb(var(--primary-6))' : '' }"
+                />
                 <span v-if="checked">表格</span>
               </a-space>
             </template>
@@ -130,15 +137,16 @@
           <a-radio value="card">
             <template #radio="{ checked }">
               <a-space :size="4">
-                <icon-apps :style="{ color: checked ? 'rgb(var(--primary-6))' : '' }" />
+                <icon-apps
+                  :style="{ color: checked ? 'rgb(var(--primary-6))' : '' }"
+                />
                 <span v-if="checked">卡片</span>
               </a-space>
             </template>
           </a-radio>
-      </a-radio-group>
+        </a-radio-group>
       </a-space>
 
-      
       <div class="content">
         <a-table
           v-if="viewMode === 'table'"
@@ -159,30 +167,32 @@
             {{ rowIndex + 1 }}
           </template> -->
           <template #title="{ record }">
-            
-            <span class="cursor-pointer" @click="
-              router.push({
-                name: 'DocDetail',
-                params: { 
-                  id: record.id,
-                },
-                query: {
-                  appendix: record.name,
-                }
-              })
-              ">{{ record.title }}
+            <span
+              class="cursor-pointer"
+              @click="
+                router.push({
+                  name: 'DocDetail',
+                  params: {
+                    id: record.id,
+                  },
+                  query: {
+                    appendix: record.name,
+                  },
+                })
+              "
+              >{{ record.title }}
             </span>
           </template>
 
           <template #size="{ record }">
             {{ formatFileSize(record.size) }}
           </template>
-          
+
           <template #type="{ record }">
             <component :is="getSvgByType(record.type)" class="w-10 h-10" />
           </template>
           <template #created_time="{ record }">
-              {{ tableDateFormat(record.created_time) }}
+            {{ tableDateFormat(record.created_time) }}
           </template>
           <template #doc_time="{ record }">
             {{ tableDateFormat(record.doc_time) }}
@@ -203,24 +213,24 @@
             <a-space>
               <a-tooltip content="修改">
                 <a-link @click="EditApi(record.id)">
-                  <icon-edit style="font-size:16"/>
+                  <icon-edit style="font-size: 16" />
                 </a-link>
               </a-tooltip>
               <a-tooltip content="查看">
                 <a-link @click="ViewApi(record.id, record.title)">
-                  <icon-unordered-list  style="font-size:16"/>
+                  <icon-unordered-list style="font-size: 16" />
                 </a-link>
-              </a-tooltip>  
+              </a-tooltip>
               <!-- 取消收藏 -->
               <a-tooltip v-if="record.is_collected" content="取消收藏">
                 <a-link @click="handleUnCollect(record.id)">
-                  <icon-star-fill style="font-size:16"/>
+                  <icon-star-fill style="font-size: 16" />
                 </a-link>
               </a-tooltip>
               <!-- 收藏 -->
               <a-tooltip v-else content="收藏">
                 <a-link @click="CollectionApi(record.id)">
-                  <icon-star style="font-size:16"/>
+                  <icon-star style="font-size: 16" />
                 </a-link>
               </a-tooltip>
               <!-- <a-tooltip content="隐藏">
@@ -232,27 +242,35 @@
           </template>
         </a-table>
 
-         <!-- 卡片视图 -->
-         <div v-if="viewMode === 'card'" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-          <a-card 
-            v-for="record in renderData" 
+        <!-- 卡片视图 -->
+        <div
+          v-if="viewMode === 'card'"
+          class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4"
+        >
+          <a-card
+            v-for="record in renderData"
             :key="record.id"
             class="hover:shadow-lg transition-shadow duration-300 rounded-lg"
             :hoverable="true"
             :loading="loading"
           >
-            <div class="flex items-start gap-3" v-if="record">
-                <component :is="getSvgByType(record.type || '')" class="w-12 h-12 flex-shrink-0" />
+            <div v-if="record" class="flex items-start gap-3">
+              <component
+                :is="getSvgByType(record.type || '')"
+                class="w-12 h-12 flex-shrink-0"
+              />
               <div class="flex-1 min-w-0">
                 <div class="flex justify-between items-start">
                   <a-tooltip :content="record.title">
-                    <a-link 
+                    <a-link
                       class="text-lg font-medium truncate block max-w-[180px]"
-                      @click="router.push({
-                        name: 'DocDetail',
-                        params: { id: record.id },
-                        query: { appendix: record.name }
-                      })"
+                      @click="
+                        router.push({
+                          name: 'DocDetail',
+                          params: { id: record.id },
+                          query: { appendix: record.name },
+                        })
+                      "
                     >
                       {{ record.title }}
                     </a-link>
@@ -265,7 +283,7 @@
                     </a-tooltip>
                     <a-tooltip v-if="record.is_collected" content="取消收藏">
                       <a-link @click="handleUnCollect(record.id)">
-                        <icon-star-fill style="font-size:16"/>
+                        <icon-star-fill style="font-size: 16" />
                       </a-link>
                     </a-tooltip>
                     <a-tooltip v-else content="收藏">
@@ -282,10 +300,18 @@
                   {{ tableDateFormat(record.created_time) }}
                 </div>
                 <div class="mt-2">
-                  <a-tag v-if="record.status === 0" :color="`orange`" size="small">
+                  <a-tag
+                    v-if="record.status === 0"
+                    :color="`orange`"
+                    size="small"
+                  >
                     {{ $t(`处理中`) }}
                   </a-tag>
-                  <a-tag v-else-if="record.status === 1" :color="`green`" size="small">
+                  <a-tag
+                    v-else-if="record.status === 1"
+                    :color="`green`"
+                    size="small"
+                  >
                     {{ $t(`admin.menu.form.status.${record.status}`) }}
                   </a-tag>
                   <a-tag v-else :color="`red`" size="small">
@@ -296,25 +322,33 @@
             </div>
             <!-- 新增的摘要信息部分 -->
             <div class="mt-3 flex-1">
-              <div class="text-sm text-gray-600 line-clamp-3" :title="record.desc">
+              <div
+                class="text-sm text-gray-600 line-clamp-3"
+                :title="record.desc"
+              >
                 {{ record.desc || '暂无摘要信息' }}
               </div>
             </div>
 
             <!-- 底部标签区域（如果有的话） -->
-            <div class="mt-2 flex flex-wrap gap-1" v-if="record.tags && record.tags.length">
-              <a-tag 
-                v-for="(tag, index) in record.tags.slice(0, 3)" 
-                :key="index" 
+            <div
+              v-if="record.tags && record.tags.length"
+              class="mt-2 flex flex-wrap gap-1"
+            >
+              <a-tag
+                v-for="(tag, index) in record.tags.slice(0, 3)"
+                :key="index"
                 size="small"
                 class="truncate max-w-[80px]"
                 :title="tag"
               >
                 {{ tag }}
               </a-tag>
-              <a-tag size="small" v-if="record.tags.length > 3">+{{ record.tags.length - 3 }}</a-tag>
+              <a-tag v-if="record.tags.length > 3" size="small"
+                >+{{ record.tags.length - 3 }}</a-tag
+              >
+              >
             </div>
-            
           </a-card>
         </div>
 
@@ -331,7 +365,6 @@
             @page-size-change="onPageSizeChange"
           />
         </div>
-
       </div>
       <div class="content-modal">
         <a-modal
@@ -363,74 +396,70 @@
                   :label="$t('data.doc.form.name')"
                   field="name"
                 >
-                <a-input
-                  v-model="form.name"
-                ></a-input>
-              </a-form-item>
+                  <a-input v-model="form.name"></a-input>
+                </a-form-item>
               </a-col>
             </a-row>
 
             <a-row :gutter="24">
               <a-col :span="12">
-                <a-form-item
-              :label="$t('data.doc.form.type')"
-              field="type"
-            >
-                <a-select
-                    v-model="form.type"
-                    :placeholder="$t('请选择类型')"
-                >
-                  <a-option
-                      v-for="(item, index) in ['文本', 'PDF', '表格', '图片', '媒体', '其他']"
+                <a-form-item :label="$t('data.doc.form.type')" field="type">
+                  <a-select v-model="form.type" :placeholder="$t('请选择类型')">
+                    <a-option
+                      v-for="(item, index) in [
+                        '文本',
+                        'PDF',
+                        '表格',
+                        '图片',
+                        '媒体',
+                        '其他',
+                      ]"
                       :key="index"
                       :value="item"
-                  >
-                    {{ item }}
-                  </a-option>
-                </a-select>
-            </a-form-item>
+                    >
+                      {{ item }}
+                    </a-option>
+                  </a-select>
+                </a-form-item>
               </a-col>
               <a-col :span="12">
                 <!-- 文件来源 -->
-                <a-form-item
-                  :label="$t('文件来源')"
-                  field="source"
-                >
-                  <a-input
-                    v-model="form.source"
-                  ></a-input>
+                <a-form-item :label="$t('文件来源')" field="source">
+                  <a-input v-model="form.source"></a-input>
                 </a-form-item>
               </a-col>
-              
             </a-row>
-
 
             <a-row :gutter="24">
               <a-col :span="12">
-                <a-form-item
-              :label="$t('data.doc.form.desc')"
-              field="desc"
-            >
-              <a-textarea
-                v-model="form.desc"
-                auto-size
-                style="overflow: scroll; max-height: 300px; min-height: 300px;"
-              ></a-textarea>
-            </a-form-item>
+                <a-form-item :label="$t('data.doc.form.desc')" field="desc">
+                  <a-textarea
+                    v-model="form.desc"
+                    auto-size
+                    style="
+                      overflow: scroll;
+                      max-height: 300px;
+                      min-height: 300px;
+                    "
+                  ></a-textarea>
+                </a-form-item>
               </a-col>
               <a-col :span="12">
                 <a-form-item
-              :label="$t('data.doc.form.content')"
-              field="content"
-            >
-              <a-textarea
-                v-model="form.content"
-                auto-size
-                style="overflow: scroll; max-height: 300px; min-height: 300px;"
-              ></a-textarea>
-            </a-form-item>
+                  :label="$t('data.doc.form.content')"
+                  field="content"
+                >
+                  <a-textarea
+                    v-model="form.content"
+                    auto-size
+                    style="
+                      overflow: scroll;
+                      max-height: 300px;
+                      min-height: 300px;
+                    "
+                  ></a-textarea>
+                </a-form-item>
               </a-col>
-              
             </a-row>
 
             <a-row :gutter="24">
@@ -472,7 +501,6 @@
                 </a-space>
               </a-form-item>
             </a-row>
-
           </a-form>
         </a-modal>
         <a-modal
@@ -493,9 +521,9 @@
           :title="`${$t('内容')}`"
           :visible="openView"
           fullscreen
-          hideCancel
+          hide-cancel
+          ok-text="关闭"
           @ok="cancelReq"
-          okText="关闭"
         >
           <!-- <GeneralDetail :info="form"/> -->
         </a-modal>
@@ -519,10 +547,11 @@
                 >{{ item.label }}
               </a-option>
             </a-select>
-            <a-button style="width: 100%;" @click="router.push({name: 'Collection'})">
-              <div>
-                新建收藏夹
-              </div>
+            <a-button
+              style="width: 100%"
+              @click="router.push({ name: 'Collection' })"
+            >
+              <div> 新建收藏夹 </div>
               <div>
                 <icon-plus />
               </div>
@@ -536,7 +565,7 @@
     </a-card>
   </a-layout>
 </template>
-  
+
 <script lang="ts" setup>
   import {
     Message,
@@ -559,8 +588,8 @@
     collectDoc,
   } from '@/api/doc';
   import {
-  queryStarCollectionList,
-  StarCollectionRes,
+    queryStarCollectionList,
+    StarCollectionRes,
   } from '@/api/starCollection';
   import { Pagination } from '@/types/global';
   import { useRouter } from 'vue-router';
@@ -568,12 +597,10 @@
   import SettingTable from '@/components/setting-table/index.vue';
   import { getSvgByType, formatFileSize } from '@/utils/doc';
 
-
-
   const { t } = useI18n();
   const { loading, setLoading } = useLoading(true);
   const router = useRouter();
-  const storageKey = "docTable";
+  const storageKey = 'docTable';
   const viewMode = ref('card');
 
   // 列表展示
@@ -593,7 +620,6 @@
       visibleColumns.value = columns.value; // 默认全部显示
     }
   });
-
 
   // 表单
   const generateFormModel = () => {
@@ -646,7 +672,11 @@
     // drawerTitle.value = t('查看');
     // await fetchApiDetail(pk);
     // openView.value = true;
-    router.push({name: 'DocDetail', params: { id: pk }, query: { appendix: title }});
+    router.push({
+      name: 'DocDetail',
+      params: { id: pk },
+      query: { appendix: title },
+    });
   };
   const DeleteApi = () => {
     drawerTitle.value = t('data.doc.columns.delete.drawer');
@@ -654,8 +684,8 @@
   };
   const HideApi = (pk: number) => {
     renderData.value = renderData.value.filter((item) => {
-      return item.id !== pk
-    })
+      return item.id !== pk;
+    });
   };
 
   const collectionSelect = ref();
@@ -720,7 +750,7 @@
       dataIndex: 'doc_time',
       slotName: 'doc_time',
       sortable: {
-        sortDirections: ['ascend', 'descend']
+        sortDirections: ['ascend', 'descend'],
       },
       width: 160,
       ellipsis: true,
@@ -731,7 +761,7 @@
       dataIndex: 'created_time',
       slotName: 'created_time',
       sortable: {
-        sortDirections: ['ascend', 'descend']
+        sortDirections: ['ascend', 'descend'],
       },
       width: 150,
       ellipsis: true,
@@ -868,7 +898,7 @@
       setLoading(false);
     }
   };
-  
+
   // 事件: 分页
   const onPageChange = async (current: number) => {
     pagination.current = current;
@@ -896,9 +926,7 @@
   };
 
   // 重置方法
-  const resetMethod = () => {
-
-  };
+  const resetMethod = () => {};
 
   // 重置表单
   const resetForm = (data: Record<any, any>) => {
@@ -950,14 +978,17 @@
       Message.error('请选择收藏夹');
       return;
     }
-    await collectDoc({ doc_id: operateRow.value, collection_id: collectionSelect.value });
+    await collectDoc({
+      doc_id: operateRow.value,
+      collection_id: collectionSelect.value,
+    });
     collectView.value = false;
     await fetchApiList({ page: pagination.current, size: pagination.pageSize });
     Message.success('收藏成功');
   };
 
   const handleUnCollect = async (id: number) => {
-    await collectDoc({ doc_id:id  });
+    await collectDoc({ doc_id: id });
     collectView.value = false;
     await fetchApiList({ page: pagination.current, size: pagination.pageSize });
     Message.success('操作成功');
@@ -978,11 +1009,10 @@
   .content {
     padding-top: 20px;
   }
-  .title-link{
+  .title-link {
     text-overflow: ellipsis;
     overflow: hidden;
     white-space: nowrap;
-    display:block;
+    display: block;
   }
 </style>
-  

@@ -2,6 +2,11 @@
   <a-layout class="flex-layout">
     <div class="general-card py-4">
       <a-tabs default-active-key="1">
+        <a-tab-pane key="3">
+          <template #title> <icon-at /> 邮箱 </template>
+          <EmailBoxTable />
+        </a-tab-pane>
+
         <a-tab-pane key="0">
           <template #title> <icon-layers /> 实体 </template>
           <EntityInfo />
@@ -12,18 +17,13 @@
           <SPOTable />
         </a-tab-pane>
 
-        <a-tab-pane key="2">
+        <!-- <a-tab-pane key="2">
           <template #title> <icon-code /> 邮件 </template>
           <EmailMsgTable />
-        </a-tab-pane>
-
-        <a-tab-pane key="3">
-          <template #title> <icon-at /> 邮箱 </template>
-          <EmailBoxTable />
-        </a-tab-pane>
+        </a-tab-pane> -->
 
         <a-tab-pane key="4">
-          <template #title> <icon-chart-line /> 分析 </template>
+          <template #title> <icon-code /> 分析 </template>
           <AnalyzeRelationships />
         </a-tab-pane>
       </a-tabs>
