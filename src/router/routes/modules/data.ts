@@ -37,35 +37,22 @@ const DASHBOARD: AppRouteRecordRaw = {
       },
     },
     {
-      path: 'person-detail/:id',
-      name: 'PersonDetail',
-      component: () => import('@/views/data/person-detail/index.vue'),
+      path: 'person',
+      name: 'Person',
+      component: () => import('@/views/data/person/index.vue'),
       meta: {
-        locale: 'menu.data.person.detail',
+        locale: '人物管理',
         requiresAuth: true,
-        roles: ['*'],
-        hideInMenu: true,
-      },
-    },
-    {
-      path: 'assets',
-      name: 'Assets',
-      component: () => import('@/views/data/assets/index.vue'),
-      meta: {
-        locale: 'menu.data.assets',
-        requiresAuth: true,
-        icon: 'IconFile',
         roles: ['*'],
         hideInMenu: false,
       },
     },
     {
-      path: 'assets-detail/:id',
-      name: 'AssetsDetail',
-      component: () =>
-        import('@/views/data/assets/components/assets-detail/index.vue'),
+      path: 'person-detail/:id',
+      name: 'PersonDetail',
+      component: () => import('@/views/data/person-detail/index.vue'),
       meta: {
-        locale: 'menu.data.assets.detail',
+        locale: 'menu.data.person.detail',
         requiresAuth: true,
         roles: ['*'],
         hideInMenu: true,
@@ -106,6 +93,17 @@ const DASHBOARD: AppRouteRecordRaw = {
       },
     },
     {
+      path: 'mailbox-detail/:id',
+      name: 'MailBoxDetail',
+      component: () => import('@/views/data/mailbox-detail/index.vue'),
+      meta: {
+        locale: 'menu.data.mailbox.detail',
+        requiresAuth: true,
+        roles: ['*'],
+        hideInMenu: true,
+      },
+    },
+    {
       path: 'upload',
       name: 'Upload',
       component: () => import('@/views/data/upload/index.vue'),
@@ -115,17 +113,6 @@ const DASHBOARD: AppRouteRecordRaw = {
         roles: ['*'],
         hideInMenu: false,
         icon: 'IconUpload',
-      },
-    },
-    {
-      path: 'event',
-      name: 'Event',
-      component: () => import('@/views/data/event/index.vue'),
-      meta: {
-        locale: '热点事件',
-        requiresAuth: true,
-        roles: ['*'],
-        hideInMenu: false,
       },
     },
     {
@@ -179,61 +166,6 @@ const DASHBOARD: AppRouteRecordRaw = {
       component: () => import('@/views/data/mail/index.vue'),
       meta: {
         locale: '邮件数据',
-        requiresAuth: true,
-        roles: ['*'],
-        hideInMenu: false,
-      },
-    },
-    {
-      path: 'person',
-      name: 'Person',
-      component: () => import('@/views/data/person/index.vue'),
-      meta: {
-        locale: '人物管理',
-        requiresAuth: true,
-        roles: ['*'],
-        hideInMenu: false,
-      },
-    },
-    {
-      path: 'subject',
-      name: 'Subject',
-      component: () => import('@/views/data/subject/index.vue'),
-      meta: {
-        locale: '议题管理',
-        requiresAuth: true,
-        roles: ['*'],
-        hideInMenu: false,
-      },
-    },
-    {
-      path: 'scandal',
-      name: 'Scandal',
-      component: () => import('@/views/data/scandal/index.vue'),
-      meta: {
-        locale: '黑料管理',
-        requiresAuth: true,
-        roles: ['*'],
-        hideInMenu: false,
-      },
-    },
-    {
-      path: 'social',
-      name: 'Social',
-      component: () => import('@/views/data/social/index.vue'),
-      meta: {
-        locale: '社交数据',
-        requiresAuth: true,
-        roles: ['*'],
-        hideInMenu: false,
-      },
-    },
-    {
-      path: 'news',
-      name: 'News',
-      component: () => import('@/views/data/news/index.vue'),
-      meta: {
-        locale: '新闻',
         requiresAuth: true,
         roles: ['*'],
         hideInMenu: false,

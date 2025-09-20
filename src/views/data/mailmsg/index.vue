@@ -200,9 +200,8 @@
                       type="primary"
                       @click="
                         router.push({
-                          name: 'DataDetail',
+                          name: 'MailMsgDetail',
                           params: { id: record.id },
-                          query: { type: 'mailmsg' },
                         })
                       "
                     >
