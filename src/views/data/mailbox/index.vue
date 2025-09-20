@@ -70,29 +70,46 @@
           <div v-if="loading" class="flex justify-center items-center h-64">
             <a-spin size="large" />
           </div>
-          <div v-else-if="renderData.length === 0" class="text-center text-gray-500 dark:text-gray-400">
+          <div
+            v-else-if="renderData.length === 0"
+            class="text-center text-gray-500 dark:text-gray-400"
+          >
             暂无数据
           </div>
-          <div v-else class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4">
+          <div
+            v-else
+            class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4"
+          >
             <a-card
               v-for="item in renderData"
               :key="item.id"
               class="rounded-lg shadow-md transition-all duration-300 hover:shadow-lg dark:bg-gray-800"
-              :class="{ 'border-blue-500 border-2': rowSelectKeys.includes(item.id) }"
+              :class="{
+                'border-blue-500 border-2': rowSelectKeys.includes(item.id),
+              }"
               @click="toggleSelection(item.id)"
             >
               <div class="flex items-center mb-4">
-                <component :is="getMailboxIcon(item.name)" class="w-8 h-8 mr-3" alt="mailbox icon" />
-                <h3 class="text-lg font-semibold text-gray-800 dark:text-white truncate">{{ item.name }}</h3>
+                <component
+                  :is="getMailboxIcon(item.name)"
+                  class="w-8 h-8 mr-3"
+                  alt="mailbox icon"
+                />
+                <h3
+                  class="text-lg font-semibold text-gray-800 dark:text-white truncate"
+                  >{{ item.name }}</h3
+                >
               </div>
               <div class="text-sm text-gray-600 dark:text-gray-300">
                 <p class="mb-2">
-                  <icon-email class="mr-2"/>
-                  邮件数量: <span class="font-semibold">{{ item.email_num }}</span>
+                  <icon-email class="mr-2" />
+                  邮件数量:
+                  <span class="font-semibold">{{ item.email_num }}</span>
                 </p>
                 <p>
-                  <icon-location class="mr-2"/>
-                  国家/地区: <span class="font-semibold">{{ item.country }}</span>
+                  <icon-location class="mr-2" />
+                  国家/地区:
+                  <span class="font-semibold">{{ item.country }}</span>
                 </p>
               </div>
               <template #actions>
@@ -100,9 +117,8 @@
                 <a-link
                   @click.stop="
                     router.push({
-                      name: 'DataDetail',
+                      name: 'MailBoxDetail',
                       params: { id: item.id },
-                      query: { type: 'mailbox' },
                     })
                   "
                 >
@@ -177,333 +193,339 @@
 </template>
 
 <script lang="ts" setup>
-    import {
-      Message,
-      SelectOptionData,
-      TableColumnData,
-    } from '@arco-design/web-vue';
-    import { useI18n } from 'vue-i18n';
-    import { computed, reactive, ref } from 'vue';
-    import useLoading from '@/hooks/loading';
-    import Footer from '@/components/footer/index.vue';
-    import {
-      createMailBox,
-      deleteMailBox,
-      queryMailBoxDetail,
-      queryMailBoxList,
-      MailBoxParams,
-      MailBoxReq,
-      MailBoxRes,
-      updateMailBox,
-    } from '@/api/mailbox';
-    import { Pagination } from '@/types/global';
-    import {useRouter} from "vue-router";
-    import { use, graphic } from 'echarts/core';
-    import { CanvasRenderer } from 'echarts/renderers';
-    import { PieChart, BarChart } from 'echarts/charts';
-    import {
-      TitleComponent,
-      TooltipComponent,
-      LegendComponent,
-      GridComponent,
-    } from 'echarts/components';
-    import VChart from 'vue-echarts';
-    import { useAppStore } from '@/store';
-    import GmailIcon from '@/assets/svg/gmail.svg';
-    import OutlookIcon from '@/assets/svg/outlook.svg';
-    import EmailIcon from '@/assets/svg/email.svg';
+  import {
+    Message,
+    SelectOptionData,
+    TableColumnData,
+  } from '@arco-design/web-vue';
+  import { useI18n } from 'vue-i18n';
+  import { computed, reactive, ref } from 'vue';
+  import useLoading from '@/hooks/loading';
+  import Footer from '@/components/footer/index.vue';
+  import {
+    createMailBox,
+    deleteMailBox,
+    queryMailBoxDetail,
+    queryMailBoxList,
+    MailBoxParams,
+    MailBoxReq,
+    MailBoxRes,
+    updateMailBox,
+  } from '@/api/mailbox';
+  import { Pagination } from '@/types/global';
+  import { useRouter } from 'vue-router';
+  import { use, graphic } from 'echarts/core';
+  import { CanvasRenderer } from 'echarts/renderers';
+  import { PieChart, BarChart } from 'echarts/charts';
+  import {
+    TitleComponent,
+    TooltipComponent,
+    LegendComponent,
+    GridComponent,
+  } from 'echarts/components';
+  import VChart from 'vue-echarts';
+  import { useAppStore } from '@/store';
+  import GmailIcon from '@/assets/svg/gmail.svg';
+  import OutlookIcon from '@/assets/svg/outlook.svg';
+  import EmailIcon from '@/assets/svg/email.svg';
 
-    use([
-      CanvasRenderer,
-      PieChart,
-      BarChart,
-      TitleComponent,
-      TooltipComponent,
-      LegendComponent,
-      GridComponent,
-    ]);
+  use([
+    CanvasRenderer,
+    PieChart,
+    BarChart,
+    TitleComponent,
+    TooltipComponent,
+    LegendComponent,
+    GridComponent,
+  ]);
 
-    const { t } = useI18n();
-    const { loading, setLoading } = useLoading(true);
-    const router = useRouter();
-    const appStore = useAppStore();
+  const { t } = useI18n();
+  const { loading, setLoading } = useLoading(true);
+  const router = useRouter();
+  const appStore = useAppStore();
 
-    const pieChartOption = computed(() => {
-      return {
-        tooltip: {
-          trigger: 'item',
+  const pieChartOption = computed(() => {
+    return {
+      tooltip: {
+        trigger: 'item',
+      },
+      legend: {
+        orient: 'vertical',
+        left: 'left',
+        textStyle: {
+          color: appStore.theme === 'dark' ? '#fff' : '#333',
         },
-        legend: {
-          orient: 'vertical',
-          left: 'left',
-          textStyle: {
-            color: appStore.theme === 'dark' ? '#fff' : '#333',
-          },
-        },
-        series: [
-          {
-            name: '邮件类型',
-            type: 'pie',
-            radius: '50%',
-            data: [
-              { value: 1048, name: 'Gmail' },
-              { value: 735, name: 'Outlook' },
-              { value: 580, name: 'Proton' },
-              { value: 484, name: 'Other' },
-            ],
-            emphasis: {
-              itemStyle: {
-                shadowBlur: 10,
-                shadowOffsetX: 0,
-                shadowColor: 'rgba(0, 0, 0, 0.5)',
-              },
-            },
-            label: {
-              color: appStore.theme === 'dark' ? '#fff' : '#333',
-            }
-          },
-        ],
-        color: ['#2d6aDE', '#5ab1ef', '#d8e9f8', '#b9d4f4'],
-      };
-    });
-
-    const barChartOption = computed(() => {
-      return {
-        tooltip: {
-          trigger: 'axis',
-          axisPointer: {
-            type: 'shadow',
-          },
-        },
-        grid: {
-          left: '3%',
-          right: '4%',
-          bottom: '3%',
-          containLabel: true,
-        },
-        xAxis: {
-          type: 'value',
-          boundaryGap: [0, 0.01],
-          axisLabel: {
-            color: appStore.theme === 'dark' ? '#fff' : '#333',
-          },
-        },
-        yAxis: {
-          type: 'category',
-          data: ['user1@example.com', 'user2@example.com', 'user3@example.com', 'user4@example.com', 'user5@example.com'],
-          axisLabel: {
-            color: appStore.theme === 'dark' ? '#fff' : '#333',
-          },
-        },
-        series: [
-          {
-            name: '邮件数量',
-            type: 'bar',
-            data: [18203, 23489, 29034, 104970, 131744],
+      },
+      series: [
+        {
+          name: '邮件类型',
+          type: 'pie',
+          radius: '50%',
+          data: [
+            { value: 1048, name: 'Gmail' },
+            { value: 735, name: 'Outlook' },
+            { value: 580, name: 'Proton' },
+            { value: 484, name: 'Other' },
+          ],
+          emphasis: {
             itemStyle: {
-              color: new graphic.LinearGradient(1, 0, 0, 0, [
-                { offset: 0, color: '#2d6aDE' },
-                { offset: 1, color: '#5ab1ef' },
-              ]),
+              shadowBlur: 10,
+              shadowOffsetX: 0,
+              shadowColor: 'rgba(0, 0, 0, 0.5)',
             },
           },
+          label: {
+            color: appStore.theme === 'dark' ? '#fff' : '#333',
+          },
+        },
+      ],
+      color: ['#2d6aDE', '#5ab1ef', '#d8e9f8', '#b9d4f4'],
+    };
+  });
+
+  const barChartOption = computed(() => {
+    return {
+      tooltip: {
+        trigger: 'axis',
+        axisPointer: {
+          type: 'shadow',
+        },
+      },
+      grid: {
+        left: '3%',
+        right: '4%',
+        bottom: '3%',
+        containLabel: true,
+      },
+      xAxis: {
+        type: 'value',
+        boundaryGap: [0, 0.01],
+        axisLabel: {
+          color: appStore.theme === 'dark' ? '#fff' : '#333',
+        },
+      },
+      yAxis: {
+        type: 'category',
+        data: [
+          'user1@example.com',
+          'user2@example.com',
+          'user3@example.com',
+          'user4@example.com',
+          'user5@example.com',
         ],
-      };
-    });
+        axisLabel: {
+          color: appStore.theme === 'dark' ? '#fff' : '#333',
+        },
+      },
+      series: [
+        {
+          name: '邮件数量',
+          type: 'bar',
+          data: [18203, 23489, 29034, 104970, 131744],
+          itemStyle: {
+            color: new graphic.LinearGradient(1, 0, 0, 0, [
+              { offset: 0, color: '#2d6aDE' },
+              { offset: 1, color: '#5ab1ef' },
+            ]),
+          },
+        },
+      ],
+    };
+  });
 
-    const getMailboxIcon = (name: string) => {
-      if (name.toLowerCase().includes('gmail')) {
-        return GmailIcon;
-      }
-      if (name.toLowerCase().includes('outlook')) {
-        return OutlookIcon;
-      }
-      return EmailIcon;
-    };
+  const getMailboxIcon = (name: string) => {
+    if (name.toLowerCase().includes('gmail')) {
+      return GmailIcon;
+    }
+    if (name.toLowerCase().includes('outlook')) {
+      return OutlookIcon;
+    }
+    return EmailIcon;
+  };
 
-    const toggleSelection = (id: number) => {
-      const index = rowSelectKeys.value.indexOf(id);
-      if (index > -1) {
-        rowSelectKeys.value.splice(index, 1);
-      } else {
-        rowSelectKeys.value.push(id);
-      }
-    };
+  const toggleSelection = (id: number) => {
+    const index = rowSelectKeys.value.indexOf(id);
+    if (index > -1) {
+      rowSelectKeys.value.splice(index, 1);
+    } else {
+      rowSelectKeys.value.push(id);
+    }
+  };
 
-    // 表单
-    const generateFormModel = () => {
-      return {
-        name: undefined,
-      };
+  // 表单
+  const generateFormModel = () => {
+    return {
+      name: undefined,
     };
-    const formModel = ref(generateFormModel());
-    // 表格
-    const renderData = ref<MailBoxRes[]>([]);
-    const operateRow = ref<number>(0);
-    const rowSelectKeys = ref<number[]>([]);
-    const basePagination: Pagination = {
-      current: 1,
-      pageSize: 20,
-      defaultPageSize: 20,
-      showTotal: true,
-      showPageSize: true,
-      bufferSize: 3,
-    };
-    const pagination: Pagination = reactive({
-      ...basePagination,
-    });
-    const NewMailBox = () => {
-      buttonStatus.value = 'new';
-      drawerTitle.value = t('新增');
-      resetForm(formDefaultValues);
-      openNewOrEdit.value = true;
-    };
-    const EditMailBox = async (pk: number) => {
-      buttonStatus.value = 'edit';
-      operateRow.value = pk;
-      drawerTitle.value = t('编辑');
-      await fetchMailBoxDetail(pk);
-      openNewOrEdit.value = true;
-    };
-    const DeleteMailBox = () => {
-      drawerTitle.value = t('删除');
-      openDelete.value = true;
-    };
+  };
+  const formModel = ref(generateFormModel());
+  // 表格
+  const renderData = ref<MailBoxRes[]>([]);
+  const operateRow = ref<number>(0);
+  const rowSelectKeys = ref<number[]>([]);
+  const basePagination: Pagination = {
+    current: 1,
+    pageSize: 20,
+    defaultPageSize: 20,
+    showTotal: true,
+    showPageSize: true,
+    bufferSize: 3,
+  };
+  const pagination: Pagination = reactive({
+    ...basePagination,
+  });
+  const NewMailBox = () => {
+    buttonStatus.value = 'new';
+    drawerTitle.value = t('新增');
+    resetForm(formDefaultValues);
+    openNewOrEdit.value = true;
+  };
+  const EditMailBox = async (pk: number) => {
+    buttonStatus.value = 'edit';
+    operateRow.value = pk;
+    drawerTitle.value = t('编辑');
+    await fetchMailBoxDetail(pk);
+    openNewOrEdit.value = true;
+  };
+  const DeleteMailBox = () => {
+    drawerTitle.value = t('删除');
+    openDelete.value = true;
+  };
 
-    // 对话框
-    const openNewOrEdit = ref<boolean>(false);
-    const openDelete = ref<boolean>(false);
-    const drawerTitle = ref<string>('');
-    const cancelReq = () => {
-      openNewOrEdit.value = false;
-      openDelete.value = false;
-    };
-    const formDefaultValues: MailBoxReq = {
-      name: '',
-    };
-    const form = reactive<MailBoxReq>({ ...formDefaultValues });
-    const buttonStatus = ref<string>();
-    const formRef = ref();
+  // 对话框
+  const openNewOrEdit = ref<boolean>(false);
+  const openDelete = ref<boolean>(false);
+  const drawerTitle = ref<string>('');
+  const cancelReq = () => {
+    openNewOrEdit.value = false;
+    openDelete.value = false;
+  };
+  const formDefaultValues: MailBoxReq = {
+    name: '',
+  };
+  const form = reactive<MailBoxReq>({ ...formDefaultValues });
+  const buttonStatus = ref<string>();
+  const formRef = ref();
 
-    // 表单校验
-    const beforeSubmit = async (done: any) => {
-      const res = await formRef.value?.validate();
-      if (!res) {
-        // 关闭对话框
-        done(true);
-      }
-      done(false);
-    };
+  // 表单校验
+  const beforeSubmit = async (done: any) => {
+    const res = await formRef.value?.validate();
+    if (!res) {
+      // 关闭对话框
+      done(true);
+    }
+    done(false);
+  };
 
-    // 提交按钮
-    const submitNewOrEdit = async () => {
-      setLoading(true);
-      try {
-        if (buttonStatus.value === 'new') {
-          await createMailBox(form);
-          cancelReq();
-          Message.success(t('submit.create.success'));
-          await fetchMailBoxList();
-        } else {
-          await updateMailBox(operateRow.value, form);
-          cancelReq();
-          Message.success(t('submit.update.success'));
-          await fetchMailBoxList();
-        }
-      } catch (error) {
-        // console.log(error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    // 删除按钮状态
-    const deleteButtonStatus = () => {
-      return rowSelectKeys.value?.length === 0;
-    };
-
-    // 删除按钮
-    const submitDelete = async () => {
-      setLoading(true);
-      try {
-        await deleteMailBox({ pk: rowSelectKeys.value });
+  // 提交按钮
+  const submitNewOrEdit = async () => {
+    setLoading(true);
+    try {
+      if (buttonStatus.value === 'new') {
+        await createMailBox(form);
         cancelReq();
-        Message.success(t('submit.delete.success'));
+        Message.success(t('submit.create.success'));
         await fetchMailBoxList();
-        rowSelectKeys.value = [];
-      } catch (error) {
-        openDelete.value = false;
-        // console.log(error);
-      } finally {
-        openDelete.value = false;
-        setLoading(false);
+      } else {
+        await updateMailBox(operateRow.value, form);
+        cancelReq();
+        Message.success(t('submit.update.success'));
+        await fetchMailBoxList();
       }
-    };
+    } catch (error) {
+      // console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    // 请求API列表
-    const fetchMailBoxList = async (params: MailBoxParams = {}) => {
-      setLoading(true);
-      try {
-        const res = await queryMailBoxList(params);
-        renderData.value = res.items;
-        pagination.total = res.total;
-        pagination.current = params.page;
-      } catch (error) {
-        // console.log(error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchMailBoxList();
+  // 删除按钮状态
+  const deleteButtonStatus = () => {
+    return rowSelectKeys.value?.length === 0;
+  };
 
-    // 请求部门详情
-    const fetchMailBoxDetail = async (pk: number) => {
-      setLoading(true);
-      try {
-        const res = await queryMailBoxDetail(pk);
-        resetForm(res);
-      } catch (error) {
-        // console.log(error);
-      } finally {
-        setLoading(false);
-      }
-    };
+  // 删除按钮
+  const submitDelete = async () => {
+    setLoading(true);
+    try {
+      await deleteMailBox({ pk: rowSelectKeys.value });
+      cancelReq();
+      Message.success(t('submit.delete.success'));
+      await fetchMailBoxList();
+      rowSelectKeys.value = [];
+    } catch (error) {
+      openDelete.value = false;
+      // console.log(error);
+    } finally {
+      openDelete.value = false;
+      setLoading(false);
+    }
+  };
 
-    // 事件: 分页
-    const onPageChange = async (current: number) => {
-      await fetchMailBoxList({ page: current, size: pagination.pageSize });
-    };
+  // 请求API列表
+  const fetchMailBoxList = async (params: MailBoxParams = {}) => {
+    setLoading(true);
+    try {
+      const res = await queryMailBoxList(params);
+      renderData.value = res.items;
+      pagination.total = res.total;
+      pagination.current = params.page;
+    } catch (error) {
+      // console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+  fetchMailBoxList();
 
-    // 事件: 分页大小
-    const onPageSizeChange = async (pageSize: number) => {
-      pagination.pageSize = pageSize;
-      await fetchMailBoxList({ page: 1, size: pageSize });
-    };
+  // 请求部门详情
+  const fetchMailBoxDetail = async (pk: number) => {
+    setLoading(true);
+    try {
+      const res = await queryMailBoxDetail(pk);
+      resetForm(res);
+    } catch (error) {
+      // console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    // 搜索
-    const search = async () => {
-      await fetchMailBoxList({
-        ...formModel.value,
-      } as unknown as MailBoxParams);
-    };
+  // 事件: 分页
+  const onPageChange = async (current: number) => {
+    await fetchMailBoxList({ page: current, size: pagination.pageSize });
+  };
 
-    // 重置
-    const resetSelect = () => {
-      formModel.value = generateFormModel();
-    };
+  // 事件: 分页大小
+  const onPageSizeChange = async (pageSize: number) => {
+    pagination.pageSize = pageSize;
+    await fetchMailBoxList({ page: 1, size: pageSize });
+  };
 
-    // 重置方法
-    const resetMethod = () => {
-      formModel.value.name = undefined;
-    };
+  // 搜索
+  const search = async () => {
+    await fetchMailBoxList({
+      ...formModel.value,
+    } as unknown as MailBoxParams);
+  };
 
-    // 重置表单
-    const resetForm = (data: Record<any, any>) => {
-      Object.keys(data).forEach((key) => {
-        // @ts-ignore
-        form[key] = data[key];
-      });
-    };
+  // 重置
+  const resetSelect = () => {
+    formModel.value = generateFormModel();
+  };
+
+  // 重置方法
+  const resetMethod = () => {
+    formModel.value.name = undefined;
+  };
+
+  // 重置表单
+  const resetForm = (data: Record<any, any>) => {
+    Object.keys(data).forEach((key) => {
+      // @ts-ignore
+      form[key] = data[key];
+    });
+  };
 </script>
 
 <script lang="ts">
@@ -517,5 +539,3 @@
     padding-top: 20px;
   }
 </style>
-
-  

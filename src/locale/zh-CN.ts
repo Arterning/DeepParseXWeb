@@ -49,6 +49,7 @@ export default {
   'menu.data.assets.detail': '资产详情',
   'menu.data.org.detail': '组织详情',
   'menu.analyse.org': '组织管理',
+  'menu.data.mailbox.detail': '邮箱详情',
   'menu.aiAssistant': '智能助手',
   'menu.data.aiAssistant': '智能助手',
   'menu.data.news': '新闻数据',
@@ -89,5 +90,5 @@ export default {
   ...localeGenerator,
   ...localSysDoc,
   ...localSysOrg,
-  ...localeSysAssets
+  ...localeSysAssets,
 };
