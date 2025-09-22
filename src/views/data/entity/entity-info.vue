@@ -133,6 +133,45 @@
                 ></a-textarea>
               </a-form-item>
 
+              <!-- 动态表单字段 - 人物类型 -->
+              <template v-if="form.entity_type === '人物'">
+                <a-form-item label="性别" field="gender">
+                  <a-select v-model="form.properties?.gender">
+                    <a-option value="男">男</a-option>
+                    <a-option value="女">女</a-option>
+                    <a-option value="其他">其他</a-option>
+                  </a-select>
+                </a-form-item>
+                <a-form-item label="国籍" field="nationality">
+                  <a-input v-model="form.properties?.nationality"></a-input>
+                </a-form-item>
+                <a-form-item label="组织" field="organization">
+                  <a-input v-model="form.properties?.organization"></a-input>
+                </a-form-item>
+                <a-form-item label="职位" field="position">
+                  <a-input v-model="form.properties?.position"></a-input>
+                </a-form-item>
+                <a-form-item label="联系方式" field="contact">
+                  <a-input v-model="form.properties?.contact"></a-input>
+                </a-form-item>
+                <a-form-item label="标签" field="tags">
+                  <a-input v-model="form.properties?.tags"></a-input>
+                </a-form-item>
+              </template>
+
+              <!-- 动态表单字段 - 组织类型 -->
+              <template v-else-if="form.entity_type === '组织'">
+                <a-form-item label="类型" field="type">
+                  <a-input v-model="form.properties?.type"></a-input>
+                </a-form-item>
+                <a-form-item label="标签" field="tags">
+                  <a-input v-model="form.properties?.tags"></a-input>
+                </a-form-item>
+                <a-form-item label="国家" field="country">
+                  <a-input v-model="form.properties?.country"></a-input>
+                </a-form-item>
+              </template>
+
             </a-form>
           </a-modal>
           <a-modal
@@ -259,6 +298,7 @@
       name: '',
       entity_type: '',
       description: '',
+      properties: {},
     };
     const form = reactive<EntityReq>({ ...formDefaultValues });
     const buttonStatus = ref<string>();
@@ -392,9 +432,14 @@
   
     // 重置表单
     const resetForm = (data: Record<any, any>) => {
-      Object.keys(data).forEach((key) => {
+      Object.keys(formDefaultValues).forEach((key) => {
         // @ts-ignore
-        form[key] = data[key];
+        if (key === 'properties' && !data[key]) {
+          form[key] = {};
+        } else {
+          // @ts-ignore
+          form[key] = data[key] !== undefined ? data[key] : formDefaultValues[key];
+        }
       });
     };
 
