@@ -14,6 +14,16 @@
                     <a-input
                       v-model="formModel.name"
                       :placeholder="$t('搜索名称')"
+                      @keydown.enter="search"
+                    />
+                  </a-form-item>
+                </a-col>
+                <a-col :span="8">
+                  <a-form-item field="entity_type" label="实体类型">
+                    <a-input
+                      v-model="formModel.entity_type"
+                      :placeholder="$t('搜索实体类型')"
+                      @keydown.enter="search"
                     />
                   </a-form-item>
                 </a-col>
@@ -69,6 +79,7 @@
             :bordered="false"
             :columns="(visibleColumns as TableColumnData[])"
             :data="renderData"
+            :expandable="expandable"
             :loading="loading"
             :pagination="pagination"
             :row-selection="rowSelection"
@@ -86,6 +97,19 @@
                   编辑
                 </a-link>
               </a-space>
+            </template>
+            <template #expand="{ record }">
+              <div v-if="record.properties" class="expand-content">
+                <div class="expand-title">属性详情</div>
+                <div v-if="Object.keys(record.properties).length > 0" class="properties-grid">
+                  <div v-for="(value, key) in record.properties" :key="key" class="property-item">
+                    <span class="property-key">{{ formatPropertyKey(key) }}:</span>
+                    <span class="property-value">{{ value || '-' }}</span>
+                  </div>
+                </div>
+                <div v-else class="no-properties">暂无属性信息</div>
+              </div>
+              <div v-else class="no-properties">暂无属性信息</div>
             </template>
           </a-table>
         </div>
@@ -223,6 +247,7 @@
     const generateFormModel = () => {
       return {
         name: undefined,
+        entity_type: undefined,
       };
     };
     const formModel = ref(generateFormModel());
@@ -428,6 +453,27 @@
     // 重置方法
     const resetMethod = () => {
       formModel.value.name = undefined;
+      formModel.value.entity_type = undefined;
+    };
+
+    // 表格展开配置
+    const expandable = {
+      expandedRowRender: (record: any) => record.properties !== undefined
+    };
+
+    // 格式化属性键名
+    const formatPropertyKey = (key: string): string => {
+      const keyMap: Record<string, string> = {
+        gender: '性别',
+        nationality: '国籍',
+        organization: '组织',
+        position: '职位',
+        contact: '联系方式',
+        tags: '标签',
+        type: '类型',
+        country: '国家'
+      };
+      return keyMap[key] || key;
     };
   
     // 重置表单
@@ -461,6 +507,51 @@
   <style lang="less" scoped>
     .content {
       padding-top: 20px;
+    }
+
+    .expand-content {
+      padding: 16px;
+      background-color: #fafafa;
+      border-radius: 4px;
+    }
+
+    .expand-title {
+      font-size: 14px;
+      font-weight: 500;
+      margin-bottom: 12px;
+      color: #262626;
+    }
+
+    .properties-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 12px;
+    }
+
+    .property-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+    }
+
+    .property-key {
+      color: #8c8c8c;
+      font-size: 12px;
+      min-width: 60px;
+    }
+
+    .property-value {
+      color: #262626;
+      font-size: 12px;
+      flex: 1;
+      word-break: break-all;
+    }
+
+    .no-properties {
+      color: #8c8c8c;
+      font-size: 12px;
+      text-align: center;
+      padding: 10px 0;
     }
   </style>
   
