@@ -5,7 +5,7 @@ export interface EntityReq {
   name: string;
   description?: string;
   entity_type?: string;
-  properties?: Record<string, any>;
+  properties: Record<string, any>;
 }
 
 export interface EntityRes extends EntityReq {
