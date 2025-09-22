@@ -464,22 +464,31 @@
         
         return () => {
           const record = props.data;
-          if (record.properties) {
-            return h('div', { class: 'expand-content' }, [
-              h('div', { class: 'expand-title' }, '属性详情'),
-              Object.keys(record.properties).length > 0 
-                ? h('div', { class: 'properties-grid' }, 
-                    Object.entries(record.properties).map(([key, value]) => 
-                      h('div', { class: 'property-item' }, [
-                        h('span', { class: 'property-key' }, `${formatPropertyKey(key)}:`),
-                        h('span', { class: 'property-value' }, value || '-')
+          return h('div', { class: 'bg-gray-50 p-4 rounded-lg border border-gray-200' }, [
+            // 属性详情部分
+            h('div', { class: 'mb-4' }, [
+              h('h3', { class: 'text-lg font-semibold mb-3 text-gray-700' }, '属性详情'),
+              Object.keys(record.properties || {}).length > 0 
+                ? h('div', { class: 'grid grid-cols-1 md:grid-cols-2 gap-3' }, 
+                    Object.entries(record.properties || {}).map(([key, value]) => 
+                      h('div', { class: 'flex items-start gap-2 bg-white p-3 rounded shadow-sm' }, [
+                        h('span', { class: 'text-gray-500 font-medium min-w-[80px]' }, `${formatPropertyKey(key)}:`),
+                        h('span', { class: 'text-gray-800 flex-1 word-break-break-all' }, value || '-')
                       ])
                     )
                   )
-                : h('div', { class: 'no-properties' }, '暂无属性信息')
-            ]);
-          }
-          return h('div', { class: 'no-properties' }, '暂无属性信息');
+                : h('div', { class: 'text-gray-500 italic text-center py-2' }, '暂无属性信息')
+            ]),
+            // 实体详情部分
+            record.description && record.description.trim() 
+              ? h('div', { class: 'mt-4 border-t border-gray-200 pt-4' }, [
+                  h('h3', { class: 'text-lg font-semibold mb-2 text-gray-700' }, '实体详情'),
+                  h('div', { class: 'bg-white p-3 rounded shadow-sm text-gray-800' }, record.description)
+                ])
+              : h('div', { class: 'mt-4 border-t border-gray-200 pt-4' }, [
+                  h('div', { class: 'text-gray-500 italic text-center' }, '暂无实体详情')
+                ])
+          ]);
         };
       }
     };
@@ -527,49 +536,6 @@
       padding-top: 20px;
     }
 
-    .expand-content {
-      padding: 16px;
-      background-color: #fafafa;
-      border-radius: 4px;
-    }
 
-    .expand-title {
-      font-size: 14px;
-      font-weight: 500;
-      margin-bottom: 12px;
-      color: #262626;
-    }
-
-    .properties-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-      gap: 12px;
-    }
-
-    .property-item {
-      display: flex;
-      align-items: flex-start;
-      gap: 8px;
-    }
-
-    .property-key {
-      color: #8c8c8c;
-      font-size: 12px;
-      min-width: 60px;
-    }
-
-    .property-value {
-      color: #262626;
-      font-size: 12px;
-      flex: 1;
-      word-break: break-all;
-    }
-
-    .no-properties {
-      color: #8c8c8c;
-      font-size: 12px;
-      text-align: center;
-      padding: 10px 0;
-    }
   </style>
   
