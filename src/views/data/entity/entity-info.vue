@@ -98,19 +98,7 @@
                 </a-link>
               </a-space>
             </template>
-            <template #expand="{ record }">
-              <div v-if="record.properties" class="expand-content">
-                <div class="expand-title">属性详情</div>
-                <div v-if="Object.keys(record.properties).length > 0" class="properties-grid">
-                  <div v-for="(value, key) in record.properties" :key="key" class="property-item">
-                    <span class="property-key">{{ formatPropertyKey(key) }}:</span>
-                    <span class="property-value">{{ value || '-' }}</span>
-                  </div>
-                </div>
-                <div v-else class="no-properties">暂无属性信息</div>
-              </div>
-              <div v-else class="no-properties">暂无属性信息</div>
-            </template>
+
           </a-table>
         </div>
         <div class="content-modal">
@@ -224,7 +212,7 @@
       TableColumnData,
     } from '@arco-design/web-vue';
     import { useI18n } from 'vue-i18n';
-    import { computed, onMounted, reactive, ref } from 'vue';
+    import { computed, h, onMounted, reactive, ref } from 'vue';
     import useLoading from '@/hooks/loading';
     import SettingTable from '@/components/setting-table/index.vue';
     import Footer from '@/components/footer/index.vue';
@@ -456,25 +444,55 @@
       formModel.value.entity_type = undefined;
     };
 
+    // 实体详情组件
+    const EntityDetail = { 
+      props: ['data'],
+      setup(props) {
+        const formatPropertyKey = (key: string): string => {
+          const keyMap: Record<string, string> = {
+            gender: '性别',
+            nationality: '国籍',
+            organization: '组织',
+            position: '职位',
+            contact: '联系方式',
+            tags: '标签',
+            type: '类型',
+            country: '国家'
+          };
+          return keyMap[key] || key;
+        };
+        
+        return () => {
+          const record = props.data;
+          if (record.properties) {
+            return h('div', { class: 'expand-content' }, [
+              h('div', { class: 'expand-title' }, '属性详情'),
+              Object.keys(record.properties).length > 0 
+                ? h('div', { class: 'properties-grid' }, 
+                    Object.entries(record.properties).map(([key, value]) => 
+                      h('div', { class: 'property-item' }, [
+                        h('span', { class: 'property-key' }, `${formatPropertyKey(key)}:`),
+                        h('span', { class: 'property-value' }, value || '-')
+                      ])
+                    )
+                  )
+                : h('div', { class: 'no-properties' }, '暂无属性信息')
+            ]);
+          }
+          return h('div', { class: 'no-properties' }, '暂无属性信息');
+        };
+      }
+    };
+    
     // 表格展开配置
-    const expandable = {
-      expandedRowRender: (record: any) => record.properties !== undefined
-    };
+    const expandable = reactive({
+      title: '展开',
+      expandedRowRender: (record: any) => {
+        return h(EntityDetail, { data: record });
+      }
+    });
 
-    // 格式化属性键名
-    const formatPropertyKey = (key: string): string => {
-      const keyMap: Record<string, string> = {
-        gender: '性别',
-        nationality: '国籍',
-        organization: '组织',
-        position: '职位',
-        contact: '联系方式',
-        tags: '标签',
-        type: '类型',
-        country: '国家'
-      };
-      return keyMap[key] || key;
-    };
+
   
     // 重置表单
     const resetForm = (data: Record<any, any>) => {
