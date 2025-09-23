@@ -15,7 +15,7 @@
   // });
 
   const props = defineProps<{
-    entity: any
+    info: any
   }>();
 
 </script>

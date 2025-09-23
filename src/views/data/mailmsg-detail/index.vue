@@ -8,7 +8,7 @@
           <Content :info="info" />
         </a-tab-pane>
         <a-tab-pane key="2" title="实体信息">
-          
+          <Entity :info="info" />
         </a-tab-pane>
       </a-tabs>
     </a-card>
@@ -24,6 +24,7 @@ import { useRoute } from 'vue-router';
 import Content from './content.vue';
 import Footer from '@/components/footer/index.vue';
 import { MailMsgRes, queryMailMsgDetail } from '@/api/mailmsg';
+import Entity from './entity.vue';
 
 const graphData = ref({
   nodes: [],

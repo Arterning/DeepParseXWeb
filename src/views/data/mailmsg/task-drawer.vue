@@ -81,8 +81,8 @@
           {{ record.success }} / {{ record.fail }} / {{ record.total }}
         </a-space>
       </template> -->
-      <template #createdTime="{ record }">
-        {{ formatDate(record.createdTime) }}
+      <template #created_time="{ record }">
+        {{ tableDateFormat(record.created_time) }}
       </template>
       <template #status="{ record }">
         <a-tag :color="tagMap(record.status).color" bordered>
@@ -117,8 +117,8 @@
     Message,
     TableColumnData,
   } from '@arco-design/web-vue';
-  import { formatDate } from './utils';
   import { deleteUploadTask, queryUploadTaskList } from '@/api/upload_task';
+  import { tableDateFormat } from '@/utils/date';
 
   const props = defineProps({
     open: Boolean,
@@ -212,7 +212,7 @@
     // },
     {
       title: '开始时间',
-      slotName: 'createdTime',
+      slotName: 'created_time',
       // width: 150
     },
     {

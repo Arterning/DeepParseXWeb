@@ -173,7 +173,7 @@
                       {{ record.name }}
                     </div>
                     <span class="text-sm text-gray-500 flex-shrink-0 ml-4">{{
-                      formatDate(record.time)
+                      tableDateFormat(record.time)
                     }}</span>
                   </div>
 
@@ -408,8 +408,8 @@
   } from '@/api/mailmsg';
   import { Pagination } from '@/types/global';
   import { useRouter } from 'vue-router';
-  import { formatDate } from './utils';
   import DirectoryDrawer from './directory-drawer.vue';
+  import { tableDateFormat } from '@/utils/date';
 
   const { t } = useI18n();
   const { loading, setLoading } = useLoading(true);

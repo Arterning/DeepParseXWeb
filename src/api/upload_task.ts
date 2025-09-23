@@ -4,7 +4,7 @@ import qs from 'query-string';
 export interface UploadTaskReq {
   name: string;
   option: any;
-  createdTime: string;
+  created_time: string;
 }
 
 export interface UploadTaskRes extends UploadTaskReq {
