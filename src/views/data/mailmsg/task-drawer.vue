@@ -112,17 +112,14 @@
 <script setup lang='ts'>
   import { computed, reactive, ref, watch } from 'vue';
   import { Pagination } from '@/types/global';
-  import { useI18n } from 'vue-i18n';
   import useLoading from '@/hooks/loading';
   import { useRouter } from 'vue-router';
   import {
     Message,
     TableColumnData,
-
   } from '@arco-design/web-vue';
-
+  import { formatDate } from './utils';
   import { deleteUploadTask, queryUploadTaskList } from '@/api/upload_task';
-  import dayjs from 'dayjs';
 
   const props = defineProps({
     open: Boolean,
@@ -136,29 +133,12 @@
     'update:open'
   ])
 
-  const { t } = useI18n();
   const { loading, setLoading } = useLoading(true);
   const router = useRouter();
 
   const tableScrollY = computed(() => {
     return `calc(100vh - 200px)`
   })
-
-  const todayStr = computed(() => {
-    const now = new Date()
-    const year = now.getFullYear()
-    const month = String(now.getMonth() + 1).padStart(2, '0')
-    const day = String(now.getDate()).padStart(2, '0')
-    return `${year}${month}${day}`
-  })
-
-  const formatFileSize = (bytes: number) => {
-    if (bytes === 0) return '0 B';
-    const k = 1024;
-    const sizes = ['B', 'KB', 'MB', 'GB', 'TB'];
-    const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return `${(bytes / (k ** i)).toFixed(2)} ${sizes[i]}`;
-  };
 
   const generateSearchForm = () => {
     return {
@@ -181,7 +161,6 @@
         return { label: '-', color: 'gary' };
     }
   }
-  const formatDate = (isoString: string) => dayjs(isoString).format("YY-MM-DD HH:mm:ss");
 
   const searchModel = ref(generateSearchForm());
     // 表格
@@ -335,7 +314,3 @@
     }
   }
 </script>
-
-<style lang="less" scoped>
-
-</style>

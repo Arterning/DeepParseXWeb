@@ -59,6 +59,7 @@
                     v-model="formModel.time"
                     :placeholder="$t('搜索时间')"
                     @keyup.enter="search"
+                    class="w-full"
                   />
                 </a-form-item>
               </a-col>
@@ -104,7 +105,7 @@
           </a-button>
         </a-space>
         <a-space>
-          <a-button type="primary" @click="">
+          <a-button type="primary" @click="viewType=!viewType">
             <template #icon>
               <icon-sync />
             </template>
@@ -123,97 +124,33 @@
           v-if="loading"
           class="w-full h-96 flex justify-center items-center"
         >
-          <a-spin size="large" />
+          <a-spin :size="32" />
         </div>
         <div v-else>
-          <div class="grid grid-cols-2 gap-4">
-            <div
-              v-for="record in renderData"
-              :key="record.id"
-              class="flex items-start p-4 border rounded-lg shadow-sm hover:shadow-lg transition-shadow duration-200"
-              :class="{
-                'border-blue-500 ring-1 ring-blue-500': rowSelectKeys.includes(
-                  record.id
-                ),
-              }"
-            >
-              <div class="mr-4 pt-1">
-                <a-checkbox
-                  :model-value="rowSelectKeys.includes(record.id)"
-                  @change="() => toggleSelection(record.id)"
-                />
-              </div>
-              <div class="flex-1 min-w-0">
-                <div class="flex justify-between items-center mb-2">
-                  <a-link
-                    class="text-lg font-semibold truncate hover:text-blue-600"
-                    :title="record.name"
-                    @click="
-                      router.push({
-                        name: 'MailMsgDetail',
-                        params: { id: record.id },
-                      })
-                    "
-                  >
-                    {{ record.name }}
-                  </a-link>
-                  <span class="text-sm text-gray-500 flex-shrink-0 ml-4">{{
-                    record.time
-                  }}</span>
+
+          <template v-if="viewType">
+            <div class="grid grid-cols-2 gap-4" >
+              <div
+                v-for="record in renderData"
+                :key="record.id"
+                class="flex items-start p-4 border rounded-lg shadow-sm hover:shadow-lg transition-shadow duration-200"
+                :class="{
+                  'border-blue-500 ring-1 ring-blue-500': rowSelectKeys.includes(
+                    record.id
+                  ),
+                }"
+              >
+                <div class="mr-4 pt-1">
+                  <a-checkbox
+                    :model-value="rowSelectKeys.includes(record.id)"
+                    @change="() => toggleSelection(record.id)"
+                  />
                 </div>
-
-                <div
-                  class="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-gray-600 mb-3"
-                >
-                  <div class="flex items-center">
-                    <span class="font-medium text-gray-500">From:</span>
-                    <span
-                      class="ml-1.5 text-gray-500 px-2 py-0.5 rounded-full"
-                      >{{ record.sender }}</span
-                    >
-                  </div>
-                  <div class="flex items-center">
-                    <span class="font-medium text-gray-500">To:</span>
-                    <span
-                      class="ml-1.5 text-gray-500 px-2 py-0.5 rounded-full"
-                      >{{ record.receiver }}</span
-                    >
-                  </div>
-                  <div v-if="record.cc" class="flex items-center">
-                    <span class="font-medium text-gray-500">CC:</span>
-                    <span
-                      class="ml-1.5 text-gray-500 px-2 py-0.5 rounded-full"
-                      >{{ record.cc }}</span
-                    >
-                  </div>
-                </div>
-
-                <p
-                  class="text-gray-600 text-sm truncate mb-4"
-                  :title="record.content"
-                >
-                  {{ record.content || 'No content to display.' }}
-                </p>
-
-                <div class="flex justify-between items-center">
-                  <div class="flex items-center space-x-2">
-                    <a-tag v-if="record.category" color="arcoblue">{{
-                      record.category
-                    }}</a-tag>
-                    <span
-                      v-if="record.location"
-                      class="text-xs text-gray-400 flex items-center"
-                    >
-                      <icon-location /> {{ record.location }}
-                    </span>
-                  </div>
-                  <div class="flex items-center space-x-2">
-                    <a-button size="mini" @click="EditMailMsg(record.id)">
-                      编辑
-                    </a-button>
-                    <a-button
-                      size="mini"
-                      type="primary"
+                <div class="flex-1 min-w-0">
+                  <div class="flex justify-between items-center mb-2">
+                    <div
+                      class="flex-1  text-lg font-semibold truncate hover:text-blue-600 cursor-pointer"
+                      :title="record.name"
                       @click="
                         router.push({
                           name: 'MailMsgDetail',
@@ -221,35 +158,139 @@
                         })
                       "
                     >
-                      查看
-                    </a-button>
+                      {{ record.name }}
+                    </div>
+                    <span class="text-sm text-gray-500 flex-shrink-0 ml-4">{{
+                      formatDate(record.time)
+                    }}</span>
+                  </div>
+
+                  <div
+                    class="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-gray-600 mb-3"
+                  >
+                    <div class="flex items-center">
+                      <span class="font-medium text-gray-500">From:</span>
+                      <span
+                        class="ml-1.5 text-gray-500 px-2 py-0.5 rounded-full"
+                        >{{ record.sender }}</span
+                      >
+                    </div>
+                    <div class="flex items-center">
+                      <span class="font-medium text-gray-500">To:</span>
+                      <span
+                        class="ml-1.5 text-gray-500 px-2 py-0.5 rounded-full"
+                        >{{ record.receiver }}</span
+                      >
+                    </div>
+                    <div v-if="record.cc" class="flex items-center">
+                      <span class="font-medium text-gray-500">CC:</span>
+                      <span
+                        class="ml-1.5 text-gray-500 px-2 py-0.5 rounded-full"
+                        >{{ record.cc }}</span
+                      >
+                    </div>
+                  </div>
+
+                  <p
+                    class="text-gray-600 text-sm truncate mb-4"
+                    :title="record.content"
+                  >
+                    {{ record.content || 'No content to display.' }}
+                  </p>
+
+                  <div class="flex justify-between items-center">
+                    <div class="flex items-center space-x-2">
+                      <a-tag v-if="record.category" color="arcoblue">{{
+                        record.category
+                      }}</a-tag>
+                      <span
+                        v-if="record.location"
+                        class="text-xs text-gray-400 flex items-center"
+                      >
+                        <icon-location /> {{ record.location }}
+                      </span>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                      <a-button size="mini" @click="EditMailMsg(record.id)">
+                        编辑
+                      </a-button>
+                      <a-button
+                        size="mini"
+                        type="primary"
+                        @click="
+                          router.push({
+                            name: 'MailMsgDetail',
+                            params: { id: record.id },
+                          })
+                        "
+                      >
+                        查看
+                      </a-button>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
+            <div
+              v-if="!loading && renderData.length === 0"
+              class="text-center py-16"
+            >
+              <a-empty />
+            </div>
+            <div
+              v-if="renderData.length > 0"
+              class="flex justify-end items-center mt-4"
+            >
+              <a-pagination
+                :total="pagination.total || 0"
+                :current="pagination.current"
+                :page-size="pagination.pageSize"
+                show-total
+                show-page-size
+                @change="onPageChange"
+                @page-size-change="onPageSizeChange"
+              />
+            </div>            
+          </template>
 
-          <div
-            v-if="!loading && renderData.length === 0"
-            class="text-center py-16"
-          >
-            <a-empty />
-          </div>
 
-          <div
-            v-if="renderData.length > 0"
-            class="flex justify-end items-center mt-4"
-          >
-            <a-pagination
-              :total="pagination.total || 0"
-              :current="pagination.current"
-              :page-size="pagination.pageSize"
-              show-total
-              show-page-size
-              @change="onPageChange"
-              @page-size-change="onPageSizeChange"
-            />
-          </div>
+          <a-table v-else v-model:selected-keys="rowSelectKeys" :bordered="false" :columns="columns" :data="renderData"
+            :loading="loading" :pagination="pagination" :row-selection="rowSelection" row-key="id"
+            @page-change="onPageChange" @page-size-change="onPageSizeChange">
+            <!-- <template #index="{ rowIndex }">
+              {{ rowIndex + 1 }}
+            </template> -->
+            <!-- <template #files="{ record }">
+              <a-space>
+                {{ record.success }} / {{ record.fail }} / {{ record.total }}
+              </a-space>
+            </template> -->
+            <template #abstract="{ record }">
+              {{ record.content.slice(0, 15) }}
+            </template>
+            <template #time="{ record }">
+              {{ formatDate(record.time) }}
+            </template>
+            <template #operate="{ record }">
+              <a-space>
+                <a-tooltip content="编辑">
+                  <a-link @click="EditMailMsg(record.id)">
+                    <icon-edit style="font-size:16" />
+                  </a-link>
+                </a-tooltip>
+                <a-tooltip content="查看">
+                  <a-link @click="
+                    router.push({
+                      name: 'MailMsgDetail',
+                      params: { id: record.id },
+                    })
+                  ">
+                    <icon-eye style="font-size:16" />
+                  </a-link>
+                </a-tooltip>
+              </a-space>
+            </template>
+          </a-table>        
         </div>
       </div>
       <div class="content-modal">
@@ -331,16 +372,14 @@
       </div>
       <TaskDrawer v-model:open="openTask" :refresh-trigger="taskRefreshTrigger" />
     </a-card>
-    <Footer />
   </a-layout>
 </template>
 
 <script lang="ts" setup>
-  import { Message, SelectOptionData } from '@arco-design/web-vue';
+  import { Message, SelectOptionData, TableColumnData } from '@arco-design/web-vue';
   import { useI18n } from 'vue-i18n';
-  import { reactive, ref } from 'vue';
+  import { computed, reactive, ref } from 'vue';
   import useLoading from '@/hooks/loading';
-  import Footer from '@/components/footer/index.vue';
   import UploadModal from './upload-modal.vue';
   import TaskDrawer from './task-drawer.vue';
   import {
@@ -355,10 +394,12 @@
   } from '@/api/mailmsg';
   import { Pagination } from '@/types/global';
   import { useRouter } from 'vue-router';
+  import { formatDate } from './utils';
 
   const { t } = useI18n();
   const { loading, setLoading } = useLoading(true);
   const router = useRouter();
+  const viewType = ref(true);
 
   // 表单
   const generateFormModel = () => {
@@ -378,6 +419,12 @@
   const renderData = ref<MailMsgRes[]>([]);
   const operateRow = ref<number>(0);
   const rowSelectKeys = ref<number[]>([]);
+  const rowSelection = {
+    type: 'checkbox' as 'checkbox' | 'radio' | undefined,
+    showCheckedAll: true,
+    onlyCurrent: false,
+  };
+
   const basePagination: Pagination = {
     current: 1,
     pageSize: 10,
@@ -389,6 +436,83 @@
   const pagination: Pagination = reactive({
     ...basePagination,
   });
+
+  const columns = computed<TableColumnData[]>(() => [
+    {
+      title: 'ID',
+      dataIndex: 'id',
+      slotName: 'id',
+      // sortable: {
+      //   sortDirections: ['ascend', 'descend']
+      // },
+      ellipsis: true,
+      tooltip: true,
+      width: 50,
+    },
+    {
+      title: '邮件主题',
+      dataIndex: 'name',
+      slotName: 'name',
+      ellipsis: true,
+      tooltip: true,
+      // width: 150
+    },
+    // {
+    //   title: '文件数量（成功/失败/总数）',
+    //   slotName: 'files',
+    //   width: 150
+    // },
+    // {
+    //   title: '总大小',
+    //   dataIndex: 'size',
+    //   width: 100
+    // },
+    {
+      title: '摘要',
+      slotName: 'abstract',
+      // width: 150
+    },
+    {
+      title: '日期',
+      slotName: 'time',
+      width: 160
+    },
+    // {
+    //   title: '关键字',
+    //   slotName: 'keywords',
+    //   // width: 120
+    // },
+    {
+      title: '发件人',
+      dataIndex: 'sender',
+      ellipsis: true,
+      tooltip: true,
+      width: 120
+    },
+    {
+      title: '收件人',
+      dataIndex: 'receiver',
+      ellipsis: true,
+      tooltip: true,
+      width: 120
+    },
+    {
+      title: '标签',
+      dataIndex: 'cc',
+      ellipsis: true,
+      tooltip: true,
+      width: 180
+    },
+    {
+      title: '操作',
+      dataIndex: 'operate',
+      slotName: 'operate',
+      align: 'center',
+      fixed: 'right',
+      width: 100,
+    },
+  ]);
+
   const EditMailMsg = async (pk: number) => {
     buttonStatus.value = 'edit';
     operateRow.value = pk;
