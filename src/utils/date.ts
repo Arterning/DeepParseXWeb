@@ -1,4 +1,4 @@
-export function tableDateFormat(dateStr: string): string {
+export function tableDateFormat(dateStr: string | Date): string {
   if (!dateStr) return '';
   const date = new Date(dateStr);
 
@@ -15,7 +15,7 @@ export function tableDateFormat(dateStr: string): string {
 
 
 
-export function emailDateFormat(dateStr: string): string {
+export function emailDateFormat(dateStr: string | Date): string {
   if (!dateStr) return '-';
   const daysOfWeek = ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'];
   const date = new Date(dateStr);

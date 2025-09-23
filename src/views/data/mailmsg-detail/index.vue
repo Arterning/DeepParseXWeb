@@ -4,14 +4,10 @@
     <a-card v-if="info" class="general-card" :loading="loading">
       <a-tabs>
         <a-tab-pane key="1" title="邮件内容">
-          <Content />
+          <Content :info="info" />
         </a-tab-pane>
-        <a-tab-pane key="2" title="人物信息">
-        </a-tab-pane>
-        <a-tab-pane key="3" title="组织信息">
-        </a-tab-pane>
-
-        <a-tab-pane key="4" title="码址信息">
+        <a-tab-pane key="2" title="实体信息">
+          
         </a-tab-pane>
       </a-tabs>
     </a-card>
@@ -20,14 +16,13 @@
 </template>
 
 <script lang="ts" setup>
-import { querySysDocDetail, SysDocRes, extractGraphData } from '@/api/doc';
+import { extractGraphData } from '@/api/doc';
 import useLoading from '@/hooks/loading';
 import { onMounted, ref } from 'vue';
 import { useRoute } from 'vue-router';
 import Content from './content.vue';
 import Footer from '@/components/footer/index.vue';
-
-
+import { MailMsgRes, queryMailMsgDetail } from '@/api/mailmsg';
 
 const graphData = ref({
   nodes: [],
@@ -51,14 +46,14 @@ const handleExtractGraph = async () => {
 const route = useRoute();
 const { loading, setLoading } = useLoading(true);
 
-const info = ref<SysDocRes>();
+const info = ref<MailMsgRes>();
 
 const { id } = route.params;
 
 onMounted(async () => {
   setLoading(true);
-  info.value = await querySysDocDetail(Number(id));
-  graphData.value = info.value.graph_data as any;
+  info.value = await queryMailMsgDetail(Number(id));
+  // graphData.value = info.value.graph_data as any;
   setLoading(false);
 })
 

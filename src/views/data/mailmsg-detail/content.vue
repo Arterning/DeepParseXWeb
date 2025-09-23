@@ -3,22 +3,22 @@
   <div class="p-6">
       <!-- 邮件标题 -->
       <h1 class="text-2xl font-semibold text-gray-900 mb-2">
-        {{ mailData?.name }}
+        {{ info?.name }}
       </h1>
 
       <!-- 元信息区域 -->
       <div class="flex flex-wrap gap-4 mb-6">
         <div class="flex items-center gap-2 text-gray-600">
           <a-icon-user />
-          <span>{{ mailData?.sender }}</span>
+          <span>{{ info?.sender }}</span>
         </div>
         <div class="flex items-center gap-2 text-gray-600">
           <a-icon-calendar />
-          <span>{{ emailDateFormat(mailData?.time) }}</span>
+          <span>{{ emailDateFormat(info?.time) }}</span>
         </div>
         <div class="flex items-center gap-2 text-gray-600">
           <a-icon-tag />
-          <span>{{ mailData?.category }}</span>
+          <span>{{ info?.category }}</span>
         </div>
       </div>
 
@@ -26,21 +26,21 @@
       <a-space class="flex flex-nowrap mb-4">
         <div class="text-sm font-medium text-gray-600 w-16">收件人</div>
         <!--            <a-tag-->
-        <!--              v-for="(recipient, index) in mailData?.recipients"-->
+        <!--              v-for="(recipient, index) in info?.recipients"-->
         <!--              :key="index"-->
         <!--            >-->
         <!--              {{ recipient }}-->
         <!--            </a-tag>-->
-        <a-tag>{{ mailData?.receiver }}</a-tag>
+        <a-tag>{{ info?.receiver }}</a-tag>
       </a-space>
 
       <!-- 抄送信息 -->  
-      <a-space v-if="mailData?.cc" class="flex flex-nowrap mb-4">
+      <a-space v-if="info?.cc" class="flex flex-nowrap mb-4">
         <div class="text-sm font-medium text-gray-600 w-16">抄送</div>
-        <!--            <a-tag v-for="(cc, index) in mailData?.cc" :key="index" type="gray">-->
+        <!--            <a-tag v-for="(cc, index) in info?.cc" :key="index" type="gray">-->
         <!--              {{ cc }}-->
         <!--            </a-tag>-->
-        <a-tag class="text-wrap h-auto">{{ mailData?.cc }}</a-tag>
+        <a-tag class="text-wrap h-auto">{{ info?.cc }}</a-tag>
       </a-space>
 
       <a-space class="flex justify-end mb-4">
@@ -60,7 +60,7 @@
       <a-split v-if="translate" v-model:size="splitSize" min="0.3" max="0.7" class="border-t border-gray-200 pt-6 h-[calc(100vh-500px)]">
         <template #first>
           <a-typography-paragraph>
-            <div class="prose max-w-none" v-html="mailData?.original"></div>
+            <div class="prose max-w-none" v-html="info?.original"></div>
           </a-typography-paragraph>
         </template>
         <template #second v-if="translate">
@@ -70,28 +70,30 @@
         </template>
       </a-split>
       <div v-else class="border-t border-gray-200 pt-6 h-[calc(100vh-500px)]">
-        <div class="prose max-w-none" v-html="mailData?.original"></div>
+        <div class="prose max-w-none" v-html="info?.original"></div>
       </div>
   </div>
 </template>
 
 <script setup lang="ts">
-  import { ref, onBeforeMount, reactive } from 'vue';
+  import { ref } from 'vue';
   import { Message } from '@arco-design/web-vue';
-  import { useRoute } from 'vue-router';
-  import { queryMailMsgDetail, MailMsgRes } from '@/api/mailmsg';
+  import { MailMsgRes } from '@/api/mailmsg';
   import { emailDateFormat } from '@/utils/date';
 
   const translate = ref(false);
 
-  onBeforeMount(async () => {
-    const route = useRoute();
-    const id = Number(route.params.id); // 获取路由参数中的 id
-    const res = await queryMailMsgDetail(id);
-    mailData.value = reactive(res);
-  });
+  // onBeforeMount(async () => {
+  //   const route = useRoute();
+  //   const id = Number(route.params.id); // 获取路由参数中的 id
+  //   const res = await queryMailMsgDetail(id);
+  //   info.value = reactive(res);
+  // });
 
-  const mailData = ref<MailMsgRes>();
+  const props = defineProps<{
+    info: MailMsgRes
+  }>();
+
   const splitSize = ref(0.5);
 
   const handleDelete = () => {

@@ -227,7 +227,7 @@
     try {
       for(let id of uploadedIds.value) {
         await updateUploadTask(id, form);
-        await parseDoc(id);
+        await parseDoc(id, {name: form.name});
       }
     
       Message.success('任务已提交');
