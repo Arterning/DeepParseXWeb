@@ -1,6 +1,7 @@
 <template>
   <a-layout class="flex-layout">
     <a-card v-if="info" class="general-card" :loading="loading">
+      <Breadcrumb />
       <a-tabs>
         <a-tab-pane key="1" title="文件内容">
           <TextDetail v-if="info.type === '文本'" :info="info" />
@@ -48,8 +49,8 @@
         </a-tab-pane>
       </a-tabs>
     </a-card>
+    <Footer />
   </a-layout>
-  <Footer />
 </template>
 
 <script lang="ts" setup>

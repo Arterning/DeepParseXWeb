@@ -65,7 +65,7 @@
                 <a-form-item :label="$t('时间搜索')" field="rangeValue">
                   <a-range-picker
                     v-model="formModel.rangeValue"
-                    style="width: 254px"
+                    class="w-full"
                   />
                 </a-form-item>
               </a-col>

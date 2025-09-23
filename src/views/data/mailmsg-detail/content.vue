@@ -1,6 +1,6 @@
 <template>
   <!-- 邮件内容区域 -->
-  <div class="p-6">
+  <div class="p-4">
       <!-- 邮件标题 -->
       <h1 class="text-2xl font-semibold text-gray-900 mb-2">
         {{ info?.name }}

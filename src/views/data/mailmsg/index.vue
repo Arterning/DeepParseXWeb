@@ -1,6 +1,6 @@
 <template>
   <a-layout class="flex-layout">
-    <a-card class="general-card">
+    <div class="general-card">
       <a-row>
         <a-col :flex="62">
           <a-form
@@ -385,7 +385,7 @@
       </div>
       <TaskDrawer v-model:open="openTask" :refresh-trigger="taskRefreshTrigger" />
       <DirectoryDrawer v-model:open="openDirectory" />
-    </a-card>
+    </div>
   </a-layout>
 </template>
 

@@ -1,7 +1,7 @@
 <template>
   <a-layout class="flex-layout">
-    <Breadcrumb />
-    <a-card title="邮箱描述" class="email-card">
+    <a-card title="邮箱描述" class="general-card">
+      <Breadcrumb />
       <a-descriptions>
         <a-descriptions-item label="邮件名称">{{
           mailbox?.name

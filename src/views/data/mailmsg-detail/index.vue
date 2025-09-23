@@ -2,6 +2,7 @@
   <a-layout class="flex-layout">
     <!-- <a-page-header title="邮件详情" :show-back="true" @back="$router.back()"></a-page-header> -->
     <a-card v-if="info" class="general-card" :loading="loading">
+      <Breadcrumb />
       <a-tabs>
         <a-tab-pane key="1" title="邮件内容">
           <Content :info="info" />

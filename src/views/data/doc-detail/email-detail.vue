@@ -72,7 +72,6 @@
         </div>
       </div>
     </div>
-    <Footer />
   </a-layout>
 </template>
 
