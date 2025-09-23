@@ -218,6 +218,7 @@
     import useLoading from '@/hooks/loading';
     import SettingTable from '@/components/setting-table/index.vue';
     import Footer from '@/components/footer/index.vue';
+    import EntityDetail from './entity-detail.vue';
     import {
       createEntity,
       deleteEntity,
@@ -446,110 +447,7 @@
       formModel.value.entity_type = undefined;
     };
 
-    // 实体详情组件
-    const EntityDetail = { 
-      props: ['data'],
-      setup(props) {
-        const formatPropertyKey = (key: string): string => {
-          const keyMap: Record<string, string> = {
-            gender: '性别',
-            nationality: '国籍',
-            organization: '组织',
-            position: '职位',
-            contact: '联系方式',
-            tags: '标签',
-            type: '类型',
-            country: '国家'
-          };
-          return keyMap[key] || key;
-        };
-        
-        return () => {
-          const record = props.data;
-          return h('div', { class: 'bg-gray-50 p-4 rounded-lg border border-gray-200' }, [
-            // 属性详情部分
-            h('div', { class: 'mb-4' }, [
-              h('h3', { class: 'text-lg font-semibold mb-3 text-gray-700' }, '属性详情'),
-              Object.keys(record.properties || {}).length > 0 
-                ? h('div', { class: 'grid grid-cols-1 md:grid-cols-2 gap-3' }, 
-                    Object.entries(record.properties || {}).map(([key, value]) => 
-                      h('div', { class: 'flex items-start gap-2 bg-white p-3 rounded shadow-sm' }, [
-                        h('span', { class: 'text-gray-500 font-medium min-w-[80px]' }, `${formatPropertyKey(key)}:`),
-                        h('span', { class: 'text-gray-800 flex-1 word-break-break-all' }, value || '-')
-                      ])
-                    )
-                  )
-                : h('div', { class: 'text-gray-500 italic text-center py-2' }, '暂无属性信息')
-            ]),
-            // 实体详情部分
-            record.description && record.description.trim() 
-              ? h('div', { class: 'mt-4 border-t border-gray-200 pt-4' }, [
-                  h('h3', { class: 'text-lg font-semibold mb-2 text-gray-700' }, '实体详情'),
-                  h('div', { class: 'bg-white p-3 rounded shadow-sm text-gray-800' }, record.description)
-                ])
-              : h('div', { class: 'mt-4 border-t border-gray-200 pt-4' }, [
-                  h('div', { class: 'text-gray-500 italic text-center' }, '暂无实体详情')
-                ]),
-            // 关系展示部分
-            h('div', { class: 'mt-4 border-t border-gray-200 pt-4' }, [
-              h('h3', { class: 'text-lg font-semibold mb-3 text-gray-700' }, '实体关系'),
-              Array.isArray(record.relationships) && record.relationships.length > 0 
-                ? h('div', { class: 'space-y-3' }, 
-                    record.relationships.map((relation, index) => 
-                      h('div', { class: 'bg-white p-3 rounded shadow-sm' }, [
-                        h('div', { class: 'flex flex-col md:flex-row md:items-center gap-2' }, [
-                          h('div', { class: 'flex-1' }, [
-                            h('div', { class: 'flex items-center gap-2' }, [
-                              h('span', { class: 'text-gray-800 font-medium' }, record.name),
-                              h('span', { class: 'text-blue-500 px-2 py-0.5 rounded text-xs bg-blue-50' }, relation.relation_type),
-                              h('span', { class: 'text-gray-500' }, relation.direction === 'outgoing' ? '->' : '<-'),
-                              h('span', { class: 'text-gray-800 font-medium' }, relation.related_entity?.name)
-                            ]),
-                            relation.related_entity?.entity_type && 
-                              h('span', { class: 'text-xs text-gray-500 mt-1 inline-block' }, 
-                                `类型: ${relation.related_entity.entity_type}`
-                              )
-                          ]),
-                          relation.weight > 0 && 
-                            h('div', { class: 'text-xs bg-yellow-50 text-yellow-600 px-2 py-1 rounded' }, 
-                              `权重: ${relation.weight}`
-                            )
-                        ]),
-                        relation.description && 
-                          h('div', { class: 'text-sm text-gray-600 mt-2 pl-1' }, relation.description)
-                      ])
-                    )
-                  )
-                : h('div', { class: 'text-gray-500 italic text-center py-2' }, '暂无关系信息')
-            ]),
-            // 关联文件展示部分
-            h('div', { class: 'mt-4 border-t border-gray-200 pt-4' }, [
-              h('h3', { class: 'text-lg font-semibold mb-3 text-gray-700' }, '关联文件'),
-              Array.isArray(record.docs) && record.docs.length > 0 
-                ? h('div', { class: 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3' }, 
-                    record.docs.map((doc, index) => 
-                      h('div', { class: 'bg-white p-3 rounded shadow-sm hover:shadow-md transition-shadow' }, [
-                        h('div', { class: 'flex justify-between items-start' }, [
-                          h('div', { class: 'flex-1' }, [
-                            h('div', { class: 'text-gray-800 font-medium mb-1 truncate' }, doc.title),
-                            h('div', { class: 'flex flex-wrap gap-2' }, [
-                              h('span', { class: 'text-xs bg-green-50 text-green-600 px-2 py-0.5 rounded' }, doc.type),
-                              h('span', { class: 'text-xs text-gray-500' }, new Date(doc.doc_time).toLocaleDateString())
-                            ])
-                          ]),
-                          h('div', { class: 'text-blue-500 cursor-pointer ml-2' }, [
-                            h('span', { class: 'text-sm' }, '查看')
-                          ])
-                        ])
-                      ])
-                    )
-                  )
-                : h('div', { class: 'text-gray-500 italic text-center py-2' }, '暂无关联文件')
-            ])
-          ]);
-        };
-      }
-    };
+
     
     // 存储展开行的完整数据
     const expandedRows = reactive<Record<number, any>>({});
