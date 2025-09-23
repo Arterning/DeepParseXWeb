@@ -246,7 +246,9 @@ const customRequest = (option: RequestOption): UploadRequest => {
 
     
 
-    await parseDoc(id);
+    await parseDoc(id, {
+      name: '任务 -' + fileItem?.file?.name,
+    });
 
     // console.log("触发任务", uid)
 
