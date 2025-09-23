@@ -1,5 +1,5 @@
 <template>
-  <div class="w-[80%] flex flex-col mx-auto banner mt-8">
+  <div class="w-[80%] flex flex-col mx-auto banner">
       <a-input v-model="searchQuery" class="w-[30vw] mx-auto rounded-lg" placeholder="搜索" allow-clear
         @input="handleInput">
         <template #prefix>

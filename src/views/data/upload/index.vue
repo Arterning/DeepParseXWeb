@@ -1,5 +1,5 @@
 <template>
-  <a-layout class="flex-layout mt-8">
+  <a-layout class="flex-layout">
     <!-- <Breadcrumb /> -->
     <a-card :title="$t('')" class="general-card">
 

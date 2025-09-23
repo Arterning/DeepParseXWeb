@@ -1,6 +1,6 @@
 <template>
   <a-layout class="flex-layout">
-    <Breadcrumb />
+    <!-- <Breadcrumb /> -->
     <a-card :title="$t('menu.admin.sysDept')" class="general-card">
       <a-row>
         <a-col :flex="62">

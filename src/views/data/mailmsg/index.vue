@@ -1,6 +1,6 @@
 <template>
   <a-layout class="flex-layout">
-    <a-card class="general-card py-4">
+    <a-card class="general-card">
       <a-row>
         <a-col :flex="62">
           <a-form
@@ -93,6 +93,13 @@
             </template>
             新增
           </a-button>
+          <a-button type="outline" @click="openTask=true">
+            <template #icon>
+              <icon-list />
+            </template>
+            任务
+          </a-button>    
+
           <a-button
             :disabled="deleteButtonStatus()"
             status="danger"
@@ -105,18 +112,22 @@
           </a-button>
         </a-space>
         <a-space>
-          <a-button type="primary" @click="viewType=!viewType">
-            <template #icon>
-              <icon-sync />
-            </template>
-            切换视图
-          </a-button> 
-          <a-button type="outline" @click="openTask=true">
-            <template #icon>
-              <icon-list />
-            </template>
-            任务
-          </a-button>          
+          
+          <a-tooltip content="目录">
+            <a-button type="text" @click="openDirectory=true">
+              <template #icon>
+                <icon-folder />
+              </template>
+            </a-button> 
+          </a-tooltip>
+          <a-tooltip content="切换视图">
+            <a-button type="text" @click="viewType=!viewType">
+              <template #icon>
+                <icon-swap />
+              </template>
+            </a-button> 
+          </a-tooltip>
+      
         </a-space>
       </a-space>
       <div class="content">
@@ -149,12 +160,13 @@
                 <div class="flex-1 min-w-0">
                   <div class="flex justify-between items-center mb-2">
                     <div
-                      class="flex-1  text-lg font-semibold truncate hover:text-blue-600 cursor-pointer"
+                      class="flex-1 text-lg font-semibold truncate hover:text-blue-600 cursor-pointer"
                       :title="record.name"
                       @click="
                         router.push({
                           name: 'MailMsgDetail',
                           params: { id: record.id },
+                          query: { appendix: record.name },
                         })
                       "
                     >
@@ -221,6 +233,7 @@
                           router.push({
                             name: 'MailMsgDetail',
                             params: { id: record.id },
+                            query: { appendix: record.name },
                           })
                         "
                       >
@@ -253,7 +266,6 @@
             </div>            
           </template>
 
-
           <a-table v-else v-model:selected-keys="rowSelectKeys" :bordered="false" :columns="columns" :data="renderData"
             :loading="loading" :pagination="pagination" :row-selection="rowSelection" row-key="id"
             @page-change="onPageChange" @page-size-change="onPageSizeChange">
@@ -283,6 +295,7 @@
                     router.push({
                       name: 'MailMsgDetail',
                       params: { id: record.id },
+                      query: { appendix: record.name },
                     })
                   ">
                     <icon-eye style="font-size:16" />
@@ -371,6 +384,7 @@
         </a-modal>
       </div>
       <TaskDrawer v-model:open="openTask" :refresh-trigger="taskRefreshTrigger" />
+      <DirectoryDrawer v-model:open="openDirectory" />
     </a-card>
   </a-layout>
 </template>
@@ -395,6 +409,7 @@
   import { Pagination } from '@/types/global';
   import { useRouter } from 'vue-router';
   import { formatDate } from './utils';
+  import DirectoryDrawer from './directory-drawer.vue';
 
   const { t } = useI18n();
   const { loading, setLoading } = useLoading(true);
@@ -452,10 +467,8 @@
     {
       title: '邮件主题',
       dataIndex: 'name',
-      slotName: 'name',
       ellipsis: true,
-      tooltip: true,
-      // width: 150
+      tooltip: true
     },
     // {
     //   title: '文件数量（成功/失败/总数）',
@@ -536,6 +549,7 @@
 
   const openTask = ref<boolean>(false);
   const taskRefreshTrigger = ref<number>(0);
+  const openDirectory = ref<boolean>(false);
   
   // 刷新任务抽屉数据
   const refreshTaskDrawer = () => {

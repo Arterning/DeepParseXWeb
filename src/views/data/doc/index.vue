@@ -1,7 +1,7 @@
 <template>
   <a-layout class="flex-layout">
     <!-- <Breadcrumb /> -->
-    <div class="general-card mt-8">
+    <div class="general-card">
       <a-tabs default-active-key="1">
         <a-tab-pane key="1">
           <template #title> <icon-email /> 邮件 </template>

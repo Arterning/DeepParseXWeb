@@ -1,5 +1,5 @@
 <template>
-  <div class="p-4 min-h-screen">
+  <div class="p-4">
     <!-- Search Input -->
     <div class="relative mb-6">
       <input

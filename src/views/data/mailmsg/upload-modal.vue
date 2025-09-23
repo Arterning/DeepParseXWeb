@@ -7,7 +7,7 @@
         <a-scrollbar style="width:100%; height: 380px; overflow-y: auto; padding-right: 2rem;">
             <a-upload multiple draggable :directory="uploadDirectory" accept=".zip,.rar,.eml" :custom-request="customRequest" :limit="MAX_UPLOAD_COUNT" :before-upload="beforeUpload" @exceed-limit="onExceedLimit" @change="handleUploadChange" :file-list="uploadFileList">
             <template #upload-button>
-                <div class="rounded-lg border-2 border-dashed w-full h-[320px] p-4 flex flex-col justify-center space-y-4 items-center text-center">
+                <div class="rounded-lg border-2 border-dashed w-full h-[320px] p-4 flex flex-col justify-center space-y-4 items-center text-center" :class="{ 'border-blue-500 bg-blue-50': isDragOver }" @dragenter.prevent="handleDragEnter" @dragover.prevent="handleDragOver" @dragleave.prevent="handleDragLeave" @drop.prevent="handleDrop">
                 <icon-upload :size="24" />
                 <div>将邮件文件或文件夹拖放至此处</div>
                 <div class="text-gray-500 text-sm">支持 .eml格式邮件，以及 .zip、.rar压缩包</div>
@@ -103,7 +103,7 @@
     UploadRequest,
     Modal
   } from '@arco-design/web-vue';
-  import { deleteSysDoc } from '@/api/doc';
+  import { deleteSysDoc, parseDoc } from '@/api/doc';
   import { getToken } from '@/utils/auth';
   import { updateUploadTask } from '@/api/upload_task';
 
@@ -159,16 +159,21 @@
   };
 
   // 对话框
-  const cancelReq = () => {
-    Modal.confirm({
-      title: '确认取消',
-      content: '会放弃已上传和已选择的文件，是否继续？',
-      okText: '放弃并关闭',
-      cancelText: '返回',
-      async onOk() {
-        await doCancelCleanup();
-      },
-    });
+  const cancelReq = async () => {
+    if(selectedCount.value > 0){
+      Modal.confirm({
+        title: '确认取消',
+        content: '会放弃已上传和已选择的文件，是否继续？',
+        okText: '放弃并关闭',
+        cancelText: '返回',
+        async onOk() {
+          await doCancelCleanup();
+        },
+      });
+    }
+    else {
+      await doCancelCleanup();
+    }
   };
   const formDefaultValues: any = {
     name: '',
@@ -188,6 +193,20 @@
   const formRef = ref();
 
   const uploadDirectory = ref(false);
+  const isDragOver = ref(false);
+
+  const handleDragEnter = () => {
+    isDragOver.value = true;
+  };
+  const handleDragOver = () => {
+    isDragOver.value = true;
+  };
+  const handleDragLeave = () => {
+    isDragOver.value = false;
+  };
+  const handleDrop = () => {
+    isDragOver.value = false;
+  };
   
   // 表单校验
   const beforeSubmit = async (done: any) => {
@@ -208,6 +227,7 @@
     try {
       for(let id of uploadedIds.value) {
         await updateUploadTask(id, form);
+        await parseDoc(id);
       }
     
       Message.success('任务已提交');

@@ -1,6 +1,6 @@
 <template>
     <a-layout class="flex-layout">
-        <a-card :title="$t('')" class="general-card py-4">
+        <a-card :title="$t('')" class="general-card">
             <a-row>
                 <a-col :flex="62">
                     <a-form :auto-label-width="true" :model="formModel" label-align="right">

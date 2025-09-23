@@ -1,7 +1,7 @@
 <template>
   <a-layout class="h-full">
     <!-- 左侧收藏夹列表 -->
-    <a-layout-sider :width=230 class="rounded-lg p-4 mt-4 ml-4 max-h-[calc(100vh-150px)] overflow-y-auto">
+    <a-layout-sider :width=230 class="rounded-lg p-4 mt-4 ml-4 max-h-[calc(100vh-124px)] overflow-y-auto">
       <div class="flex justify-between items-center mb-4">
         <!-- <span class="font-bold">我的收藏夹</span> -->
         <a-button type="text" @click="NewStarCollection" size="small">
@@ -34,7 +34,7 @@
     </a-layout-sider>
 
     <!-- 右侧内容展示 -->
-    <a-layout-content class="p-6 overflow-auto">
+    <a-layout-content class="p-4 overflow-auto">
       <a-card :title="currentCollection?.name || '收藏夹内容'" class="general-card h-full">
         <!-- 文件卡片展示区域 -->
         <div v-if="currentCollection?.docs?.length &&  currentCollection?.docs?.length > 0"

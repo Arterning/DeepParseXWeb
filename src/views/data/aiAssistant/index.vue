@@ -1,7 +1,7 @@
 <template>
   <a-layout class="flex-layout">
     <!-- <Breadcrumb /> -->
-    <a-card :title="$t('')" class="general-card mt-8">
+    <a-card :title="$t('')" class="general-card">
       <div>
         <div class="layout-content">
           <div class="layout-sider">

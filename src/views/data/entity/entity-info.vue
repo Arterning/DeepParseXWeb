@@ -1,6 +1,6 @@
 <template>
     <a-layout class="flex-layout">
-      <a-card class="general-card py-4">
+      <a-card class="general-card">
         <a-row>
           <a-col :flex="62">
             <a-form

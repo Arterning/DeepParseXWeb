@@ -1,5 +1,5 @@
 <template>
-  <a-layout class="flex-layout mt-8">
+  <a-layout class="flex-layout">
     <a-card v-if="info" class="general-card" :loading="loading">
       <a-tabs>
         <a-tab-pane key="1" title="文件内容">

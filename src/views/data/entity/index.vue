@@ -1,6 +1,6 @@
 <template>
   <a-layout class="flex-layout">
-    <div class="general-card py-4">
+    <div class="general-card">
       <a-tabs default-active-key="1">
         <a-tab-pane key="3">
           <template #title> <icon-at /> 邮箱 </template>
