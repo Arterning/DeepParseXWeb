@@ -521,6 +521,30 @@
                     )
                   )
                 : h('div', { class: 'text-gray-500 italic text-center py-2' }, '暂无关系信息')
+            ]),
+            // 关联文件展示部分
+            h('div', { class: 'mt-4 border-t border-gray-200 pt-4' }, [
+              h('h3', { class: 'text-lg font-semibold mb-3 text-gray-700' }, '关联文件'),
+              Array.isArray(record.docs) && record.docs.length > 0 
+                ? h('div', { class: 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3' }, 
+                    record.docs.map((doc, index) => 
+                      h('div', { class: 'bg-white p-3 rounded shadow-sm hover:shadow-md transition-shadow' }, [
+                        h('div', { class: 'flex justify-between items-start' }, [
+                          h('div', { class: 'flex-1' }, [
+                            h('div', { class: 'text-gray-800 font-medium mb-1 truncate' }, doc.title),
+                            h('div', { class: 'flex flex-wrap gap-2' }, [
+                              h('span', { class: 'text-xs bg-green-50 text-green-600 px-2 py-0.5 rounded' }, doc.type),
+                              h('span', { class: 'text-xs text-gray-500' }, new Date(doc.doc_time).toLocaleDateString())
+                            ])
+                          ]),
+                          h('div', { class: 'text-blue-500 cursor-pointer ml-2' }, [
+                            h('span', { class: 'text-sm' }, '查看')
+                          ])
+                        ])
+                      ])
+                    )
+                  )
+                : h('div', { class: 'text-gray-500 italic text-center py-2' }, '暂无关联文件')
             ])
           ]);
         };

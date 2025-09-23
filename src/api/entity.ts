@@ -22,9 +22,18 @@ export interface Relationship {
   description?: string;
 }
 
+export interface Doc {
+  id: number;
+  title: string;
+  name: string;
+  type: string;
+  doc_time: string;
+}
+
 export interface EntityRes extends EntityReq {
   id: number;
   relationships?: Relationship[];
+  docs?: Doc[];
 }
 
 export interface EntityParams {
