@@ -207,6 +207,18 @@
   const handleDrop = () => {
     isDragOver.value = false;
   };
+
+  // 提交成功后仅重置前端状态（不删除已提交文件）
+  const resetModalState = () => {
+    try { formRef.value?.resetFields?.(); } catch {}
+    Object.assign(form, { ...formDefaultValues, status: 'pending' });
+    uploadFileList.value = [];
+    selectedCount.value = 0;
+    uploadedIds.value = [];
+    activeXhrs.value = [];
+    isDragOver.value = false;
+    uploadDirectory.value = false;
+  };
   
   // 表单校验
   const beforeSubmit = async (done: any) => {
@@ -231,6 +243,9 @@
       }
     
       Message.success('任务已提交');
+      // 成功后重置本弹窗内容
+      resetModalState();
+      // 关闭弹窗并刷新外部任务视图
       emit('update:open', false);
       emit('open-task-drawer');
       emit('refresh-task-drawer');
