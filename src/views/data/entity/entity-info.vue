@@ -85,6 +85,7 @@
             :row-selection="rowSelection"
             :size="'medium'"
             row-key="id"
+            @expand="handleExpand"
             @page-change="onPageChange"
             @page-size-change="onPageSizeChange"
           >
@@ -210,6 +211,7 @@
       Message,
       SelectOptionData,
       TableColumnData,
+      TableData,
     } from '@arco-design/web-vue';
     import { useI18n } from 'vue-i18n';
     import { computed, h, onMounted, reactive, ref } from 'vue';
@@ -525,13 +527,35 @@
       }
     };
     
+    // 存储展开行的完整数据
+    const expandedRows = reactive<Record<number, any>>({});
+    
     // 表格展开配置
     const expandable = reactive({
       title: '展开',
       expandedRowRender: (record: any) => {
-        return h(EntityDetail, { data: record });
+        // 使用存储的完整数据，如果没有则使用原始记录
+        const rowData = expandedRows[record.id] || record;
+        return h(EntityDetail, { data: rowData });
       }
     });
+    
+    // 点击展开时触发的事件处理函数
+    const handleExpand = (rowKey: number, record: TableData) => {
+      if (!expandedRows[rowKey]) {
+        try {
+          setLoading(true);
+          // 根据 rowKey 调用 queryEntityDetail 接口获取完整数据
+          queryEntityDetail(rowKey).then(res => {
+            expandedRows[rowKey] = res;
+          });
+        } catch (error) {
+          Message.error('获取实体详情失败');
+        } finally {
+          setLoading(false);
+        }
+      }
+    };
 
 
   
