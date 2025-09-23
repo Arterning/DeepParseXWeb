@@ -487,7 +487,39 @@
                 ])
               : h('div', { class: 'mt-4 border-t border-gray-200 pt-4' }, [
                   h('div', { class: 'text-gray-500 italic text-center' }, '暂无实体详情')
-                ])
+                ]),
+            // 关系展示部分
+            h('div', { class: 'mt-4 border-t border-gray-200 pt-4' }, [
+              h('h3', { class: 'text-lg font-semibold mb-3 text-gray-700' }, '实体关系'),
+              Array.isArray(record.relationships) && record.relationships.length > 0 
+                ? h('div', { class: 'space-y-3' }, 
+                    record.relationships.map((relation, index) => 
+                      h('div', { class: 'bg-white p-3 rounded shadow-sm' }, [
+                        h('div', { class: 'flex flex-col md:flex-row md:items-center gap-2' }, [
+                          h('div', { class: 'flex-1' }, [
+                            h('div', { class: 'flex items-center gap-2' }, [
+                              h('span', { class: 'text-gray-800 font-medium' }, record.name),
+                              h('span', { class: 'text-blue-500 px-2 py-0.5 rounded text-xs bg-blue-50' }, relation.relation_type),
+                              h('span', { class: 'text-gray-500' }, relation.direction === 'outgoing' ? '->' : '<-'),
+                              h('span', { class: 'text-gray-800 font-medium' }, relation.related_entity?.name)
+                            ]),
+                            relation.related_entity?.entity_type && 
+                              h('span', { class: 'text-xs text-gray-500 mt-1 inline-block' }, 
+                                `类型: ${relation.related_entity.entity_type}`
+                              )
+                          ]),
+                          relation.weight > 0 && 
+                            h('div', { class: 'text-xs bg-yellow-50 text-yellow-600 px-2 py-1 rounded' }, 
+                              `权重: ${relation.weight}`
+                            )
+                        ]),
+                        relation.description && 
+                          h('div', { class: 'text-sm text-gray-600 mt-2 pl-1' }, relation.description)
+                      ])
+                    )
+                  )
+                : h('div', { class: 'text-gray-500 italic text-center py-2' }, '暂无关系信息')
+            ])
           ]);
         };
       }

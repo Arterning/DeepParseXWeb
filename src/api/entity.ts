@@ -8,8 +8,23 @@ export interface EntityReq {
   properties: Record<string, any>;
 }
 
+export interface RelatedEntity {
+  id?: number;
+  name: string;
+  entity_type?: string;
+}
+
+export interface Relationship {
+  relation_type: string;
+  direction: 'outgoing' | 'incoming';
+  related_entity: RelatedEntity;
+  weight?: number;
+  description?: string;
+}
+
 export interface EntityRes extends EntityReq {
   id: number;
+  relationships?: Relationship[];
 }
 
 export interface EntityParams {
