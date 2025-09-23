@@ -5,10 +5,35 @@ export interface EntityReq {
   name: string;
   description?: string;
   entity_type?: string;
+  properties: Record<string, any>;
+}
+
+export interface RelatedEntity {
+  id?: number;
+  name: string;
+  entity_type?: string;
+}
+
+export interface Relationship {
+  relation_type: string;
+  direction: 'outgoing' | 'incoming';
+  related_entity: RelatedEntity;
+  weight?: number;
+  description?: string;
+}
+
+export interface Doc {
+  id: number;
+  title: string;
+  name: string;
+  type: string;
+  doc_time: string;
 }
 
 export interface EntityRes extends EntityReq {
   id: number;
+  relationships?: Relationship[];
+  docs?: Doc[];
 }
 
 export interface EntityParams {
