@@ -1,5 +1,5 @@
 <template>
-  <a-layout :class="{ mobile: appStore.hideMenu }" class="layout">
+  <a-layout :class="{ mobile: appStore.hideMenu }" class="layout" id="mainLayout">
     <div v-if="navbar" class="layout-navbar">
       <NavBar />
     </div>

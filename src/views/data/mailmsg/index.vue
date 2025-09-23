@@ -84,23 +84,39 @@
         </a-col>
       </a-row>
       <a-divider class="mt-0" />
-      <a-space :size="'medium'">
-        <a-button type="primary" @click="NewMailMsg()">
-          <template #icon>
-            <icon-plus />
-          </template>
-          新增
-        </a-button>
-        <a-button
-          :disabled="deleteButtonStatus()"
-          status="danger"
-          @click="DeleteMailMsg"
-        >
-          <template #icon>
-            <icon-minus />
-          </template>
-          删除
-        </a-button>
+      <a-space :size="'medium'" class="flex justify-between">
+        <a-space>
+          <a-button type="primary" @click="openNew=true">
+            <template #icon>
+              <icon-plus />
+            </template>
+            新增
+          </a-button>
+          <a-button
+            :disabled="deleteButtonStatus()"
+            status="danger"
+            @click="DeleteMailMsg"
+          >
+            <template #icon>
+              <icon-minus />
+            </template>
+            删除
+          </a-button>
+        </a-space>
+        <a-space>
+          <a-button type="primary" @click="">
+            <template #icon>
+              <icon-sync />
+            </template>
+            切换视图
+          </a-button> 
+          <a-button type="outline" @click="openTask=true">
+            <template #icon>
+              <icon-list />
+            </template>
+            任务
+          </a-button>          
+        </a-space>
       </a-space>
       <div class="content">
         <div
@@ -237,14 +253,15 @@
         </div>
       </div>
       <div class="content-modal">
+        <UploadModal v-model:open="openNew" @open-task-drawer="openTask = true" @refresh-task-drawer="refreshTaskDrawer" />
         <a-modal
           :closable="false"
           :on-before-ok="beforeSubmit"
           :title="drawerTitle"
-          :visible="openNewOrEdit"
+          :visible="openEdit"
           :width="550"
           @cancel="cancelReq"
-          @ok="submitNewOrEdit"
+          @ok="submitEdit"
         >
           <a-form ref="formRef" :model="form">
             <a-form-item
@@ -312,6 +329,7 @@
           </a-space>
         </a-modal>
       </div>
+      <TaskDrawer v-model:open="openTask" :refresh-trigger="taskRefreshTrigger" />
     </a-card>
     <Footer />
   </a-layout>
@@ -323,6 +341,8 @@
   import { reactive, ref } from 'vue';
   import useLoading from '@/hooks/loading';
   import Footer from '@/components/footer/index.vue';
+  import UploadModal from './upload-modal.vue';
+  import TaskDrawer from './task-drawer.vue';
   import {
     createMailMsg,
     deleteMailMsg,
@@ -369,18 +389,12 @@
   const pagination: Pagination = reactive({
     ...basePagination,
   });
-  const NewMailMsg = () => {
-    buttonStatus.value = 'new';
-    drawerTitle.value = t('新增');
-    resetForm(formDefaultValues);
-    openNewOrEdit.value = true;
-  };
   const EditMailMsg = async (pk: number) => {
     buttonStatus.value = 'edit';
     operateRow.value = pk;
     drawerTitle.value = t('编辑');
     await fetchMailMsgDetail(pk);
-    openNewOrEdit.value = true;
+    openEdit.value = true;
   };
   const DeleteMailMsg = () => {
     drawerTitle.value = t('删除');
@@ -396,12 +410,20 @@
     }
   };
 
+  const openTask = ref<boolean>(false);
+  const taskRefreshTrigger = ref<number>(0);
+  
+  // 刷新任务抽屉数据
+  const refreshTaskDrawer = () => {
+    taskRefreshTrigger.value += 1;
+  };
   // 对话框
-  const openNewOrEdit = ref<boolean>(false);
+  const openNew = ref<boolean>(false);
+  const openEdit = ref<boolean>(false);
   const openDelete = ref<boolean>(false);
   const drawerTitle = ref<string>('');
   const cancelReq = () => {
-    openNewOrEdit.value = false;
+    openEdit.value = false;
     openDelete.value = false;
   };
   const formDefaultValues: MailMsgReq = {
@@ -429,7 +451,7 @@
   };
 
   // 提交按钮
-  const submitNewOrEdit = async () => {
+  const submitEdit = async () => {
     setLoading(true);
     try {
       if (buttonStatus.value === 'new') {
@@ -455,7 +477,7 @@
     return rowSelectKeys.value?.length === 0;
   };
 
-  // 删除按钮
+  // 提交按钮
   const submitDelete = async () => {
     setLoading(true);
     try {
@@ -529,11 +551,6 @@
   // 重置
   const resetSelect = () => {
     formModel.value = generateFormModel();
-  };
-
-  // 重置方法
-  const resetMethod = () => {
-    formModel.value.name = undefined;
   };
 
   // 重置表单

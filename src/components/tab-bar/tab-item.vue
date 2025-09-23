@@ -186,11 +186,17 @@
   .tag-link {
     color: var(--color-text-2);
     text-decoration: none;
+    
   }
 
   .link-activated {
     background-color: #2971CF;
-
+    .arco-tag-close-btn{
+      color: #e0e0e0;
+    }
+    .arco-tag-close-btn:hover{
+      color: var(--color-text-2);
+    }
     .tag-link {
       color: #e0e0e0;
     }
