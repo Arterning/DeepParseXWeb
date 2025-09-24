@@ -15,15 +15,19 @@ export interface SysDocReq {
   tags?: string [];
 }
 
+export interface DocEntity {
+  entity_type: string;
+  name: string;
+  description?: string;
+  id: number;
+}
+
 export interface SysDocRes extends SysDocReq {
   id: number;
   is_collected?: boolean;
-  email_from?: string;
-  email_to?: string;
-  email_subject?: string;
-  email_time?: string;
   graph_data?: GraphData;
   email_msg?: MailMsgRes;
+  entities?: DocEntity[];
   created_time: string;
   created_user?: string;
   size: number;

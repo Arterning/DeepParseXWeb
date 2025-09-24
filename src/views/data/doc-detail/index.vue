@@ -17,10 +17,10 @@
           <BasicInfo :info="info" />
           <FileDescription :info="info" class="mt-2"/>
         </a-tab-pane>
-        <!-- <a-tab-pane key="3" title="文件总结">
-          <FileDescription :info="info" />
-        </a-tab-pane> -->
-        <a-tab-pane key="4" title="知识图谱">
+        <a-tab-pane key="3" title="实体提取">
+          <EntityExtraction :info="info" />
+        </a-tab-pane>
+        <a-tab-pane key="4" title="关系图谱">
           <a-skeleton :loading="extractGraphLoading" :animation="true">
             <a-space direction="vertical" :style="{width:'100%'}" size="large">
               <a-skeleton-line :rows="8" />
@@ -71,6 +71,7 @@ import GraphControls from './GraphControls.vue';
 import KnowledgeGraph from './KnowledgeGraph.vue';
 import DocAIChat from './components/DocAIChat.vue';
 import FileDescription from './components/FileDescription.vue';
+import EntityExtraction from './EntityExtraction.vue';
 
 
 
