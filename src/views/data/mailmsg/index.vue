@@ -281,7 +281,7 @@
               {{ record.content.slice(0, 15) }}
             </template>
             <template #time="{ record }">
-              {{ formatDate(record.time) }}
+              {{ tableDateFormat(record.time) }}
             </template>
             <template #operate="{ record }">
               <a-space>
@@ -457,9 +457,9 @@
       title: 'ID',
       dataIndex: 'id',
       slotName: 'id',
-      // sortable: {
-      //   sortDirections: ['ascend', 'descend']
-      // },
+      sortable: {
+        sortDirections: ['ascend', 'descend']
+      },
       ellipsis: true,
       tooltip: true,
       width: 50,
@@ -488,7 +488,10 @@
     {
       title: '日期',
       slotName: 'time',
-      width: 160
+      width: 170,
+      sortable: {
+        sortDirections: ['ascend', 'descend']
+      }
     },
     // {
     //   title: '关键字',
