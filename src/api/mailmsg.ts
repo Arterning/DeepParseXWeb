@@ -34,6 +34,7 @@ export interface MailMsgParams {
   name?: string;
   page?: number;
   size?: number;
+  directory_id?: number;
 }
 
 export interface MailMsgListRes {

@@ -63,6 +63,15 @@
                   />
                 </a-form-item>
               </a-col>
+              <a-col :span="8" v-if="selectedDirectory">
+                <a-form-item label="当前目录">
+                  <div class="flex items-center space-x-2">
+                    <a-tag color="blue" closable @close="clearDirectoryFilter">
+                      {{ selectedDirectory.name }}
+                    </a-tag>
+                  </div>
+                </a-form-item>
+              </a-col>
             </a-row>
           </a-form>
         </a-col>
@@ -384,7 +393,7 @@
         </a-modal>
       </div>
       <TaskDrawer v-model:open="openTask" :refresh-trigger="taskRefreshTrigger" />
-      <DirectoryDrawer v-model:open="openDirectory" />
+      <DirectoryDrawer v-model:open="openDirectory" @directory-change="onDirectoryChange" />
     </div>
   </a-layout>
 </template>
@@ -554,9 +563,27 @@
   const taskRefreshTrigger = ref<number>(0);
   const openDirectory = ref<boolean>(false);
   
+  // 目录筛选
+  const selectedDirectory = ref<any>(null);
+  
   // 刷新任务抽屉数据
   const refreshTaskDrawer = () => {
     taskRefreshTrigger.value += 1;
+  };
+
+  // 目录变化处理
+  const onDirectoryChange = (directory: any) => {
+    selectedDirectory.value = directory;
+    // 重置分页并重新加载数据
+    pagination.current = 1;
+    fetchData();
+  };
+
+  // 清除目录筛选
+  const clearDirectoryFilter = () => {
+    selectedDirectory.value = null;
+    pagination.current = 1;
+    fetchData();
   };
   // 对话框
   const openNew = ref<boolean>(false);
@@ -640,11 +667,18 @@
   const fetchData = async () => {
     setLoading(true);
     try {
-      const res = await queryMailMsgList({
+      const params: MailMsgParams = {
         ...formModel.value,
         page: pagination.current,
         size: pagination.pageSize,
-      } as MailMsgParams);
+      };
+      
+      // 添加目录筛选参数
+      if (selectedDirectory.value) {
+        params.directory_id = selectedDirectory.value.id;
+      }
+      
+      const res = await queryMailMsgList(params);
       renderData.value = res.items;
       pagination.total = res.total;
     } catch (error) {

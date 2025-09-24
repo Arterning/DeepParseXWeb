@@ -22,7 +22,7 @@ export interface DirectoryDeleteParams {
   pk: number[];
 }
 
-export function queryDirectoryList(params: DirectoryParams): Promise<DirectoryListRes> {
+export function queryDirectoryList(params: DirectoryParams): Promise<DirectoryRes[]> {
   return axios.get('/api/v1/sys/doc_dirs', {
     params,
     paramsSerializer: (obj) => {
