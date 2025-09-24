@@ -105,7 +105,7 @@
   } from '@arco-design/web-vue';
   import { deleteSysDoc, parseDoc } from '@/api/doc';
   import { getToken } from '@/utils/auth';
-  import { updateUploadTask } from '@/api/upload_task';
+  import { createUploadTask, updateUploadTask } from '@/api/upload_task';
 
   defineProps({
     open: Boolean
@@ -238,7 +238,7 @@
     setLoading(true);
     try {
       for(let id of uploadedIds.value) {
-        await updateUploadTask(id, form);
+        await createUploadTask(form);
         await parseDoc(id, {name: form.name});
       }
     
