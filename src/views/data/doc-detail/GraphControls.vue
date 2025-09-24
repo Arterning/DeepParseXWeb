@@ -293,9 +293,9 @@ const addCommonEntityType = (type: string) => {
               {{ type }}
               <button 
                 @click="removeEntityType(type)"
-                class="ml-1 text-blue-300 hover:text-blue-100"
+                class="ml-1 text-blue-300 hover:text-blue-100 w-5 h-5 flex items-center justify-center rounded-full hover:bg-blue-700/30 transition-colors"
               >
-                <span class="i-heroicons-x-circle-solid"></span>
+                ×
               </button>
             </span>
           </div>
