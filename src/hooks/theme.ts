@@ -12,7 +12,7 @@ export const changeTheme = () => {
   } else {
       const cards = document.querySelectorAll('.general-card');
       cards.forEach((card: any) => {
-        card.style.background = '';
+        card.style.background = '#FFF';
       });
   }
 }
