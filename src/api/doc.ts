@@ -15,15 +15,19 @@ export interface SysDocReq {
   tags?: string [];
 }
 
+export interface DocEntity {
+  entity_type: string;
+  name: string;
+  description?: string;
+  id: number;
+}
+
 export interface SysDocRes extends SysDocReq {
   id: number;
   is_collected?: boolean;
-  email_from?: string;
-  email_to?: string;
-  email_subject?: string;
-  email_time?: string;
   graph_data?: GraphData;
   email_msg?: MailMsgRes;
+  entities?: DocEntity[];
   created_time: string;
   created_user?: string;
   size: number;
@@ -123,13 +127,10 @@ export function queryRecentDocs(): Promise<SysDocRes[]> {
   return axios.get(`/api/v1/sys/docs/recent_docs`)
 }
 
-export function extractIPAddress(params: number[]) {
-  return axios.post(`/api/v1/sys/ip_addr`, params);
-}
 
 // 提取知识图谱
-export function extractGraphData(pk: number) {
-  return axios.get(`/api/v1/sys/docs/build_graph/${pk}`);
+export function extractGraphData(pk: number, entity_types: string[]) {
+  return axios.post(`/api/v1/sys/docs/build_graph/${pk}`, { entity_types });
 }
 
 // 提取内容

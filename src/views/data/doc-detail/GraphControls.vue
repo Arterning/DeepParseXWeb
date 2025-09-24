@@ -7,7 +7,10 @@ const props = defineProps<{
   initialData: GraphData;
 }>();
 
-const emit = defineEmits(['dataChange', 'extractGraph']);
+const emit = defineEmits<{
+  dataChange: [data: GraphData];
+  extractGraph: [entityTypes: string[]];
+}>();
 
 const isFullscreen = ref(false);
 
@@ -153,6 +156,28 @@ loadData();
 
 const showAddNodeModal = ref(false);
 const showAddRelationModal = ref(false);
+
+// 实体类型选择相关
+const selectedEntityTypes = ref<string[]>([]);
+const entityTypeInput = ref('');
+const commonEntityTypes = ['邮箱账号', '联系方式', '电话号码', '网址', 'IP地址', '身份证号', '银行卡号', '车牌号', '组织机构代码', '税号'];
+
+const addEntityType = () => {
+  if (entityTypeInput.value && !selectedEntityTypes.value.includes(entityTypeInput.value)) {
+    selectedEntityTypes.value.push(entityTypeInput.value);
+    entityTypeInput.value = '';
+  }
+};
+
+const removeEntityType = (type: string) => {
+  selectedEntityTypes.value = selectedEntityTypes.value.filter(t => t !== type);
+};
+
+const addCommonEntityType = (type: string) => {
+  if (!selectedEntityTypes.value.includes(type)) {
+    selectedEntityTypes.value.push(type);
+  }
+};
 </script>
 
 <template>
@@ -225,62 +250,117 @@ const showAddRelationModal = ref(false);
       </div>
     </a-modal>
 
-    <div class="p-4 rounded-lg shadow flex justify-between">
-      <!-- <h3 class="text-lg font-semibold text-cyan-400 mb-3">操作</h3> -->
-      <div class="flex gap-2">
-
-        <!-- 提取知识图谱 -->
-        <button @click="emit('extractGraph')"
-          class="bg-[#2971CF] hover:bg-blue-700 text-white p-2 rounded transition-colors duration-200 flex items-center justify-center">
-          <span class="i-heroicons-arrow-path-solid"></span>
-          提取图谱
-        </button>
-
-        <button @click="() => (showAddNodeModal = true)"
-          class="bg-[#2971CF] hover:bg-blue-700 text-white p-2 rounded transition-colors duration-200 flex items-center justify-center">
-          <span class="i-heroicons-plus-circle-solid"></span>
-          添加节点
-        </button>
-
-
-        <button @click="() => (showAddRelationModal = true)"
-          class="bg-[#2971CF] hover:bg-blue-700 text-white p-2 rounded transition-colors duration-200 flex items-center justify-center">
-          <span class="i-heroicons-link-solid"></span>
-          添加关系
-        </button>
-
-        <button @click="emit('dataChange', graphData)"
-          class="bg-[#2971CF] hover:bg-blue-700 text-white p-2 rounded transition-colors duration-200 flex items-center justify-center">
-          <span class="i-heroicons-arrow-path-solid"></span>
-          刷新
-        </button>
-
-        <button @click="toggleFullscreen"
-          class="bg-[#2971CF] hover:bg-blue-700 text-white p-2 rounded transition-colors duration-200 flex items-center justify-center">
-          <span :class="isFullscreen ? 'i-heroicons-arrows-pointing-in-solid' : 'i-heroicons-arrows-pointing-out-solid'"></span>
-          {{ isFullscreen ? '退出全屏' : '全屏' }}
-        </button>
-
-        <!-- <button @click="emit('dataChange', { nodes: [], edges: [] })"
-          class="bg-red-300 hover:bg-red-700 text-white p-2 rounded transition-colors duration-200 flex items-center justify-center">
-          <span class="i-heroicons-trash-solid mr-2"></span>
-          清空
-        </button> -->
+    <div class="p-4 rounded-lg shadow">
+      <div class="mb-4">
+        <div class="flex gap-2 items-center">
+          <h3 class="text-lg font-semibold text-[#2971CF] mb-2">实体类型选择</h3>
+            <div class="flex gap-2 items-center">
+            <a-input 
+              v-model="entityTypeInput" 
+              placeholder="输入实体类型，如'人物'"
+              class="w-40"
+              @keyup.enter="addEntityType"
+            />
+            <button 
+              @click="addEntityType"
+              class="bg-[#2971CF] text-white px-3 py-1 rounded transition-colors duration-200"
+            >
+              添加
+            </button>
+          </div>
+        </div>
+        
+        <!-- 常用实体类型快速选择 -->
+        <div class="mt-2 flex flex-wrap gap-2 items-center">
+          <span class="text-sm text-gray-400 mr-2">常用类型：</span>
+          <button 
+            v-for="type in commonEntityTypes"
+            :key="type"
+            @click="addCommonEntityType(type)"
+            class="text-sm bg-gray-700 hover:bg-gray-600 text-white px-2 py-1 rounded transition-colors duration-200"
+          >
+            {{ type }}
+          </button>
+        </div>
+        
+        <!-- 已选择的实体类型 -->
+        <div v-if="selectedEntityTypes.length > 0" class="mt-3">
+          <span class="text-sm text-gray-400">已选择：</span>
+          <div class="flex flex-wrap gap-2 mt-1">
+            <span 
+              v-for="type in selectedEntityTypes"
+              :key="type"
+              class="inline-flex items-center bg-blue-900/50 text-blue-300 px-2 py-1 rounded text-sm"
+            >
+              {{ type }}
+              <button 
+                @click="removeEntityType(type)"
+                class="ml-1 text-blue-300 hover:text-blue-100 w-5 h-5 flex items-center justify-center rounded-full hover:bg-blue-700/30 transition-colors"
+              >
+                ×
+              </button>
+            </span>
+          </div>
+        </div>
       </div>
+    
+      <div class="flex justify-between">
+        <!-- <h3 class="text-lg font-semibold text-cyan-400 mb-3">操作</h3> -->
+        <div class="flex gap-2">
 
-      <div class="flex gap-2 ml-auto">
-        <a-input v-model="searchTerm"
-            placeholder="搜索ID或名称" />
-        <a-select v-model="filterType">
-          <a-option value="all">所有类型</a-option>
-          <a-option value="人物">人物</a-option>
-          <a-option value="组织">组织</a-option>
-          <a-option value="地点">地点</a-option>
-          <a-option value="事件">事件</a-option>
-          <a-option value="概念">概念</a-option>
-        </a-select>
-        <a-input v-model="filterRelation"
-            placeholder="输入关系类型" />
+          <!-- 提取知识图谱 -->
+          <button @click="emit('extractGraph', selectedEntityTypes)"
+            class="bg-[#2971CF] hover:bg-blue-700 text-white p-2 rounded transition-colors duration-200 flex items-center justify-center">
+            <span class="i-heroicons-arrow-path-solid"></span>
+            提取图谱
+          </button>
+
+          <button @click="() => (showAddNodeModal = true)"
+            class="bg-[#2971CF] hover:bg-blue-700 text-white p-2 rounded transition-colors duration-200 flex items-center justify-center">
+            <span class="i-heroicons-plus-circle-solid"></span>
+            添加节点
+          </button>
+
+
+          <button @click="() => (showAddRelationModal = true)"
+            class="bg-[#2971CF] hover:bg-blue-700 text-white p-2 rounded transition-colors duration-200 flex items-center justify-center">
+            <span class="i-heroicons-link-solid"></span>
+            添加关系
+          </button>
+
+          <button @click="emit('dataChange', graphData)"
+            class="bg-[#2971CF] hover:bg-blue-700 text-white p-2 rounded transition-colors duration-200 flex items-center justify-center">
+            <span class="i-heroicons-arrow-path-solid"></span>
+            刷新
+          </button>
+
+          <button @click="toggleFullscreen"
+            class="bg-[#2971CF] hover:bg-blue-700 text-white p-2 rounded transition-colors duration-200 flex items-center justify-center">
+            <span :class="isFullscreen ? 'i-heroicons-arrows-pointing-in-solid' : 'i-heroicons-arrows-pointing-out-solid'"></span>
+            {{ isFullscreen ? '退出全屏' : '全屏' }}
+          </button>
+
+          <!-- <button @click="emit('dataChange', { nodes: [], edges: [] })"
+            class="bg-red-300 hover:bg-red-700 text-white p-2 rounded transition-colors duration-200 flex items-center justify-center">
+            <span class="i-heroicons-trash-solid mr-2"></span>
+            清空
+          </button> -->
+        </div>
+
+        <div class="flex gap-2 ml-auto">
+          <a-input v-model="searchTerm"
+              placeholder="搜索ID或名称" />
+          <a-select v-model="filterType">
+            <a-option value="all">所有类型</a-option>
+            <a-option value="人物">人物</a-option>
+            <a-option value="组织">组织</a-option>
+            <a-option value="地点">地点</a-option>
+            <a-option value="事件">事件</a-option>
+            <a-option value="概念">概念</a-option>
+          </a-select>
+          <a-input v-model="filterRelation"
+              placeholder="输入关系类型" />
+        </div>
       </div>
     </div>
 
