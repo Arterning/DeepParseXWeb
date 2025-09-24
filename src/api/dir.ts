@@ -11,8 +11,6 @@ export interface DirectoryRes extends DirectoryReq {
 
 export interface DirectoryParams {
   name?: string;
-  page?: number;
-  size?: number;
 }
 
 export interface DirectoryListRes {
