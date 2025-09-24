@@ -160,7 +160,7 @@ const showAddRelationModal = ref(false);
 // 实体类型选择相关
 const selectedEntityTypes = ref<string[]>([]);
 const entityTypeInput = ref('');
-const commonEntityTypes = ['人物', '组织', '地点', '事件', '概念'];
+const commonEntityTypes = ['邮箱账号', '联系方式', '电话号码', '网址', 'IP地址', '身份证号', '银行卡号', '车牌号', '组织机构代码', '税号'];
 
 const addEntityType = () => {
   if (entityTypeInput.value && !selectedEntityTypes.value.includes(entityTypeInput.value)) {
@@ -252,24 +252,26 @@ const addCommonEntityType = (type: string) => {
 
     <div class="p-4 rounded-lg shadow">
       <div class="mb-4">
-        <h3 class="text-lg font-semibold text-cyan-400 mb-2">实体类型选择</h3>
         <div class="flex gap-2 items-center">
-          <a-input 
-            v-model="entityTypeInput" 
-            placeholder="输入实体类型，如'人物'"
-            class="w-40"
-            @keyup.enter="addEntityType"
-          />
-          <button 
-            @click="addEntityType"
-            class="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded transition-colors duration-200"
-          >
-            添加
-          </button>
+          <h3 class="text-lg font-semibold text-[#2971CF] mb-2">实体类型选择</h3>
+            <div class="flex gap-2 items-center">
+            <a-input 
+              v-model="entityTypeInput" 
+              placeholder="输入实体类型，如'人物'"
+              class="w-40"
+              @keyup.enter="addEntityType"
+            />
+            <button 
+              @click="addEntityType"
+              class="bg-[#2971CF] text-white px-3 py-1 rounded transition-colors duration-200"
+            >
+              添加
+            </button>
+          </div>
         </div>
         
         <!-- 常用实体类型快速选择 -->
-        <div class="mt-2 flex flex-wrap gap-2">
+        <div class="mt-2 flex flex-wrap gap-2 items-center">
           <span class="text-sm text-gray-400 mr-2">常用类型：</span>
           <button 
             v-for="type in commonEntityTypes"
