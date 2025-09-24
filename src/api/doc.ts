@@ -123,13 +123,10 @@ export function queryRecentDocs(): Promise<SysDocRes[]> {
   return axios.get(`/api/v1/sys/docs/recent_docs`)
 }
 
-export function extractIPAddress(params: number[]) {
-  return axios.post(`/api/v1/sys/ip_addr`, params);
-}
 
 // 提取知识图谱
-export function extractGraphData(pk: number) {
-  return axios.get(`/api/v1/sys/docs/build_graph/${pk}`);
+export function extractGraphData(pk: number, entity_types: string[]) {
+  return axios.post(`/api/v1/sys/docs/build_graph/${pk}`, { entity_types });
 }
 
 // 提取内容

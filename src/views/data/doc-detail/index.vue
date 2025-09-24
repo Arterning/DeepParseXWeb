@@ -85,10 +85,10 @@ const handleDataChange = (newData: any) => {
   graphData.value = newData;
 };
 
-const handleExtractGraph = async () => {
+const handleExtractGraph = async (entityTypes: string[]) => {
   if (!info.value) return;
   extractGraphLoading.value = true;
-  const res = await extractGraphData(info.value.id);
+  const res = await extractGraphData(info.value.id, entityTypes);
   extractGraphLoading.value = false;
   handleDataChange(res);
 }
