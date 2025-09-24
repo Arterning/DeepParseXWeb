@@ -7,7 +7,7 @@
 
     <!-- 加载状态 -->
     <div v-if="loading" class="flex justify-center items-center py-10">
-      <a-spin size="large" />
+      <a-spin />
     </div>
 
     <!-- 没有实体数据时 -->
@@ -32,7 +32,7 @@
           >
             <div class="flex justify-between items-start">
               <div class="flex-1">
-                <p class="font-medium text-gray-800 mb-1">{{ entity.name }}</p>
+                <p class="font-medium text-gray-800 dark:text-white mb-1">{{ entity.name }}</p>
                 <p v-if="entity.description" class="text-sm text-gray-500 line-clamp-2">
                   {{ entity.description }}
                 </p>
@@ -95,7 +95,7 @@ watch(() => props.info, (newInfo) => {
 }, { immediate: true });
 </script>
 
-<style scoped lang="scss">
+<style scoped lang="less">
 .line-clamp-2 {
   display: -webkit-box;
   -webkit-line-clamp: 2;
