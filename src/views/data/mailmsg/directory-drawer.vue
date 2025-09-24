@@ -5,6 +5,7 @@
     :footer="false"
     :closable="true"
     @cancel="onClose"
+    placement="left"
   >        
     <div class="h-full flex flex-col">
       <!-- 搜索框 -->
@@ -26,7 +27,7 @@
             v-if="treeData.length > 0"
             :data="treeData"
             :default-expanded-keys="expandedKeys"
-            :default-selected-keys="selectedKeys"
+            :selected-keys="selectedKeys"
             @select="onSelect"
             block-node
           >
@@ -145,13 +146,22 @@
   };
 
   // 选择目录
-  const onSelect = (selectedKeys: (string | number)[]) => {
-    if (selectedKeys.length > 0) {
-      // 根据选中的 key 找到对应的原始数据
-      const selectedKey = selectedKeys[0].toString();
-      const selectedDirectory = findNodeByKey(directoryList.value, selectedKey);
-      emit('directory-change', selectedDirectory);
+  const onSelect = (newSelectedKeys: (string | number)[]) => {
+    if (newSelectedKeys.length > 0) {
+      const selectedKey = newSelectedKeys[0].toString();
+      
+      // 如果点击的是当前已选择的节点，则取消选择
+      if (selectedKeys.value.includes(selectedKey)) {
+        selectedKeys.value = [];
+        emit('directory-change', null);
+      } else {
+        // 选择新节点
+        selectedKeys.value = [selectedKey];
+        const selectedDirectory = findNodeByKey(directoryList.value, selectedKey);
+        emit('directory-change', selectedDirectory);
+      }
     } else {
+      selectedKeys.value = [];
       emit('directory-change', null);
     }
   };

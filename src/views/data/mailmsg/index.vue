@@ -63,15 +63,6 @@
                   />
                 </a-form-item>
               </a-col>
-              <a-col :span="8" v-if="selectedDirectory">
-                <a-form-item label="当前目录">
-                  <div class="flex items-center space-x-2">
-                    <a-tag color="blue" closable @close="clearDirectoryFilter">
-                      {{ selectedDirectory.name }}
-                    </a-tag>
-                  </div>
-                </a-form-item>
-              </a-col>
             </a-row>
           </a-form>
         </a-col>
@@ -127,6 +118,7 @@
               <template #icon>
                 <icon-folder />
               </template>
+              {{ selectedDirectory?  selectedDirectory.name : '未选择目录' }}
             </a-button> 
           </a-tooltip>
           <a-tooltip content="切换视图">
@@ -675,7 +667,7 @@
       
       // 添加目录筛选参数
       if (selectedDirectory.value) {
-        params.directory_id = selectedDirectory.value.id;
+        params.doc_dir_id = selectedDirectory.value.id;
       }
       
       const res = await queryMailMsgList(params);
