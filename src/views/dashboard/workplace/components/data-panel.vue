@@ -130,6 +130,7 @@ import PictureSvg from '@/assets/svg/picture.svg';
 import MailSvg from '@/assets/svg/email.svg';
 import ExcelSvg from '@/assets/svg/excel.svg';
 import { queyDashboard, DashboardRes } from '@/api/dashboard';
+import { queryDirectoryList } from '@/api/dir';
 
 
 const docNumber = ref<number>(0);
@@ -151,6 +152,8 @@ const fetchDashboardApi = async () => {
 
 onMounted(async () => {
   await fetchDashboardApi();
+  await queryDirectoryList({
+  });
 });
 // fetchDashboardApi();
 </script>
