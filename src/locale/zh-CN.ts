@@ -54,7 +54,7 @@ export default {
   'menu.data.aiAssistant': '智能助手',
   'menu.data.news': '新闻数据',
   'menu.data.social': '社交数据',
-  'menu.data.mail': '邮件数据',
+  'menu.data.mail': '邮件处理',
   'menu.social.socialAccount': '社交账号',
   'menu.social.socialPost': '社交帖子',
   'menu.upload': '文件上传',
