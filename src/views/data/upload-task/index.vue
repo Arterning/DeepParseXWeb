@@ -134,7 +134,7 @@ const tableScrollY = computed(() => {
 const generateSearchForm = () => {
     return {
         name: '', // 任务名称
-        rangeTime: ['', ''], // 开始时间范围
+        rangeValue: ['', ''], // 开始时间范围
         status: '', // 任务状态
         source: '', // 来源
     }
@@ -193,18 +193,20 @@ const columns = computed<TableColumnData[]>(() => [
         // width: 150
     },
     {
-      title: '文件数量（成功/失败/总数）',
-      slotName: 'files',
-      width: 150
+      title: '文件数量',
+      slotName: 'file_count',
+      dataIndex: 'file_count',
     },
-    // {
-    //   title: '总大小',
-    //   dataIndex: 'size',
-    //   width: 100
-    // },
     {
         title: '开始时间',
         slotName: 'created_time',
+        // width: 150
+    },
+    {
+        // 结束时间
+        title: '结束时间',
+        slotName: 'updated_time',
+        dataIndex: 'updated_time',
         // width: 150
     },
     {
@@ -213,10 +215,10 @@ const columns = computed<TableColumnData[]>(() => [
         // width: 120
     },
     {
-      title: '数据来源',
+      title: '来源',
       dataIndex: 'source',
       ellipsis: true,
-      width: 100
+      width: 120
     },
     {
         title: '操作',
