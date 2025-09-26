@@ -21,8 +21,6 @@ export default {
   'data.doc.button.create': '新增',
   'data.doc.button.upload': '导入',
   'data.doc.button.delete': '删除',
-  'data.doc.button.ip': '提取IP地址',
-  'data.doc.button.usercount': '提取用户账号',
   // drawer
   'data.doc.columns.new.drawer': '新增文件',
   'data.doc.columns.edit.drawer': '编辑文件',

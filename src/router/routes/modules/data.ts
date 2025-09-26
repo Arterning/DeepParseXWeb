@@ -48,11 +48,11 @@ const DASHBOARD: AppRouteRecordRaw = {
       },
     },
     {
-      path: 'person-detail/:id',
-      name: 'PersonDetail',
-      component: () => import('@/views/data/person-detail/index.vue'),
+      path: 'upload-task',
+      name: 'UploadTask',
+      component: () => import('@/views/data/upload-task/index.vue'),
       meta: {
-        locale: 'menu.data.person.detail',
+        locale: 'menu.data.uploadTask',
         requiresAuth: true,
         roles: ['*'],
         hideInMenu: true,
