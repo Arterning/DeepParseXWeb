@@ -25,13 +25,20 @@
                     <a-form-item label="进度" field="status">
                         <a-select v-model="searchModel.status" placeholder="筛选任务进度" :allow-clear="false">
                             <a-option v-for="(item, index) in [
-                                '邮件处理中',
-                                '邮件处理失败',
-                                '附件上传中',
-                                '附件上传失败',
-                                '已完成'
-                            ]" :key="item" :value="item">
-                                {{ item }}
+                                {
+                                    label: '处理中',
+                                    value: 'doing',
+                                },
+                                {
+                                    label: '已完成',
+                                    value: 'done',
+                                },
+                                {
+                                    label: '处理失败',
+                                    value: 'error',
+                                },
+                            ]" :key="item.value" :value="item.value">
+                                {{ item.label }}
                             </a-option>
                         </a-select>
                     </a-form-item>
@@ -185,11 +192,11 @@ const columns = computed<TableColumnData[]>(() => [
         ellipsis: true,
         // width: 150
     },
-    // {
-    //   title: '文件数量（成功/失败/总数）',
-    //   slotName: 'files',
-    //   width: 150
-    // },
+    {
+      title: '文件数量（成功/失败/总数）',
+      slotName: 'files',
+      width: 150
+    },
     // {
     //   title: '总大小',
     //   dataIndex: 'size',
@@ -205,12 +212,12 @@ const columns = computed<TableColumnData[]>(() => [
         slotName: 'status',
         // width: 120
     },
-    // {
-    //   title: '数据来源',
-    //   dataIndex: 'source',
-    //   ellipsis: true,
-    //   width: 100
-    // },
+    {
+      title: '数据来源',
+      dataIndex: 'source',
+      ellipsis: true,
+      width: 100
+    },
     {
         title: '操作',
         dataIndex: 'operate',
