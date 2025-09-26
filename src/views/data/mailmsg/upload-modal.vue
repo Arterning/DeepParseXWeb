@@ -41,9 +41,14 @@
             <a-form-item :feedback="true" label="归属目录" :rules="[
                 { required: true, message: `该项为必填项` },
                 ]" field="option.directory">
-                <a-select v-model="form.option.directory" placeholder="选择或创建目录" allow-create >
-                <a-option :value="todayStr">{{ todayStr }}</a-option>
-                </a-select>
+                <a-tree-select
+                  v-model="form.doc_dir_id"
+                  :data="dirTreeOptions"
+                  placeholder="请选择归属目录"
+                  allow-search
+                  allow-clear
+                  @change="onDirChange"
+                />
             </a-form-item>
             <div>高级选项</div>
             <a-form-item field="option.skipRepeat">
@@ -106,6 +111,7 @@
   import { deleteSysDoc, parseDoc } from '@/api/doc';
   import { getToken } from '@/utils/auth';
   import { createUploadTask, updateUploadTask } from '@/api/upload_task';
+  import { queryDirectoryList, type DirectoryRes } from '@/api/dir';
 
   defineProps({
     open: Boolean
@@ -177,6 +183,7 @@
   };
   const formDefaultValues: any = {
     name: '',
+    doc_dir_id: 0,
     option: {
       directory: todayStr.value, // 所属二级目录
       skipRepeat: true, // 跳过重复
@@ -191,6 +198,39 @@
 
   const form = reactive<any>({ ...formDefaultValues, status: 'pending' });
   const formRef = ref();
+
+  // 目录树选项
+  const dirTreeOptions = ref<any[]>([]);
+
+  const buildTreeOptions = (data: DirectoryRes[]): any[] => {
+    if (!Array.isArray(data)) return [];
+    return data.map((item) => ({
+      key: item.id.toString(),
+      title: item.name,
+      value: item.id,
+      children: item.children ? buildTreeOptions(item.children) : undefined,
+    }));
+  };
+
+  const loadDirTree = async (name?: string) => {
+    try {
+      const params: any = {};
+      if (name) params.name = name;
+      const res = await queryDirectoryList(params);
+      dirTreeOptions.value = buildTreeOptions(res as unknown as DirectoryRes[]);
+    } catch (e) {}
+  };
+
+  // 打开弹窗时加载目录树
+  loadDirTree();
+
+  // 选择目录时，回填名称到 option.directory
+  const onDirChange = (_val: any, node: any) => {
+    try {
+      const title = node?.title ?? '';
+      form.option.directory = title;
+    } catch {}
+  };
 
   const uploadDirectory = ref(false);
   const isDragOver = ref(false);
@@ -238,8 +278,7 @@
     setLoading(true);
     try {
       for(let id of uploadedIds.value) {
-        await createUploadTask(form);
-        await parseDoc(id, {name: form.name});
+        await parseDoc(id, {name: form.name, doc_dir_id: form.doc_dir_id, option: form.option});
       }
     
       Message.success('任务已提交');
