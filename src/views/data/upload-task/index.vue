@@ -193,8 +193,8 @@ const columns = computed<TableColumnData[]>(() => [
         // width: 150
     },
     {
-      title: '文件数量（成功/失败/总数）',
-      slotName: 'files',
+      title: '文件数量',
+      slotName: 'file_count',
       width: 150
     },
     // {
@@ -208,12 +208,18 @@ const columns = computed<TableColumnData[]>(() => [
         // width: 150
     },
     {
+        // 结束时间
+        title: '结束时间',
+        slotName: 'updated_time',
+        // width: 150
+    },
+    {
         title: '任务进度',
         slotName: 'status',
         // width: 120
     },
     {
-      title: '数据来源',
+      title: '来源',
       dataIndex: 'source',
       ellipsis: true,
       width: 100
