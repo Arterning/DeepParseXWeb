@@ -156,6 +156,7 @@ loadData();
 
 const showAddNodeModal = ref(false);
 const showAddRelationModal = ref(false);
+const showEntityTypeModal = ref(false);
 
 // 实体类型选择相关
 const selectedEntityTypes = ref<string[]>([]);
@@ -177,6 +178,11 @@ const addCommonEntityType = (type: string) => {
   if (!selectedEntityTypes.value.includes(type)) {
     selectedEntityTypes.value.push(type);
   }
+};
+
+// 处理提取确认
+const handleExtractConfirm = () => {
+  emit('extractGraph', selectedEntityTypes.value);
 };
 </script>
 
@@ -250,24 +256,22 @@ const addCommonEntityType = (type: string) => {
       </div>
     </a-modal>
 
-    <div class="p-4 rounded-lg shadow">
-      <div class="mb-4">
+    <!-- 实体类型选择弹框 -->
+    <a-modal v-model:visible="showEntityTypeModal" title="实体类型选择" @ok="handleExtractConfirm">
+      <div class="space-y-4">
         <div class="flex gap-2 items-center">
-          <h3 class="text-lg font-semibold text-[#2971CF] mb-2">实体类型选择</h3>
-            <div class="flex gap-2 items-center">
-            <a-input 
-              v-model="entityTypeInput" 
-              placeholder="输入实体类型，如'人物'"
-              class="w-40"
-              @keyup.enter="addEntityType"
-            />
-            <button 
-              @click="addEntityType"
-              class="bg-[#2971CF] text-white px-3 py-1 rounded transition-colors duration-200"
-            >
-              添加
-            </button>
-          </div>
+          <a-input 
+            v-model="entityTypeInput" 
+            placeholder="输入实体类型，如'人物'"
+            class="w-40"
+            @keyup.enter="addEntityType"
+          />
+          <button 
+            @click="addEntityType"
+            class="bg-[#2971CF] text-white px-3 py-1 rounded transition-colors duration-200"
+          >
+            添加
+          </button>
         </div>
         
         <!-- 常用实体类型快速选择 -->
@@ -302,14 +306,20 @@ const addCommonEntityType = (type: string) => {
             </span>
           </div>
         </div>
+        
+        <div v-else class="mt-2 text-gray-400 text-sm">
+          请选择要提取的实体类型
+        </div>
       </div>
-    
+    </a-modal>
+
+    <div class="p-4 rounded-lg shadow">
       <div class="flex justify-between">
         <!-- <h3 class="text-lg font-semibold text-cyan-400 mb-3">操作</h3> -->
         <div class="flex gap-2">
 
           <!-- 提取知识图谱 -->
-          <button @click="emit('extractGraph', selectedEntityTypes)"
+          <button @click="showEntityTypeModal = true"
             class="bg-[#2971CF] hover:bg-blue-700 text-white p-2 rounded transition-colors duration-200 flex items-center justify-center">
             <span class="i-heroicons-arrow-path-solid"></span>
             提取图谱
