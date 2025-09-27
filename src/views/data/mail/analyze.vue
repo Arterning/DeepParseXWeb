@@ -102,13 +102,161 @@
       <div class="p-4">
         <h3 class="text-lg font-semibold dark:text-white">分析结果</h3>
         <div class="text-sm text-gray-500 mt-1">
-          节点数量: {{ analysisResult.nodes.length }}，关系数量:
+          节点数量: {{ analysisResult.nodes.length }}，关系数量: 
           {{ analysisResult.edges.length }}
         </div>
       </div>
 
       <!-- 图谱容器 -->
       <div ref="graphContainer" class="h-96 w-full"></div>
+
+      <!-- 网络分析结果 -->
+      <div v-if="analysisResult.network_analysis" class="p-6">
+        <h3 class="text-lg font-semibold mb-4 dark:text-white">网络分析结果</h3>
+
+        <!-- 基本统计信息 -->
+        <div class="bg-gray-50 p-4 rounded-lg mb-6">
+          <h4 class="text-md font-medium mb-3">网络基本统计</h4>
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div class="text-center">
+              <div class="text-gray-500 text-sm">节点数量</div>
+              <div class="text-xl font-bold mt-1">{{ analysisResult.network_analysis.number_of_nodes }}</div>
+            </div>
+            <div class="text-center">
+              <div class="text-gray-500 text-sm">边数量</div>
+              <div class="text-xl font-bold mt-1">{{ analysisResult.network_analysis.number_of_edges }}</div>
+            </div>
+            <div class="text-center">
+              <div class="text-gray-500 text-sm">连通分量</div>
+              <div class="text-xl font-bold mt-1">{{ analysisResult.network_analysis.number_of_connected_components }}</div>
+            </div>
+            <div class="text-center">
+              <div class="text-gray-500 text-sm">是否有向</div>
+              <div class="text-xl font-bold mt-1">{{ analysisResult.network_analysis.is_directed ? '是' : '否' }}</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 度数分布 -->
+        <div class="mb-6">
+          <h4 class="text-md font-medium mb-3">节点度数分布</h4>
+          <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+              <thead class="bg-gray-50">
+                <tr>
+                  <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">节点</th>
+                  <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">度数</th>
+                </tr>
+              </thead>
+              <tbody class="bg-white divide-y divide-gray-200">
+                <tr v-for="(degree, node) in analysisResult.network_analysis.degrees" :key="node">
+                  <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-900 max-w-xs truncate">{{ node }}</td>
+                  <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-900">{{ degree }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- 中心性指标 -->
+        <div class="mb-6">
+          <h4 class="text-md font-medium mb-3">中心性指标</h4>
+          <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+              <thead class="bg-gray-50">
+                <tr>
+                  <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">节点</th>
+                  <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">度中心性</th>
+                  <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">介数中心性</th>
+                  <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">接近中心性</th>
+                  <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">特征向量中心性</th>
+                </tr>
+              </thead>
+              <tbody class="bg-white divide-y divide-gray-200">
+                <tr v-for="node in getCentralityNodes()" :key="node">
+                  <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-900 max-w-xs truncate">{{ node }}</td>
+                  <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-900">{{ analysisResult.network_analysis.centrality.degree[node]?.toFixed(4) || '0.0000' }}</td>
+                  <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-900">{{ analysisResult.network_analysis.centrality.betweenness[node]?.toFixed(4) || '0.0000' }}</td>
+                  <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-900">{{ analysisResult.network_analysis.centrality.closeness[node]?.toFixed(4) || '0.0000' }}</td>
+                  <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-900">{{ analysisResult.network_analysis.centrality.eigenvector[node]?.toFixed(4) || '0.0000' }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- 关键节点 -->
+        <div>
+          <h4 class="text-md font-medium mb-3">关键节点识别</h4>
+          
+          <!-- 度数最高的节点 -->
+          <div class="mb-4">
+            <h5 class="text-sm font-medium text-gray-600 mb-2">度数最高的节点</h5>
+            <div class="overflow-x-auto">
+              <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-50">
+                  <tr>
+                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">排名</th>
+                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">节点</th>
+                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">度数</th>
+                  </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200">
+                  <tr v-for="(item, index) in analysisResult.network_analysis.key_nodes.top_degree_nodes" :key="index">
+                    <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-900">{{ index + 1 }}</td>
+                    <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-900 max-w-xs truncate">{{ item[0] }}</td>
+                    <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-900">{{ item[1] }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- 介数中心性最高的节点 -->
+          <div class="mb-4">
+            <h5 class="text-sm font-medium text-gray-600 mb-2">介数中心性最高的节点</h5>
+            <div class="overflow-x-auto">
+              <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-50">
+                  <tr>
+                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">排名</th>
+                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">节点</th>
+                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">介数中心性</th>
+                  </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200">
+                  <tr v-for="(item, index) in analysisResult.network_analysis.key_nodes.top_betweenness_nodes" :key="index">
+                    <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-900">{{ index + 1 }}</td>
+                    <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-900 max-w-xs truncate">{{ item[0] }}</td>
+                    <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-900">{{ item[1].toFixed(4) }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- 节点影响度 -->
+          <div>
+            <h5 class="text-sm font-medium text-gray-600 mb-2">节点影响度</h5>
+            <div class="overflow-x-auto">
+              <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-50">
+                  <tr>
+                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">节点</th>
+                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">影响度</th>
+                  </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200">
+                  <tr v-for="item in analysisResult.network_analysis.key_nodes.node_impacts" :key="item.node">
+                    <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-900 max-w-xs truncate">{{ item.node }}</td>
+                    <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-900">{{ item.impact }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- 无结果提示 -->
@@ -529,6 +677,24 @@
     });
   };
 
+  // 获取中心性指标中的所有节点名称
+  const getCentralityNodes = () => {
+    if (!analysisResult.value?.network_analysis?.centrality) {
+      return [];
+    }
+    
+    const nodes = new Set<string>();
+    const { degree, betweenness, closeness, eigenvector } = analysisResult.value.network_analysis.centrality;
+    
+    // 合并所有中心性指标中的节点名称
+    Object.keys(degree).forEach(node => nodes.add(node));
+    Object.keys(betweenness).forEach(node => nodes.add(node));
+    Object.keys(closeness).forEach(node => nodes.add(node));
+    Object.keys(eigenvector).forEach(node => nodes.add(node));
+    
+    return Array.from(nodes);
+  };
+
   // 辅助函数
   const getLayerColor = (layer: number) => {
     const colors = ['red', 'orange', 'gold', 'green', 'blue', 'purple'];
@@ -558,6 +724,10 @@
   };
 
   onMounted(() => {
-    loadMailboxes();
-  });
+  loadMailboxes();
+});
+
+defineExpose({
+  getCentralityNodes,
+});
 </script>
