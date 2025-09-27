@@ -2,18 +2,6 @@
   <a-layout class="flex-layout">
     <Breadcrumb />
     <div class="h-full flex flex-col rounded-lg shadow-sm overflow-hidden">
-      <!-- 邮件头部 -->
-      <a-page-header class="" title="" :show-back="true" @back="$router.back()">
-        <template #extra>
-          <a-space>
-            <a-button type="outline" size="small">回复</a-button>
-            <a-button type="outline" size="small">转发</a-button>
-            <a-popconfirm content="确认删除此邮件？" @ok="handleDelete">
-              <a-button status="danger" size="small">删除</a-button>
-            </a-popconfirm>
-          </a-space>
-        </template>
-      </a-page-header>
 
       <!-- 邮件内容区域 -->
       <div class="flex-1 overflow-y-auto p-6">
