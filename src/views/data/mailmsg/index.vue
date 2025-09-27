@@ -1,6 +1,6 @@
 <template>
   <a-layout class="flex-layout">
-    <div class="general-card">
+    <a-card class="general-card py-4">
       <a-row>
         <a-col :flex="62">
           <a-form
@@ -59,7 +59,6 @@
                     v-model="formModel.time"
                     :placeholder="$t('搜索时间')"
                     @keyup.enter="search"
-                    class="w-full"
                   />
                 </a-form-item>
               </a-col>
@@ -85,238 +84,167 @@
         </a-col>
       </a-row>
       <a-divider class="mt-0" />
-      <a-space class="flex justify-between">
-        <a-space :size="'medium'">
-          <a-button type="primary" @click="openNew=true">
-            <template #icon>
-              <icon-plus />
-            </template>
-            新增
-          </a-button>
-          <a-button type="outline" @click="openTask=true">
-            <template #icon>
-              <icon-list />
-            </template>
-            任务
-          </a-button>    
-
-          <a-button
-            :disabled="deleteButtonStatus()"
-            status="danger"
-            @click="DeleteMailMsg"
-          >
-            <template #icon>
-              <icon-minus />
-            </template>
-            删除
-          </a-button>
-        </a-space>
-        <a-space>
-          
-          <a-tooltip content="目录">
-            <a-button type="text" @click="openDirectory=true">
-              <template #icon>
-                <icon-folder />
-              </template>
-              {{ selectedDirectory?  selectedDirectory.name : '未选择目录' }}
-            </a-button> 
-          </a-tooltip>
-          <a-tooltip content="切换视图">
-            <a-button type="text" @click="viewType=!viewType">
-              <template #icon>
-                <icon-swap />
-              </template>
-            </a-button> 
-          </a-tooltip>
-      
-        </a-space>
+      <a-space :size="'medium'">
+        <a-button type="primary" @click="NewMailMsg()">
+          <template #icon>
+            <icon-plus />
+          </template>
+          新增
+        </a-button>
+        <a-button
+          :disabled="deleteButtonStatus()"
+          status="danger"
+          @click="DeleteMailMsg"
+        >
+          <template #icon>
+            <icon-minus />
+          </template>
+          删除
+        </a-button>
       </a-space>
       <div class="content">
         <div
           v-if="loading"
           class="w-full h-96 flex justify-center items-center"
         >
-          <a-spin :size="32" />
+          <a-spin size="large" />
         </div>
         <div v-else>
-
-          <template v-if="viewType">
-            <div class="grid grid-cols-2 gap-4" >
-              <div
-                v-for="record in renderData"
-                :key="record.id"
-                class="flex items-start p-4 border rounded-lg shadow-sm hover:shadow-lg transition-shadow duration-200"
-                :class="{
-                  'border-blue-500 ring-1 ring-blue-500': rowSelectKeys.includes(
-                    record.id
-                  ),
-                }"
-              >
-                <div class="mr-4 pt-1">
-                  <a-checkbox
-                    :model-value="rowSelectKeys.includes(record.id)"
-                    @change="() => toggleSelection(record.id)"
-                  />
+          <div class="grid grid-cols-2 gap-4">
+            <div
+              v-for="record in renderData"
+              :key="record.id"
+              class="flex items-start p-4 rounded-lg shadow-sm hover:shadow-lg transition-shadow duration-200"
+              :class="{
+                'border-blue-500 ring-1 ring-blue-500': rowSelectKeys.includes(
+                  record.id
+                ),
+              }"
+            >
+              <div class="mr-4 pt-1">
+                <a-checkbox
+                  :model-value="rowSelectKeys.includes(record.id)"
+                  @change="() => toggleSelection(record.id)"
+                />
+              </div>
+              <div class="flex-1 min-w-0">
+                <div class="flex justify-between items-center mb-2">
+                  <a-link
+                    class="text-lg font-semibold truncate hover:text-blue-600"
+                    :title="record.name"
+                    @click="
+                      router.push({
+                        name: 'MailMsgDetail',
+                        params: { id: record.id },
+                      })
+                    "
+                  >
+                    {{ record.name }}
+                  </a-link>
+                  <span class="text-sm text-gray-500 flex-shrink-0 ml-4">{{
+                    record.time
+                  }}</span>
                 </div>
-                <div class="flex-1 min-w-0">
-                  <div class="flex justify-between items-center mb-2">
-                    <div
-                      class="flex-1 text-lg font-semibold truncate hover:text-blue-600 cursor-pointer"
-                      :title="record.name"
+
+                <div
+                  class="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-gray-600 mb-3"
+                >
+                  <div class="flex items-center">
+                    <span class="font-medium text-gray-500">From:</span>
+                    <span
+                      class="ml-1.5 text-gray-500 px-2 py-0.5 rounded-full"
+                      >{{ record.sender }}</span
+                    >
+                  </div>
+                  <div class="flex items-center">
+                    <span class="font-medium text-gray-500">To:</span>
+                    <span
+                      class="ml-1.5 text-gray-500 px-2 py-0.5 rounded-full"
+                      >{{ record.receiver }}</span
+                    >
+                  </div>
+                  <div v-if="record.cc" class="flex items-center">
+                    <span class="font-medium text-gray-500">CC:</span>
+                    <span
+                      class="ml-1.5 text-gray-500 px-2 py-0.5 rounded-full"
+                      >{{ record.cc }}</span
+                    >
+                  </div>
+                </div>
+
+                <p
+                  class="text-gray-600 text-sm truncate mb-4"
+                  :title="record.original"
+                >
+                  {{ record.original || 'No content to display.' }}
+                </p>
+
+                <div class="flex justify-between items-center">
+                  <div class="flex items-center space-x-2">
+                    <a-tag v-if="record.category" color="arcoblue">{{
+                      record.category
+                    }}</a-tag>
+                    <span
+                      v-if="record.location"
+                      class="text-xs text-gray-400 flex items-center"
+                    >
+                      <icon-location /> {{ record.location }}
+                    </span>
+                  </div>
+                  <div class="flex items-center space-x-2">
+                    <a-button size="mini" @click="EditMailMsg(record.id)">
+                      编辑
+                    </a-button>
+                    <a-button
+                      size="mini"
+                      type="primary"
                       @click="
                         router.push({
                           name: 'MailMsgDetail',
                           params: { id: record.id },
-                          query: { appendix: record.name },
                         })
                       "
                     >
-                      {{ record.name }}
-                    </div>
-                    <span class="text-sm text-gray-500 flex-shrink-0 ml-4">{{
-                      tableDateFormat(record.time)
-                    }}</span>
-                  </div>
-
-                  <div
-                    class="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-gray-600 mb-3"
-                  >
-                    <div class="flex items-center">
-                      <span class="font-medium text-gray-500">From:</span>
-                      <span
-                        class="ml-1.5 text-gray-500 px-2 py-0.5 rounded-full"
-                        >{{ record.sender }}</span
-                      >
-                    </div>
-                    <div class="flex items-center">
-                      <span class="font-medium text-gray-500">To:</span>
-                      <span
-                        class="ml-1.5 text-gray-500 px-2 py-0.5 rounded-full"
-                        >{{ record.receiver }}</span
-                      >
-                    </div>
-                    <div v-if="record.cc" class="flex items-center">
-                      <span class="font-medium text-gray-500">CC:</span>
-                      <span
-                        class="ml-1.5 text-gray-500 px-2 py-0.5 rounded-full"
-                        >{{ record.cc }}</span
-                      >
-                    </div>
-                  </div>
-
-                  <p
-                    class="text-gray-600 text-sm truncate mb-4"
-                    :title="record.content"
-                  >
-                    {{ record.content || 'No content to display.' }}
-                  </p>
-
-                  <div class="flex justify-between items-center">
-                    <div class="flex items-center space-x-2">
-                      <a-tag v-if="record.category" color="arcoblue">{{
-                        record.category
-                      }}</a-tag>
-                      <span
-                        v-if="record.location"
-                        class="text-xs text-gray-400 flex items-center"
-                      >
-                        <icon-location /> {{ record.location }}
-                      </span>
-                    </div>
-                    <div class="flex items-center space-x-2">
-                      <a-button size="mini" @click="EditMailMsg(record.id)">
-                        编辑
-                      </a-button>
-                      <a-button
-                        size="mini"
-                        type="primary"
-                        @click="
-                          router.push({
-                            name: 'MailMsgDetail',
-                            params: { id: record.id },
-                            query: { appendix: record.name },
-                          })
-                        "
-                      >
-                        查看
-                      </a-button>
-                    </div>
+                      查看
+                    </a-button>
                   </div>
                 </div>
               </div>
             </div>
-            <div
-              v-if="!loading && renderData.length === 0"
-              class="text-center py-16"
-            >
-              <a-empty />
-            </div>
-            <div
-              v-if="renderData.length > 0"
-              class="flex justify-end items-center mt-4"
-            >
-              <a-pagination
-                :total="pagination.total || 0"
-                :current="pagination.current"
-                :page-size="pagination.pageSize"
-                show-total
-                show-page-size
-                @change="onPageChange"
-                @page-size-change="onPageSizeChange"
-              />
-            </div>            
-          </template>
+          </div>
 
-          <a-table v-else v-model:selected-keys="rowSelectKeys" :bordered="false" :columns="columns" :data="renderData"
-            :loading="loading" :pagination="pagination" :row-selection="rowSelection" row-key="id"
-            @page-change="onPageChange" @page-size-change="onPageSizeChange">
-            <!-- <template #index="{ rowIndex }">
-              {{ rowIndex + 1 }}
-            </template> -->
-            <!-- <template #files="{ record }">
-              <a-space>
-                {{ record.success }} / {{ record.fail }} / {{ record.total }}
-              </a-space>
-            </template> -->
-            <template #abstract="{ record }">
-              {{ record.content.slice(0, 15) }}
-            </template>
-            <template #time="{ record }">
-              {{ tableDateFormat(record.time) }}
-            </template>
-            <template #operate="{ record }">
-              <a-space>
-                <a-tooltip content="编辑">
-                  <a-link @click="EditMailMsg(record.id)">
-                    <icon-edit style="font-size:16" />
-                  </a-link>
-                </a-tooltip>
-                <a-tooltip content="查看">
-                  <a-link @click="
-                    router.push({
-                      name: 'MailMsgDetail',
-                      params: { id: record.id },
-                      query: { appendix: record.name },
-                    })
-                  ">
-                    <icon-eye style="font-size:16" />
-                  </a-link>
-                </a-tooltip>
-              </a-space>
-            </template>
-          </a-table>        
+          <div
+            v-if="!loading && renderData.length === 0"
+            class="text-center py-16"
+          >
+            <a-empty />
+          </div>
+
+          <div
+            v-if="renderData.length > 0"
+            class="flex justify-end items-center mt-4"
+          >
+            <a-pagination
+              :total="pagination.total || 0"
+              :current="pagination.current"
+              :page-size="pagination.pageSize"
+              show-total
+              show-page-size
+              @change="onPageChange"
+              @page-size-change="onPageSizeChange"
+            />
+          </div>
         </div>
       </div>
       <div class="content-modal">
-        <UploadModal v-model:open="openNew" @open-task-drawer="openTask = true" @refresh-task-drawer="refreshTaskDrawer" />
         <a-modal
           :closable="false"
           :on-before-ok="beforeSubmit"
           :title="drawerTitle"
-          :visible="openEdit"
+          :visible="openNewOrEdit"
           :width="550"
           @cancel="cancelReq"
-          @ok="submitEdit"
+          @ok="submitNewOrEdit"
         >
           <a-form ref="formRef" :model="form">
             <a-form-item
@@ -384,19 +312,17 @@
           </a-space>
         </a-modal>
       </div>
-      <TaskDrawer v-model:open="openTask" :refresh-trigger="taskRefreshTrigger" />
-      <DirectoryDrawer v-model:open="openDirectory" @directory-change="onDirectoryChange" />
-    </div>
+    </a-card>
+    <Footer />
   </a-layout>
 </template>
 
 <script lang="ts" setup>
-  import { Message, SelectOptionData, TableColumnData } from '@arco-design/web-vue';
+  import { Message, SelectOptionData } from '@arco-design/web-vue';
   import { useI18n } from 'vue-i18n';
-  import { computed, reactive, ref } from 'vue';
+  import { reactive, ref } from 'vue';
   import useLoading from '@/hooks/loading';
-  import UploadModal from './upload-modal.vue';
-  import TaskDrawer from './task-drawer.vue';
+  import Footer from '@/components/footer/index.vue';
   import {
     createMailMsg,
     deleteMailMsg,
@@ -409,13 +335,10 @@
   } from '@/api/mailmsg';
   import { Pagination } from '@/types/global';
   import { useRouter } from 'vue-router';
-  import DirectoryDrawer from './directory-drawer.vue';
-  import { tableDateFormat } from '@/utils/date';
 
   const { t } = useI18n();
   const { loading, setLoading } = useLoading(true);
   const router = useRouter();
-  const viewType = ref(true);
 
   // 表单
   const generateFormModel = () => {
@@ -435,12 +358,6 @@
   const renderData = ref<MailMsgRes[]>([]);
   const operateRow = ref<number>(0);
   const rowSelectKeys = ref<number[]>([]);
-  const rowSelection = {
-    type: 'checkbox' as 'checkbox' | 'radio' | undefined,
-    showCheckedAll: true,
-    onlyCurrent: false,
-  };
-
   const basePagination: Pagination = {
     current: 1,
     pageSize: 10,
@@ -452,90 +369,18 @@
   const pagination: Pagination = reactive({
     ...basePagination,
   });
-
-  const columns = computed<TableColumnData[]>(() => [
-    {
-      title: 'ID',
-      dataIndex: 'id',
-      slotName: 'id',
-      sortable: {
-        sortDirections: ['ascend', 'descend']
-      },
-      ellipsis: true,
-      tooltip: true,
-      width: 80,
-    },
-    {
-      title: '邮件主题',
-      dataIndex: 'name',
-      ellipsis: true,
-      tooltip: true
-    },
-    // {
-    //   title: '文件数量（成功/失败/总数）',
-    //   slotName: 'files',
-    //   width: 150
-    // },
-    // {
-    //   title: '总大小',
-    //   dataIndex: 'size',
-    //   width: 100
-    // },
-    {
-      title: '摘要',
-      slotName: 'abstract',
-      // width: 150
-    },
-    {
-      title: '日期',
-      slotName: 'time',
-      width: 170,
-      sortable: {
-        sortDirections: ['ascend', 'descend']
-      }
-    },
-    // {
-    //   title: '关键字',
-    //   slotName: 'keywords',
-    //   // width: 120
-    // },
-    {
-      title: '发件人',
-      dataIndex: 'sender',
-      ellipsis: true,
-      tooltip: true,
-      width: 120
-    },
-    {
-      title: '收件人',
-      dataIndex: 'receiver',
-      ellipsis: true,
-      tooltip: true,
-      width: 120
-    },
-    {
-      title: '标签',
-      dataIndex: 'cc',
-      ellipsis: true,
-      tooltip: true,
-      width: 180
-    },
-    {
-      title: '操作',
-      dataIndex: 'operate',
-      slotName: 'operate',
-      align: 'center',
-      fixed: 'right',
-      width: 100,
-    },
-  ]);
-
+  const NewMailMsg = () => {
+    buttonStatus.value = 'new';
+    drawerTitle.value = t('新增');
+    resetForm(formDefaultValues);
+    openNewOrEdit.value = true;
+  };
   const EditMailMsg = async (pk: number) => {
     buttonStatus.value = 'edit';
     operateRow.value = pk;
     drawerTitle.value = t('编辑');
     await fetchMailMsgDetail(pk);
-    openEdit.value = true;
+    openNewOrEdit.value = true;
   };
   const DeleteMailMsg = () => {
     drawerTitle.value = t('删除');
@@ -551,39 +396,12 @@
     }
   };
 
-  const openTask = ref<boolean>(false);
-  const taskRefreshTrigger = ref<number>(0);
-  const openDirectory = ref<boolean>(false);
-  
-  // 目录筛选
-  const selectedDirectory = ref<any>(null);
-  
-  // 刷新任务抽屉数据
-  const refreshTaskDrawer = () => {
-    taskRefreshTrigger.value += 1;
-  };
-
-  // 目录变化处理
-  const onDirectoryChange = (directory: any) => {
-    selectedDirectory.value = directory;
-    // 重置分页并重新加载数据
-    pagination.current = 1;
-    fetchData();
-  };
-
-  // 清除目录筛选
-  const clearDirectoryFilter = () => {
-    selectedDirectory.value = null;
-    pagination.current = 1;
-    fetchData();
-  };
   // 对话框
-  const openNew = ref<boolean>(false);
-  const openEdit = ref<boolean>(false);
+  const openNewOrEdit = ref<boolean>(false);
   const openDelete = ref<boolean>(false);
   const drawerTitle = ref<string>('');
   const cancelReq = () => {
-    openEdit.value = false;
+    openNewOrEdit.value = false;
     openDelete.value = false;
   };
   const formDefaultValues: MailMsgReq = {
@@ -611,7 +429,7 @@
   };
 
   // 提交按钮
-  const submitEdit = async () => {
+  const submitNewOrEdit = async () => {
     setLoading(true);
     try {
       if (buttonStatus.value === 'new') {
@@ -637,7 +455,7 @@
     return rowSelectKeys.value?.length === 0;
   };
 
-  // 提交按钮
+  // 删除按钮
   const submitDelete = async () => {
     setLoading(true);
     try {
@@ -659,18 +477,11 @@
   const fetchData = async () => {
     setLoading(true);
     try {
-      const params: MailMsgParams = {
+      const res = await queryMailMsgList({
         ...formModel.value,
         page: pagination.current,
         size: pagination.pageSize,
-      };
-      
-      // 添加目录筛选参数
-      if (selectedDirectory.value) {
-        params.doc_dir_id = selectedDirectory.value.id;
-      }
-      
-      const res = await queryMailMsgList(params);
+      } as MailMsgParams);
       renderData.value = res.items;
       pagination.total = res.total;
     } catch (error) {
@@ -718,6 +529,11 @@
   // 重置
   const resetSelect = () => {
     formModel.value = generateFormModel();
+  };
+
+  // 重置方法
+  const resetMethod = () => {
+    formModel.value.name = undefined;
   };
 
   // 重置表单
