@@ -1,5 +1,4 @@
 <template>
-  <div class="container mx-auto p-4">
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
       <a-card class="general-card" :title="$t('邮件类型分布')">
         <VChart :option="pieChartOption" style="height: 300px" />
@@ -48,94 +47,148 @@
           </a-col>
         </a-row>
         <a-divider class="mt-0" />
-        <a-space :size="'medium'">
-          <a-button type="primary" @click="NewMailBox()">
-            <template #icon>
-              <icon-plus />
-            </template>
-            新增
-          </a-button>
-          <a-button
-            :disabled="deleteButtonStatus()"
-            status="danger"
-            @click="DeleteMailBox"
-          >
-            <template #icon>
-              <icon-minus />
-            </template>
-            删除
-          </a-button>
+        <a-space class="flex justify-between">
+          <a-space :size="'medium'">
+            <a-button type="primary" @click="NewMailBox()">
+              <template #icon>
+                <icon-plus />
+              </template>
+              新增
+            </a-button>
+            <a-button
+              :disabled="deleteButtonStatus()"
+              status="danger"
+              @click="DeleteMailBox"
+            >
+              <template #icon>
+                <icon-minus />
+              </template>
+              删除
+            </a-button>
+          </a-space>
+          <a-space>
+            <a-tooltip content="切换视图">
+              <a-button type="text" @click="viewType = !viewType">
+                <template #icon>
+                  <icon-swap />
+                </template>
+              </a-button>
+            </a-tooltip>
+          </a-space>
         </a-space>
         <div class="content mt-4">
           <div v-if="loading" class="flex justify-center items-center h-64">
             <a-spin size="large" />
           </div>
-          <div
-            v-else-if="renderData.length === 0"
-            class="text-center text-gray-500 dark:text-gray-400"
-          >
-            暂无数据
-          </div>
-          <div
-            v-else
-            class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4"
-          >
-            <a-card
-              v-for="item in renderData"
-              :key="item.id"
-              class="rounded-lg shadow-md transition-all duration-300 hover:shadow-lg dark:bg-gray-800"
-              :class="{
-                'border-blue-500 border-2': rowSelectKeys.includes(item.id),
-              }"
-              @click="toggleSelection(item.id)"
-            >
-              <div class="flex items-center mb-4">
-                <component
-                  :is="getMailboxIcon(item.name)"
-                  class="w-8 h-8 mr-3"
-                  alt="mailbox icon"
+          <template v-else>
+            <template v-if="viewType">
+              <div
+                v-if="renderData.length === 0"
+                class="text-center text-gray-500 dark:text-gray-400"
+              >
+                暂无数据
+              </div>
+              <div
+                v-else
+                class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4"
+              >
+                <a-card
+                  v-for="item in renderData"
+                  :key="item.id"
+                  class="rounded-lg shadow-md transition-all duration-300 hover:shadow-lg dark:bg-gray-800"
+                  :class="{
+                    'border-blue-500 border-2': rowSelectKeys.includes(item.id),
+                  }"
+                  @click="toggleSelection(item.id)"
+                >
+                  <div class="flex items-center mb-4">
+                    <component
+                      :is="getMailboxIcon(item.name)"
+                      class="w-8 h-8 mr-3"
+                      alt="mailbox icon"
+                    />
+                    <h3
+                      class="text-lg font-semibold text-gray-800 dark:text-white truncate"
+                      >{{ item.name }}</h3
+                    >
+                  </div>
+                  <div class="text-sm text-gray-600 dark:text-gray-300">
+                    <p class="mb-2">
+                      <icon-email class="mr-2" />
+                      邮件数量:
+                      <span class="font-semibold">{{ item.email_num }}</span>
+                    </p>
+                    <p>
+                      <icon-location class="mr-2" />
+                      国家/地区:
+                      <span class="font-semibold">{{ item.country }}</span>
+                    </p>
+                  </div>
+                  <template #actions>
+                    <a-link @click.stop="EditMailBox(item.id)"> 编辑 </a-link>
+                    <a-link
+                      @click.stop="
+                        router.push({
+                          name: 'MailBoxDetail',
+                          params: { id: item.id },
+                        })
+                      "
+                    >
+                      查看
+                    </a-link>
+                  </template>
+                </a-card>
+              </div>
+              <div class="flex justify-end mt-4">
+                <a-pagination
+                  :total="pagination.total"
+                  :current="pagination.current"
+                  :page-size="pagination.pageSize"
+                  @change="onPageChange"
+                  @page-size-change="onPageSizeChange"
                 />
-                <h3
-                  class="text-lg font-semibold text-gray-800 dark:text-white truncate"
-                  >{{ item.name }}</h3
-                >
               </div>
-              <div class="text-sm text-gray-600 dark:text-gray-300">
-                <p class="mb-2">
-                  <icon-email class="mr-2" />
-                  邮件数量:
-                  <span class="font-semibold">{{ item.email_num }}</span>
-                </p>
-                <p>
-                  <icon-location class="mr-2" />
-                  国家/地区:
-                  <span class="font-semibold">{{ item.country }}</span>
-                </p>
-              </div>
-              <template #actions>
-                <a-link @click.stop="EditMailBox(item.id)"> 编辑 </a-link>
-                <a-link
-                  @click.stop="
-                    router.push({
-                      name: 'MailBoxDetail',
-                      params: { id: item.id },
-                    })
-                  "
-                >
-                  查看
-                </a-link>
-              </template>
-            </a-card>
-          </div>
-          <div class="flex justify-end mt-4">
-            <a-pagination
-              :total="pagination.total"
-              :current="pagination.current"
-              :page-size="pagination.pageSize"
-              @change="onPageChange"
+            </template>
+            <a-table
+              v-else
+              v-model:selected-keys="rowSelectKeys"
+              :bordered="false"
+              :columns="columns"
+              :data="renderData"
+              :loading="loading"
+              :pagination="pagination"
+              :row-selection="rowSelection"
+              row-key="id"
+              @page-change="onPageChange"
               @page-size-change="onPageSizeChange"
-            />
-          </div>
+            >
+              <template #name="{ record }">
+                {{ record.name }}
+              </template>
+              <template #email_num="{ record }">
+                {{ record.email_num }}
+              </template>
+              <template #operate="{ record }">
+                <a-space>
+                  <a-tooltip content="编辑">
+                    <a-link @click="EditMailBox(record.id)">
+                      <icon-edit style="font-size:16" />
+                    </a-link>
+                  </a-tooltip>
+                  <a-tooltip content="查看">
+                    <a-link @click="
+                      router.push({
+                        name: 'MailBoxDetail',
+                        params: { id: record.id },
+                      })
+                    ">
+                      <icon-eye style="font-size:16" />
+                    </a-link>
+                  </a-tooltip>
+                </a-space>
+              </template>
+            </a-table>
+          </template>
         </div>
         <div class="content-modal">
           <a-modal
@@ -189,7 +242,6 @@
       </a-card>
       <Footer />
     </a-layout>
-  </div>
 </template>
 
 <script lang="ts" setup>
@@ -243,6 +295,7 @@
   const { loading, setLoading } = useLoading(true);
   const router = useRouter();
   const appStore = useAppStore();
+  const viewType = ref(true);
 
   const pieChartOption = computed(() => {
     return {
@@ -374,6 +427,49 @@
   const pagination: Pagination = reactive({
     ...basePagination,
   });
+
+  const columns = computed<TableColumnData[]>(() => [
+    {
+      title: 'ID',
+      dataIndex: 'id',
+      slotName: 'id',
+      sortable: {
+        sortDirections: ['ascend', 'descend']
+      },
+      ellipsis: true,
+      tooltip: true,
+      width: 80,
+    },
+    {
+      title: '邮箱',
+      dataIndex: 'name',
+      ellipsis: true,
+      tooltip: true,
+    },
+    {
+      title: '邮件数量',
+      dataIndex: 'email_num',
+      sortable: {
+        sortDirections: ['ascend', 'descend']
+      },
+      width: 120
+    },
+    {
+      title: '国家/地区',
+      dataIndex: 'country',
+      ellipsis: true,
+      tooltip: true,
+      width: 120
+    },
+    {
+      title: '操作',
+      dataIndex: 'operate',
+      slotName: 'operate',
+      align: 'center',
+      fixed: 'right',
+      width: 100,
+    },
+  ]);
   const NewMailBox = () => {
     buttonStatus.value = 'new';
     drawerTitle.value = t('新增');

@@ -1,5 +1,5 @@
 <template>
-    <a-layout class="flex-layout mt-8">
+    <a-layout class="flex-layout">
         <a-card class="general-card py-4">
         <div class="flex">
         <a-form :auto-label-width="true" :model="searchModel" label-align="right">
@@ -75,6 +75,9 @@
       </template> -->
         <template #created_time="{ record }">
             {{ tableDateFormat(record.created_time) }}
+        </template>
+        <template #updated_time="{ record }">
+            {{ tableDateFormat(record.updated_time) }}
         </template>
         <template #status="{ record }">
             <a-tag :color="tagMap(record.status).color" bordered>
@@ -177,7 +180,6 @@ const columns = computed<TableColumnData[]>(() => [
     {
         title: 'ID',
         dataIndex: 'id',
-        slotName: 'id',
         // sortable: {
         //   sortDirections: ['ascend', 'descend']
         // },
@@ -188,13 +190,11 @@ const columns = computed<TableColumnData[]>(() => [
     {
         title: '任务名称',
         dataIndex: 'name',
-        slotName: 'name',
         ellipsis: true,
         // width: 150
     },
     {
       title: '文件数量',
-      slotName: 'file_count',
       dataIndex: 'file_count',
     },
     {
@@ -206,7 +206,6 @@ const columns = computed<TableColumnData[]>(() => [
         // 结束时间
         title: '结束时间',
         slotName: 'updated_time',
-        dataIndex: 'updated_time',
         // width: 150
     },
     {
@@ -222,7 +221,6 @@ const columns = computed<TableColumnData[]>(() => [
     },
     {
         title: '操作',
-        dataIndex: 'operate',
         slotName: 'operate',
         align: 'center',
         fixed: 'right',

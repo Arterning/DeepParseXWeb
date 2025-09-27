@@ -16,9 +16,13 @@
                     <a-list-item class="transition-colors" style="--hover-bg: var(--color-fill-1);">
                     <div class="flex items-start justify-between w-full">
                         <div class="flex-1 space-y-2">
-                        <div class="flex items-center space-x-4">
+                        <div class="flex items-center space-x-2">
                             <div class="font-medium" style="color: var(--color-text-1);">{{ item.name || '未知姓名' }}</div>
-                            <a-tag v-if="item.gender" :color="item.gender === '男' ? 'blue' : 'pink'">{{ item.gender }}</a-tag>
+                            <span class="inline-flex items-center">
+                              <IconMan v-if="item.gender === '男'" style="color: #1e88e5;" />
+                              <IconWoman v-else-if="item.gender === '女'" style="color: #ec407a;" />
+                              <IconUser v-else style="color: #9e9e9e;" />
+                            </span>
                             <a-tag v-if="item.nationality" color="green">{{ item.nationality }}</a-tag>
                         </div>
                         
@@ -228,7 +232,9 @@
     IconPhone,
     IconWechat,
     IconComputer,
-    IconRelation
+    IconRelation,
+    IconMan,
+    IconWoman
   } from '@arco-design/web-vue/es/icon';
   import AddrCodeItem from './components/addrcode.vue';
 

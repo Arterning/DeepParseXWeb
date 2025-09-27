@@ -40,7 +40,8 @@
             </a-form-item>
             <a-form-item :feedback="true" label="归属目录" :rules="[
                 { required: true, message: `该项为必填项` },
-                ]" field="option.directory">
+                { validator: (_: any, value: any, cb: any) => { (typeof value === 'number' && value > 0) ? cb() : cb('该项为必填项'); } }
+                ]" field="doc_dir_id">
                 <a-tree-select
                   v-model="form.doc_dir_id"
                   :data="dirTreeOptions"
@@ -157,6 +158,7 @@
       } catch {}
       activeXhrs.value = [];
       // 清空 Upload 文件列表与计数
+      Object.assign(form, { ...formDefaultValues, status: 'pending' });
       uploadFileList.value = [];
       selectedCount.value = 0;
       uploadedIds.value = [];
@@ -183,7 +185,7 @@
   };
   const formDefaultValues: any = {
     name: '',
-    doc_dir_id: 0,
+    doc_dir_id: null,
     option: {
       directory: todayStr.value, // 所属二级目录
       skipRepeat: true, // 跳过重复
@@ -272,6 +274,13 @@
 
   // 提交按钮
   const onSubmit = async () => {
+
+    const res = await formRef.value?.validate();
+    if (res) {
+      // 有校验错误，阻止提交
+      return;
+    }
+    
     // 显示开始提示
     Message.info('正在提交任务，请稍候...');
     

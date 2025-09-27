@@ -23,10 +23,10 @@
             {{ formatFileSize(info.size) }}
         </a-descriptions-item>
         <a-descriptions-item label="创建时间">
-            {{ info.created_time }}
+            {{ tableDateFormat(info.created_time) }}
         </a-descriptions-item>
         <a-descriptions-item label="修改时间">
-            {{ info.updated_time }}
+            {{ tableDateFormat(info.updated_time) }}
         </a-descriptions-item>
         <a-descriptions-item label="创建人">
             {{ info.created_user }}
@@ -60,6 +60,7 @@
 <script lang="ts" setup>
 import InfoSvg from '@/assets/svg/info.svg';
 import { formatFileSize } from '@/utils/doc';
+import { tableDateFormat } from '@/utils/date';
 
 const props = defineProps(['info']);
 

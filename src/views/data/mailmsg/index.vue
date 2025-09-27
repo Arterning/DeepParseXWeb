@@ -85,8 +85,8 @@
         </a-col>
       </a-row>
       <a-divider class="mt-0" />
-      <a-space :size="'medium'" class="flex justify-between">
-        <a-space>
+      <a-space class="flex justify-between">
+        <a-space :size="'medium'">
           <a-button type="primary" @click="openNew=true">
             <template #icon>
               <icon-plus />
@@ -463,7 +463,7 @@
       },
       ellipsis: true,
       tooltip: true,
-      width: 50,
+      width: 80,
     },
     {
       title: '邮件主题',

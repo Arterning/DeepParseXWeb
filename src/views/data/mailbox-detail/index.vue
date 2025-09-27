@@ -3,8 +3,9 @@
     <a-card class="general-card">
       <Breadcrumb />
       <div class="p-4">
+        <h4 class="text-lg font-semibold mb-3" style="color: var(--color-text-1);">基本信息</h4>
         <a-descriptions layout="vertical" class="mb-4">
-          <a-descriptions-item label="邮件名称">{{
+          <a-descriptions-item label="邮箱名称">{{
             mailbox?.name
           }}</a-descriptions-item>
           <a-descriptions-item label="国家/地区">{{
@@ -21,6 +22,7 @@
           }}</a-descriptions-item>
         </a-descriptions>
 
+        <h4 class="text-lg font-semibold mb-3" style="color: var(--color-text-1);">关系图谱</h4>
         <a-layout class="w-full h-[320px]">
           <a-layout-sider>
             <div class="p-4 space-y-4">
@@ -45,6 +47,72 @@
             <div ref="graphContainer" class="h-full w-full"></div>
           </a-layout-content>
         </a-layout>
+        <!-- 相关邮件列表（跟随关系图后） -->
+        <div class="mt-6">
+          <h4 class="text-lg font-semibold mb-3" style="color: var(--color-text-1);">相关邮件</h4>
+          <a-tabs>
+            <a-tab-pane key="sender" title="作为发件人">
+              <a-table
+                :columns="mailColumns"
+                :data="senderData"
+                :loading="senderLoading"
+                :pagination="senderPagination"
+                row-key="id"
+                @page-change="(p:number) => fetchSenderList({ page: p, size: senderPagination.pageSize })"
+                @page-size-change="(s:number) => fetchSenderList({ page: 1, size: s })"
+              >
+                <template #time="{ record }">
+                  {{ tableDateFormat(record.time) }}
+                </template>
+                <template #operate="{ record }">
+                  <a-space>
+                    <a-tooltip content="查看">
+                      <a-link @click="
+                        router.push({
+                          name: 'MailMsgDetail',
+                          params: { id: record.id },
+                          query: { appendix: record.name },
+                        })
+                      ">
+                        <icon-eye style="font-size:16px" />
+                      </a-link>
+                    </a-tooltip>
+                  </a-space>
+                </template>
+              </a-table>
+            </a-tab-pane>
+            <a-tab-pane key="receiver" title="作为收件人">
+              <a-table
+                :columns="mailColumns"
+                :data="receiverData"
+                :loading="receiverLoading"
+                :pagination="receiverPagination"
+                row-key="id"
+                @page-change="(p:number) => fetchReceiverList({ page: p, size: receiverPagination.pageSize })"
+                @page-size-change="(s:number) => fetchReceiverList({ page: 1, size: s })"
+              >
+                <template #time="{ record }">
+                  {{ tableDateFormat(record.time) }}
+                </template>
+                <template #operate="{ record }">
+                  <a-space>
+                    <a-tooltip content="查看">
+                      <a-link @click="
+                        router.push({
+                          name: 'MailMsgDetail',
+                          params: { id: record.id },
+                          query: { appendix: record.name },
+                        })
+                      ">
+                        <icon-eye style="font-size:16px" />
+                      </a-link>
+                    </a-tooltip>
+                  </a-space>
+                </template>
+              </a-table>
+            </a-tab-pane>
+          </a-tabs>
+        </div>
       </div>
 
       <!-- 详情抽屉 -->
@@ -204,10 +272,16 @@
 </template>
 
 <script lang="ts" setup>
-  import { onBeforeMount, ref, nextTick, onMounted } from 'vue';
+  import { onBeforeMount, ref, nextTick, onMounted, reactive, computed } from 'vue';
   import Footer from '@/components/footer/index.vue';
   import { Message } from '@arco-design/web-vue';
   import dayjs, { type Dayjs } from 'dayjs';
+  import { useRouter } from 'vue-router';
+  import { queryMailMsgList, type MailMsgParams, type MailMsgRes } from '@/api/mailmsg';
+  import { tableDateFormat } from '@/utils/date';
+  import type { TableColumnData } from '@arco-design/web-vue';
+  import type { Pagination } from '@/types/global';
+  const router = useRouter();
   import cytoscape from 'cytoscape';
   import coseBilkent from 'cytoscape-cose-bilkent';
   import { queryMailBoxDetail, MailBoxRes, analyzeMailboxRelationships, type AnalyzeRelationshipsReq, type AnalyzeRelationshipsRes } from '@/api/mailbox';
@@ -238,6 +312,13 @@
     const id = Number(route.params.id); // 获取路由参数中的 id
     mailbox.value = await queryMailBoxDetail(id);
     await startAnalysis();
+    // 初始拉取相关邮件
+    if (mailbox.value?.name) {
+      await Promise.all([
+        fetchSenderList({ page: senderPagination.current, size: senderPagination.pageSize }),
+        fetchReceiverList({ page: receiverPagination.current, size: receiverPagination.pageSize }),
+      ]);
+    }
   });
   const startAnalysis = async () => {
     if (!mailbox.value?.name) {
@@ -265,6 +346,52 @@
       analysisResult.value = null;
     } finally {
       analyzing.value = false;
+    }
+  };
+
+  // ============ 相关邮件（发件人/收件人） ============
+  const senderData = ref<MailMsgRes[]>([]);
+  const receiverData = ref<MailMsgRes[]>([]);
+  const senderLoading = ref(false);
+  const receiverLoading = ref(false);
+  const senderPagination: Pagination = reactive({ current: 1, pageSize: 10, showTotal: true, showPageSize: true, bufferSize: 3 });
+  const receiverPagination: Pagination = reactive({ current: 1, pageSize: 10, showTotal: true, showPageSize: true, bufferSize: 3 });
+
+  const mailColumns = computed<TableColumnData[]>(() => [
+    { title: 'ID', dataIndex: 'id', width: 80 },
+    { title: '邮件主题', dataIndex: 'name', ellipsis: true, tooltip: true },
+    { title: '发件人', dataIndex: 'sender', width: 160, ellipsis: true, tooltip: true },
+    { title: '收件人', dataIndex: 'receiver', width: 160, ellipsis: true, tooltip: true },
+    { title: '日期', slotName: 'time', width: 170 },
+    { title: '操作', slotName: 'operate', align: 'center', width: 100 },
+  ]);
+
+  const fetchSenderList = async ({ page, size }: { page: number; size: number }) => {
+    if (!mailbox.value?.name) return;
+    senderLoading.value = true;
+    try {
+      const params: MailMsgParams = { page, size, sender: mailbox.value.name } as any;
+      const res = await queryMailMsgList(params);
+      senderData.value = res.items;
+      senderPagination.total = res.total;
+      senderPagination.current = page;
+      senderPagination.pageSize = size;
+    } finally {
+      senderLoading.value = false;
+    }
+  };
+  const fetchReceiverList = async ({ page, size }: { page: number; size: number }) => {
+    if (!mailbox.value?.name) return;
+    receiverLoading.value = true;
+    try {
+      const params: MailMsgParams = { page, size, receiver: mailbox.value.name } as any;
+      const res = await queryMailMsgList(params);
+      receiverData.value = res.items;
+      receiverPagination.total = res.total;
+      receiverPagination.current = page;
+      receiverPagination.pageSize = size;
+    } finally {
+      receiverLoading.value = false;
     }
   };
 

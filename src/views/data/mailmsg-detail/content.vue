@@ -1,49 +1,52 @@
 <template>
   <!-- 邮件内容区域 -->
   <div class="p-5">
-      <!-- 邮件标题 -->
-      <h1 class="text-2xl font-semibold text-gray-900 mb-2">
-        {{ info?.name }}
-      </h1>
+    <div class="flex">
+      <div class="flex-1">
+        <!-- 邮件标题 -->
+        <h1 class="text-2xl font-semibold mb-2">
+          {{ info?.name }}
+        </h1>
 
-      <!-- 元信息区域 -->
-      <div class="flex flex-wrap gap-4 mb-6">
-        <div class="flex items-center gap-2 text-gray-600">
-          <a-icon-user />
-          <span>{{ info?.sender }}</span>
+        <!-- 元信息区域 -->
+        <div class="flex flex-wrap gap-4 mb-4">
+          <div class="flex items-center gap-2">
+            <a-icon-user />
+            <span>{{ info?.sender }}</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <a-icon-calendar />
+            <span>{{ emailDateFormat(info?.time) }}</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <a-icon-tag />
+            <span>{{ info?.category }}</span>
+          </div>
         </div>
-        <div class="flex items-center gap-2 text-gray-600">
-          <a-icon-calendar />
-          <span>{{ emailDateFormat(info?.time) }}</span>
-        </div>
-        <div class="flex items-center gap-2 text-gray-600">
-          <a-icon-tag />
-          <span>{{ info?.category }}</span>
-        </div>
+
+        <!-- 收件人信息 -->        
+        <a-space class="flex flex-nowrap mb-4">
+          <div class="text-sm font-medium w-16">收件人</div>
+          <!--            <a-tag-->
+          <!--              v-for="(recipient, index) in info?.recipients"-->
+          <!--              :key="index"-->
+          <!--            >-->
+          <!--              {{ recipient }}-->
+          <!--            </a-tag>-->
+          <a-tag>{{ info?.receiver }}</a-tag>
+        </a-space>
+
+        <!-- 抄送信息 -->  
+        <a-space v-if="info?.cc" class="flex flex-nowrap mb-4">
+          <div class="text-sm font-medium w-16">抄送</div>
+          <!--            <a-tag v-for="(cc, index) in info?.cc" :key="index" type="gray">-->
+          <!--              {{ cc }}-->
+          <!--            </a-tag>-->
+          <a-tag class="text-wrap h-auto">{{ info?.cc }}</a-tag>
+        </a-space>
       </div>
-
-      <!-- 收件人信息 -->        
-      <a-space class="flex flex-nowrap mb-4">
-        <div class="text-sm font-medium text-gray-600 w-16">收件人</div>
-        <!--            <a-tag-->
-        <!--              v-for="(recipient, index) in info?.recipients"-->
-        <!--              :key="index"-->
-        <!--            >-->
-        <!--              {{ recipient }}-->
-        <!--            </a-tag>-->
-        <a-tag>{{ info?.receiver }}</a-tag>
-      </a-space>
-
-      <!-- 抄送信息 -->  
-      <a-space v-if="info?.cc" class="flex flex-nowrap mb-4">
-        <div class="text-sm font-medium text-gray-600 w-16">抄送</div>
-        <!--            <a-tag v-for="(cc, index) in info?.cc" :key="index" type="gray">-->
-        <!--              {{ cc }}-->
-        <!--            </a-tag>-->
-        <a-tag class="text-wrap h-auto">{{ info?.cc }}</a-tag>
-      </a-space>
-
-      <a-space class="flex justify-end mb-4">
+      <div>
+        <div class="flex gap-2 items-center">
         <a-switch type="round" v-model="translate">
           <template #checked>
             关闭翻译
@@ -55,9 +58,13 @@
         <a-popconfirm content="确认删除此邮件？" @ok="handleDelete">
           <a-button status="danger" size="small">删除</a-button>
         </a-popconfirm>
-      </a-space>
+        </div>
+      </div>
+    </div>
 
-      <a-split v-if="translate" v-model:size="splitSize" min="0.3" max="0.7" class="border-t border-gray-200 pt-6 h-[calc(100vh-500px)]">
+
+
+      <a-split v-if="translate" v-model:size="splitSize" min="0.3" max="0.7" class="border-t pt-6 h-[calc(100vh-500px)]">
         <template #first>
           <a-typography-paragraph>
             <div class="prose max-w-none" v-html="info?.original"></div>
@@ -69,7 +76,7 @@
           </a-typography-paragraph>
         </template>
       </a-split>
-      <div v-else class="border-t border-gray-200 pt-6 h-[calc(100vh-500px)]">
+      <div v-else class="border-t pt-6 h-[calc(100vh-500px)]">
         <div class="prose max-w-none" v-html="info?.original"></div>
       </div>
   </div>

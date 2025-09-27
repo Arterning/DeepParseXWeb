@@ -16,7 +16,7 @@
         </a-tab-pane>
         <a-tab-pane key="2" title="基本信息">
           <BasicInfo :info="info" />
-          <FileDescription :info="info" class="mt-2"/>
+          <FileDescription :info="info" class="mt-4"/>
         </a-tab-pane>
         <a-tab-pane key="3" title="实体提取">
           <EntityExtraction :info="info" />
@@ -60,7 +60,7 @@ import { onMounted, ref } from 'vue';
 import { useRoute } from 'vue-router';
 import Footer from '@/components/footer/index.vue';
 import ReactSvg from '@/assets/svg/react.svg';
-import BasicInfo from './basic-info.vue';
+import BasicInfo from '../components/basic-info.vue';
 import TextDetail from './text-detail.vue';
 import PdfDetail from './pdf-detail.vue';
 import ExcelDetail from './excel-detail.vue';
@@ -70,8 +70,8 @@ import EmailDetail from './email-detail.vue';
 import DocxDetail from './docx-detail.vue';
 import GraphControls from './GraphControls.vue';
 import KnowledgeGraph from './KnowledgeGraph.vue';
-import DocAIChat from './components/DocAIChat.vue';
-import FileDescription from './components/FileDescription.vue';
+import DocAIChat from '../components/DocAIChat.vue';
+import FileDescription from '../components/FileDescription.vue';
 import EntityExtraction from './EntityExtraction.vue';
 
 
