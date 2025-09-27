@@ -53,7 +53,10 @@
 
         <!-- 邮件正文 -->
         <div class="border-t border-gray-200 pt-6">
-          <div class="prose max-w-none" v-html="mailData?.original"></div>
+          <div v-if="isHtmlContent(mailData?.original)" class="prose max-w-none" v-html="mailData?.original"></div>
+          <div v-else class="whitespace-pre-wrap break-words text-gray-800 leading-relaxed">
+            {{ mailData?.original }}
+          </div>
         </div>
 
         <!-- 附件信息 -->
@@ -109,6 +112,14 @@
         appendix: attachment.name,
       },
     });
+  };
+
+  // 检测内容是否包含HTML标签
+  const isHtmlContent = (content?: string): boolean => {
+    if (!content) return false;
+    // 简单检测是否包含HTML标签
+    const htmlRegex = /<[^>]*>/;
+    return htmlRegex.test(content);
   };
 </script>
 
