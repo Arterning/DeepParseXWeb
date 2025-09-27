@@ -9,7 +9,11 @@ export interface MailMsgReq {
   original: string;
 
   // 邮件翻译
-  content: string;
+  zh_content: string;
+
+  subject: string;
+
+  zh_subject: string;
 
   // 发送时间
   time: Date;
@@ -26,8 +30,14 @@ export interface MailMsgReq {
   category: string;
 }
 
+export interface MailMsgAttachment {
+  id: number;
+  name: string;
+}
+
 export interface MailMsgRes extends MailMsgReq {
   id: number;
+  attachment: MailMsgAttachment[];
 }
 
 export interface MailMsgParams {

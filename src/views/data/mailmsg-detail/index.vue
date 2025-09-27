@@ -67,6 +67,22 @@
         <div class="border-t border-gray-200 pt-6">
           <div class="prose max-w-none" v-html="mailData?.original"></div>
         </div>
+
+        <!-- 附件信息 -->
+        <div v-if="mailData?.attachment && mailData.attachment.length > 0" class="mt-6 pt-6 border-t border-gray-200">
+          <h2 class="text-sm font-medium text-gray-600 mb-3">附件</h2>
+          <div class="space-y-2">
+            <div
+              v-for="attachment in mailData.attachment"
+              :key="attachment.id"
+              class="flex items-center text-blue-600 hover:text-blue-800 cursor-pointer"
+              @click="handleAttachmentClick(attachment)"
+            >
+              <a-icon-file-text class="mr-2" />
+              <span>{{ attachment.name }}</span>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
     <Footer />
@@ -77,8 +93,10 @@
   import { ref, onBeforeMount, reactive } from 'vue';
   import { Message } from '@arco-design/web-vue';
   import Footer from '@/components/footer/index.vue';
-  import { useRoute } from 'vue-router';
+  import { useRoute, useRouter } from 'vue-router';
   import { queryMailMsgDetail, MailMsgRes } from '@/api/mailmsg';
+
+  const router = useRouter();
 
   onBeforeMount(async () => {
     const route = useRoute();
@@ -91,6 +109,18 @@
 
   const handleDelete = () => {
     Message.success('邮件已删除');
+  };
+
+  const handleAttachmentClick = (attachment: any) => {
+    router.push({
+      name: 'DocDetail',
+      params: {
+        id: attachment.id,
+      },
+      query: {
+        appendix: attachment.name,
+      },
+    });
   };
 </script>
 
