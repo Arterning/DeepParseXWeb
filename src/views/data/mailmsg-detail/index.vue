@@ -114,12 +114,22 @@
     });
   };
 
-  // 检测内容是否包含HTML标签
+  // 检测内容是否为HTML格式
   const isHtmlContent = (content?: string): boolean => {
     if (!content) return false;
-    // 简单检测是否包含HTML标签
-    const htmlRegex = /<[^>]*>/;
-    return htmlRegex.test(content);
+    
+    // 更严格的HTML标签检测，要求匹配完整的开始标签格式
+    // 例如 <p>, <div class="test">, <img src="..." />, 但不会匹配单个的 < 或 > 符号
+    const htmlRegex = /<[a-z][\s\S]*>/i;
+    
+    // 检查是否包含常见的HTML标签或HTML特征
+    const commonHtmlTags = ['<html', '<body', '<p>', '<div', '<span', '<h1', '<h2', '<h3', '<h4', '<h5', '<h6', '<ul', '<ol', '<li', '<table', '<tr', '<td', '<a ', '<img', '<br', '<hr'];
+    const hasCommonHtmlTag = commonHtmlTags.some(tag => 
+      content.toLowerCase().includes(tag)
+    );
+    
+    // 综合判断：有完整的HTML标签结构 或 包含常见的HTML标签
+    return htmlRegex.test(content) || hasCommonHtmlTag;
   };
 </script>
 
