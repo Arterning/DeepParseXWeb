@@ -37,9 +37,9 @@ export interface MailMsgAttachment {
 
 export interface MailMsgRes extends MailMsgReq {
   id: number;
-  attachment: MailMsgAttachment[];
+  attachments: MailMsgAttachment[];
 }
-
+  
 export interface MailMsgParams {
   name?: string;
   page?: number;

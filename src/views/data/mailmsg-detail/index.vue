@@ -69,11 +69,11 @@
         </div>
 
         <!-- 附件信息 -->
-        <div v-if="mailData?.attachment && mailData.attachment.length > 0" class="mt-6 pt-6 border-t border-gray-200">
+        <div v-if="mailData?.attachments && mailData.attachments.length > 0" class="mt-6 pt-6 border-t border-gray-200">
           <h2 class="text-sm font-medium text-gray-600 mb-3">附件</h2>
           <div class="space-y-2">
             <div
-              v-for="attachment in mailData.attachment"
+              v-for="attachment in mailData.attachments"
               :key="attachment.id"
               class="flex items-center text-blue-600 hover:text-blue-800 cursor-pointer"
               @click="handleAttachmentClick(attachment)"
