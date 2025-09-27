@@ -54,7 +54,7 @@
         <!-- 邮件正文 -->
         <div class="border-t border-gray-200 pt-6">
           <div v-if="isHtmlContent(mailData?.original)" class="prose max-w-none" v-html="mailData?.original"></div>
-          <div v-else class="whitespace-pre-wrap break-words text-gray-800 leading-relaxed">
+          <div v-else class="whitespace-pre-wrap break-words dark:text-white text-gray-800 leading-relaxed">
             {{ mailData?.original }}
           </div>
         </div>

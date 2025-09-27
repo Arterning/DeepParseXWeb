@@ -114,7 +114,7 @@
             <div
               v-for="record in renderData"
               :key="record.id"
-              class="flex items-start p-4 border rounded-lg shadow-sm hover:shadow-lg transition-shadow duration-200"
+              class="flex items-start p-4 rounded-lg shadow-sm hover:shadow-lg transition-shadow duration-200"
               :class="{
                 'border-blue-500 ring-1 ring-blue-500': rowSelectKeys.includes(
                   record.id
@@ -174,9 +174,9 @@
 
                 <p
                   class="text-gray-600 text-sm truncate mb-4"
-                  :title="record.content"
+                  :title="record.original"
                 >
-                  {{ record.content || 'No content to display.' }}
+                  {{ record.original || 'No content to display.' }}
                 </p>
 
                 <div class="flex justify-between items-center">
