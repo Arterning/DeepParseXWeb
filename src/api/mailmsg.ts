@@ -5,6 +5,8 @@ export interface MailMsgReq {
   // 邮件标题
   name: string;
 
+  doc_name: string;
+
   // 邮件原文
   original: string;
 
