@@ -35,10 +35,10 @@
             >最大分析层级</label
           >
           <a-input-number
-            v-model:value="maxLayers"
+            v-model="maxLayers"
             :min="1"
             :max="10000"
-            placeholder="默认3层"
+            placeholder="默认2层"
             class="w-full"
           />
         </div>
@@ -496,7 +496,7 @@
 
   // 表单数据
   const selectedMailboxes = ref<string[]>([]);
-  const maxLayers = ref<number>(3);
+  const maxLayers = ref<number>(2);
   const startTime = ref<Dayjs | null>(null);
   const endTime = ref<Dayjs | null>(null);
   const referenceTime = ref<Dayjs | null>(null);
