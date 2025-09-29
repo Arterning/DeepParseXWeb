@@ -240,7 +240,6 @@
           </a-modal>
         </div>
       </a-card>
-      <Footer />
     </a-layout>
 </template>
 
@@ -253,7 +252,6 @@
   import { useI18n } from 'vue-i18n';
   import { computed, reactive, ref } from 'vue';
   import useLoading from '@/hooks/loading';
-  import Footer from '@/components/footer/index.vue';
   import {
     createMailBox,
     deleteMailBox,

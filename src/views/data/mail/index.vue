@@ -2,6 +2,10 @@
   <a-layout class="flex-layout">
     <div class="general-card">
       <a-tabs default-active-key="1">
+        <a-tab-pane key="0">
+          <template #title> <icon-upload /> 上传 </template>
+          <EmailUpload />
+        </a-tab-pane>       
         <a-tab-pane key="1">
           <template #title> <icon-layers /> 邮件 </template>
           <EmailMsgTable />
@@ -25,5 +29,7 @@
 <script setup lang="ts">
   import EmailBoxTable from '@/views/data/mailbox/index.vue';
   import EmailMsgTable from '@/views/data/mailmsg/index.vue';
+  import EmailUpload from '@/views/data/mailupload/index.vue';
   import AnalyzeRelationships from './analyze.vue';
+  import Footer from '@/components/footer/index.vue';
 </script>

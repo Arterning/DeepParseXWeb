@@ -313,7 +313,6 @@
         </a-modal>
       </div>
     </a-card>
-    <Footer />
   </a-layout>
 </template>
 
@@ -322,7 +321,6 @@
   import { useI18n } from 'vue-i18n';
   import { reactive, ref } from 'vue';
   import useLoading from '@/hooks/loading';
-  import Footer from '@/components/footer/index.vue';
   import {
     createMailMsg,
     deleteMailMsg,
@@ -407,7 +405,9 @@
   const formDefaultValues: MailMsgReq = {
     name: '',
     original: '',
-    content: '',
+    zh_content: '',
+    zh_subject: '',
+    subject: '',
     time: new Date(),
     category: '',
     sender: '',
