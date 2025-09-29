@@ -7,11 +7,11 @@
           <TextDetail v-if="info.type === '文本'" :info="info" />
           <ExcelDetail v-else-if="info.type === '表格'" :info="info" />
           <PdfDetail v-else-if="info.type === 'PDF'" :info="info" />
-          <PictureDetail v-else-if="info.type == '图片'" :info="info" />
-          <MediaDetail v-else-if="info.type == '媒体'" :info="info" />
-          <EmailDetail v-else-if="info.type == '邮件'" :mailData="info.email_msg" />
-          <DocxDetail v-else-if="info.type == '文档'" :info="info" file-type="docx"/>
-          <DocxDetail v-else-if="info.type == 'PPT'" :info="info" file-type="pptx"/>
+          <PictureDetail v-else-if="info.type === '图片'" :info="info" />
+          <MediaDetail v-else-if="info.type === '媒体'" :info="info" />
+          <EmailDetail v-else-if="info.type === '邮件'" :mailData="info.email_msg" />
+          <DocxDetail v-else-if="info.type === '文档'" :info="info" file-type="docx"/>
+          <DocxDetail v-else-if="info.type === 'PPT'" :info="info" file-type="pptx"/>
           <TextDetail v-else :info="info" />
         </a-tab-pane>
         <a-tab-pane key="2" title="基本信息">
@@ -66,7 +66,7 @@ import PdfDetail from './pdf-detail.vue';
 import ExcelDetail from './excel-detail.vue';
 import PictureDetail from './picture-detail.vue';
 import MediaDetail from './media-detail.vue';
-import EmailDetail from './email-detail.vue';
+import EmailDetail from '@/components/email-detail/index.vue';
 import DocxDetail from './docx-detail.vue';
 import GraphControls from './GraphControls.vue';
 import KnowledgeGraph from './KnowledgeGraph.vue';

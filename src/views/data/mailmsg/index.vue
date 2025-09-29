@@ -145,6 +145,12 @@
                     record.time
                   }}</span>
                 </div>
+                <span
+                  v-if="record.doc_name"
+                  class="text-xs text-gray-400 flex items-center"
+                >
+                  <icon-location /> {{ record.doc_name }}
+                </span>
 
                 <div
                   class="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-gray-600 mb-3"
@@ -184,12 +190,6 @@
                     <a-tag v-if="record.category" color="arcoblue">{{
                       record.category
                     }}</a-tag>
-                    <span
-                      v-if="record.location"
-                      class="text-xs text-gray-400 flex items-center"
-                    >
-                      <icon-location /> {{ record.location }}
-                    </span>
                   </div>
                   <div class="flex items-center space-x-2">
                     <a-button size="mini" @click="EditMailMsg(record.id)">

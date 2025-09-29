@@ -93,9 +93,29 @@ export interface EdgeData {
   emails: EmailData[];
 }
 
+export interface NetworkAnalysis {
+  degrees: Record<string, number>;
+  centrality: {
+    degree: Record<string, number>;
+    betweenness: Record<string, number>;
+    closeness: Record<string, number>;
+    eigenvector: Record<string, number>;
+  };
+  key_nodes: {
+    top_degree_nodes: [string, number][];
+    top_betweenness_nodes: [string, number][];
+    node_impacts: Array<{ node: string; impact: number }>;
+  };
+  is_directed: boolean;
+  number_of_nodes: number;
+  number_of_edges: number;
+  number_of_connected_components: number;
+}
+
 export interface AnalyzeRelationshipsRes {
   nodes: NodeData[];
   edges: EdgeData[];
+  network_analysis: NetworkAnalysis;
 }
 
 export function analyzeMailboxRelationships(data: AnalyzeRelationshipsReq): Promise<AnalyzeRelationshipsRes> {
