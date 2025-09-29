@@ -28,7 +28,7 @@
             <div class="p-4 space-y-4">
               <div>
                 <label class="block text-sm font-medium text-gray-700 mb-2">最大分析层级</label>
-                <a-input-number v-model:value="maxLayers" :min="1" :max="10000"/>
+                <a-input-number v-model="maxLayers" :min="1" :max="10000"/>
               </div>
               <div>
                 <label class="block text-sm font-medium text-gray-700 mb-2">开始时间</label>
@@ -291,7 +291,7 @@
   const analyzing = ref(false);
 
   // 表单
-  const maxLayers = ref<number>(3);
+  const maxLayers = ref<number>(2);
   const startTime = ref<Dayjs | null>(null);
   const endTime = ref<Dayjs | null>(null);
 
