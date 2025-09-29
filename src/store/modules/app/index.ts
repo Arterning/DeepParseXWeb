@@ -83,21 +83,7 @@ const useAppStore = defineStore('app', {
       if (dark) {
         this.theme = 'dark';
         document.body.setAttribute('arco-theme', 'dark');
-
-        const cards = document.querySelectorAll('.general-card');
-        cards.forEach((card: any) => {
-          card.style.background = '';
-        });
-
       } else {
-        
-        // 设置body的渐变背景
-        // document.body.style.background = 'linear-gradient(146.3deg, #F0F1F7 11.56%, #D5D7E0 80%)';
-        const cards = document.querySelectorAll('.general-card');
-        cards.forEach((card: any) => {
-          card.style.background = 'linear-gradient(146.3deg, #F0F1F7 11.56%, #D5D7E0 80%)';
-        });
-      
         this.theme = 'light';
         document.body.removeAttribute('arco-theme');
       }
