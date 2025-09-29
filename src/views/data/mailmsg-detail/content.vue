@@ -61,46 +61,47 @@
         </div>
       </div>
     </div>
+    <a-divider />
 
-
-
-      <a-split v-if="translate" v-model:size="splitSize" min="0.3" max="0.7" class="border-t pt-6 h-[calc(100vh-500px)]">
-        <template #first>
+    <a-split v-if="translate" v-model:size="splitSize" min="0.3" max="0.7" class="h-[calc(100vh-500px)]">
+      <template #first>
+        <a-typography-paragraph>
           <div v-if="isHtmlContent(info?.original)" class="prose max-w-none" v-html="info?.original"></div>
           <div v-else class="whitespace-pre-wrap break-words dark:text-white text-gray-800 leading-relaxed">
             {{ info?.original }}
           </div>
-        </template>
-        <template #second v-if="translate">
-          <a-typography-paragraph>
+        </a-typography-paragraph>
+      </template>
+      <template #second v-if="translate">
+        <a-typography-paragraph>
+          {{ info?.zh_content }}
+        </a-typography-paragraph>
+      </template>
+    </a-split>
+    
+    <!-- 邮件正文 -->
+    <a-scrollbar v-else class="pr-6 h-[calc(100vh-500px)] overflow-y-auto">
+      <div v-if="isHtmlContent(info?.original)" class="prose max-w-none" v-html="info?.original"></div>
+      <div v-else class="whitespace-pre-wrap break-words dark:text-white text-gray-800 leading-relaxed">
+        {{ info?.original }}
+      </div>
+    </a-scrollbar>
 
-          </a-typography-paragraph>
-        </template>
-      </a-split>
-      
-      <!-- 邮件正文 -->
-      <div v-else class="border-t pt-6 h-[calc(100vh-500px)]">
-        <div v-if="isHtmlContent(info?.original)" class="prose max-w-none" v-html="info?.original"></div>
-        <div v-else class="whitespace-pre-wrap break-words dark:text-white text-gray-800 leading-relaxed">
-          {{ info?.original }}
+    <!-- 附件信息 -->
+    <div v-if="info?.attachments && info.attachments.length > 0" class="mt-6 pt-6 border-t border-gray-200">
+      <h2 class="text-sm font-medium text-gray-600 mb-3">附件</h2>
+      <div class="space-y-2">
+        <div
+          v-for="attachment in info.attachments"
+          :key="attachment.id"
+          class="flex items-center text-blue-600 hover:text-blue-800 cursor-pointer"
+          @click="handleAttachmentClick(attachment)"
+        >
+          <a-icon-file-text class="mr-2" />
+          <span>{{ attachment.name }}</span>
         </div>
       </div>
-
-      <!-- 附件信息 -->
-      <div v-if="info?.attachments && info.attachments.length > 0" class="mt-6 pt-6 border-t border-gray-200">
-        <h2 class="text-sm font-medium text-gray-600 mb-3">附件</h2>
-        <div class="space-y-2">
-          <div
-            v-for="attachment in info.attachments"
-            :key="attachment.id"
-            class="flex items-center text-blue-600 hover:text-blue-800 cursor-pointer"
-            @click="handleAttachmentClick(attachment)"
-          >
-            <a-icon-file-text class="mr-2" />
-            <span>{{ attachment.name }}</span>
-          </div>
-        </div>
-      </div>
+    </div>
   </div>
 </template>
 
