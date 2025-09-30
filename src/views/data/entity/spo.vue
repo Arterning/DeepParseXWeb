@@ -1,102 +1,99 @@
 <template>
-    <a-layout class="flex-layout">
-        <a-card :title="$t('')" class="general-card">
-            <a-row>
-                <a-col :flex="62">
-                    <a-form :auto-label-width="true" :model="formModel" label-align="right">
-                        <a-row :gutter="16">
-                            <a-col :span="8">
-                                <a-form-item field="subject" label="实体名称">
-                                    <a-input v-model="formModel.subject" :placeholder="$t('搜索')" />
-                                </a-form-item>
-                            </a-col>
-                        </a-row>
-                    </a-form>
-                </a-col>
-                <a-divider direction="vertical" style="height: 30px" />
-                <a-col :span="6">
-                    <a-space :size="'medium'" direction="horizontal">
-                        <a-button type="primary" @click="search">
-                            <template #icon>
-                                <icon-search />
-                            </template>
-                            搜索
-                        </a-button>
-                        <a-button @click="resetSelect">
-                            <template #icon>
-                                <icon-refresh />
-                            </template>
-                            重置
-                        </a-button>
-                    </a-space>
-                </a-col>
-            </a-row>
-            <a-divider style="margin-top: 0" />
-            <a-space :size="'medium'">
-                <a-button type="primary" @click="NewSubjectPredictObject()">
-                    <template #icon>
-                        <icon-plus />
-                    </template>
-                    新增
-                </a-button>
-                <a-button :disabled="deleteButtonStatus()" status="danger" @click="DeleteSubjectPredictObject">
-                    <template #icon>
-                        <icon-minus />
-                    </template>
-                    删除
-                </a-button>
+    <div class="p-4">
+        <a-row>
+            <a-col :flex="62">
+                <a-form :auto-label-width="true" :model="formModel" label-align="right">
+                    <a-row :gutter="16">
+                        <a-col :span="8">
+                            <a-form-item field="subject" label="实体名称">
+                                <a-input v-model="formModel.subject" :placeholder="$t('搜索')" />
+                            </a-form-item>
+                        </a-col>
+                    </a-row>
+                </a-form>
+            </a-col>
+            <a-divider direction="vertical" style="height: 30px" />
+            <a-col :span="6">
+                <a-space :size="'medium'" direction="horizontal">
+                    <a-button type="primary" @click="search">
+                        <template #icon>
+                            <icon-search />
+                        </template>
+                        搜索
+                    </a-button>
+                    <a-button @click="resetSelect">
+                        <template #icon>
+                            <icon-refresh />
+                        </template>
+                        重置
+                    </a-button>
+                </a-space>
+            </a-col>
+        </a-row>
+        <a-divider style="margin-top: 0" />
+        <a-space :size="'medium'">
+            <a-button type="primary" @click="NewSubjectPredictObject()">
+                <template #icon>
+                    <icon-plus />
+                </template>
+                新增
+            </a-button>
+            <a-button :disabled="deleteButtonStatus()" status="danger" @click="DeleteSubjectPredictObject">
+                <template #icon>
+                    <icon-minus />
+                </template>
+                删除
+            </a-button>
 
-                <SettingTable :columns="columns" storageKey="spo-columns" @update-columns="updateVisibleColumns" />
-            </a-space>
-            <div class="content">
-                <a-table v-model:selected-keys="rowSelectKeys" :bordered="false"
-                    :columns="(visibleColumns as TableColumnData[])" :data="renderData" :loading="loading"
-                    :pagination="pagination" :row-selection="rowSelection" :size="'medium'" row-key="id"
-                    @page-change="onPageChange" @page-size-change="onPageSizeChange">
-                    <template #index="{ rowIndex }">
-                        {{ rowIndex + 1 }}
-                    </template>
-                    <template #operate="{ record }">
-                        <a-space>
-                            <a-link @click="EditSubjectPredictObject(record.id)">
-                                编辑
-                            </a-link>
-                        </a-space>
-                    </template>
-                </a-table>
-            </div>
-            <div class="content-modal">
-                <a-modal :closable="false" :on-before-ok="beforeSubmit" :title="drawerTitle" :visible="openNewOrEdit"
-                    :width="550" @cancel="cancelReq" @ok="submitNewOrEdit">
-                    <a-form ref="formRef" :model="form">
-                        <a-form-item :feedback="true" label="主语" field="subject">
-                            <a-input v-model="form.subject"></a-input>
-                        </a-form-item>
-                        <a-form-item :feedback="true" label="主语类型" field="subject">
-                            <a-input v-model="form.subject_type"></a-input>
-                        </a-form-item>
-                        <a-form-item :feedback="true" label="关系" field="predicate">
-                            <a-input v-model="form.predicate"></a-input>
-                        </a-form-item>
-                        <a-form-item :feedback="true" label="谓语" field="object">
-                            <a-input v-model="form.object"></a-input>
-                        </a-form-item>
-                        <a-form-item :feedback="true" label="谓语类型" field="object_type">
-                            <a-input v-model="form.object_type"></a-input>
-                        </a-form-item>
-                    </a-form>
-                </a-modal>
-                <a-modal :closable="false" :title="`${$t('modal.title.tips')}`" :visible="openDelete" :width="360"
-                    @cancel="cancelReq" @ok="submitDelete">
+            <SettingTable :columns="columns" storageKey="spo-columns" @update-columns="updateVisibleColumns" />
+        </a-space>
+        <div class="content">
+            <a-table v-model:selected-keys="rowSelectKeys" :bordered="false"
+                :columns="(visibleColumns as TableColumnData[])" :data="renderData" :loading="loading"
+                :pagination="pagination" :row-selection="rowSelection" :size="'medium'" row-key="id"
+                @page-change="onPageChange" @page-size-change="onPageSizeChange">
+                <template #index="{ rowIndex }">
+                    {{ rowIndex + 1 }}
+                </template>
+                <template #operate="{ record }">
                     <a-space>
-                        <icon-exclamation-circle-fill size="24" style="color: #e6a23c" />
-                        {{ $t('modal.title.tips.delete') }}
+                        <a-link @click="EditSubjectPredictObject(record.id)">
+                            编辑
+                        </a-link>
                     </a-space>
-                </a-modal>
-            </div>
-        </a-card>
-        <Footer />
-    </a-layout>
+                </template>
+            </a-table>
+        </div>
+        <div class="content-modal">
+            <a-modal :closable="false" :on-before-ok="beforeSubmit" :title="drawerTitle" :visible="openNewOrEdit"
+                :width="550" @cancel="cancelReq" @ok="submitNewOrEdit">
+                <a-form ref="formRef" :model="form">
+                    <a-form-item :feedback="true" label="主语" field="subject">
+                        <a-input v-model="form.subject"></a-input>
+                    </a-form-item>
+                    <a-form-item :feedback="true" label="主语类型" field="subject">
+                        <a-input v-model="form.subject_type"></a-input>
+                    </a-form-item>
+                    <a-form-item :feedback="true" label="关系" field="predicate">
+                        <a-input v-model="form.predicate"></a-input>
+                    </a-form-item>
+                    <a-form-item :feedback="true" label="谓语" field="object">
+                        <a-input v-model="form.object"></a-input>
+                    </a-form-item>
+                    <a-form-item :feedback="true" label="谓语类型" field="object_type">
+                        <a-input v-model="form.object_type"></a-input>
+                    </a-form-item>
+                </a-form>
+            </a-modal>
+            <a-modal :closable="false" :title="`${$t('modal.title.tips')}`" :visible="openDelete" :width="360"
+                @cancel="cancelReq" @ok="submitDelete">
+                <a-space>
+                    <icon-exclamation-circle-fill size="24" style="color: #e6a23c" />
+                    {{ $t('modal.title.tips.delete') }}
+                </a-space>
+            </a-modal>
+        </div>
+    </div>
 </template>
 
 <script lang="ts" setup>

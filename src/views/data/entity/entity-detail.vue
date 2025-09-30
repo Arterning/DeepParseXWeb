@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
+  <div class="p-4">
     <!-- 属性详情部分 -->
     <div class="mb-4">
       <h3 class="text-lg font-semibold mb-3 text-gray-700">属性详情</h3>

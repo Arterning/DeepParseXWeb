@@ -1,569 +1,568 @@
 <template>
-  <a-layout class="flex-layout">
-    <a-card class="general-card">
-      <a-row>
-        <a-col :flex="62">
-          <a-form
-            :auto-label-width="true"
-            :model="formModel"
-            label-align="right"
-          >
-            <a-row :gutter="16">
-              <a-col :span="8">
-                <a-form-item :label="$t('data.doc.form.title')" field="title">
-                  <a-input
-                    v-model="formModel.title"
-                    :placeholder="$t('输入文件原名')"
-                    @keyup.enter="search"
-                  />
-                </a-form-item>
-              </a-col>
-              <a-col :span="8">
-                <a-form-item :label="$t('data.doc.form.name')" field="name">
-                  <a-input
-                    v-model="formModel.name"
-                    :placeholder="$t('data.doc.form.name.placeholder')"
-                    @keyup.enter="search"
-                  />
-                </a-form-item>
-              </a-col>
-              <a-col :span="8">
-                <a-form-item :label="$t('data.doc.form.type')" field="type">
-                  <a-select
-                    v-model="formModel.doc_type"
-                    :placeholder="$t('请选择类型')"
-                    :allow-clear="false"
-                  >
-                    <a-option
-                      v-for="(item, index) in [
-                        '文本',
-                        'PDF',
-                        '表格',
-                        '图片',
-                        '媒体',
-                        'PPT',
-                        '文档',
-                      ]"
-                      :key="index"
-                      :value="item"
-                    >
-                      {{ item }}
-                    </a-option>
-                  </a-select>
-                </a-form-item>
-              </a-col>
-              <a-col :span="8">
-                <a-form-item :label="$t('来源搜索')" field="source">
-                  <a-input
-                    v-model="formModel.source"
-                    :placeholder="$t('输入文件来源')"
-                    @keyup.enter="search"
-                  />
-                </a-form-item>
-              </a-col>
-              <a-col :span="8">
-                <a-form-item :label="$t('时间搜索')" field="rangeValue">
-                  <a-range-picker
-                    v-model="formModel.rangeValue"
-                    class="w-full"
-                  />
-                </a-form-item>
-              </a-col>
-              <a-col :span="8">
-                <a-form-item :label="$t('内容搜索')" field="content">
-                  <a-input
-                    v-model="formModel.content"
-                    :placeholder="$t('内容搜索')"
-                    @keyup.enter="search"
-                  />
-                </a-form-item>
-              </a-col>
-            </a-row>
-          </a-form>
-        </a-col>
-        <a-divider direction="vertical" style="height: 30px" />
-        <a-col :span="6">
-          <a-space :size="'medium'" direction="horizontal">
-            <a-button type="primary" @click="search">
-              <template #icon>
-                <icon-search />
-              </template>
-              {{ $t('data.doc.form.search') }}
-            </a-button>
-            <a-button @click="resetSelect">
-              <template #icon>
-                <icon-refresh />
-              </template>
-              {{ $t('data.doc.form.reset') }}
-            </a-button>
-          </a-space>
-        </a-col>
-      </a-row>
-      <a-divider class="mt-0" />
-      <a-space :size="'medium'">
-        <a-button type="primary" size="small" @click="NewApi()">
-          <template #icon>
-            <icon-plus />
-          </template>
-          {{ $t('data.doc.button.create') }}
-        </a-button>
-        <a-button
-          :disabled="deleteButtonStatus()"
-          status="danger"
-          size="small"
-          @click="DeleteApi"
-        >
-          <template #icon>
-            <icon-minus />
-          </template>
-          {{ $t('data.doc.button.delete') }}
-        </a-button>
-        <SettingTable
-          :columns="columns"
-          :storage-key="storageKey"
-          @update-columns="updateVisibleColumns"
-        />
-        <a-radio-group v-model="viewMode" size="small">
-          <a-radio value="table">
-            <template #radio="{ checked }">
-              <a-space :size="4">
-                <icon-list
-                  :style="{ color: checked ? 'rgb(var(--primary-6))' : '' }"
-                />
-                <span v-if="checked">表格</span>
-              </a-space>
-            </template>
-          </a-radio>
-          <a-radio value="card">
-            <template #radio="{ checked }">
-              <a-space :size="4">
-                <icon-apps
-                  :style="{ color: checked ? 'rgb(var(--primary-6))' : '' }"
-                />
-                <span v-if="checked">卡片</span>
-              </a-space>
-            </template>
-          </a-radio>
-        </a-radio-group>
-      </a-space>
-
-      <div class="content">
-        <a-table
-          v-if="viewMode === 'table'"
-          v-model:selected-keys="rowSelectKeys"
-          :bordered="false"
-          column-resizable
-          :columns="visibleColumns"
-          :data="renderData"
-          :loading="loading"
-          :pagination="pagination"
-          :row-selection="rowSelection"
-          :size="'medium'"
-          row-key="id"
-          @page-change="onPageChange"
-          @page-size-change="onPageSizeChange"
-        >
-          <!-- <template #index="{ rowIndex }">
-            {{ rowIndex + 1 }}
-          </template> -->
-          <template #title="{ record }">
-            <span
-              class="cursor-pointer"
-              @click="
-                router.push({
-                  name: 'DocDetail',
-                  params: {
-                    id: record.id,
-                  },
-                  query: {
-                    appendix: record.name,
-                  },
-                })
-              "
-              >{{ record.title }}
-            </span>
-          </template>
-
-          <template #size="{ record }">
-            {{ formatFileSize(record.size) }}
-          </template>
-
-          <template #type="{ record }">
-            <component :is="getSvgByType(record.type)" class="w-10 h-10" />
-          </template>
-          <template #created_time="{ record }">
-            {{ tableDateFormat(record.created_time) }}
-          </template>
-          <template #doc_time="{ record }">
-            {{ tableDateFormat(record.doc_time) }}
-          </template>
-          <!-- status -->
-          <template #status="{ record }">
-            <a-tag v-if="record.status === 0" :color="`orange`" bordered>
-              {{ $t(`处理中`) }}
-            </a-tag>
-            <a-tag v-if="record.status === 1" :color="`green`" bordered>
-              {{ $t(`admin.menu.form.status.${record.status}`) }}
-            </a-tag>
-            <a-tag v-else :color="`red`" bordered>
-              {{ $t(`解析失败`) }}
-            </a-tag>
-          </template>
-          <template #operate="{ record }">
-            <a-space>
-              <a-tooltip content="修改">
-                <a-link @click="EditApi(record.id)">
-                  <icon-edit style="font-size: 16" />
-                </a-link>
-              </a-tooltip>
-              <a-tooltip content="查看">
-                <a-link @click="ViewApi(record.id, record.title)">
-                  <icon-unordered-list style="font-size: 16" />
-                </a-link>
-              </a-tooltip>
-              <!-- 取消收藏 -->
-              <a-tooltip v-if="record.is_collected" content="取消收藏">
-                <a-link @click="handleUnCollect(record.id)">
-                  <icon-star-fill style="font-size: 16" />
-                </a-link>
-              </a-tooltip>
-              <!-- 收藏 -->
-              <a-tooltip v-else content="收藏">
-                <a-link @click="CollectionApi(record.id)">
-                  <icon-star style="font-size: 16" />
-                </a-link>
-              </a-tooltip>
-              <!-- <a-tooltip content="隐藏">
-                <a-link @click="HideApi(record.id)">
-                  <icon-eye-invisible  style="font-size:16"/>
-                </a-link>
-              </a-tooltip> -->
-            </a-space>
-          </template>
-        </a-table>
-
-        <!-- 卡片视图 -->
-        <div
-          v-if="viewMode === 'card'"
-          class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4"
-        >
-          <a-card
-            v-for="record in renderData"
-            :key="record.id"
-            class="hover:shadow-lg transition-shadow duration-300 rounded-lg"
-            :hoverable="true"
-            :loading="loading"
-          >
-            <div v-if="record" class="flex items-start gap-3">
-              <component
-                :is="getSvgByType(record.type || '')"
-                class="w-12 h-12 flex-shrink-0"
+<div class="p-4">
+  <a-row>
+    <a-col :flex="62">
+      <a-form
+        :auto-label-width="true"
+        :model="formModel"
+        label-align="right"
+      >
+        <a-row :gutter="16">
+          <a-col :span="8">
+            <a-form-item :label="$t('data.doc.form.title')" field="title">
+              <a-input
+                v-model="formModel.title"
+                :placeholder="$t('输入文件原名')"
+                @keyup.enter="search"
               />
-              <div class="flex-1 min-w-0">
-                <div class="flex justify-between items-start">
-                  <a-tooltip :content="record.title">
-                    <a-link
-                      class="text-lg font-medium truncate block max-w-[180px]"
-                      @click="
-                        router.push({
-                          name: 'DocDetail',
-                          params: { id: record.id },
-                          query: { appendix: record.name },
-                        })
-                      "
-                    >
-                      {{ record.title }}
-                    </a-link>
-                  </a-tooltip>
-                  <a-space>
-                    <a-tooltip content="修改">
-                      <a-link @click="EditApi(record.id)">
-                        <icon-edit />
-                      </a-link>
-                    </a-tooltip>
-                    <a-tooltip v-if="record.is_collected" content="取消收藏">
-                      <a-link @click="handleUnCollect(record.id)">
-                        <icon-star-fill style="font-size: 16" />
-                      </a-link>
-                    </a-tooltip>
-                    <a-tooltip v-else content="收藏">
-                      <a-link @click="CollectionApi(record.id)">
-                        <icon-star />
-                      </a-link>
-                    </a-tooltip>
-                  </a-space>
-                </div>
-                <div class="text-sm text-gray-500 mt-1">
-                  {{ formatFileSize(record.size) }}
-                </div>
-                <div class="text-sm text-gray-500 mt-1">
-                  {{ tableDateFormat(record.created_time) }}
-                </div>
-                <div class="mt-2">
-                  <a-tag
-                    v-if="record.status === 0"
-                    :color="`orange`"
-                    size="small"
-                  >
-                    {{ $t(`处理中`) }}
-                  </a-tag>
-                  <a-tag
-                    v-else-if="record.status === 1"
-                    :color="`green`"
-                    size="small"
-                  >
-                    {{ $t(`admin.menu.form.status.${record.status}`) }}
-                  </a-tag>
-                  <a-tag v-else :color="`red`" size="small">
-                    {{ $t(`解析失败`) }}
-                  </a-tag>
-                </div>
-              </div>
-            </div>
-            <!-- 新增的摘要信息部分 -->
-            <div class="mt-3 flex-1">
-              <div
-                class="text-sm text-gray-600 line-clamp-3"
-                :title="record.desc"
+            </a-form-item>
+          </a-col>
+          <a-col :span="8">
+            <a-form-item :label="$t('data.doc.form.name')" field="name">
+              <a-input
+                v-model="formModel.name"
+                :placeholder="$t('data.doc.form.name.placeholder')"
+                @keyup.enter="search"
+              />
+            </a-form-item>
+          </a-col>
+          <a-col :span="8">
+            <a-form-item :label="$t('data.doc.form.type')" field="type">
+              <a-select
+                v-model="formModel.doc_type"
+                :placeholder="$t('请选择类型')"
+                :allow-clear="false"
               >
-                {{ record.desc || '暂无摘要信息' }}
-              </div>
-            </div>
+                <a-option
+                  v-for="(item, index) in [
+                    '文本',
+                    'PDF',
+                    '表格',
+                    '图片',
+                    '媒体',
+                    'PPT',
+                    '文档',
+                  ]"
+                  :key="index"
+                  :value="item"
+                >
+                  {{ item }}
+                </a-option>
+              </a-select>
+            </a-form-item>
+          </a-col>
+          <a-col :span="8">
+            <a-form-item :label="$t('来源搜索')" field="source">
+              <a-input
+                v-model="formModel.source"
+                :placeholder="$t('输入文件来源')"
+                @keyup.enter="search"
+              />
+            </a-form-item>
+          </a-col>
+          <a-col :span="8">
+            <a-form-item :label="$t('时间搜索')" field="rangeValue">
+              <a-range-picker
+                v-model="formModel.rangeValue"
+                class="w-full"
+              />
+            </a-form-item>
+          </a-col>
+          <a-col :span="8">
+            <a-form-item :label="$t('内容搜索')" field="content">
+              <a-input
+                v-model="formModel.content"
+                :placeholder="$t('内容搜索')"
+                @keyup.enter="search"
+              />
+            </a-form-item>
+          </a-col>
+        </a-row>
+      </a-form>
+    </a-col>
+    <a-divider direction="vertical" style="height: 30px" />
+    <a-col :span="6">
+      <a-space :size="'medium'" direction="horizontal">
+        <a-button type="primary" @click="search">
+          <template #icon>
+            <icon-search />
+          </template>
+          {{ $t('data.doc.form.search') }}
+        </a-button>
+        <a-button @click="resetSelect">
+          <template #icon>
+            <icon-refresh />
+          </template>
+          {{ $t('data.doc.form.reset') }}
+        </a-button>
+      </a-space>
+    </a-col>
+  </a-row>    
 
-            <!-- 底部标签区域（如果有的话） -->
-            <div
-              v-if="record.tags && record.tags.length"
-              class="mt-2 flex flex-wrap gap-1"
-            >
+  <a-divider class="mt-0" />
+  <a-space :size="'medium'">
+    <a-button type="primary" size="small" @click="NewApi()">
+      <template #icon>
+        <icon-plus />
+      </template>
+      {{ $t('data.doc.button.create') }}
+    </a-button>
+    <a-button
+      :disabled="deleteButtonStatus()"
+      status="danger"
+      size="small"
+      @click="DeleteApi"
+    >
+      <template #icon>
+        <icon-minus />
+      </template>
+      {{ $t('data.doc.button.delete') }}
+    </a-button>
+    <SettingTable
+      :columns="columns"
+      :storage-key="storageKey"
+      @update-columns="updateVisibleColumns"
+    />
+    <a-radio-group v-model="viewMode" size="small">
+      <a-radio value="table">
+        <template #radio="{ checked }">
+          <a-space :size="4">
+            <icon-list
+              :style="{ color: checked ? 'rgb(var(--primary-6))' : '' }"
+            />
+            <span v-if="checked">表格</span>
+          </a-space>
+        </template>
+      </a-radio>
+      <a-radio value="card">
+        <template #radio="{ checked }">
+          <a-space :size="4">
+            <icon-apps
+              :style="{ color: checked ? 'rgb(var(--primary-6))' : '' }"
+            />
+            <span v-if="checked">卡片</span>
+          </a-space>
+        </template>
+      </a-radio>
+    </a-radio-group>
+  </a-space>
+
+  <div class="content">
+    <a-table
+      v-if="viewMode === 'table'"
+      v-model:selected-keys="rowSelectKeys"
+      :bordered="false"
+      column-resizable
+      :columns="visibleColumns"
+      :data="renderData"
+      :loading="loading"
+      :pagination="pagination"
+      :row-selection="rowSelection"
+      :size="'medium'"
+      row-key="id"
+      @page-change="onPageChange"
+      @page-size-change="onPageSizeChange"
+    >
+      <!-- <template #index="{ rowIndex }">
+        {{ rowIndex + 1 }}
+      </template> -->
+      <template #title="{ record }">
+        <span
+          class="cursor-pointer"
+          @click="
+            router.push({
+              name: 'DocDetail',
+              params: {
+                id: record.id,
+              },
+              query: {
+                appendix: record.name,
+              },
+            })
+          "
+          >{{ record.title }}
+        </span>
+      </template>
+
+      <template #size="{ record }">
+        {{ formatFileSize(record.size) }}
+      </template>
+
+      <template #type="{ record }">
+        <component :is="getSvgByType(record.type)" class="w-10 h-10" />
+      </template>
+      <template #created_time="{ record }">
+        {{ tableDateFormat(record.created_time) }}
+      </template>
+      <template #doc_time="{ record }">
+        {{ tableDateFormat(record.doc_time) }}
+      </template>
+      <!-- status -->
+      <template #status="{ record }">
+        <a-tag v-if="record.status === 0" :color="`orange`" bordered>
+          {{ $t(`处理中`) }}
+        </a-tag>
+        <a-tag v-if="record.status === 1" :color="`green`" bordered>
+          {{ $t(`admin.menu.form.status.${record.status}`) }}
+        </a-tag>
+        <a-tag v-else :color="`red`" bordered>
+          {{ $t(`解析失败`) }}
+        </a-tag>
+      </template>
+      <template #operate="{ record }">
+        <a-space>
+          <a-tooltip content="修改">
+            <a-link @click="EditApi(record.id)">
+              <icon-edit style="font-size: 16" />
+            </a-link>
+          </a-tooltip>
+          <a-tooltip content="查看">
+            <a-link @click="ViewApi(record.id, record.title)">
+              <icon-unordered-list style="font-size: 16" />
+            </a-link>
+          </a-tooltip>
+          <!-- 取消收藏 -->
+          <a-tooltip v-if="record.is_collected" content="取消收藏">
+            <a-link @click="handleUnCollect(record.id)">
+              <icon-star-fill style="font-size: 16" />
+            </a-link>
+          </a-tooltip>
+          <!-- 收藏 -->
+          <a-tooltip v-else content="收藏">
+            <a-link @click="CollectionApi(record.id)">
+              <icon-star style="font-size: 16" />
+            </a-link>
+          </a-tooltip>
+          <!-- <a-tooltip content="隐藏">
+            <a-link @click="HideApi(record.id)">
+              <icon-eye-invisible  style="font-size:16"/>
+            </a-link>
+          </a-tooltip> -->
+        </a-space>
+      </template>
+    </a-table>
+
+    <!-- 卡片视图 -->
+    <div
+      v-if="viewMode === 'card'"
+      class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4"
+    >
+      <a-card
+        v-for="record in renderData"
+        :key="record.id"
+        class="hover:shadow-lg transition-shadow duration-300 rounded-lg"
+        :hoverable="true"
+        :loading="loading"
+      >
+        <div v-if="record" class="flex items-start gap-3">
+          <component
+            :is="getSvgByType(record.type || '')"
+            class="w-12 h-12 flex-shrink-0"
+          />
+          <div class="flex-1 min-w-0">
+            <div class="flex justify-between items-start">
+              <a-tooltip :content="record.title">
+                <a-link
+                  class="text-lg font-medium truncate block max-w-[180px]"
+                  @click="
+                    router.push({
+                      name: 'DocDetail',
+                      params: { id: record.id },
+                      query: { appendix: record.name },
+                    })
+                  "
+                >
+                  {{ record.title }}
+                </a-link>
+              </a-tooltip>
+              <a-space>
+                <a-tooltip content="修改">
+                  <a-link @click="EditApi(record.id)">
+                    <icon-edit />
+                  </a-link>
+                </a-tooltip>
+                <a-tooltip v-if="record.is_collected" content="取消收藏">
+                  <a-link @click="handleUnCollect(record.id)">
+                    <icon-star-fill style="font-size: 16" />
+                  </a-link>
+                </a-tooltip>
+                <a-tooltip v-else content="收藏">
+                  <a-link @click="CollectionApi(record.id)">
+                    <icon-star />
+                  </a-link>
+                </a-tooltip>
+              </a-space>
+            </div>
+            <div class="text-sm text-gray-500 mt-1">
+              {{ formatFileSize(record.size) }}
+            </div>
+            <div class="text-sm text-gray-500 mt-1">
+              {{ tableDateFormat(record.created_time) }}
+            </div>
+            <div class="mt-2">
               <a-tag
-                v-for="(tag, index) in record.tags.slice(0, 3)"
-                :key="index"
+                v-if="record.status === 0"
+                :color="`orange`"
                 size="small"
-                class="truncate max-w-[80px]"
-                :title="tag"
+              >
+                {{ $t(`处理中`) }}
+              </a-tag>
+              <a-tag
+                v-else-if="record.status === 1"
+                :color="`green`"
+                size="small"
+              >
+                {{ $t(`admin.menu.form.status.${record.status}`) }}
+              </a-tag>
+              <a-tag v-else :color="`red`" size="small">
+                {{ $t(`解析失败`) }}
+              </a-tag>
+            </div>
+          </div>
+        </div>
+        <!-- 新增的摘要信息部分 -->
+        <div class="mt-3 flex-1">
+          <div
+            class="text-sm text-gray-600 line-clamp-3"
+            :title="record.desc"
+          >
+            {{ record.desc || '暂无摘要信息' }}
+          </div>
+        </div>
+
+        <!-- 底部标签区域（如果有的话） -->
+        <div
+          v-if="record.tags && record.tags.length"
+          class="mt-2 flex flex-wrap gap-1"
+        >
+          <a-tag
+            v-for="(tag, index) in record.tags.slice(0, 3)"
+            :key="index"
+            size="small"
+            class="truncate max-w-[80px]"
+            :title="tag"
+          >
+            {{ tag }}
+          </a-tag>
+          <a-tag v-if="record.tags.length > 3" size="small"
+            >+{{ record.tags.length - 3 }}</a-tag
+          >
+          >
+        </div>
+      </a-card>
+    </div>
+
+    <!-- 分页器 -->
+    <div v-if="viewMode === 'card'" class="mt-4 flex justify-end">
+      <a-pagination
+        v-model:current="pagination.current"
+        v-model:page-size="pagination.pageSize"
+        :total="pagination.total || 0"
+        show-total
+        show-jumper
+        show-page-size
+        @change="onPageChange"
+        @page-size-change="onPageSizeChange"
+      />
+    </div>
+  </div>
+  <div class="content-modal">
+    <a-modal
+      :closable="false"
+      :on-before-ok="beforeSubmit"
+      :title="drawerTitle"
+      :visible="openNewOrEdit"
+      :width="850"
+      @cancel="cancelReq"
+      @ok="submitNewOrEdit"
+    >
+      <a-form ref="formRef" :model="form">
+        <a-row :gutter="24">
+          <a-col :span="12">
+            <a-form-item
+              :feedback="true"
+              :label="$t('data.doc.form.title')"
+              field="title"
+            >
+              <a-input
+                v-model="form.title"
+                :placeholder="$t('data.doc.form.name.placeholder')"
+              ></a-input>
+            </a-form-item>
+          </a-col>
+          <a-col :span="12">
+            <a-form-item
+              :feedback="true"
+              :label="$t('data.doc.form.name')"
+              field="name"
+            >
+              <a-input v-model="form.name"></a-input>
+            </a-form-item>
+          </a-col>
+        </a-row>
+
+        <a-row :gutter="24">
+          <a-col :span="12">
+            <a-form-item :label="$t('data.doc.form.type')" field="type">
+              <a-select v-model="form.type" :placeholder="$t('请选择类型')">
+                <a-option
+                  v-for="(item, index) in [
+                    '文本',
+                    'PDF',
+                    '表格',
+                    '图片',
+                    '媒体',
+                    '其他',
+                  ]"
+                  :key="index"
+                  :value="item"
+                >
+                  {{ item }}
+                </a-option>
+              </a-select>
+            </a-form-item>
+          </a-col>
+          <a-col :span="12">
+            <!-- 文件来源 -->
+            <a-form-item :label="$t('文件来源')" field="source">
+              <a-input v-model="form.source"></a-input>
+            </a-form-item>
+          </a-col>
+        </a-row>
+
+        <a-row :gutter="24">
+          <a-col :span="12">
+            <a-form-item :label="$t('data.doc.form.desc')" field="desc">
+              <a-textarea
+                v-model="form.desc"
+                auto-size
+                style="
+                  overflow: scroll;
+                  max-height: 300px;
+                  min-height: 300px;
+                "
+              ></a-textarea>
+            </a-form-item>
+          </a-col>
+          <a-col :span="12">
+            <a-form-item
+              :label="$t('data.doc.form.content')"
+              field="content"
+            >
+              <a-textarea
+                v-model="form.content"
+                auto-size
+                style="
+                  overflow: scroll;
+                  max-height: 300px;
+                  min-height: 300px;
+                "
+              ></a-textarea>
+            </a-form-item>
+          </a-col>
+        </a-row>
+
+        <a-row :gutter="24">
+          <a-form-item :label="$t('标签')" field="tags">
+            <a-space wrap>
+              <a-tag
+                v-for="(tag, index) of tags"
+                :key="index"
+                :closable="index >= 0"
+                @close="handleRemove(tag)"
               >
                 {{ tag }}
               </a-tag>
-              <a-tag v-if="record.tags.length > 3" size="small"
-                >+{{ record.tags.length - 3 }}</a-tag
+
+              <a-input
+                v-if="showInput"
+                ref="inputRef"
+                v-model.trim="inputVal"
+                :style="{ width: '90px' }"
+                size="mini"
+                @keyup.enter="handleAdd"
+                @blur="handleAdd"
+              />
+              <a-tag
+                v-else
+                :style="{
+                  width: '90px',
+                  backgroundColor: 'var(--color-fill-2)',
+                  border: '1px dashed var(--color-fill-3)',
+                  cursor: 'pointer',
+                }"
+                @click="handleEdit"
               >
-              >
-            </div>
-          </a-card>
-        </div>
-
-        <!-- 分页器 -->
-        <div v-if="viewMode === 'card'" class="mt-4 flex justify-end">
-          <a-pagination
-            v-model:current="pagination.current"
-            v-model:page-size="pagination.pageSize"
-            :total="pagination.total || 0"
-            show-total
-            show-jumper
-            show-page-size
-            @change="onPageChange"
-            @page-size-change="onPageSizeChange"
-          />
-        </div>
-      </div>
-      <div class="content-modal">
-        <a-modal
-          :closable="false"
-          :on-before-ok="beforeSubmit"
-          :title="drawerTitle"
-          :visible="openNewOrEdit"
-          :width="850"
-          @cancel="cancelReq"
-          @ok="submitNewOrEdit"
+                <template #icon>
+                  <icon-plus />
+                </template>
+                添加标签
+              </a-tag>
+            </a-space>
+          </a-form-item>
+        </a-row>
+      </a-form>
+    </a-modal>
+    <a-modal
+      :closable="false"
+      :title="`${$t('modal.title.tips')}`"
+      :visible="openDelete"
+      :width="360"
+      @cancel="cancelReq"
+      @ok="submitDelete"
+    >
+      <a-space>
+        <icon-exclamation-circle-fill size="24" style="color: #e6a23c" />
+        {{ $t('modal.title.tips.delete') }}
+      </a-space>
+    </a-modal>
+    <a-modal
+      :closable="false"
+      :title="`${$t('内容')}`"
+      :visible="openView"
+      fullscreen
+      hide-cancel
+      ok-text="关闭"
+      @ok="cancelReq"
+    >
+      <!-- <GeneralDetail :info="form"/> -->
+    </a-modal>
+    <!--    收藏弹窗 -->
+    <a-modal
+      :visible="collectView"
+      @ok="handleCollectOk"
+      @cancel="handleCollectCancel"
+    >
+      <template #title> 选择收藏位置 </template>
+      <div>
+        <a-select
+          v-model="collectionSelect"
+          :style="{ width: '100%', marginBottom: '15px' }"
+          placeholder="请选择需要保存的收藏夹"
         >
-          <a-form ref="formRef" :model="form">
-            <a-row :gutter="24">
-              <a-col :span="12">
-                <a-form-item
-                  :feedback="true"
-                  :label="$t('data.doc.form.title')"
-                  field="title"
-                >
-                  <a-input
-                    v-model="form.title"
-                    :placeholder="$t('data.doc.form.name.placeholder')"
-                  ></a-input>
-                </a-form-item>
-              </a-col>
-              <a-col :span="12">
-                <a-form-item
-                  :feedback="true"
-                  :label="$t('data.doc.form.name')"
-                  field="name"
-                >
-                  <a-input v-model="form.name"></a-input>
-                </a-form-item>
-              </a-col>
-            </a-row>
-
-            <a-row :gutter="24">
-              <a-col :span="12">
-                <a-form-item :label="$t('data.doc.form.type')" field="type">
-                  <a-select v-model="form.type" :placeholder="$t('请选择类型')">
-                    <a-option
-                      v-for="(item, index) in [
-                        '文本',
-                        'PDF',
-                        '表格',
-                        '图片',
-                        '媒体',
-                        '其他',
-                      ]"
-                      :key="index"
-                      :value="item"
-                    >
-                      {{ item }}
-                    </a-option>
-                  </a-select>
-                </a-form-item>
-              </a-col>
-              <a-col :span="12">
-                <!-- 文件来源 -->
-                <a-form-item :label="$t('文件来源')" field="source">
-                  <a-input v-model="form.source"></a-input>
-                </a-form-item>
-              </a-col>
-            </a-row>
-
-            <a-row :gutter="24">
-              <a-col :span="12">
-                <a-form-item :label="$t('data.doc.form.desc')" field="desc">
-                  <a-textarea
-                    v-model="form.desc"
-                    auto-size
-                    style="
-                      overflow: scroll;
-                      max-height: 300px;
-                      min-height: 300px;
-                    "
-                  ></a-textarea>
-                </a-form-item>
-              </a-col>
-              <a-col :span="12">
-                <a-form-item
-                  :label="$t('data.doc.form.content')"
-                  field="content"
-                >
-                  <a-textarea
-                    v-model="form.content"
-                    auto-size
-                    style="
-                      overflow: scroll;
-                      max-height: 300px;
-                      min-height: 300px;
-                    "
-                  ></a-textarea>
-                </a-form-item>
-              </a-col>
-            </a-row>
-
-            <a-row :gutter="24">
-              <a-form-item :label="$t('标签')" field="tags">
-                <a-space wrap>
-                  <a-tag
-                    v-for="(tag, index) of tags"
-                    :key="index"
-                    :closable="index >= 0"
-                    @close="handleRemove(tag)"
-                  >
-                    {{ tag }}
-                  </a-tag>
-
-                  <a-input
-                    v-if="showInput"
-                    ref="inputRef"
-                    v-model.trim="inputVal"
-                    :style="{ width: '90px' }"
-                    size="mini"
-                    @keyup.enter="handleAdd"
-                    @blur="handleAdd"
-                  />
-                  <a-tag
-                    v-else
-                    :style="{
-                      width: '90px',
-                      backgroundColor: 'var(--color-fill-2)',
-                      border: '1px dashed var(--color-fill-3)',
-                      cursor: 'pointer',
-                    }"
-                    @click="handleEdit"
-                  >
-                    <template #icon>
-                      <icon-plus />
-                    </template>
-                    添加标签
-                  </a-tag>
-                </a-space>
-              </a-form-item>
-            </a-row>
-          </a-form>
-        </a-modal>
-        <a-modal
-          :closable="false"
-          :title="`${$t('modal.title.tips')}`"
-          :visible="openDelete"
-          :width="360"
-          @cancel="cancelReq"
-          @ok="submitDelete"
+          <a-option
+            v-for="item of collectionOptions"
+            :key="item.value"
+            :value="item.value"
+            >{{ item.label }}
+          </a-option>
+        </a-select>
+        <a-button
+          style="width: 100%"
+          @click="router.push({ name: 'Collection' })"
         >
-          <a-space>
-            <icon-exclamation-circle-fill size="24" style="color: #e6a23c" />
-            {{ $t('modal.title.tips.delete') }}
-          </a-space>
-        </a-modal>
-        <a-modal
-          :closable="false"
-          :title="`${$t('内容')}`"
-          :visible="openView"
-          fullscreen
-          hide-cancel
-          ok-text="关闭"
-          @ok="cancelReq"
-        >
-          <!-- <GeneralDetail :info="form"/> -->
-        </a-modal>
-        <!--    收藏弹窗 -->
-        <a-modal
-          :visible="collectView"
-          @ok="handleCollectOk"
-          @cancel="handleCollectCancel"
-        >
-          <template #title> 选择收藏位置 </template>
+          <div> 新建收藏夹 </div>
           <div>
-            <a-select
-              v-model="collectionSelect"
-              :style="{ width: '100%', marginBottom: '15px' }"
-              placeholder="请选择需要保存的收藏夹"
-            >
-              <a-option
-                v-for="item of collectionOptions"
-                :key="item.value"
-                :value="item.value"
-                >{{ item.label }}
-              </a-option>
-            </a-select>
-            <a-button
-              style="width: 100%"
-              @click="router.push({ name: 'Collection' })"
-            >
-              <div> 新建收藏夹 </div>
-              <div>
-                <icon-plus />
-              </div>
-            </a-button>
+            <icon-plus />
           </div>
-          <!-- <template #footer>
-            <a-button type="primary" style="width: 100%;" @ok="handleOk">收藏</a-button>
-          </template> -->
-        </a-modal>
+        </a-button>
       </div>
-    </a-card>
-  </a-layout>
+      <!-- <template #footer>
+        <a-button type="primary" style="width: 100%;" @ok="handleOk">收藏</a-button>
+      </template> -->
+    </a-modal>
+  </div>
+</div>
 </template>
 
 <script lang="ts" setup>

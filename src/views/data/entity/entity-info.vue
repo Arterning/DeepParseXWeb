@@ -1,209 +1,206 @@
 <template>
-    <a-layout class="flex-layout">
-      <a-card class="general-card">
-        <a-row>
-          <a-col :flex="62">
-            <a-form
-              :auto-label-width="true"
-              :model="formModel"
-              label-align="right"
-            >
-              <a-row :gutter="16">
-                <a-col :span="8">
-                  <a-form-item field="name" label="名称">
-                    <a-input
-                      v-model="formModel.name"
-                      :placeholder="$t('搜索名称')"
-                      @keydown.enter="search"
-                    />
-                  </a-form-item>
-                </a-col>
-                <a-col :span="8">
-                  <a-form-item field="entity_type" label="实体类型">
-                    <a-input
-                      v-model="formModel.entity_type"
-                      :placeholder="$t('搜索实体类型')"
-                      @keydown.enter="search"
-                    />
-                  </a-form-item>
-                </a-col>
-              </a-row>
-            </a-form>
-          </a-col>
-          <a-divider direction="vertical" style="height: 30px" />
-          <a-col :span="6">
-            <a-space :size="'medium'" direction="horizontal">
-              <a-button type="primary" @click="search">
-                <template #icon>
-                  <icon-search />
-                </template>
-                搜索
-              </a-button>
-              <a-button @click="resetSelect">
-                <template #icon>
-                  <icon-refresh />
-                </template>
-                重置
-              </a-button>
-            </a-space>
-          </a-col>
-        </a-row>
-        <a-divider style="margin-top: 0" />
-        <a-space :size="'medium'">
-          <a-button type="primary" @click="NewEntity()">
+  <div class="p-4">
+    <a-row>
+      <a-col :flex="62">
+        <a-form
+          :auto-label-width="true"
+          :model="formModel"
+          label-align="right"
+        >
+          <a-row :gutter="16">
+            <a-col :span="8">
+              <a-form-item field="name" label="名称">
+                <a-input
+                  v-model="formModel.name"
+                  :placeholder="$t('搜索名称')"
+                  @keydown.enter="search"
+                />
+              </a-form-item>
+            </a-col>
+            <a-col :span="8">
+              <a-form-item field="entity_type" label="实体类型">
+                <a-input
+                  v-model="formModel.entity_type"
+                  :placeholder="$t('搜索实体类型')"
+                  @keydown.enter="search"
+                />
+              </a-form-item>
+            </a-col>
+          </a-row>
+        </a-form>
+      </a-col>
+      <a-divider direction="vertical" style="height: 30px" />
+      <a-col :span="6">
+        <a-space :size="'medium'" direction="horizontal">
+          <a-button type="primary" @click="search">
             <template #icon>
-              <icon-plus />
+              <icon-search />
             </template>
-            新增
+            搜索
           </a-button>
-          <a-button
-            :disabled="deleteButtonStatus()"
-            status="danger"
-            @click="DeleteEntity"
-          >
+          <a-button @click="resetSelect">
             <template #icon>
-              <icon-minus />
+              <icon-refresh />
             </template>
-            删除
+            重置
           </a-button>
-
-          <SettingTable
-            :columns="columns"
-            storageKey="entity-columns"
-            @update-columns="updateVisibleColumns"
-          />
         </a-space>
-        <div class="content">
-          <a-table
-            v-model:selected-keys="rowSelectKeys"
-            :bordered="false"
-            :columns="(visibleColumns as TableColumnData[])"
-            :data="renderData"
-            :expandable="expandable"
-            :loading="loading"
-            :pagination="pagination"
-            :row-selection="rowSelection"
-            :size="'medium'"
-            row-key="id"
-            @expand="handleExpand"
-            @page-change="onPageChange"
-            @page-size-change="onPageSizeChange"
+      </a-col>
+    </a-row>
+    <a-divider style="margin-top: 0" />
+    <a-space :size="'medium'">
+      <a-button type="primary" @click="NewEntity()">
+        <template #icon>
+          <icon-plus />
+        </template>
+        新增
+      </a-button>
+      <a-button
+        :disabled="deleteButtonStatus()"
+        status="danger"
+        @click="DeleteEntity"
+      >
+        <template #icon>
+          <icon-minus />
+        </template>
+        删除
+      </a-button>
+
+      <SettingTable
+        :columns="columns"
+        storageKey="entity-columns"
+        @update-columns="updateVisibleColumns"
+      />
+    </a-space>
+    <div class="content">
+      <a-table
+        v-model:selected-keys="rowSelectKeys"
+        :bordered="false"
+        :columns="(visibleColumns as TableColumnData[])"
+        :data="renderData"
+        :expandable="expandable"
+        :loading="loading"
+        :pagination="pagination"
+        :row-selection="rowSelection"
+        :size="'medium'"
+        row-key="id"
+        @expand="handleExpand"
+        @page-change="onPageChange"
+        @page-size-change="onPageSizeChange"
+      >
+        <template #index="{ rowIndex }">
+            {{ rowIndex + 1 }} 
+        </template>
+        <template #operate="{ record }">
+          <a-space>
+            <a-link @click="EditEntity(record.id)">
+              编辑
+            </a-link>
+          </a-space>
+        </template>
+
+      </a-table>
+    </div>
+    <div class="content-modal">
+      <a-modal
+        :closable="false"
+        :on-before-ok="beforeSubmit"
+        :title="drawerTitle"
+        :visible="openNewOrEdit"
+        :width="550"
+        @cancel="cancelReq"
+        @ok="submitNewOrEdit"
+      >
+        <a-form ref="formRef" :model="form">
+          <a-form-item
+            :feedback="true"
+            label="名称"
+            :rules="[
+              { required: true, message: 'required' },
+            ]"
+            field="name"
           >
-            <template #index="{ rowIndex }">
-               {{ rowIndex + 1 }} 
-            </template>
-            <template #operate="{ record }">
-              <a-space>
-                <a-link @click="EditEntity(record.id)">
-                  编辑
-                </a-link>
-              </a-space>
-            </template>
+            <a-input
+              v-model="form.name"
+            ></a-input>
+          </a-form-item>
 
-          </a-table>
-        </div>
-        <div class="content-modal">
-          <a-modal
-            :closable="false"
-            :on-before-ok="beforeSubmit"
-            :title="drawerTitle"
-            :visible="openNewOrEdit"
-            :width="550"
-            @cancel="cancelReq"
-            @ok="submitNewOrEdit"
+          <a-form-item
+            :feedback="true"
+            label="类型"
+            field="entity_type"
           >
-            <a-form ref="formRef" :model="form">
-              <a-form-item
-                :feedback="true"
-                label="名称"
-                :rules="[
-                  { required: true, message: 'required' },
-                ]"
-                field="name"
-              >
-                <a-input
-                  v-model="form.name"
-                ></a-input>
-              </a-form-item>
+            <a-input
+              v-model="form.entity_type"
+            ></a-input>
+          </a-form-item>
 
-              <a-form-item
-                :feedback="true"
-                label="类型"
-                field="entity_type"
-              >
-                <a-input
-                  v-model="form.entity_type"
-                ></a-input>
-              </a-form-item>
-
-              <a-form-item
-                :feedback="true"
-                label="描述"
-                field="description"
-              >
-                <a-textarea
-                  v-model="form.description"
-                ></a-textarea>
-              </a-form-item>
-
-              <!-- 动态表单字段 - 人物类型 -->
-              <template v-if="form.entity_type === '人物'">
-                <a-form-item label="性别" field="gender">
-                  <a-select v-model="form.properties.gender">
-                    <a-option value="男">男</a-option>
-                    <a-option value="女">女</a-option>
-                    <a-option value="其他">其他</a-option>
-                  </a-select>
-                </a-form-item>
-                <a-form-item label="国籍" field="nationality">
-                  <a-input v-model="form.properties.nationality"></a-input>
-                </a-form-item>
-                <a-form-item label="组织" field="organization">
-                  <a-input v-model="form.properties.organization"></a-input>
-                </a-form-item>
-                <a-form-item label="职位" field="position">
-                  <a-input v-model="form.properties.position"></a-input>
-                </a-form-item>
-                <a-form-item label="联系方式" field="contact">
-                  <a-input v-model="form.properties.contact"></a-input>
-                </a-form-item>
-                <a-form-item label="标签" field="tags">
-                  <a-select v-model="form.properties.tags" multiple allow-create></a-select>
-                </a-form-item>
-              </template>
-
-              <!-- 动态表单字段 - 组织类型 -->
-              <template v-else-if="form.entity_type === '组织'">
-                <a-form-item label="类型" field="type">
-                  <a-input v-model="form.properties.type"></a-input>
-                </a-form-item>
-                <a-form-item label="标签" field="tags">
-                  <a-select v-model="form.properties.tags" multiple allow-create></a-select>
-                </a-form-item>
-                <a-form-item label="国家" field="country">
-                  <a-input v-model="form.properties.country"></a-input>
-                </a-form-item>
-              </template>
-
-            </a-form>
-          </a-modal>
-          <a-modal
-            :closable="false"
-            :title="`${$t('modal.title.tips')}`"
-            :visible="openDelete"
-            :width="360"
-            @cancel="cancelReq"
-            @ok="submitDelete"
+          <a-form-item
+            :feedback="true"
+            label="描述"
+            field="description"
           >
-            <a-space>
-              <icon-exclamation-circle-fill size="24" style="color: #e6a23c" />
-              {{ $t('modal.title.tips.delete') }}
-            </a-space>
-          </a-modal>
-        </div>
-      </a-card>
-      <Footer />
-    </a-layout>
+            <a-textarea
+              v-model="form.description"
+            ></a-textarea>
+          </a-form-item>
+
+          <!-- 动态表单字段 - 人物类型 -->
+          <template v-if="form.entity_type === '人物'">
+            <a-form-item label="性别" field="gender">
+              <a-select v-model="form.properties.gender">
+                <a-option value="男">男</a-option>
+                <a-option value="女">女</a-option>
+                <a-option value="其他">其他</a-option>
+              </a-select>
+            </a-form-item>
+            <a-form-item label="国籍" field="nationality">
+              <a-input v-model="form.properties.nationality"></a-input>
+            </a-form-item>
+            <a-form-item label="组织" field="organization">
+              <a-input v-model="form.properties.organization"></a-input>
+            </a-form-item>
+            <a-form-item label="职位" field="position">
+              <a-input v-model="form.properties.position"></a-input>
+            </a-form-item>
+            <a-form-item label="联系方式" field="contact">
+              <a-input v-model="form.properties.contact"></a-input>
+            </a-form-item>
+            <a-form-item label="标签" field="tags">
+              <a-select v-model="form.properties.tags" multiple allow-create></a-select>
+            </a-form-item>
+          </template>
+
+          <!-- 动态表单字段 - 组织类型 -->
+          <template v-else-if="form.entity_type === '组织'">
+            <a-form-item label="类型" field="type">
+              <a-input v-model="form.properties.type"></a-input>
+            </a-form-item>
+            <a-form-item label="标签" field="tags">
+              <a-select v-model="form.properties.tags" multiple allow-create></a-select>
+            </a-form-item>
+            <a-form-item label="国家" field="country">
+              <a-input v-model="form.properties.country"></a-input>
+            </a-form-item>
+          </template>
+
+        </a-form>
+      </a-modal>
+      <a-modal
+        :closable="false"
+        :title="`${$t('modal.title.tips')}`"
+        :visible="openDelete"
+        :width="360"
+        @cancel="cancelReq"
+        @ok="submitDelete"
+      >
+        <a-space>
+          <icon-exclamation-circle-fill size="24" style="color: #e6a23c" />
+          {{ $t('modal.title.tips.delete') }}
+        </a-space>
+      </a-modal>
+    </div>
+  </div>
   </template>
   
   <script lang="ts" setup>

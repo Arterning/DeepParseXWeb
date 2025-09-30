@@ -1,9 +1,9 @@
 <template>
   <a-layout class="flex-layout">
     <!-- <Breadcrumb /> -->
-    <div class="general-card mt-8">
+    <a-card class="general-card" title="文件数据">
       <FileTable />
-    </div>
+    </a-card >
     <Footer />
   </a-layout>
 </template>

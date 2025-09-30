@@ -55,11 +55,10 @@
             启用翻译
           </template>
         </a-switch>
-        <a-button @click="showEntityTypeModal = true" type="primary" size="small">提取信息</a-button>
-          
         <a-popconfirm content="确认删除此邮件？" @ok="handleDelete">
           <a-button status="danger" size="small">删除</a-button>
         </a-popconfirm>
+        <a-button @click="showEntityTypeModal = true" type="primary" size="small">提取信息</a-button>
         </div>
       </div>
     </div>

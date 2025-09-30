@@ -1,6 +1,6 @@
 <template>
   <a-layout class="flex-layout">
-    <div class="general-card">
+    <a-card class="general-card">
       <a-tabs default-active-key="1">
 
         <a-tab-pane key="1">
@@ -15,7 +15,7 @@
 
         
       </a-tabs>
-    </div>
+    </a-card>
     <Footer />
   </a-layout>
 </template>
@@ -23,4 +23,5 @@
 <script setup lang="ts">
   import EntityInfo from './entity-info.vue';
   import SPOTable from './spo.vue';
+  import Footer from '@/components/footer/index.vue';
 </script>

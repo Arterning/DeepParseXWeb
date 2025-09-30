@@ -7,240 +7,238 @@
         <VChart :option="barChartOption" style="height: 300px" />
       </a-card>
     </div>
-    <a-layout class="flex-layout">
-      <a-card class="general-card p-4">
-        <a-row>
-          <a-col :flex="62">
-            <a-form
-              :auto-label-width="true"
-              :model="formModel"
-              label-align="right"
-            >
-              <a-row :gutter="16">
-                <a-col :span="8">
-                  <a-form-item field="name" label="名称">
-                    <a-input
-                      v-model="formModel.name"
-                      :placeholder="$t('搜索邮箱地址')"
-                    />
-                  </a-form-item>
-                </a-col>
-              </a-row>
-            </a-form>
-          </a-col>
-          <a-divider direction="vertical" style="height: 30px" />
-          <a-col :span="6">
-            <a-space :size="'medium'" direction="horizontal">
-              <a-button type="primary" @click="search">
-                <template #icon>
-                  <icon-search />
-                </template>
-                搜索
-              </a-button>
-              <a-button @click="resetSelect">
-                <template #icon>
-                  <icon-refresh />
-                </template>
-                重置
-              </a-button>
-            </a-space>
-          </a-col>
-        </a-row>
-        <a-divider class="mt-0" />
-        <a-space class="flex justify-between">
-          <a-space :size="'medium'">
-            <a-button type="primary" @click="NewMailBox()">
+    <div class="p-4">
+      <a-row>
+        <a-col :flex="62">
+          <a-form
+            :auto-label-width="true"
+            :model="formModel"
+            label-align="right"
+          >
+            <a-row :gutter="16">
+              <a-col :span="8">
+                <a-form-item field="name" label="名称">
+                  <a-input
+                    v-model="formModel.name"
+                    :placeholder="$t('搜索邮箱地址')"
+                  />
+                </a-form-item>
+              </a-col>
+            </a-row>
+          </a-form>
+        </a-col>
+        <a-divider direction="vertical" style="height: 30px" />
+        <a-col :span="6">
+          <a-space :size="'medium'" direction="horizontal">
+            <a-button type="primary" @click="search">
               <template #icon>
-                <icon-plus />
+                <icon-search />
               </template>
-              新增
+              搜索
             </a-button>
-            <a-button
-              :disabled="deleteButtonStatus()"
-              status="danger"
-              @click="DeleteMailBox"
-            >
+            <a-button @click="resetSelect">
               <template #icon>
-                <icon-minus />
+                <icon-refresh />
               </template>
-              删除
+              重置
             </a-button>
           </a-space>
-          <a-space>
-            <a-tooltip content="切换视图">
-              <a-button type="text" @click="viewType = !viewType">
-                <template #icon>
-                  <icon-swap />
-                </template>
-              </a-button>
-            </a-tooltip>
-          </a-space>
-        </a-space>
-        <div class="content mt-4">
-          <div v-if="loading" class="flex justify-center items-center h-64">
-            <a-spin size="large" />
-          </div>
-          <template v-else>
-            <template v-if="viewType">
-              <div
-                v-if="renderData.length === 0"
-                class="text-center text-gray-500 dark:text-gray-400"
-              >
-                暂无数据
-              </div>
-              <div
-                v-else
-                class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4"
-              >
-                <a-card
-                  v-for="item in renderData"
-                  :key="item.id"
-                  class="rounded-lg shadow-md transition-all duration-300 hover:shadow-lg dark:bg-gray-800"
-                  :class="{
-                    'border-blue-500 border-2': rowSelectKeys.includes(item.id),
-                  }"
-                  @click="toggleSelection(item.id)"
-                >
-                  <div class="flex items-center mb-4">
-                    <component
-                      :is="getMailboxIcon(item.name)"
-                      class="w-8 h-8 mr-3"
-                      alt="mailbox icon"
-                    />
-                    <h3
-                      class="text-lg font-semibold text-gray-800 dark:text-white truncate"
-                      >{{ item.name }}</h3
-                    >
-                  </div>
-                  <div class="text-sm text-gray-600 dark:text-gray-300">
-                    <p class="mb-2">
-                      <icon-email class="mr-2" />
-                      邮件数量:
-                      <span class="font-semibold">{{ item.email_num }}</span>
-                    </p>
-                    <p>
-                      <icon-location class="mr-2" />
-                      国家/地区:
-                      <span class="font-semibold">{{ item.country }}</span>
-                    </p>
-                  </div>
-                  <template #actions>
-                    <a-link @click.stop="EditMailBox(item.id)"> 编辑 </a-link>
-                    <a-link
-                      @click.stop="
-                        router.push({
-                          name: 'MailBoxDetail',
-                          params: { id: item.id },
-                        })
-                      "
-                    >
-                      查看
-                    </a-link>
-                  </template>
-                </a-card>
-              </div>
-              <div class="flex justify-end mt-4">
-                <a-pagination
-                  :total="pagination.total"
-                  :current="pagination.current"
-                  :page-size="pagination.pageSize"
-                  @change="onPageChange"
-                  @page-size-change="onPageSizeChange"
-                />
-              </div>
+        </a-col>
+      </a-row>
+      <a-divider class="mt-0" />
+      <a-space class="flex justify-between">
+        <a-space :size="'medium'">
+          <a-button type="primary" @click="NewMailBox()">
+            <template #icon>
+              <icon-plus />
             </template>
-            <a-table
-              v-else
-              v-model:selected-keys="rowSelectKeys"
-              :bordered="false"
-              :columns="columns"
-              :data="renderData"
-              :loading="loading"
-              :pagination="pagination"
-              :row-selection="rowSelection"
-              row-key="id"
-              @page-change="onPageChange"
-              @page-size-change="onPageSizeChange"
+            新增
+          </a-button>
+          <a-button
+            :disabled="deleteButtonStatus()"
+            status="danger"
+            @click="DeleteMailBox"
+          >
+            <template #icon>
+              <icon-minus />
+            </template>
+            删除
+          </a-button>
+        </a-space>
+        <a-space>
+          <a-tooltip content="切换视图">
+            <a-button type="text" @click="viewType = !viewType">
+              <template #icon>
+                <icon-swap />
+              </template>
+            </a-button>
+          </a-tooltip>
+        </a-space>
+      </a-space>
+      <div class="content mt-4">
+        <div v-if="loading" class="flex justify-center items-center h-64">
+          <a-spin size="large" />
+        </div>
+        <template v-else>
+          <template v-if="viewType">
+            <div
+              v-if="renderData.length === 0"
+              class="text-center text-gray-500 dark:text-gray-400"
             >
-              <template #name="{ record }">
-                {{ record.name }}
-              </template>
-              <template #email_num="{ record }">
-                {{ record.email_num }}
-              </template>
-              <template #operate="{ record }">
-                <a-space>
-                  <a-tooltip content="编辑">
-                    <a-link @click="EditMailBox(record.id)">
-                      <icon-edit style="font-size:16" />
-                    </a-link>
-                  </a-tooltip>
-                  <a-tooltip content="查看">
-                    <a-link @click="
+              暂无数据
+            </div>
+            <div
+              v-else
+              class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4"
+            >
+              <a-card
+                v-for="item in renderData"
+                :key="item.id"
+                class="rounded-lg shadow-md transition-all duration-300 hover:shadow-lg dark:bg-gray-800"
+                :class="{
+                  'border-blue-500 border-2': rowSelectKeys.includes(item.id),
+                }"
+                @click="toggleSelection(item.id)"
+              >
+                <div class="flex items-center mb-4">
+                  <component
+                    :is="getMailboxIcon(item.name)"
+                    class="w-8 h-8 mr-3"
+                    alt="mailbox icon"
+                  />
+                  <h3
+                    class="text-lg font-semibold text-gray-800 dark:text-white truncate"
+                    >{{ item.name }}</h3
+                  >
+                </div>
+                <div class="text-sm text-gray-600 dark:text-gray-300">
+                  <p class="mb-2">
+                    <icon-email class="mr-2" />
+                    邮件数量:
+                    <span class="font-semibold">{{ item.email_num }}</span>
+                  </p>
+                  <p>
+                    <icon-location class="mr-2" />
+                    国家/地区:
+                    <span class="font-semibold">{{ item.country }}</span>
+                  </p>
+                </div>
+                <template #actions>
+                  <a-link @click.stop="EditMailBox(item.id)"> 编辑 </a-link>
+                  <a-link
+                    @click.stop="
                       router.push({
                         name: 'MailBoxDetail',
-                        params: { id: record.id },
+                        params: { id: item.id },
                       })
-                    ">
-                      <icon-eye style="font-size:16" />
-                    </a-link>
-                  </a-tooltip>
-                </a-space>
-              </template>
-            </a-table>
+                    "
+                  >
+                    查看
+                  </a-link>
+                </template>
+              </a-card>
+            </div>
+            <div class="flex justify-end mt-4">
+              <a-pagination
+                :total="pagination.total"
+                :current="pagination.current"
+                :page-size="pagination.pageSize"
+                @change="onPageChange"
+                @page-size-change="onPageSizeChange"
+              />
+            </div>
           </template>
-        </div>
-        <div class="content-modal">
-          <a-modal
-            :closable="false"
-            :on-before-ok="beforeSubmit"
-            :title="drawerTitle"
-            :visible="openNewOrEdit"
-            :width="550"
-            @cancel="cancelReq"
-            @ok="submitNewOrEdit"
+          <a-table
+            v-else
+            v-model:selected-keys="rowSelectKeys"
+            :bordered="false"
+            :columns="columns"
+            :data="renderData"
+            :loading="loading"
+            :pagination="pagination"
+            :row-selection="rowSelection"
+            row-key="id"
+            @page-change="onPageChange"
+            @page-size-change="onPageSizeChange"
           >
-            <a-form ref="formRef" :model="form">
-              <a-form-item
-                :feedback="true"
-                label="名称"
-                :rules="[{ required: true, message: 'required' }]"
-                field="name"
-              >
-                <a-input v-model="form.name"></a-input>
-              </a-form-item>
-              <!-- country -->
-              <a-form-item label="国家/地区" field="country">
-                <a-select v-model="form.country" :placeholder="$t('请选择')">
-                  <a-option value="china">中国</a-option>
-                  <a-option value="usa">美国</a-option>
-                </a-select>
-              </a-form-item>
-              <!-- other_info -->
-              <a-form-item label="其他信息" field="other_info">
-                <a-input
-                  v-model="form.other_info"
-                  :placeholder="$t('请输入其他信息')"
-                ></a-input>
-              </a-form-item>
-            </a-form>
-          </a-modal>
-          <a-modal
-            :closable="false"
-            :title="`${$t('modal.title.tips')}`"
-            :visible="openDelete"
-            :width="360"
-            @cancel="cancelReq"
-            @ok="submitDelete"
-          >
-            <a-space>
-              <icon-exclamation-circle-fill size="24" style="color: #e6a23c" />
-              {{ $t('modal.title.tips.delete') }}
-            </a-space>
-          </a-modal>
-        </div>
-      </a-card>
-    </a-layout>
+            <template #name="{ record }">
+              {{ record.name }}
+            </template>
+            <template #email_num="{ record }">
+              {{ record.email_num }}
+            </template>
+            <template #operate="{ record }">
+              <a-space>
+                <a-tooltip content="编辑">
+                  <a-link @click="EditMailBox(record.id)">
+                    <icon-edit style="font-size:16" />
+                  </a-link>
+                </a-tooltip>
+                <a-tooltip content="查看">
+                  <a-link @click="
+                    router.push({
+                      name: 'MailBoxDetail',
+                      params: { id: record.id },
+                    })
+                  ">
+                    <icon-eye style="font-size:16" />
+                  </a-link>
+                </a-tooltip>
+              </a-space>
+            </template>
+          </a-table>
+        </template>
+      </div>
+      <div class="content-modal">
+        <a-modal
+          :closable="false"
+          :on-before-ok="beforeSubmit"
+          :title="drawerTitle"
+          :visible="openNewOrEdit"
+          :width="550"
+          @cancel="cancelReq"
+          @ok="submitNewOrEdit"
+        >
+          <a-form ref="formRef" :model="form">
+            <a-form-item
+              :feedback="true"
+              label="名称"
+              :rules="[{ required: true, message: 'required' }]"
+              field="name"
+            >
+              <a-input v-model="form.name"></a-input>
+            </a-form-item>
+            <!-- country -->
+            <a-form-item label="国家/地区" field="country">
+              <a-select v-model="form.country" :placeholder="$t('请选择')">
+                <a-option value="china">中国</a-option>
+                <a-option value="usa">美国</a-option>
+              </a-select>
+            </a-form-item>
+            <!-- other_info -->
+            <a-form-item label="其他信息" field="other_info">
+              <a-input
+                v-model="form.other_info"
+                :placeholder="$t('请输入其他信息')"
+              ></a-input>
+            </a-form-item>
+          </a-form>
+        </a-modal>
+        <a-modal
+          :closable="false"
+          :title="`${$t('modal.title.tips')}`"
+          :visible="openDelete"
+          :width="360"
+          @cancel="cancelReq"
+          @ok="submitDelete"
+        >
+          <a-space>
+            <icon-exclamation-circle-fill size="24" style="color: #e6a23c" />
+            {{ $t('modal.title.tips.delete') }}
+          </a-space>
+        </a-modal>
+      </div>
+    </div>
 </template>
 
 <script lang="ts" setup>

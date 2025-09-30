@@ -1,7 +1,7 @@
 <template>
   <div class="h-full flex flex-col space-y-4">
     <!-- 参数设置区域 -->
-    <div class="p-6 rounded-lg shadow-sm">
+    <div class="p-4 rounded-lg shadow-sm">
       <h3 class="text-lg font-semibold mb-4 dark:text-white">分析设置</h3>
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">

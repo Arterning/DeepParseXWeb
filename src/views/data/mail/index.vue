@@ -1,6 +1,6 @@
 <template>
   <a-layout class="flex-layout">
-    <div class="general-card">
+    <a-card class="general-card">
       <a-tabs default-active-key="1">
         <a-tab-pane key="0">
           <template #title> <icon-upload /> 上传 </template>
@@ -21,7 +21,7 @@
           <AnalyzeRelationships />
         </a-tab-pane>
       </a-tabs>
-    </div>
+    </a-card>
     <Footer />
   </a-layout>
 </template>

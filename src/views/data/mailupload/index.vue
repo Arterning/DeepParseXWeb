@@ -1,7 +1,6 @@
 
 <template>
-<a-layout class="flex-layout">
-    <a-card class="general-card py-4">        
+  <div class="p-4">        
     <a-row>
         <a-col :span="7">
         <a-scrollbar class="h-[calc(100vh-300px)]" style="width:100%; overflow-y: auto; padding-right: 2rem;">
@@ -101,10 +100,7 @@
         </a-scrollbar>
         </a-col>
     </a-row>
-
-    
-  </a-card>
-</a-layout>
+  </div>
 </template>
 
 <script setup lang='ts'>

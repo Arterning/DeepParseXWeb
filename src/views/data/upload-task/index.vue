@@ -1,104 +1,106 @@
 <template>
     <a-layout class="flex-layout">
-        <a-card class="general-card py-4">
-        <div class="flex">
-        <a-form :auto-label-width="true" :model="searchModel" label-align="right">
-            <a-row :gutter="24">
-                <a-col :span="12">
-                    <a-form-item label="名称" field="name">
-                        <a-input v-model="searchModel.name" placeholder="搜索任务名称" />
-                    </a-form-item>
-                </a-col>
-                <a-col :span="12">
-                    <a-form-item label="时间" field="rangeTime">
-                        <a-range-picker v-model="searchModel.rangeTime" class="w-full" />
-                    </a-form-item>
-                </a-col>
-            </a-row>
-            <a-row :gutter="24">
-                <a-col :span="12">
-                    <a-form-item label="来源" field="source">
-                        <a-input v-model="searchModel.source" placeholder="搜索任务来源" />
-                    </a-form-item>
-                </a-col>
-                <a-col :span="12">
-                    <a-form-item label="进度" field="status">
-                        <a-select v-model="searchModel.status" placeholder="筛选任务进度" :allow-clear="false">
-                            <a-option v-for="(item, index) in [
-                                {
-                                    label: '处理中',
-                                    value: 'doing',
-                                },
-                                {
-                                    label: '已完成',
-                                    value: 'done',
-                                },
-                                {
-                                    label: '处理失败',
-                                    value: 'error',
-                                },
-                            ]" :key="item.value" :value="item.value">
-                                {{ item.label }}
-                            </a-option>
-                        </a-select>
-                    </a-form-item>
-                </a-col>
-            </a-row>
-        </a-form>
-        <a-divider direction="vertical" style="height: 30px" />
-        <div class="flex gap-4">
-            <a-button type="primary" @click="search">
-                <template #icon>
-                    <icon-search />
-                </template>
-                搜索
-            </a-button>
-            <a-button @click="resetSelect">
-                <template #icon>
-                    <icon-refresh />
-                </template>
-                重置
-            </a-button>
-        </div>
-    </div>
-    <a-divider class="mt-0"></a-divider>
-    <a-table v-model:selected-keys="rowSelectKeys" :bordered="false" :columns="columns" :data="renderData"
-        :loading="loading" :pagination="pagination" :row-selection="rowSelection" :size="'small'" row-key="id"
-        :scroll="{ y: tableScrollY }" @page-change="onPageChange" @page-size-change="onPageSizeChange">
-        <!-- <template #index="{ rowIndex }" >
-        {{ rowIndex + 1 }}
-      </template> -->
-        <!-- <template #files="{ record }">
-        <a-space>
-          {{ record.success }} / {{ record.fail }} / {{ record.total }}
-        </a-space>
-      </template> -->
-        <template #created_time="{ record }">
-            {{ tableDateFormat(record.created_time) }}
-        </template>
-        <template #updated_time="{ record }">
-            {{ tableDateFormat(record.updated_time) }}
-        </template>
-        <template #status="{ record }">
-            <a-tag :color="tagMap(record.status).color" bordered>
-                {{ tagMap(record.status).label }}
-            </a-tag>
-        </template>
-        <template #operate="{ record }">
-            <a-space>
-                <a-tooltip content="查看详情">
-                    <a-link @click="viewApi(record.id)">
-                        <icon-unordered-list style="font-size:16" />
-                    </a-link>
-                </a-tooltip>
-                <a-tooltip content="删除">
-                    <a-link @click="deleteApi(record.id)" status="danger">
-                        <icon-delete style="font-size:16" />
-                    </a-link>
-                </a-tooltip>
-            </a-space>
-        </template>
-    </a-table>
+        <a-card class="general-card" title="上传任务">
+            <div class="p-4">
+                <div class="flex">
+                    <a-form :auto-label-width="true" :model="searchModel" label-align="right">
+                        <a-row :gutter="24">
+                            <a-col :span="12">
+                                <a-form-item label="名称" field="name">
+                                    <a-input v-model="searchModel.name" placeholder="搜索任务名称" />
+                                </a-form-item>
+                            </a-col>
+                            <a-col :span="12">
+                                <a-form-item label="时间" field="rangeTime">
+                                    <a-range-picker v-model="searchModel.rangeTime" class="w-full" />
+                                </a-form-item>
+                            </a-col>
+                        </a-row>
+                        <a-row :gutter="24">
+                            <a-col :span="12">
+                                <a-form-item label="来源" field="source">
+                                    <a-input v-model="searchModel.source" placeholder="搜索任务来源" />
+                                </a-form-item>
+                            </a-col>
+                            <a-col :span="12">
+                                <a-form-item label="进度" field="status">
+                                    <a-select v-model="searchModel.status" placeholder="筛选任务进度" :allow-clear="false">
+                                        <a-option v-for="(item, index) in [
+                                            {
+                                                label: '处理中',
+                                                value: 'doing',
+                                            },
+                                            {
+                                                label: '已完成',
+                                                value: 'done',
+                                            },
+                                            {
+                                                label: '处理失败',
+                                                value: 'error',
+                                            },
+                                        ]" :key="item.value" :value="item.value">
+                                            {{ item.label }}
+                                        </a-option>
+                                    </a-select>
+                                </a-form-item>
+                            </a-col>
+                        </a-row>
+                    </a-form>
+                    <a-divider direction="vertical" style="height: 30px" />
+                    <div class="flex gap-4">
+                        <a-button type="primary" @click="search">
+                            <template #icon>
+                                <icon-search />
+                            </template>
+                            搜索
+                        </a-button>
+                        <a-button @click="resetSelect">
+                            <template #icon>
+                                <icon-refresh />
+                            </template>
+                            重置
+                        </a-button>
+                    </div>
+                </div>
+                <a-divider class="mt-0"></a-divider>
+                <a-table v-model:selected-keys="rowSelectKeys" :bordered="false" :columns="columns" :data="renderData"
+                    :loading="loading" :pagination="pagination" :row-selection="rowSelection" :size="'small'" row-key="id"
+                    :scroll="{ y: tableScrollY }" @page-change="onPageChange" @page-size-change="onPageSizeChange">
+                    <!-- <template #index="{ rowIndex }" >
+                    {{ rowIndex + 1 }}
+                </template> -->
+                    <!-- <template #files="{ record }">
+                    <a-space>
+                    {{ record.success }} / {{ record.fail }} / {{ record.total }}
+                    </a-space>
+                </template> -->
+                    <template #created_time="{ record }">
+                        {{ tableDateFormat(record.created_time) }}
+                    </template>
+                    <template #updated_time="{ record }">
+                        {{ tableDateFormat(record.updated_time) }}
+                    </template>
+                    <template #status="{ record }">
+                        <a-tag :color="tagMap(record.status).color" bordered>
+                            {{ tagMap(record.status).label }}
+                        </a-tag>
+                    </template>
+                    <template #operate="{ record }">
+                        <a-space>
+                            <a-tooltip content="查看详情">
+                                <a-link @click="viewApi(record.id)">
+                                    <icon-unordered-list style="font-size:16" />
+                                </a-link>
+                            </a-tooltip>
+                            <a-tooltip content="删除">
+                                <a-link @click="deleteApi(record.id)" status="danger">
+                                    <icon-delete style="font-size:16" />
+                                </a-link>
+                            </a-tooltip>
+                        </a-space>
+                    </template>
+                </a-table>
+            </div>
         </a-card>
     </a-layout>
 </template>

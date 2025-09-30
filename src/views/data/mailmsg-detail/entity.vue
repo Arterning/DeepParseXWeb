@@ -1,5 +1,5 @@
 <template>
-  <div class="space-y-6">
+  <div class="grid gap-6 grid-cols-2">
     <!-- 人物信息 -->
     <div v-if="personList.length > 0" class="rounded-lg shadow-sm border" style="background-color: var(--color-bg-1); border-color: var(--color-border);">
       <div class="p-4 border-b" style="border-color: var(--color-border);">
@@ -25,7 +25,7 @@
                     </template>
                   </div>
 
-                  <div class="grid grid-cols-2 gap-2 text-sm" style="color: var(--color-text-2);">
+                  <div class="space-y-2 text-sm" style="color: var(--color-text-2);">
                     <div v-if="item.country"><span>国家：</span>{{ item.country }}</div>
                     <div v-if="item.organization"><span>组织：</span>{{ item.organization }}</div>
                     <div v-if="item.position"><span>职位：</span>{{ item.position }}</div>
@@ -70,11 +70,9 @@
                       <a-tag v-for="(tag, index) in item.tags" :key="`${item.id}-${tag}`" size="small" color="orange">{{ tag }}</a-tag>
                     </template>
                   </div>
-                  <div v-if="item.type" class="text-sm" style="color: var(--color-text-2);">
-                    <span>类型：</span>{{ item.type }}
-                  </div>
-                  <div v-if="item.country" class="text-sm" style="color: var(--color-text-2);">
-                    <span>国家：</span>{{ item.country }}
+                  <div class="space-y-2 text-sm" style="color: var(--color-text-2);">
+                    <div v-if="item.type"><span>类型：</span>{{ item.type }}</div>
+                    <div v-if="item.country"><span>国家：</span>{{ item.country }}</div>
                   </div>
                 </div>
 
