@@ -6,7 +6,12 @@
       <div v-if="Object.keys(data.properties || {}).length > 0" class="grid grid-cols-1 md:grid-cols-2 gap-3">
         <div v-for="[key, value] in Object.entries(data.properties || {})" :key="key" class="flex items-start gap-2 bg-white p-3 rounded shadow-sm">
           <span class="text-gray-500 font-medium min-w-[80px]">{{ formatPropertyKey(key) }}:</span>
-          <span class="text-gray-800 flex-1 word-break-break-all">{{ value || '-' }}</span>
+          <template v-if="key==='tags'">
+            <a-tag v-for="tag in value" :key="`${data.id}-${tag}`">{{ tag }}</a-tag>
+          </template>
+          <template v-else>
+            <span class="text-gray-800 flex-1 word-break-break-all">{{ value || '-' }}</span>
+          </template>
         </div>
       </div>
       <div v-else class="text-gray-500 italic text-center py-2">暂无属性信息</div>

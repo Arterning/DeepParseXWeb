@@ -168,7 +168,7 @@
                   <a-input v-model="form.properties.contact"></a-input>
                 </a-form-item>
                 <a-form-item label="标签" field="tags">
-                  <a-input v-model="form.properties.tags"></a-input>
+                  <a-select v-model="form.properties.tags" multiple allow-create></a-select>
                 </a-form-item>
               </template>
 
@@ -178,7 +178,7 @@
                   <a-input v-model="form.properties.type"></a-input>
                 </a-form-item>
                 <a-form-item label="标签" field="tags">
-                  <a-input v-model="form.properties.tags"></a-input>
+                  <a-select v-model="form.properties.tags" multiple allow-create></a-select>
                 </a-form-item>
                 <a-form-item label="国家" field="country">
                   <a-input v-model="form.properties.country"></a-input>

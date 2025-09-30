@@ -319,11 +319,11 @@ const handleExtractConfirm = () => {
         <div class="flex gap-2">
 
           <!-- 提取知识图谱 -->
-          <button @click="showEntityTypeModal = true"
+          <!-- <button @click="showEntityTypeModal = true"
             class="bg-[#2971CF] hover:bg-blue-700 text-white p-2 rounded transition-colors duration-200 flex items-center justify-center">
             <span class="i-heroicons-arrow-path-solid"></span>
-            提取图谱
-          </button>
+            提取信息
+          </button> -->
 
           <button @click="() => (showAddNodeModal = true)"
             class="bg-[#2971CF] hover:bg-blue-700 text-white p-2 rounded transition-colors duration-200 flex items-center justify-center">

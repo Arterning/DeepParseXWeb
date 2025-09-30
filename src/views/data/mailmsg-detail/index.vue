@@ -5,16 +5,19 @@
       <Breadcrumb />
       <a-tabs>
         <a-tab-pane key="1" title="邮件内容">
-          <Content :info="info" />
+          <!-- <GraphControls 
+            class="p-2 border-b"
+            :initial-data="graphData"
+            @extract-graph="handleExtractGraph"
+            @dataChange="handleDataChange"
+          /> -->
+          <Content :info="info" @extract-graph="handleExtractGraph"/>
         </a-tab-pane>
         <a-tab-pane key="2" title="基本信息">
           <BasicInfo :info="doc" />
           <FileDescription :info="doc" class="mt-4"/>
         </a-tab-pane>
-        <a-tab-pane key="3" title="实体信息">
-          <Entity v-if="doc" :info="doc" />
-        </a-tab-pane>
-        <a-tab-pane key="4" title="关系图谱">
+        <a-tab-pane key="3" title="关系图谱">
           <a-skeleton :loading="extractGraphLoading" :animation="true">
             <a-space direction="vertical" :style="{width:'100%'}" size="large">
               <a-skeleton-line :rows="8" />
@@ -35,7 +38,16 @@
               />
             </div>
           </div>
-        </a-tab-pane>       
+        </a-tab-pane>   
+        <a-tab-pane v-if="doc.entities" key="4" title="实体信息">
+          <!-- <GraphControls 
+            class="p-2 border-b"
+            :initial-data="graphData"
+            @extract-graph="handleExtractGraph"
+            @dataChange="handleDataChange"
+          /> -->
+          <Entity :entities="doc.entities" />
+        </a-tab-pane>    
       </a-tabs>
     </a-card>
     <Footer />
@@ -45,16 +57,17 @@
 <script lang="ts" setup>
 import { querySysDocDetail, extractGraphData } from '@/api/doc';
 import useLoading from '@/hooks/loading';
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import Content from './content.vue';
 import Footer from '@/components/footer/index.vue';
 import { MailMsgRes, queryMailMsgDetail } from '@/api/mailmsg';
-import Entity from './entity.vue';
 import BasicInfo from '../components/basic-info.vue';
 import FileDescription from '../components/FileDescription.vue';
 import GraphControls from './GraphControls.vue';
 import KnowledgeGraph from './KnowledgeGraph.vue';
+import Entity from './entity.vue';
+import { Message } from '@arco-design/web-vue';
 
 const graphData = ref({
   nodes: [],
@@ -63,43 +76,64 @@ const graphData = ref({
 
 const extractGraphLoading = ref(false);
 
+// localStorage 工具
+const STORAGE_KEY = 'extractGraphLoadingMap';
+const getLoadingMap = (): Record<string, boolean> => {
+  try {
+    return JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+  } catch {
+    return {};
+  }
+};
+const setLoadingMap = (docId: string, value: boolean) => {
+  const map = getLoadingMap();
+  map[docId] = value;
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(map));
+};
+const getLoadingStatus = (docId: string): boolean => {
+  const map = getLoadingMap();
+  return !!map[docId];
+};
+
 const handleDataChange = (newData: any) => {
   graphData.value = newData;
 };
 
-const handleExtractGraph = async () => {
-  if (!info.value) return;
-  extractGraphLoading.value = true;
-  const res = await extractGraphData(info.value.id);
-  extractGraphLoading.value = false;
-  handleDataChange(res);
-}
+const info = ref<MailMsgRes>();
+const doc = ref<any>();
+const entities = ref<any[]>();
 
 const route = useRoute();
 const { loading, setLoading } = useLoading(true);
 
-const info = ref<MailMsgRes>();
-const doc = ref<any>();
-
 const { id } = route.params;
+
+const handleExtractGraph = async () => {
+  if (!info.value) return;
+  extractGraphLoading.value = true;
+  Message.success('提取进行中');
+  const res = await extractGraphData(info.value.doc_id);
+  extractGraphLoading.value = false;
+  handleDataChange(res);
+};
+
+watch(extractGraphLoading, (val) => {
+  if (info.value?.doc_id) {
+    setLoadingMap(String(info.value.doc_id), val);
+  }
+});
 
 onMounted(async () => {
   setLoading(true);
   info.value = await queryMailMsgDetail(Number(id));
-
+  
   if (info.value.doc_id) {
     doc.value = await querySysDocDetail(info.value.doc_id);
-    console.log(doc.value);
+    graphData.value = doc.value.graph_data;
+    
+    extractGraphLoading.value = getLoadingStatus(String(info.value.doc_id));
   }
-  // graphData.value = info.value.graph_data as any;
+  
   setLoading(false);
-})
-
+});
 </script>
-
-<style scoped lang="less">
-.content-box {
-  border: none;
-  // width: 70vw;
-}
-</style>
