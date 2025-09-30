@@ -25,15 +25,20 @@
         </div>
 
         <!-- 收件人信息 -->        
-        <a-space class="flex flex-nowrap mb-4">
+        <a-space class="flex mb-4">
           <div class="text-sm font-medium w-16">收件人</div>
-          <!--            <a-tag-->
-          <!--              v-for="(recipient, index) in info?.recipients"-->
-          <!--              :key="index"-->
-          <!--            >-->
-          <!--              {{ recipient }}-->
-          <!--            </a-tag>-->
-          <a-tag>{{ info?.receiver }}</a-tag>
+          <a-scrollbar style="max-height: 100px; overflow: auto">
+            <div class="space-x-2 space-y-2">
+              <a-tag
+                v-for="(recipient, index) in parseReceiver"
+                :key="index"
+              >
+                {{ recipient }}
+              </a-tag>
+            </div>
+          </a-scrollbar>
+
+          <!-- <a-tag>{{ parseReceiver }}</a-tag> -->
         </a-space>
 
         <!-- 抄送信息 -->  
@@ -64,7 +69,7 @@
     </div>
     <a-divider />
 
-    <a-split v-if="translate" v-model:size="splitSize" min="0.3" max="0.7" class="h-[calc(100vh-500px)]">
+    <a-split v-if="translate" v-model:size="splitSize" min="0.3" max="0.7" class="h-[calc(100vh-300px)]">
       <template #first>
         <a-typography-paragraph>
           <div v-if="isHtmlContent(info?.original)" class="prose max-w-none" v-html="info?.original"></div>
@@ -81,7 +86,7 @@
     </a-split>
     
     <!-- 邮件正文 -->
-    <a-scrollbar v-else class="pr-6 h-[calc(100vh-500px)] overflow-y-auto">
+    <a-scrollbar v-else class="pr-6 h-[calc(100vh-300px)] overflow-y-auto">
       <div v-if="isHtmlContent(info?.original)" class="prose max-w-none" v-html="info?.original"></div>
       <div v-else class="whitespace-pre-wrap break-words dark:text-white text-gray-800 leading-relaxed">
         {{ info?.original }}
@@ -163,7 +168,7 @@
 </template>
 
 <script setup lang="ts">
-  import { ref } from 'vue';
+  import { computed, ref } from 'vue';
   import { Message } from '@arco-design/web-vue';
   import { MailMsgRes } from '@/api/mailmsg';
   import { emailDateFormat } from '@/utils/date';
@@ -249,6 +254,24 @@
       },
     });
   };
+
+  const parseReceiver = computed(() => {
+    const raw = props.info.receiver || ''
+    const results: string[] = []
+
+    const regex = /"?([^",]+,\s*[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,})"?|([A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,})/g
+    let match
+    while ((match = regex.exec(raw)) !== null) {
+      if (match[1]) {
+        results.push(match[1].trim())
+      } else if (match[2]) {
+        results.push(match[2].trim())
+      }
+    }
+
+    return results
+  })
+
 </script>
 
 <style scoped>

@@ -5,12 +5,6 @@
       <Breadcrumb />
       <a-tabs>
         <a-tab-pane key="1" title="邮件内容">
-          <!-- <GraphControls 
-            class="p-2 border-b"
-            :initial-data="graphData"
-            @extract-graph="handleExtractGraph"
-            @dataChange="handleDataChange"
-          /> -->
           <Content :info="info" @extract-graph="handleExtractGraph"/>
         </a-tab-pane>
         <a-tab-pane key="2" title="基本信息">
@@ -40,12 +34,6 @@
           </div>
         </a-tab-pane>   
         <a-tab-pane v-if="doc.entities" key="4" title="实体信息">
-          <!-- <GraphControls 
-            class="p-2 border-b"
-            :initial-data="graphData"
-            @extract-graph="handleExtractGraph"
-            @dataChange="handleDataChange"
-          /> -->
           <Entity :entities="doc.entities" />
         </a-tab-pane>    
       </a-tabs>

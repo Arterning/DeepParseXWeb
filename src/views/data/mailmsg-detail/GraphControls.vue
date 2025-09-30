@@ -313,64 +313,62 @@ const handleExtractConfirm = () => {
       </div>
     </a-modal>
 
-    <div class="p-4 rounded-lg shadow">
-      <div class="flex justify-between">
-        <!-- <h3 class="text-lg font-semibold text-cyan-400 mb-3">操作</h3> -->
-        <div class="flex gap-2">
+    <div class="flex justify-between">
+      <!-- <h3 class="text-lg font-semibold text-cyan-400 mb-3">操作</h3> -->
+      <div class="flex gap-2">
 
-          <!-- 提取知识图谱 -->
-          <!-- <button @click="showEntityTypeModal = true"
-            class="bg-[#2971CF] hover:bg-blue-700 text-white p-2 rounded transition-colors duration-200 flex items-center justify-center">
-            <span class="i-heroicons-arrow-path-solid"></span>
-            提取信息
-          </button> -->
+        <!-- 提取知识图谱 -->
+        <!-- <button @click="showEntityTypeModal = true"
+          class="bg-[#2971CF] hover:bg-blue-700 text-white p-2 rounded transition-colors duration-200 flex items-center justify-center">
+          <span class="i-heroicons-arrow-path-solid"></span>
+          提取信息
+        </button> -->
 
-          <button @click="() => (showAddNodeModal = true)"
-            class="bg-[#2971CF] hover:bg-blue-700 text-white p-2 rounded transition-colors duration-200 flex items-center justify-center">
-            <span class="i-heroicons-plus-circle-solid"></span>
-            添加节点
-          </button>
+        <button @click="() => (showAddNodeModal = true)"
+          class="bg-[#2971CF] hover:bg-blue-700 text-white p-2 rounded transition-colors duration-200 flex items-center justify-center">
+          <span class="i-heroicons-plus-circle-solid"></span>
+          添加节点
+        </button>
 
 
-          <button @click="() => (showAddRelationModal = true)"
-            class="bg-[#2971CF] hover:bg-blue-700 text-white p-2 rounded transition-colors duration-200 flex items-center justify-center">
-            <span class="i-heroicons-link-solid"></span>
-            添加关系
-          </button>
+        <button @click="() => (showAddRelationModal = true)"
+          class="bg-[#2971CF] hover:bg-blue-700 text-white p-2 rounded transition-colors duration-200 flex items-center justify-center">
+          <span class="i-heroicons-link-solid"></span>
+          添加关系
+        </button>
 
-          <button @click="emit('dataChange', graphData)"
-            class="bg-[#2971CF] hover:bg-blue-700 text-white p-2 rounded transition-colors duration-200 flex items-center justify-center">
-            <span class="i-heroicons-arrow-path-solid"></span>
-            刷新
-          </button>
+        <button @click="emit('dataChange', graphData)"
+          class="bg-[#2971CF] hover:bg-blue-700 text-white p-2 rounded transition-colors duration-200 flex items-center justify-center">
+          <span class="i-heroicons-arrow-path-solid"></span>
+          刷新
+        </button>
 
-          <button @click="toggleFullscreen"
-            class="bg-[#2971CF] hover:bg-blue-700 text-white p-2 rounded transition-colors duration-200 flex items-center justify-center">
-            <span :class="isFullscreen ? 'i-heroicons-arrows-pointing-in-solid' : 'i-heroicons-arrows-pointing-out-solid'"></span>
-            {{ isFullscreen ? '退出全屏' : '全屏' }}
-          </button>
+        <button @click="toggleFullscreen"
+          class="bg-[#2971CF] hover:bg-blue-700 text-white p-2 rounded transition-colors duration-200 flex items-center justify-center">
+          <span :class="isFullscreen ? 'i-heroicons-arrows-pointing-in-solid' : 'i-heroicons-arrows-pointing-out-solid'"></span>
+          {{ isFullscreen ? '退出全屏' : '全屏' }}
+        </button>
 
-          <!-- <button @click="emit('dataChange', { nodes: [], edges: [] })"
-            class="bg-red-300 hover:bg-red-700 text-white p-2 rounded transition-colors duration-200 flex items-center justify-center">
-            <span class="i-heroicons-trash-solid mr-2"></span>
-            清空
-          </button> -->
-        </div>
+        <!-- <button @click="emit('dataChange', { nodes: [], edges: [] })"
+          class="bg-red-300 hover:bg-red-700 text-white p-2 rounded transition-colors duration-200 flex items-center justify-center">
+          <span class="i-heroicons-trash-solid mr-2"></span>
+          清空
+        </button> -->
+      </div>
 
-        <div class="flex gap-2 ml-auto">
-          <a-input v-model="searchTerm"
-              placeholder="搜索ID或名称" />
-          <a-select v-model="filterType">
-            <a-option value="all">所有类型</a-option>
-            <a-option value="人物">人物</a-option>
-            <a-option value="组织">组织</a-option>
-            <a-option value="地点">地点</a-option>
-            <a-option value="事件">事件</a-option>
-            <a-option value="概念">概念</a-option>
-          </a-select>
-          <a-input v-model="filterRelation"
-              placeholder="输入关系类型" />
-        </div>
+      <div class="flex gap-2 ml-auto">
+        <a-input v-model="searchTerm"
+            placeholder="搜索ID或名称" />
+        <a-select v-model="filterType">
+          <a-option value="all">所有类型</a-option>
+          <a-option value="人物">人物</a-option>
+          <a-option value="组织">组织</a-option>
+          <a-option value="地点">地点</a-option>
+          <a-option value="事件">事件</a-option>
+          <a-option value="概念">概念</a-option>
+        </a-select>
+        <a-input v-model="filterRelation"
+            placeholder="输入关系类型" />
       </div>
     </div>
 

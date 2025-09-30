@@ -64,6 +64,7 @@
     cursor: pointer;
   }
   .btn-wrapper:hover{
-    color: #13c2c2;
+    // color: #13c2c2;
+    color: rgb(var(--primary-6));
   }
 </style>
