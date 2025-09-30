@@ -44,7 +44,7 @@ export default defineConfig({
             'src/assets/style/breakpoint.less'
           )}";`,
           'color-primary-6': '#2971CF',
-          'link-6': '#134CA3',
+          'link-6': '#2971CF',
         },
         javascriptEnabled: true,
       },

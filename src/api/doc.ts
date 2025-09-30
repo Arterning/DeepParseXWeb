@@ -20,6 +20,7 @@ export interface DocEntity {
   name: string;
   description?: string;
   id: number;
+  properties: any;
 }
 
 export interface SysDocRes extends SysDocReq {

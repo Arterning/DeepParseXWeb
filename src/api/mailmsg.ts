@@ -39,7 +39,9 @@ export interface MailMsgAttachment {
 
 export interface MailMsgRes extends MailMsgReq {
   id: number;
+  doc_id?: number;
   attachments: MailMsgAttachment[];
+  graph_data: any;
 }
   
 export interface MailMsgParams {

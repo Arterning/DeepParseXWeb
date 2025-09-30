@@ -65,22 +65,23 @@
 <style lang="less" scoped>
   .tab-bar-container {
     position: relative;
-    background-color: var(--color-bg-2);
+    // background-color: var(--color-bg-2);
+    // background-color: transparent;
 
     .tab-bar-box {
       display: flex;
-      padding: 0 0 0 1rem;
+      padding: 0 1rem;
       background-color: var(--color-bg-2);
       border-bottom: 1px solid var(--color-border);
 
       .tab-bar-scroll {
-        height: 32px;
+        // height: 32px;
         flex: 1;
         overflow: hidden;
 
         .tags-wrap {
           padding: 4px 0;
-          height: 48px;
+          // height: 48px;
           white-space: nowrap;
           overflow-x: auto;
 
