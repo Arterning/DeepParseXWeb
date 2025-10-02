@@ -199,7 +199,7 @@
     TableColumnData,
   } from '@arco-design/web-vue';
   import { useI18n } from 'vue-i18n';
-  import { computed, reactive, ref } from 'vue';
+  import { computed, reactive, ref, onMounted } from 'vue';
   import useLoading from '@/hooks/loading';
   import Footer from '@/components/footer/index.vue';
   import {
@@ -217,17 +217,25 @@
   import { use, graphic } from 'echarts/core';
   import { CanvasRenderer } from 'echarts/renderers';
   import { PieChart, BarChart } from 'echarts/charts';
-  import {
-    TitleComponent,
-    TooltipComponent,
-    LegendComponent,
-    GridComponent,
+  import { 
+    TitleComponent, 
+    TooltipComponent, 
+    LegendComponent, 
+    GridComponent
   } from 'echarts/components';
   import VChart from 'vue-echarts';
   import { useAppStore } from '@/store';
   import GmailIcon from '@/assets/svg/gmail.svg';
   import OutlookIcon from '@/assets/svg/outlook.svg';
   import EmailIcon from '@/assets/svg/email.svg';
+  import { 
+    getMailboxRanking, 
+    getEmailProviderDistribution,
+    MailboxRankingRes,
+    MailboxRankingItem,
+    EmailProviderDistributionRes,
+    EmailProviderDistributionItem
+  } from '@/api/mailbox';
 
   use([
     CanvasRenderer,
@@ -244,6 +252,47 @@
   const router = useRouter();
   const appStore = useAppStore();
 
+  // 存储图表数据
+  const mailboxRankingData = ref<MailboxRankingItem[]>([]);
+  const emailProviderDistributionData = ref<EmailProviderDistributionItem[]>([]);
+
+  // 获取邮箱类型分布数据
+  const fetchEmailProviderDistribution = async () => {
+    try {
+      const res = await getEmailProviderDistribution();
+      emailProviderDistributionData.value = res.items;
+    } catch (error) {
+      console.error('获取邮箱类型分布失败:', error);
+    }
+  };
+
+  // 获取邮箱邮件数量排名数据
+  const fetchMailboxRanking = async () => {
+    try {
+      const res = await getMailboxRanking();
+      // 按邮件数量降序排序并取前5个
+      mailboxRankingData.value = [...res.items]
+        .sort((a, b) => b.value - a.value)
+        .slice(0, 5);
+    } catch (error) {
+      console.error('获取邮箱邮件数量排名失败:', error);
+    }
+  };
+
+  // 初始化图表数据
+  const initChartData = async () => {
+    setLoading(true);
+    try {
+      await Promise.all([
+        fetchEmailProviderDistribution(),
+        fetchMailboxRanking()
+      ]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // 饼图选项
   const pieChartOption = computed(() => {
     return {
       tooltip: {
@@ -261,12 +310,14 @@
           name: '邮件类型',
           type: 'pie',
           radius: '50%',
-          data: [
-            { value: 1048, name: 'Gmail' },
-            { value: 735, name: 'Outlook' },
-            { value: 580, name: 'Proton' },
-            { value: 484, name: 'Other' },
-          ],
+          data: emailProviderDistributionData.value.length > 0 
+            ? emailProviderDistributionData.value 
+            : [
+                { value: 1048, name: 'Gmail' },
+                { value: 735, name: 'Outlook' },
+                { value: 580, name: 'Proton' },
+                { value: 484, name: 'Other' },
+              ],
           emphasis: {
             itemStyle: {
               shadowBlur: 10,
@@ -283,7 +334,18 @@
     };
   });
 
+  // 柱状图选项
   const barChartOption = computed(() => {
+    const data = mailboxRankingData.value.length > 0 
+      ? mailboxRankingData.value 
+      : [
+          { name: 'user1@example.com', value: 18203 },
+          { name: 'user2@example.com', value: 23489 },
+          { name: 'user3@example.com', value: 29034 },
+          { name: 'user4@example.com', value: 104970 },
+          { name: 'user5@example.com', value: 131744 },
+        ];
+
     return {
       tooltip: {
         trigger: 'axis',
@@ -306,22 +368,23 @@
       },
       yAxis: {
         type: 'category',
-        data: [
-          'user1@example.com',
-          'user2@example.com',
-          'user3@example.com',
-          'user4@example.com',
-          'user5@example.com',
-        ],
+        data: data.map(item => item.name),
         axisLabel: {
           color: appStore.theme === 'dark' ? '#fff' : '#333',
+          formatter: (value: string) => {
+            // 如果邮箱地址太长，进行截断处理
+            if (value.length > 20) {
+              return value.substring(0, 20) + '...';
+            }
+            return value;
+          }
         },
       },
       series: [
         {
           name: '邮件数量',
           type: 'bar',
-          data: [18203, 23489, 29034, 104970, 131744],
+          data: data.map(item => item.value),
           itemStyle: {
             color: new graphic.LinearGradient(1, 0, 0, 0, [
               { offset: 0, color: '#2d6aDE' },
@@ -476,7 +539,14 @@
       setLoading(false);
     }
   };
-  fetchMailBoxList();
+
+  // 组件挂载时获取数据
+  onMounted(async () => {
+    await Promise.all([
+      fetchMailBoxList(),
+      initChartData()
+    ]);
+  });
 
   // 请求部门详情
   const fetchMailBoxDetail = async (pk: number) => {

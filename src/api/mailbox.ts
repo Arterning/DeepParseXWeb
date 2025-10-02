@@ -121,3 +121,33 @@ export interface AnalyzeRelationshipsRes {
 export function analyzeMailboxRelationships(data: AnalyzeRelationshipsReq): Promise<AnalyzeRelationshipsRes> {
   return axios.post('/api/v1/sys/mailbox/analyze-relationships', data);
 }
+
+// 邮箱邮件数量排名响应接口
+export interface MailboxRankingItem {
+  name: string;
+  value: number;
+}
+
+export interface MailboxRankingRes {
+  items: MailboxRankingItem[];
+}
+
+// 获取邮箱邮件数量排名
+export function getMailboxRanking(): Promise<MailboxRankingRes> {
+  return axios.get('/api/v1/sys/mailbox/ranking');
+}
+
+// 邮箱类型分布响应接口
+export interface EmailProviderDistributionItem {
+  name: string;
+  value: number;
+}
+
+export interface EmailProviderDistributionRes {
+  items: EmailProviderDistributionItem[];
+}
+
+// 获取邮箱类型分布
+export function getEmailProviderDistribution(): Promise<EmailProviderDistributionRes> {
+  return axios.get('/api/v1/sys/mailbox/provider-distribution');
+}
