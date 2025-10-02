@@ -124,16 +124,13 @@ export function analyzeMailboxRelationships(data: AnalyzeRelationshipsReq): Prom
 
 // 邮箱邮件数量排名响应接口
 export interface MailboxRankingItem {
-  name: string;
-  value: number;
+  email: string;
+  count: number;
 }
 
-export interface MailboxRankingRes {
-  items: MailboxRankingItem[];
-}
 
 // 获取邮箱邮件数量排名
-export function getMailboxRanking(): Promise<MailboxRankingRes> {
+export function getMailboxRanking(): Promise<MailboxRankingItem[]> {
   return axios.get('/api/v1/sys/mailbox/ranking');
 }
 
@@ -143,11 +140,8 @@ export interface EmailProviderDistributionItem {
   value: number;
 }
 
-export interface EmailProviderDistributionRes {
-  items: EmailProviderDistributionItem[];
-}
 
 // 获取邮箱类型分布
-export function getEmailProviderDistribution(): Promise<EmailProviderDistributionRes> {
+export function getEmailProviderDistribution(): Promise<EmailProviderDistributionItem[]> {
   return axios.get('/api/v1/sys/mailbox/provider-distribution');
 }

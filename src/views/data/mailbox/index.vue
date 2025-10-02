@@ -260,7 +260,7 @@
   const fetchEmailProviderDistribution = async () => {
     try {
       const res = await getEmailProviderDistribution();
-      emailProviderDistributionData.value = res.items;
+      emailProviderDistributionData.value = res;
     } catch (error) {
       console.error('获取邮箱类型分布失败:', error);
     }
@@ -271,9 +271,9 @@
     try {
       const res = await getMailboxRanking();
       // 按邮件数量降序排序并取前5个
-      mailboxRankingData.value = [...res.items]
+      mailboxRankingData.value = [...res]
         .sort((a, b) => b.value - a.value)
-        .slice(0, 5);
+        .slice(0, 10);
     } catch (error) {
       console.error('获取邮箱邮件数量排名失败:', error);
     }
@@ -368,7 +368,7 @@
       },
       yAxis: {
         type: 'category',
-        data: data.map(item => item.name),
+        data: data.map(item => item.email),
         axisLabel: {
           color: appStore.theme === 'dark' ? '#fff' : '#333',
           formatter: (value: string) => {
@@ -384,7 +384,7 @@
         {
           name: '邮件数量',
           type: 'bar',
-          data: data.map(item => item.value),
+          data: data.map(item => item.count),
           itemStyle: {
             color: new graphic.LinearGradient(1, 0, 0, 0, [
               { offset: 0, color: '#2d6aDE' },
