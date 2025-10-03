@@ -6,6 +6,7 @@ export interface MailBoxReq {
   email_num?: number;
   country?: string;
   other_info?: string;
+  user_name?: string;
 }
 
 export interface MailBoxRes extends MailBoxReq {

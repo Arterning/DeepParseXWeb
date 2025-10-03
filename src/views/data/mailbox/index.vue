@@ -102,6 +102,11 @@
               </div>
               <div class="text-sm text-gray-600 dark:text-gray-300">
                 <p class="mb-2">
+                  <icon-user class="mr-2" />
+                  用户名:
+                  <span class="font-semibold">{{ item.user_name }}</span>
+                </p>
+                <p class="mb-2">
                   <icon-email class="mr-2" />
                   邮件数量:
                   <span class="font-semibold">{{ item.email_num }}</span>
