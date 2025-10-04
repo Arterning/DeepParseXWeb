@@ -16,6 +16,6 @@ export function summarize(params: { id: number }): Promise<string> {
 }
 
 // 生成翻译
-export function translate(params: { text: string; target_language: string }): Promise<string> {
+export function translate(params: { id: number; text: string; target_language: string }): Promise<string> {
   return axios.post('/api/v1/sys/chat/generate_translation', params);
 }

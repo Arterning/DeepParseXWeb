@@ -84,6 +84,7 @@ const handleExtractTranslation = async () => {
     const textToTranslate = props.info.content || props.info.text_content;
     
     const response = await translate({
+      id: props.info.id,
       text: textToTranslate,
       target_language: targetLanguage.value
     });
