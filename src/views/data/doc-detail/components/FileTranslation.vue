@@ -57,7 +57,7 @@ const props = defineProps<{
 }>();
 
 const loading = ref(false);
-const translation = ref<string>('');
+const translation = ref<string>(props.info.translation || '');
 const targetLanguage = ref<string>('zh_CN'); // 默认翻译成中文
 
 // 语言选项
