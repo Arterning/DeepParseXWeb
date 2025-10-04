@@ -16,6 +16,7 @@
         <a-tab-pane key="2" title="基本信息">
           <BasicInfo :info="info" />
           <FileDescription :info="info" class="mt-2"/>
+          <FileTranslation :info="info" class="mt-2"/>
         </a-tab-pane>
         <a-tab-pane key="3" title="实体提取">
           <EntityExtraction :info="info" />
@@ -71,6 +72,7 @@ import GraphControls from './GraphControls.vue';
 import KnowledgeGraph from './KnowledgeGraph.vue';
 import DocAIChat from './components/DocAIChat.vue';
 import FileDescription from './components/FileDescription.vue';
+import FileTranslation from './components/FileTranslation.vue';
 import EntityExtraction from './EntityExtraction.vue';
 
 
