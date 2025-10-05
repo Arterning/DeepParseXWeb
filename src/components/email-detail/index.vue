@@ -104,7 +104,7 @@ function isHtmlContent(input: string): boolean {
   const hasDivTag = /<div[^>]*>/i.test(trimmed) && /<\/div>/i.test(trimmed);
   
   // 至少需要html标签或者doctype + html结构
-  return hasHtmlTag || (hasDoctype && (hasHeadTag || hasBodyTag || hasDivTag));
+  return hasHtmlTag || (hasDoctype && (hasHeadTag || hasBodyTag)) || hasDivTag;
 }
 </script>
 
