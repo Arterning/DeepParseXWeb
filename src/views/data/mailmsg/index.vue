@@ -133,7 +133,7 @@
             <div class="flex-1 min-w-0">
               <div class="flex justify-between items-center mb-2">
                 <a-link
-                  class="text-lg font-semibold truncate hover:text-blue-600"
+                  class="text-lg font-semibold truncate block"
                   :title="record.name"
                   @click="
                     router.push({
