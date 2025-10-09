@@ -80,7 +80,7 @@
 
   // 树形数据
   const treeData = computed(() => {
-    return buildTreeData(directoryList.value);
+    return [{ key: 0, title: '/', children: null }, ...buildTreeData(directoryList.value)];
   });
 
   // 构建树形数据

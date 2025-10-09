@@ -101,7 +101,8 @@
         删除
       </a-button>
       <a-button type="text" @click="openDir=true">
-        <icon-folder />
+        <template #icon><icon-folder /></template>
+        {{ dirSelect?dirSelect.name:'/' }}
       </a-button>
     </a-space>
     <div class="content">
@@ -316,8 +317,8 @@
         </a-space>
       </a-modal>
     </div>
-    <DirectoryDrawer v-model:open="openDir" :refresh-trigger="dirId" 
-    @directory-change="(item:any)=>{ dirId = item.id; fetchData()}"/>
+    <DirectoryDrawer v-model:open="openDir" :refresh-trigger="dirSelect?.id" 
+    @directory-change="(item:any)=>{ dirSelect = item; fetchData()}"/>
   </div>
 </template>
 
@@ -346,7 +347,7 @@
   const router = useRouter();
 
   const openDir = ref(false);
-  const dirId = ref(0);
+  const dirSelect = ref<any>(null);
 
   // 表单
   const generateFormModel = () => {
@@ -489,7 +490,7 @@
     try {
       const res = await queryMailMsgList({
         ...formModel.value,
-        doc_dir_id: dirId.value,
+        doc_dir_id: dirSelect.value?.id,
         page: pagination.current,
         size: pagination.pageSize,
       } as MailMsgParams);
