@@ -101,7 +101,7 @@
 
   <a-divider class="mt-0" />
   <a-space :size="'medium'">
-    <a-button type="primary" size="small" @click="NewApi()">
+    <a-button type="primary" @click="NewApi()">
       <template #icon>
         <icon-plus />
       </template>
@@ -110,7 +110,6 @@
     <a-button
       :disabled="deleteButtonStatus()"
       status="danger"
-      size="small"
       @click="DeleteApi"
     >
       <template #icon>

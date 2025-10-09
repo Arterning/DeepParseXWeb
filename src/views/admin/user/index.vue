@@ -91,7 +91,7 @@
         <a-alert :type="'warning'" style="margin: 20px 0 20px 0">
           {{ $t('admin.user.alert.superuser') }}
         </a-alert>
-        <div class="content">
+        <div class="mt-5">
           <a-table
             :bordered="false"
             :columns="columns"

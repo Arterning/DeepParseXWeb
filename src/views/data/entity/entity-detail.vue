@@ -59,7 +59,7 @@
       <div v-if="Array.isArray(data.docs) && data.docs.length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
         <div v-for="(doc, index) in data.docs" :key="index" class="bg-white p-3 rounded shadow-sm hover:shadow-md transition-shadow">
           <div class="flex justify-between items-start">
-            <div class="flex-1">
+            <div class="flex-1 min-w-0">
               <div class="text-gray-800 font-medium mb-1 truncate">{{ doc.title }}</div>
               <div class="flex flex-wrap gap-2">
                 <span class="text-xs bg-green-50 text-green-600 px-2 py-0.5 rounded">{{ doc.type }}</span>

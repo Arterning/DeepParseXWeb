@@ -38,7 +38,7 @@
       <a-card :title="currentCollection?.name || '收藏夹内容'" class="general-card h-full">
         <!-- 文件卡片展示区域 -->
         <div v-if="currentCollection?.docs?.length &&  currentCollection?.docs?.length > 0"
-             class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+             class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 content">
           <a-card
             v-for="doc in currentCollection.docs"
             :key="doc.id"

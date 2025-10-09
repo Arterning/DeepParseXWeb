@@ -88,7 +88,7 @@
             {{ $t('admin.dept.button.collapse') }}
           </a-button>
         </a-space>
-        <div class="content">
+        <div class="mt-5">
           <a-table
             ref="tableRef"
             :bordered="false"

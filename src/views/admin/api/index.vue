@@ -81,7 +81,7 @@
             {{ $t('admin.api.button.delete') }}
           </a-button>
         </a-space>
-        <div class="content">
+        <div class="mt-5">
           <a-table
             v-model:selected-keys="rowSelectKeys"
             :bordered="false"
