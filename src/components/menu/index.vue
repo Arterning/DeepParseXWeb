@@ -153,7 +153,7 @@
   .menu {
     height: 100%; 
     width:100%;
-    font-weight:300;
+    font-weight:500;
   }
 
   .arco-menu .arco-menu-item.arco-menu-selected, .arco-menu .arco-menu-group-title.arco-menu-selected, .arco-menu .arco-menu-pop-header.arco-menu-selected, .arco-menu .arco-menu-inline-header.arco-menu-selected {

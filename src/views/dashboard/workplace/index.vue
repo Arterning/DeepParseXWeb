@@ -1,16 +1,14 @@
 <template>
-  <div class="container">
+  <a-layout class="flex-layout bg-white dark:bg-[#29292C]">
     <!-- <Breadcrumb /> -->
-    <div class="left-side general-card h-screen">
+    <div class="content">
       <!-- <Banner /> -->
       <DataPanel />
       <Search />
       <DocCarousel />
     </div>
-  </div>
-  <div class="footer">
     <Footer />
-  </div>
+  </a-layout>
 </template>
 
 <script lang="ts" setup>
@@ -27,8 +25,8 @@
 <style lang="less" scoped>
   .container {
     // background-color: var(--color-fill-0);
-    padding: 16px 20px;
-    padding-bottom: 0;
+    // padding: 16px 20px;
+    // padding-bottom: 0;
   }
 
   .left-side {
