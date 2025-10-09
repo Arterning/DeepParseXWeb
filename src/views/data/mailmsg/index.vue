@@ -105,7 +105,7 @@
         {{ dirSelect?dirSelect.name:'/' }}
       </a-button>
     </a-space>
-    <div class="content">
+    <div class="mt-5">
       <div
         v-if="loading"
         class="w-full h-96 flex justify-center items-center"
@@ -562,9 +562,3 @@
     name: 'MailMsg',
   };
 </script>
-
-<style lang="less" scoped>
-  .content {
-    padding-top: 20px;
-  }
-</style>

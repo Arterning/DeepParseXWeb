@@ -72,7 +72,7 @@
         @update-columns="updateVisibleColumns"
       />
     </a-space>
-    <div class="content">
+    <div class="mt-5">
       <a-table
         v-model:selected-keys="rowSelectKeys"
         :bordered="false"
@@ -505,12 +505,5 @@
       name: 'Entity',
     };
   </script>
-  
-  <style lang="less" scoped>
-    .content {
-      padding-top: 20px;
-    }
 
-
-  </style>
   

@@ -1,5 +1,5 @@
 <template>
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4 p-6">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 content">
       <a-card class="general-card" :title="$t('邮件类型分布')">
         <VChart :option="pieChartOption" style="height: 300px" />
       </a-card>
@@ -7,7 +7,7 @@
         <VChart :option="barChartOption" style="height: 300px" />
       </a-card>
     </div>
-    <div class="p-4">
+    <div class="content">
       <a-row>
         <a-col :flex="62">
           <a-form
@@ -75,7 +75,7 @@
           </a-tooltip>
         </a-space>
       </a-space>
-      <div class="content mt-4">
+      <div class="mt-5">
         <div v-if="loading" class="flex justify-center items-center h-64">
           <a-spin size="large" />
         </div>
@@ -625,9 +625,3 @@
     name: 'MailBox',
   };
 </script>
-
-<style lang="less" scoped>
-  .content {
-    padding-top: 20px;
-  }
-</style>

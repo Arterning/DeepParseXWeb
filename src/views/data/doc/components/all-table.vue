@@ -147,7 +147,7 @@
     </a-radio-group>
   </a-space>
 
-  <div class="content">
+  <div class="mt-5">
     <a-table
       v-if="viewMode === 'table'"
       v-model:selected-keys="rowSelectKeys"
@@ -259,7 +259,7 @@
             :is="getSvgByType(record.type || '')"
             class="w-12 h-12 flex-shrink-0"
           />
-          <div class="min-w-0">
+          <div class="flex-1 min-w-0">
             <div class="flex justify-between items-start">
               <a-tooltip :content="record.title">
                 <a-link
@@ -1005,9 +1005,6 @@
 </script>
 
 <style lang="less" scoped>
-  .content {
-    padding-top: 20px;
-  }
   .title-link {
     text-overflow: ellipsis;
     overflow: hidden;

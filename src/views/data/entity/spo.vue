@@ -47,7 +47,7 @@
 
             <SettingTable :columns="columns" storageKey="spo-columns" @update-columns="updateVisibleColumns" />
         </a-space>
-        <div class="content">
+        <div class="mt-5">
             <a-table v-model:selected-keys="rowSelectKeys" :bordered="false"
                 :columns="(visibleColumns as TableColumnData[])" :data="renderData" :loading="loading"
                 :pagination="pagination" :row-selection="rowSelection" :size="'medium'" row-key="id"
@@ -391,9 +391,3 @@ export default {
     name: 'SubjectPredictObject',
 };
 </script>
-
-<style lang="less" scoped>
-.content {
-    padding-top: 20px;
-}
-</style>
