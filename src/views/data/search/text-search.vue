@@ -56,7 +56,7 @@
     </div>
 
     <!-- Search Results Section -->
-    <div v-else class="searchResults">
+    <div v-else class="p-2">
       <div class="mb-4 text-md text-gray-600">
         为您找到 {{ total }} 个相关结果
       </div>
@@ -210,6 +210,7 @@
     router.push({
       name: 'DocDetail',
       params: { id: item.id },
+      query: { appendix: item.title }
     });
 
     handleSaveHistory();

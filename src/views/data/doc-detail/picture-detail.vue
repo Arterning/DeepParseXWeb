@@ -1,6 +1,6 @@
 <template>
     <div class="container">
-        <a-layout style="padding: 0 18px">
+        <a-layout>
             <a-card class="general-card">
                 <template #title>
                     <div class="flex justify-start gap-3 items-center">

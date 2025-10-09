@@ -1,29 +1,36 @@
 <template>
-    <a-card class="info-card" title="内容">
-        <a-row :gutter="24" class="mb-10">
-            <a-col :span="24" >
-                <a-input class="p-3" v-model="term" @press-enter="search" placeholder="搜索" />
-            </a-col>
-            <!-- <a-col :span="12">
-                <a-button type="primary" @click="search">
-                    <template #icon>
-                        <icon-search />
-                    </template>
-                    {{ $t('data.doc.form.search') }}
-                </a-button>
-            </a-col> -->
-        </a-row>
+    <div class="container">
+        <a-layout>
+            <a-card class="general-card">
+                <div class="content">
+                    <a-card class="info-card" title="内容">
+                        <a-row :gutter="24" class="mb-10">
+                            <a-col :span="24" >
+                                <a-input class="p-3" v-model="term" @press-enter="search" placeholder="搜索" />
+                            </a-col>
+                            <!-- <a-col :span="12">
+                                <a-button type="primary" @click="search">
+                                    <template #icon>
+                                        <icon-search />
+                                    </template>
+                                    {{ $t('data.doc.form.search') }}
+                                </a-button>
+                            </a-col> -->
+                        </a-row>
 
-        <div style="width:80vw">
-            <a-table :columns="columns" :data="filteredData" column-resizable :hoverable="false"
-                :bordered="{ cell: true }" :ellipsis="true" :scroll="scrollPercent" />
-        </div>
+                        <div style="width:100%">
+                            <a-table :columns="columns" :data="filteredData" column-resizable :hoverable="false"
+                                :bordered="{ cell: true }" :ellipsis="true" :scroll="scrollPercent" />
+                        </div>
 
-        <div class="mt-2">
-            <VueOfficeExcel :src="buildSrcURL(props.info?.file)" style="height: 80vh; width: 80vw;"/>
-        </div>
-    </a-card>
-
+                        <div class="mt-2 overflow-scroll"  style="height: 80vh; width: 100%">
+                            <VueOfficeExcel :src="buildSrcURL(props.info?.file)"/>
+                        </div>
+                    </a-card>
+                </div>
+            </a-card>
+        </a-layout>
+    </div>
 </template>
 
 <script lang="ts" setup>

@@ -1,5 +1,5 @@
 <template>
-  <div class="p-4">
+  <div class="content">
     <div class="mb-4">
       <h3 class="text-xl font-semibold text-[#2971CF] mb-2">实体提取结果</h3>
       <p class="text-gray-500 text-sm">从文件中提取出的实体按类型分组展示</p>
