@@ -2,81 +2,82 @@
   <a-layout class="flex-layout">
     <!-- <Breadcrumb /> -->
     <a-card :title="$t('menu.admin.sysRole')" class="general-card">
-      <a-row>
-        <a-col :span="12">
-          <a-form
-            :auto-label-width="true"
-            :label-col-props="{ span: 6 }"
-            :model="formModel"
-            label-align="right"
-          >
-            <a-row>
-              <a-col :span="12">
-                <a-form-item :label="$t('admin.role.form.name')" field="name">
-                  <a-input
-                    v-model="formModel.name"
-                    :placeholder="$t('admin.role.form.name.placeholder')"
-                  />
-                </a-form-item>
-              </a-col>
-              <a-col :span="12">
-                <a-form-item
-                  :label="$t('admin.role.form.status')"
-                  field="status"
-                >
-                  <a-select
-                    v-model="formModel.status"
-                    :options="statusOptions"
-                    :placeholder="$t('admin.role.form.selectDefault')"
-                    allow-clear
-                    @clear="resetStatus"
-                  />
-                </a-form-item>
-              </a-col>
-            </a-row>
-          </a-form>
-        </a-col>
-        <a-divider direction="vertical" style="height: 30px" />
-        <a-col :span="8">
-          <a-space :size="'medium'" direction="horizontal">
-            <a-button type="primary" @click="search">
-              <template #icon>
-                <icon-search />
-              </template>
-              {{ $t('admin.role.form.search') }}
-            </a-button>
-            <a-button @click="resetSelect">
-              <template #icon>
-                <icon-refresh />
-              </template>
-              {{ $t('admin.role.form.reset') }}
-            </a-button>
-          </a-space>
-        </a-col>
-      </a-row>
-      <a-divider class="mt-0"/>
-      <a-space :size="'medium'">
-        <a-button type="primary" @click="NewRole">
-          <template #icon>
-            <icon-plus />
-          </template>
-          {{ $t('admin.role.button.create') }}
-        </a-button>
-        <a-button
-          :disabled="deleteButtonStatus()"
-          status="danger"
-          @click="DeleteRole"
-        >
-          <template #icon>
-            <icon-minus />
-          </template>
-          {{ $t('admin.role.button.delete') }}
-        </a-button>
-      </a-space>
-      <a-alert :type="'warning'" style="margin-top: 20px">
-        {{ $t('admin.role.alert.data_scope') }}
-      </a-alert>
       <div class="content">
+        <a-row>
+          <a-col :span="12">
+            <a-form
+              :auto-label-width="true"
+              :label-col-props="{ span: 6 }"
+              :model="formModel"
+              label-align="right"
+            >
+              <a-row>
+                <a-col :span="12">
+                  <a-form-item :label="$t('admin.role.form.name')" field="name">
+                    <a-input
+                      v-model="formModel.name"
+                      :placeholder="$t('admin.role.form.name.placeholder')"
+                    />
+                  </a-form-item>
+                </a-col>
+                <a-col :span="12">
+                  <a-form-item
+                    :label="$t('admin.role.form.status')"
+                    field="status"
+                  >
+                    <a-select
+                      v-model="formModel.status"
+                      :options="statusOptions"
+                      :placeholder="$t('admin.role.form.selectDefault')"
+                      allow-clear
+                      @clear="resetStatus"
+                    />
+                  </a-form-item>
+                </a-col>
+              </a-row>
+            </a-form>
+          </a-col>
+          <a-divider direction="vertical" style="height: 30px" />
+          <a-col :span="8">
+            <a-space :size="'medium'" direction="horizontal">
+              <a-button type="primary" @click="search">
+                <template #icon>
+                  <icon-search />
+                </template>
+                {{ $t('admin.role.form.search') }}
+              </a-button>
+              <a-button @click="resetSelect">
+                <template #icon>
+                  <icon-refresh />
+                </template>
+                {{ $t('admin.role.form.reset') }}
+              </a-button>
+            </a-space>
+          </a-col>
+        </a-row>
+        <a-divider class="mt-0"/>
+        <a-space :size="'medium'">
+          <a-button type="primary" @click="NewRole">
+            <template #icon>
+              <icon-plus />
+            </template>
+            {{ $t('admin.role.button.create') }}
+          </a-button>
+          <a-button
+            :disabled="deleteButtonStatus()"
+            status="danger"
+            @click="DeleteRole"
+          >
+            <template #icon>
+              <icon-minus />
+            </template>
+            {{ $t('admin.role.button.delete') }}
+          </a-button>
+        </a-space>
+        <a-alert :type="'warning'" style="margin-top: 20px">
+          {{ $t('admin.role.alert.data_scope') }}
+        </a-alert>
+
         <a-table
           v-model:selected-keys="rowSelectKeys"
           :bordered="false"
@@ -118,8 +119,10 @@
               </a-tooltip>
             </a-space>
           </template>
-        </a-table>
+        </a-table>        
       </div>
+     
+
       <div class="content-modal">
         <a-modal
           :closable="false"
@@ -868,9 +871,9 @@
     name: 'SysRole',
   };
 </script>
-
+<!-- 
 <style lang="less" scoped>
   .content {
-    padding-top: 20px;
+    padding: 1rem;
   }
-</style>
+</style> -->

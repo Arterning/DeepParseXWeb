@@ -2,134 +2,137 @@
   <a-layout class="flex-layout">
     <!-- <Breadcrumb /> -->
     <a-card :title="$t('menu.admin.sysDept')" class="general-card">
-      <a-row>
-        <a-col :flex="62">
-          <a-form
-            :auto-label-width="true"
-            :model="formModel"
-            label-align="right"
-          >
-            <a-row :gutter="16">
-              <a-col :span="6">
-                <a-form-item :label="$t('admin.dept.form.name')" field="name">
-                  <a-input
-                    v-model="formModel.name"
-                    :placeholder="$t('admin.dept.form.name.placeholder')"
-                  />
-                </a-form-item>
-              </a-col>
-              <a-col :span="6">
-                <a-form-item
-                  :label="$t('admin.dept.form.leader')"
-                  field="leader"
-                >
-                  <a-input
-                    v-model="formModel.leader"
-                    :placeholder="$t('admin.dept.form.leader.placeholder')"
-                  />
-                </a-form-item>
-              </a-col>
-              <a-col :span="6">
-                <a-form-item
-                  :label="$t('admin.dept.form.phone')"
-                  field="phone"
-                >
-                  <a-input
-                    v-model="formModel.phone"
-                    :placeholder="$t('admin.dept.form.phone.placeholder')"
-                  />
-                </a-form-item>
-              </a-col>
-              <a-col :span="6">
-                <a-form-item
-                  :label="$t('admin.dept.form.status')"
-                  field="status"
-                >
-                  <a-select
-                    v-model="formModel.status"
-                    :options="statusOptions"
-                    :placeholder="$t('admin.dept.form.selectDefault')"
-                    allow-clear
-                    @clear="resetStatus"
-                  />
-                </a-form-item>
-              </a-col>
-            </a-row>
-          </a-form>
-        </a-col>
-        <a-divider direction="vertical" style="height: 30px" />
-        <a-col :span="6">
-          <a-space :size="'medium'" direction="horizontal">
-            <a-button type="primary" @click="search">
-              <template #icon>
-                <icon-search />
-              </template>
-              {{ $t('admin.dept.form.search') }}
-            </a-button>
-            <a-button @click="resetSelect">
-              <template #icon>
-                <icon-refresh />
-              </template>
-              {{ $t('admin.dept.form.reset') }}
-            </a-button>
-          </a-space>
-        </a-col>
-      </a-row>
-      <a-divider class="mt-0"/>
-      <a-space :size="'medium'">
-        <a-button type="primary" @click="NewDept()">
-          <template #icon>
-            <icon-plus />
-          </template>
-          {{ $t('admin.dept.button.create') }}
-        </a-button>
-        <a-button @click="expand">
-          {{ $t('admin.dept.button.collapse') }}
-        </a-button>
-      </a-space>
       <div class="content">
-        <a-table
-          ref="tableRef"
-          :bordered="false"
-          :columns="columns"
-          :data="renderData"
-          :loading="loading"
-          :pagination="false"
-          :size="'medium'"
-          row-key="id"
-        >
-          <template #status="{ record }">
-            <a-tag v-if="record.status === 1" :color="`green`" bordered>
-              {{ $t(`admin.menu.form.status.${record.status}`) }}
-            </a-tag>
-            <a-tag v-else :color="`red`" bordered>
-              {{ $t(`admin.menu.form.status.${record.status}`) }}
-            </a-tag>
-          </template>
-          <template #created_time="{ record }">
-            {{ tableDateFormat(record.created_time) }}
-          </template>
-          <template #operate="{ record }">
-            <a-space>
-              <a-tooltip :content="$t(`admin.menu.columns.new`)">
-                <a-link @click="NewDept(record.id)">
-                  <icon-plus style="font-size:16"/>
-                </a-link>
-              </a-tooltip>
-              <a-tooltip :content="$t(`admin.menu.columns.edit`)">
-                <a-link @click="EditDept(record.id)">
-                  <icon-edit style="font-size:16"/>
-                </a-link>
-              </a-tooltip>
-              <a-tooltip :content="$t(`admin.menu.columns.delete`)">
-                <a-link :status="'danger'" @click="DeleteDept(record.id)">
-                  <icon-delete style="font-size:16"/>
-                </a-link>
-              </a-tooltip>
+        <a-row>
+          <a-col :flex="62">
+            <a-form
+              :auto-label-width="true"
+              :model="formModel"
+              label-align="right"
+            >
+              <a-row :gutter="16">
+                <a-col :span="6">
+                  <a-form-item :label="$t('admin.dept.form.name')" field="name">
+                    <a-input
+                      v-model="formModel.name"
+                      :placeholder="$t('admin.dept.form.name.placeholder')"
+                    />
+                  </a-form-item>
+                </a-col>
+                <a-col :span="6">
+                  <a-form-item
+                    :label="$t('admin.dept.form.leader')"
+                    field="leader"
+                  >
+                    <a-input
+                      v-model="formModel.leader"
+                      :placeholder="$t('admin.dept.form.leader.placeholder')"
+                    />
+                  </a-form-item>
+                </a-col>
+                <a-col :span="6">
+                  <a-form-item
+                    :label="$t('admin.dept.form.phone')"
+                    field="phone"
+                  >
+                    <a-input
+                      v-model="formModel.phone"
+                      :placeholder="$t('admin.dept.form.phone.placeholder')"
+                    />
+                  </a-form-item>
+                </a-col>
+                <a-col :span="6">
+                  <a-form-item
+                    :label="$t('admin.dept.form.status')"
+                    field="status"
+                  >
+                    <a-select
+                      v-model="formModel.status"
+                      :options="statusOptions"
+                      :placeholder="$t('admin.dept.form.selectDefault')"
+                      allow-clear
+                      @clear="resetStatus"
+                    />
+                  </a-form-item>
+                </a-col>
+              </a-row>
+            </a-form>
+          </a-col>
+          <a-divider direction="vertical" style="height: 30px" />
+          <a-col :span="6">
+            <a-space :size="'medium'" direction="horizontal">
+              <a-button type="primary" @click="search">
+                <template #icon>
+                  <icon-search />
+                </template>
+                {{ $t('admin.dept.form.search') }}
+              </a-button>
+              <a-button @click="resetSelect">
+                <template #icon>
+                  <icon-refresh />
+                </template>
+                {{ $t('admin.dept.form.reset') }}
+              </a-button>
             </a-space>
-          </template>
-        </a-table>
+          </a-col>
+        </a-row>
+        <a-divider class="mt-0"/>
+        <a-space :size="'medium'">
+          <a-button type="primary" @click="NewDept()">
+            <template #icon>
+              <icon-plus />
+            </template>
+            {{ $t('admin.dept.button.create') }}
+          </a-button>
+          <a-button @click="expand">
+            {{ $t('admin.dept.button.collapse') }}
+          </a-button>
+        </a-space>
+        <div class="content">
+          <a-table
+            ref="tableRef"
+            :bordered="false"
+            :columns="columns"
+            :data="renderData"
+            :loading="loading"
+            :pagination="false"
+            :size="'medium'"
+            row-key="id"
+          >
+            <template #status="{ record }">
+              <a-tag v-if="record.status === 1" :color="`green`" bordered>
+                {{ $t(`admin.menu.form.status.${record.status}`) }}
+              </a-tag>
+              <a-tag v-else :color="`red`" bordered>
+                {{ $t(`admin.menu.form.status.${record.status}`) }}
+              </a-tag>
+            </template>
+            <template #created_time="{ record }">
+              {{ tableDateFormat(record.created_time) }}
+            </template>
+            <template #operate="{ record }">
+              <a-space>
+                <a-tooltip :content="$t(`admin.menu.columns.new`)">
+                  <a-link @click="NewDept(record.id)">
+                    <icon-plus style="font-size:16"/>
+                  </a-link>
+                </a-tooltip>
+                <a-tooltip :content="$t(`admin.menu.columns.edit`)">
+                  <a-link @click="EditDept(record.id)">
+                    <icon-edit style="font-size:16"/>
+                  </a-link>
+                </a-tooltip>
+                <a-tooltip :content="$t(`admin.menu.columns.delete`)">
+                  <a-link :status="'danger'" @click="DeleteDept(record.id)">
+                    <icon-delete style="font-size:16"/>
+                  </a-link>
+                </a-tooltip>
+              </a-space>
+            </template>
+          </a-table>
+        </div>
       </div>
+
       <div class="content-modal">
         <a-modal
           :closable="false"

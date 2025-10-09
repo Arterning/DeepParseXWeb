@@ -1,7 +1,7 @@
 <template>
     <a-layout class="flex-layout">
         <a-card class="general-card" title="上传任务">
-            <div class="p-4">
+            <div class="p-6">
                 <div class="flex">
                     <a-form :auto-label-width="true" :model="searchModel" label-align="right">
                         <a-row :gutter="24">

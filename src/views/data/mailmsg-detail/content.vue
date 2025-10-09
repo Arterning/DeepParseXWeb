@@ -1,6 +1,6 @@
 <template>
   <!-- 邮件内容区域 -->
-  <div class="p-5">
+
     <div class="flex">
       <div class="flex-1">
         <!-- 邮件标题 -->
@@ -164,7 +164,6 @@
         </div>
       </div>
     </a-modal>
-  </div>
 </template>
 
 <script setup lang="ts">

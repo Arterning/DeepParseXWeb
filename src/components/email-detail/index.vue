@@ -1,7 +1,7 @@
 <template>
   <div class="h-full flex flex-col">
     <!-- 邮件内容区域 -->
-    <div class="flex-1 overflow-y-auto p-6">
+    <div class="flex-1 overflow-y-auto content">
       <!-- 邮件标题 -->
       <h1 class="text-2xl font-semibold text-gray-900 mb-2">
         {{ mailData?.name }}

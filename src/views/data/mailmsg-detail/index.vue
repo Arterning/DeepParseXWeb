@@ -5,20 +5,20 @@
       <Breadcrumb />
       <a-tabs>
         <a-tab-pane key="1" title="邮件内容">
-          <Content :info="info" @extract-graph="handleExtractGraph"/>
+          <div class="content">
+            <Content :info="info" @extract-graph="handleExtractGraph"/>            
+          </div>      
         </a-tab-pane>
         <a-tab-pane key="2" title="基本信息">
-          <BasicInfo :info="doc" />
-          <FileDescription :info="doc" class="mt-4"/>
+          <div class="content">
+            <BasicInfo :info="doc" />
+            <FileDescription :info="doc" class="mt-4"/>
+          </div>
         </a-tab-pane>
         <a-tab-pane key="3" title="关系图谱">
-          <a-skeleton :loading="extractGraphLoading" :animation="true">
-            <a-space direction="vertical" :style="{width:'100%'}" size="large">
-              <a-skeleton-line :rows="8" />
-            </a-space>
-          </a-skeleton>
-          <div class="flex flex-col h-screen" v-if="!extractGraphLoading">
-            <div class="flex flex-col flex-1 overflow-hidden">
+          <div class="flex flex-col h-screen items-center">
+            <a-spin dot v-if="extractGraphLoading" />
+            <div v-else class="flex flex-col overflow-hidden">
               <GraphControls 
                 class="p-2 border-b"
                 :initial-data="graphData"
@@ -34,7 +34,9 @@
           </div>
         </a-tab-pane>   
         <a-tab-pane v-if="doc.entities" key="4" title="实体信息">
-          <Entity :entities="doc.entities" />
+          <div class="content">
+            <Entity :entities="doc.entities" />
+          </div>
         </a-tab-pane>    
       </a-tabs>
     </a-card>

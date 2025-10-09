@@ -1,5 +1,5 @@
 <template>
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4 p-6">
       <a-card class="general-card" :title="$t('邮件类型分布')">
         <VChart :option="pieChartOption" style="height: 300px" />
       </a-card>

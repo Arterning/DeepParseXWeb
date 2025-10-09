@@ -1,7 +1,7 @@
 <template>
   <div class="h-full flex flex-col space-y-4">
     <!-- 参数设置区域 -->
-    <div class="p-4 rounded-lg shadow-sm">
+    <div class="content rounded-lg shadow-sm">
       <h3 class="text-lg font-semibold mb-4 dark:text-white">分析设置</h3>
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -111,7 +111,7 @@
       <div ref="graphContainer" class="h-96 w-full"></div>
 
       <!-- 网络分析结果 -->
-      <div v-if="analysisResult.network_analysis" class="p-6">
+      <div v-if="analysisResult.network_analysis" class="content">
         <h3 class="text-lg font-semibold mb-4 dark:text-white">网络分析结果</h3>
 
         <!-- 基本统计信息 -->

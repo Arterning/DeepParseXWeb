@@ -1,6 +1,6 @@
 
 <template>
-  <div class="p-4">        
+  <div class="content">        
     <a-row>
         <a-col :span="7">
         <a-scrollbar class="h-[calc(100vh-300px)]" style="width:100%; overflow-y: auto; padding-right: 2rem;">

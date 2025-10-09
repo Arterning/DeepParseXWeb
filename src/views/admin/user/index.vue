@@ -2,6 +2,7 @@
   <a-layout class="flex-layout">
     <!-- <Breadcrumb /> -->
     <a-card :title="$t('menu.admin.sysUser')" class="general-card">
+      <div class="content">
         <a-row>
           <a-col :flex="62">
             <a-form
@@ -222,6 +223,8 @@
             </template>
           </a-table>
         </div>
+      </div>
+
         <div class="content-modal">
           <a-modal
             :closable="false"

@@ -1,5 +1,5 @@
 <template>
-  <div class="p-4">
+  <div class="content">
     <a-row>
       <a-col :flex="62">
         <a-form
