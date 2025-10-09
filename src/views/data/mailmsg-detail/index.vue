@@ -13,12 +13,17 @@
           <div class="content">
             <BasicInfo :info="doc" />
             <FileDescription :info="doc" class="mt-4"/>
+            <FileTranslation :info="doc" class="mt-4"/>
           </div>
         </a-tab-pane>
         <a-tab-pane key="3" title="关系图谱">
-          <div class="flex flex-col h-screen items-center">
-            <a-spin dot v-if="extractGraphLoading" />
-            <div v-else class="flex flex-col overflow-hidden">
+          <div class="content">
+            <a-skeleton :loading="extractGraphLoading" :animation="true">
+              <a-space direction="vertical" :style="{width:'100%'}" size="large">
+                <a-skeleton-line :rows="8" />
+              </a-space>
+            </a-skeleton>
+            <div class="flex flex-col h-screen" v-if="!extractGraphLoading">
               <GraphControls 
                 class="p-2 border-b"
                 :initial-data="graphData"
@@ -54,6 +59,7 @@ import Footer from '@/components/footer/index.vue';
 import { MailMsgRes, queryMailMsgDetail } from '@/api/mailmsg';
 import BasicInfo from '../components/basic-info.vue';
 import FileDescription from '../components/FileDescription.vue';
+import FileTranslation from './components/FileTranslation.vue';
 import GraphControls from './GraphControls.vue';
 import KnowledgeGraph from './KnowledgeGraph.vue';
 import Entity from './entity.vue';

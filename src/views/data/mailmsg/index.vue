@@ -100,6 +100,9 @@
         </template>
         删除
       </a-button>
+      <a-button type="text" @click="openDir=true">
+        <icon-folder />
+      </a-button>
     </a-space>
     <div class="content">
       <div
@@ -113,7 +116,7 @@
           <div
             v-for="record in renderData"
             :key="record.id"
-            class="flex items-start p-4 rounded-lg shadow-sm hover:shadow-lg transition-shadow duration-200"
+            class="flex items-start p-4 rounded-lg border shadow-none hover:shadow-lg transition-shadow duration-300"
             :class="{
               'border-blue-500 ring-1 ring-blue-500': rowSelectKeys.includes(
                 record.id
@@ -135,13 +138,14 @@
                     router.push({
                       name: 'MailMsgDetail',
                       params: { id: record.id },
+                      query: { appendix: record.name },
                     })
                   "
                 >
                   {{ record.name }}
                 </a-link>
                 <span class="text-sm text-gray-500 flex-shrink-0 ml-4">{{
-                  record.time
+                  tableDateFormat(record.time) 
                 }}</span>
               </div>
               <span
@@ -201,6 +205,7 @@
                       router.push({
                         name: 'MailMsgDetail',
                         params: { id: record.id },
+                        query: { appendix: record.name },
                       })
                     "
                   >
@@ -311,6 +316,8 @@
         </a-space>
       </a-modal>
     </div>
+    <DirectoryDrawer v-model:open="openDir" :refresh-trigger="dirId" 
+    @directory-change="(item:any)=>{ dirId = item.id; fetchData()}"/>
   </div>
 </template>
 
@@ -331,10 +338,15 @@
   } from '@/api/mailmsg';
   import { Pagination } from '@/types/global';
   import { useRouter } from 'vue-router';
+  import { tableDateFormat } from '@/utils/date';
+  import DirectoryDrawer from './directory-drawer.vue';
 
   const { t } = useI18n();
   const { loading, setLoading } = useLoading(true);
   const router = useRouter();
+
+  const openDir = ref(false);
+  const dirId = ref(0);
 
   // 表单
   const generateFormModel = () => {
@@ -477,6 +489,7 @@
     try {
       const res = await queryMailMsgList({
         ...formModel.value,
+        doc_dir_id: dirId.value,
         page: pagination.current,
         size: pagination.pageSize,
       } as MailMsgParams);

@@ -190,69 +190,65 @@ const handleExtractConfirm = () => {
   <div class="space-y-4">
     <!-- 添加节点 -->
     <a-modal v-model:visible="showAddNodeModal" :title="$t('添加节点')" @ok="addNode">
-      <div class="p-2 rounded-lg shadow">
-        <div class="space-y-3">
-          <div>
-            <a-input v-model="newNode.id"
-              placeholder="ID" />
-          </div>
-          <div>
-            <a-input v-model="newNode.label"
-              required placeholder="节点名称" />
-          </div>
-          <div>
-            <a-select v-model="newNode.type">
-              <a-option value="人物">人物</a-option>
-              <a-option value="组织">组织</a-option>
-              <a-option value="地点">地点</a-option>
-              <a-option value="事件">事件</a-option>
-              <a-option value="概念">概念</a-option>
-            </a-select>
-          </div>
-          <!-- <button @click="addNode"
-            class="w-full bg-cyan-600 hover:bg-cyan-700 text-white py-2 px-4 rounded transition-colors duration-200 flex items-center justify-center">
-            <span class="i-heroicons-plus-circle-solid mr-2"></span>
-            确认
-          </button> -->
+      <div class="p-2 space-y-3">
+        <div>
+          <a-input v-model="newNode.id"
+            placeholder="ID" />
         </div>
+        <div>
+          <a-input v-model="newNode.label"
+            required placeholder="节点名称" />
+        </div>
+        <div>
+          <a-select v-model="newNode.type">
+            <a-option value="人物">人物</a-option>
+            <a-option value="组织">组织</a-option>
+            <a-option value="地点">地点</a-option>
+            <a-option value="事件">事件</a-option>
+            <a-option value="概念">概念</a-option>
+          </a-select>
+        </div>
+        <!-- <button @click="addNode"
+          class="w-full bg-cyan-600 hover:bg-cyan-700 text-white py-2 px-4 rounded transition-colors duration-200 flex items-center justify-center">
+          <span class="i-heroicons-plus-circle-solid mr-2"></span>
+          确认
+        </button> -->
       </div>
     </a-modal>
 
     <a-modal v-model:visible="showAddRelationModal" :title="$t('添加关系')" @ok="addEdge">
       <!-- 添加关系 -->
-      <div class="p-4 rounded-lg shadow">
-        <div class="space-y-3">
-          <div>
-            <label class="block text-sm font-medium text-gray-300 mb-1">源节点</label>
-            <select v-model="newEdge.source"
-              class="w-full dark:bg-gray-600 border border-gray-500 rounded px-3 py-2 dark:text-white focus:ring-2 focus:ring-cyan-500 focus:border-transparent">
-              <option value="" disabled>选择源节点</option>
-              <option v-for="node in graphData.nodes" :key="node.id" :value="node.id">
-                {{ node.label }} ({{ node.id }})
-              </option>
-            </select>
-          </div>
-          <div>
-            <label class="block text-sm font-medium text-gray-300 mb-1">目标节点</label>
-            <select v-model="newEdge.target"
-              class="w-full dark:bg-gray-600 border border-gray-500 rounded px-3 py-2 dark:text-white focus:ring-2 focus:ring-cyan-500 focus:border-transparent">
-              <option value="" disabled>选择目标节点</option>
-              <option v-for="node in graphData.nodes" :key="node.id" :value="node.id">
-                {{ node.label }} ({{ node.id }})
-              </option>
-            </select>
-          </div>
-          <div>
-            <label class="block text-sm font-medium text-gray-300 mb-1">关系类型*</label>
-            <a-input v-model="newEdge.label"
-              required placeholder="例如: 朋友, 同事, 属于" />
-          </div>
-          <!-- <button @click="addEdge"
-            class="w-full bg-purple-600 hover:bg-purple-700 text-white py-2 px-4 rounded transition-colors duration-200 flex items-center justify-center">
-            <span class="i-heroicons-link-solid mr-2"></span>
-            确认
-          </button> -->
+      <div class="p-2 space-y-3">
+        <div>
+          <label class="block text-sm font-medium text-gray-300 mb-1">源节点</label>
+          <a-select v-model="newEdge.source"
+            class="w-full dark:bg-gray-600 border border-gray-500 rounded px-3 py-2 dark:text-white focus:ring-2 focus:ring-cyan-500 focus:border-transparent">
+            <a-option value="" disabled>选择源节点</a-option>
+            <a-option v-for="node in graphData.nodes" :key="node.id" :value="node.id">
+              {{ node.label }} ({{ node.id }})
+            </a-option>
+          </a-select>
         </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-300 mb-1">目标节点</label>
+          <select v-model="newEdge.target"
+            class="w-full dark:bg-gray-600 border border-gray-500 rounded px-3 py-2 dark:text-white focus:ring-2 focus:ring-cyan-500 focus:border-transparent">
+            <option value="" disabled>选择目标节点</option>
+            <option v-for="node in graphData.nodes" :key="node.id" :value="node.id">
+              {{ node.label }} ({{ node.id }})
+            </option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-300 mb-1">关系类型*</label>
+          <a-input v-model="newEdge.label"
+            required placeholder="例如: 朋友, 同事, 属于" />
+        </div>
+        <!-- <button @click="addEdge"
+          class="w-full bg-purple-600 hover:bg-purple-700 text-white py-2 px-4 rounded transition-colors duration-200 flex items-center justify-center">
+          <span class="i-heroicons-link-solid mr-2"></span>
+          确认
+        </button> -->
       </div>
     </a-modal>
 

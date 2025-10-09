@@ -94,7 +94,7 @@
               <a-card
                 v-for="item in renderData"
                 :key="item.id"
-                class="rounded-lg shadow-md transition-all duration-300 hover:shadow-lg dark:bg-gray-800"
+                class="rounded-lg transition-all duration-200 hover:shadow-lg dark:bg-gray-800"
                 :class="{
                   'border-blue-500 border-2': rowSelectKeys.includes(item.id),
                 }"

@@ -2,7 +2,7 @@
   <a-layout class="flex-layout">
     <a-card class="general-card">
       <Breadcrumb />
-      <div class="p-4">
+      <div class="p-6">
         <h4 class="text-lg font-semibold mb-3" style="color: var(--color-text-1);">基本信息</h4>
         <a-descriptions layout="vertical" class="mb-4">
           <a-descriptions-item label="邮箱名称">{{

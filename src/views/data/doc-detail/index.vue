@@ -15,31 +15,36 @@
           <TextDetail v-else :info="info" />
         </a-tab-pane>
         <a-tab-pane key="2" title="基本信息">
-          <BasicInfo :info="info" />
-          <FileDescription :info="info" class="mt-4"/>
+          <div class="content">
+            <BasicInfo :info="info" />
+            <FileDescription :info="info" class="mt-4"/>
+            <FileTranslation :info="info" class="mt-4"/>          
+          </div>
         </a-tab-pane>
         <a-tab-pane key="3" title="实体提取">
           <EntityExtraction :info="info" />
         </a-tab-pane>
         <a-tab-pane key="4" title="关系图谱">
-          <a-skeleton :loading="extractGraphLoading" :animation="true">
-            <a-space direction="vertical" :style="{width:'100%'}" size="large">
-              <a-skeleton-line :rows="8" />
-            </a-space>
-          </a-skeleton>
-          <div class="flex flex-col h-screen" v-if="!extractGraphLoading">
-            <div class="flex flex-col flex-1 overflow-hidden">
-              <GraphControls 
-                class="p-2 border-b"
-                :initial-data="graphData"
-                @extract-graph="handleExtractGraph"
-                @dataChange="handleDataChange"
-              />
-              <KnowledgeGraph 
-                class="flex-1" 
-                :graph-data="graphData" 
-                @dataChange="handleDataChange"
-              />
+          <div class="content">
+            <a-skeleton :loading="extractGraphLoading" :animation="true">
+              <a-space direction="vertical" :style="{width:'100%'}" size="large">
+                <a-skeleton-line :rows="8" />
+              </a-space>
+            </a-skeleton>
+            <div class="flex flex-col h-screen" v-if="!extractGraphLoading">
+              <div class="flex flex-col flex-1 overflow-hidden">
+                <GraphControls 
+                  class="p-2 border-b"
+                  :initial-data="graphData"
+                  @extract-graph="handleExtractGraph"
+                  @dataChange="handleDataChange"
+                />
+                <KnowledgeGraph 
+                  class="flex-1" 
+                  :graph-data="graphData" 
+                  @dataChange="handleDataChange"
+                />
+              </div>
             </div>
           </div>
         </a-tab-pane>
@@ -70,8 +75,9 @@ import EmailDetail from '@/components/email-detail/index.vue';
 import DocxDetail from './docx-detail.vue';
 import GraphControls from './GraphControls.vue';
 import KnowledgeGraph from './KnowledgeGraph.vue';
-import DocAIChat from '../components/DocAIChat.vue';
+import DocAIChat from '../components/DocAIChat.vue'
 import FileDescription from '../components/FileDescription.vue';
+import FileTranslation from './components/FileTranslation.vue';
 import EntityExtraction from './EntityExtraction.vue';
 
 
