@@ -17,6 +17,7 @@
           allow-clear
           @search="handleSearch"
           @clear="handleClear"
+          @keyup.enter="handleSearch"
         />
       </div>
       
@@ -181,9 +182,8 @@
   };
 
   // 处理搜索
-  const handleSearch = (value: string) => {
-    searchKey.value = value;
-    loadDirectoryList(value);
+  const handleSearch = () => {
+    loadDirectoryList(searchKey.value);
   };
 
   // 处理清空搜索

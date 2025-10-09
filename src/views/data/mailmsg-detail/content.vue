@@ -1,7 +1,7 @@
 <template>
   <!-- 邮件内容区域 -->
 
-    <div class="flex">
+    <div class="flex gap-2">
       <div class="flex-1">
         <!-- 邮件标题 -->
         <h1 class="text-2xl font-semibold mb-2">

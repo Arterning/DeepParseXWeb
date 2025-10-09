@@ -187,7 +187,7 @@ const columns = computed<TableColumnData[]>(() => [
         // },
         ellipsis: true,
         tooltip: true,
-        width: 50,
+        width: 80,
     },
     {
         title: '任务名称',

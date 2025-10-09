@@ -56,6 +56,7 @@
               <a-form-item :label="$t('时间')" field="time">
                 <a-date-picker
                   v-model="formModel.time"
+                  class="w-full"
                   :placeholder="$t('搜索时间')"
                   @keyup.enter="search"
                 />
@@ -104,6 +105,28 @@
         <template #icon><icon-folder /></template>
         {{ dirSelect?dirSelect.name:'/' }}
       </a-button>
+      <a-radio-group v-model="viewMode" size="small">
+        <a-radio value="table">
+          <template #radio="{ checked }">
+            <a-space :size="4">
+              <icon-list
+                :style="{ color: checked ? 'rgb(var(--primary-6))' : '' }"
+              />
+              <span v-if="checked">表格</span>
+            </a-space>
+          </template>
+        </a-radio>
+        <a-radio value="card">
+          <template #radio="{ checked }">
+            <a-space :size="4">
+              <icon-apps
+                :style="{ color: checked ? 'rgb(var(--primary-6))' : '' }"
+              />
+              <span v-if="checked">卡片</span>
+            </a-space>
+          </template>
+        </a-radio>
+      </a-radio-group>
     </a-space>
     <div class="mt-5">
       <div
@@ -113,95 +136,29 @@
         <a-spin size="large" />
       </div>
       <div v-else>
-        <div class="grid grid-cols-2 gap-4">
-          <a-card
-            v-for="record in renderData"
-            :key="record.id"
-            class="shadow-none rounded-lg hover:shadow-lg transition-shadow duration-300"
-            :class="{
-              'border-blue-500 ring-1 ring-blue-500': rowSelectKeys.includes(
-                record.id
-              ),
-            }"
-          >
-            <div class="flex flex-col min-w-0">
-              <div class="flex justify-between items-center mb-4">
-                <div class="mr-2 pt-0.5">
-                  <a-checkbox
-                    :model-value="rowSelectKeys.includes(record.id)"
-                    @change="() => toggleSelection(record.id)"
-                  />
-                </div>
-                <a-link
-                  class="flex-1  text-lg font-semibold truncate block"
-                  :title="record.name"
-                  @click="
-                    router.push({
-                      name: 'MailMsgDetail',
-                      params: { id: record.id },
-                      query: { appendix: record.name },
-                    })
-                  "
-                >
-                  {{ record.name }}
-                </a-link>
-                <span class="text-sm text-gray-500 flex-shrink-0 ml-4">{{
-                  tableDateFormat(record.time) 
-                }}</span>
-              </div>
-              <span
-                v-if="record.doc_name"
-                class="text-xs text-gray-400 flex items-center px-1"
-              >
-                <icon-location /> {{ record.doc_name }}
-              </span>
-
-              <div
-                class="flex flex-wrap items-center px-1 gap-x-4 gap-y-1 text-sm text-gray-600 mb-3"
-              >
-                <div class="flex items-center">
-                  <span class="font-medium text-gray-500">From:</span>
-                  <span
-                    class="ml-1.5 text-gray-500 px-2 py-0.5 rounded-full"
-                    >{{ record.sender }}</span
-                  >
-                </div>
-                <div class="flex items-center">
-                  <span class="font-medium text-gray-500">To:</span>
-                  <span
-                    class="ml-1.5 text-gray-500 px-2 py-0.5 rounded-full"
-                    >{{ record.receiver }}</span
-                  >
-                </div>
-                <div v-if="record.cc" class="flex items-center">
-                  <span class="font-medium text-gray-500">CC:</span>
-                  <span
-                    class="ml-1.5 text-gray-500 px-2 py-0.5 rounded-full"
-                    >{{ record.cc }}</span
-                  >
-                </div>
-              </div>
-
-              <p
-                class="text-gray-600 text-sm truncate mb-4 px-1"
-                :title="record.original"
-              >
-                {{ record.original || 'No content to display.' }}
-              </p>
-
-              <div class="flex justify-between items-center">
-                <div class="flex items-center space-x-2">
-                  <a-tag v-if="record.category" color="arcoblue">{{
-                    record.category
-                  }}</a-tag>
-                </div>
-                <div class="flex items-center space-x-2">
-                  <a-button size="mini" @click="EditMailMsg(record.id)">
-                    编辑
-                  </a-button>
-                  <a-button
-                    size="mini"
-                    type="primary"
+        <template v-if="viewMode==='card'">
+          <div class="grid grid-cols-2 gap-4">
+            <a-card
+              v-for="record in renderData"
+              :key="record.id"
+              class="shadow-none rounded-lg hover:shadow-lg transition-shadow duration-300"
+              :class="{
+                'border-blue-500 ring-1 ring-blue-500': rowSelectKeys.includes(
+                  record.id
+                ),
+              }"
+            >
+              <div class="flex flex-col min-w-0">
+                <div class="flex justify-between items-center mb-4">
+                  <div class="mr-2 pt-0.5">
+                    <a-checkbox
+                      :model-value="rowSelectKeys.includes(record.id)"
+                      @change="() => toggleSelection(record.id)"
+                    />
+                  </div>
+                  <a-link
+                    class="flex-1 text-lg font-semibold truncate block"
+                    :title="record.name"
                     @click="
                       router.push({
                         name: 'MailMsgDetail',
@@ -210,35 +167,159 @@
                       })
                     "
                   >
-                    查看
-                  </a-button>
+                    {{ record.name }}
+                  </a-link>
+                  <span class="text-sm text-gray-500 flex-shrink-0 ml-4">{{
+                    tableDateFormat(record.time) 
+                  }}</span>
+                </div>
+                <span
+                  v-if="record.doc_name"
+                  class="text-xs text-gray-400 flex items-center px-1"
+                >
+                  <icon-location /> {{ record.doc_name }}
+                </span>
+
+                <div
+                  class="flex flex-wrap items-center px-1 gap-x-4 gap-y-1 text-sm text-gray-600 mb-3"
+                >
+                  <div class="flex items-center">
+                    <span class="font-medium text-gray-500">From:</span>
+                    <span
+                      class="ml-1.5 text-gray-500 px-2 py-0.5 rounded-full"
+                      >{{ record.sender }}</span
+                    >
+                  </div>
+                  <div class="flex items-center">
+                    <span class="font-medium text-gray-500">To:</span>
+                    <span
+                      class="ml-1.5 text-gray-500 px-2 py-0.5 rounded-full"
+                      >{{ record.receiver }}</span
+                    >
+                  </div>
+                  <div v-if="record.cc" class="flex items-center">
+                    <span class="font-medium text-gray-500">CC:</span>
+                    <span
+                      class="ml-1.5 text-gray-500 px-2 py-0.5 rounded-full"
+                      >{{ record.cc }}</span
+                    >
+                  </div>
+                </div>
+
+                <p
+                  class="text-gray-600 text-sm truncate mb-4 px-1"
+                  :title="record.original"
+                >
+                  {{ record.original || 'No content to display.' }}
+                </p>
+
+                <div class="flex justify-between items-center">
+                  <div class="flex items-center space-x-2">
+                    <a-tag v-if="record.category" color="arcoblue">{{
+                      record.category
+                    }}</a-tag>
+                  </div>
+                  <div class="flex items-center space-x-2">
+                    <a-button size="mini" @click="EditMailMsg(record.id)">
+                      编辑
+                    </a-button>
+                    <a-button
+                      size="mini"
+                      type="primary"
+                      @click="
+                        router.push({
+                          name: 'MailMsgDetail',
+                          params: { id: record.id },
+                          query: { appendix: record.name },
+                        })
+                      "
+                    >
+                      查看
+                    </a-button>
+                  </div>
                 </div>
               </div>
-            </div>
-          </a-card>
-        </div>
+            </a-card>
+          </div>
+          <div
+            v-if="!loading && renderData.length === 0"
+            class="text-center py-16"
+          >
+            <a-empty />
+          </div>
 
-        <div
-          v-if="!loading && renderData.length === 0"
-          class="text-center py-16"
-        >
-          <a-empty />
-        </div>
+          <div
+            v-if="renderData.length > 0"
+            class="flex justify-end items-center mt-4"
+          >
+            <a-pagination
+              :total="pagination.total || 0"
+              :current="pagination.current"
+              :page-size="pagination.pageSize"
+              show-total
+              show-page-size
+              @change="onPageChange"
+              @page-size-change="onPageSizeChange"
+            />
+          </div>
+        </template>
 
-        <div
-          v-if="renderData.length > 0"
-          class="flex justify-end items-center mt-4"
-        >
-          <a-pagination
-            :total="pagination.total || 0"
-            :current="pagination.current"
-            :page-size="pagination.pageSize"
-            show-total
-            show-page-size
-            @change="onPageChange"
+        <template v-else>
+          <a-table
+            v-model:selected-keys="rowSelectKeys"
+            :bordered="false"
+            column-resizable
+            :columns="columns"
+            :data="renderData"
+            :loading="loading"
+            :pagination="pagination"
+            :row-selection="rowSelection"
+            row-key="id"
+            @page-change="onPageChange"
             @page-size-change="onPageSizeChange"
-          />
-        </div>
+          >
+            <!-- <template #index="{ rowIndex }">
+              {{ rowIndex + 1 }}
+            </template> -->
+            <template #name="{ record }">
+              <a-link
+                class="truncate block"
+                @click="
+                  router.push({
+                    name: 'MailMsgDetail',
+                    params: { id: record.id },
+                    query: { appendix: record.name },
+                  })
+                "
+                >{{ record.name }}
+                </a-link>
+            </template>
+
+            <template #time="{ record }">
+              {{ tableDateFormat(record.time) }}
+            </template>
+            <template #operate="{ record }">
+              <a-space>
+                <a-tooltip content="编辑">
+                  <a-link @click="EditMailMsg(record.id)">
+                    <icon-edit style="font-size: 16" />
+                  </a-link>
+                </a-tooltip>
+                <a-tooltip content="查看">
+                  <a-link @click="
+                    router.push({
+                      name: 'MailMsgDetail',
+                      params: { id: record.id },
+                      query: { appendix: record.name },
+                    })
+                  ">
+                    <icon-unordered-list style="font-size: 16" />
+                  </a-link>
+                </a-tooltip>
+              </a-space>
+            </template>
+          </a-table>
+        </template>
       </div>
     </div>
     <div class="content-modal">
@@ -323,9 +404,9 @@
 </template>
 
 <script lang="ts" setup>
-  import { Message, SelectOptionData } from '@arco-design/web-vue';
+  import { Message, SelectOptionData, TableColumnData } from '@arco-design/web-vue';
   import { useI18n } from 'vue-i18n';
-  import { reactive, ref } from 'vue';
+  import { computed, reactive, ref } from 'vue';
   import useLoading from '@/hooks/loading';
   import {
     createMailMsg,
@@ -362,11 +443,16 @@
       time: undefined,
     };
   };
+  const viewMode = ref('card');
   const formModel = ref(generateFormModel());
   // 表格
   const renderData = ref<MailMsgRes[]>([]);
   const operateRow = ref<number>(0);
   const rowSelectKeys = ref<number[]>([]);
+  const rowSelection = reactive({
+    showCheckedAll: true,
+    selectedRowKeys: rowSelectKeys.value,
+  });
   const basePagination: Pagination = {
     current: 1,
     pageSize: 10,
@@ -404,6 +490,70 @@
       rowSelectKeys.value.push(id);
     }
   };
+
+  const columns = computed<TableColumnData[]>(() => [
+    {
+      title: 'ID',
+      dataIndex: 'id',
+      sortable: {
+        sortDirections: ['ascend', 'descend']
+      },
+      width: 80,
+      ellipsis: true,
+      tooltip: true
+    },
+    {
+      title: '邮件主题',
+      slotName: 'name',
+      width:200,
+      ellipsis: true,
+      tooltip: true
+    },
+    {
+      title: '邮件摘要',
+      dataIndex: 'original',
+      ellipsis: true,
+    },
+    {
+      title: '关键字',
+      dataIndex: 'cc',
+      slotName: 'cc',
+      ellipsis: true,
+      tooltip: true,
+      width: 100,
+    },
+    {
+      title: '收件人',
+      dataIndex: 'receiver',
+      ellipsis: true,
+      tooltip: true,
+      width: 120,
+    },
+    {
+      title: '发件人',
+      dataIndex: 'sender',
+      ellipsis: true,
+      tooltip: true,
+      width: 120,
+    },
+    {
+      title: '日期',
+      slotName: 'time',
+      sortable: {
+        sortDirections: ['ascend', 'descend'],
+      },
+      width: 160,
+      ellipsis: true,
+      tooltip: true,
+    },
+    {
+      title: t('data.doc.columns.operate'),
+      dataIndex: 'operate',
+      slotName: 'operate',
+      width: 100,
+      align: 'center',
+    },
+  ]);
 
   // 对话框
   const openNewOrEdit = ref<boolean>(false);

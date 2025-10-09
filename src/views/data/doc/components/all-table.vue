@@ -158,7 +158,6 @@
       :loading="loading"
       :pagination="pagination"
       :row-selection="rowSelection"
-      :size="'medium'"
       row-key="id"
       @page-change="onPageChange"
       @page-size-change="onPageSizeChange"
@@ -167,8 +166,8 @@
         {{ rowIndex + 1 }}
       </template> -->
       <template #title="{ record }">
-        <span
-          class="cursor-pointer"
+        <a-link
+          class="truncate block"
           @click="
             router.push({
               name: 'DocDetail',
@@ -181,7 +180,7 @@
             })
           "
           >{{ record.title }}
-        </span>
+          </a-link>
       </template>
 
       <template #size="{ record }">
@@ -189,7 +188,7 @@
       </template>
 
       <template #type="{ record }">
-        <component :is="getSvgByType(record.type)" class="w-10 h-10" />
+        <component :is="getSvgByType(record.type)" class="w-8 h-8" />
       </template>
       <template #created_time="{ record }">
         {{ tableDateFormat(record.created_time) }}

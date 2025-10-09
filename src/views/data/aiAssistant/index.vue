@@ -2,51 +2,49 @@
   <a-layout class="flex-layout">
     <!-- <Breadcrumb /> -->
     <a-card class="general-card">
-      <div>
-        <div class="layout-content">
-          <div class="layout-sider">
+      <div class="content flex">
+        <div class="layout-sider">
 
-            <div class="btn-line">
+          <div class="btn-line">
 
-              <div class="flex gap-2 mt-2">
-                <a-button type="text" long @click="handleCreateSession">
-                  <icon-plus />
-                  <span> 新建对话 </span>
-                </a-button>
+            <div class="flex gap-2 mt-2">
+              <a-button type="text" long @click="handleCreateSession">
+                <icon-plus />
+                <span> 新建对话 </span>
+              </a-button>
 
-                <a-button
-                  v-if="sessionList && sessionList.length > 0"
-                  type="text"
-                  long
-                  @click="handleClearSession"
-                >
-                  <icon-delete />
-                  <span> 清空对话 </span>
-                </a-button>
-              </div>
-
+              <a-button
+                v-if="sessionList && sessionList.length > 0"
+                type="text"
+                long
+                @click="handleClearSession"
+              >
+                <icon-delete />
+                <span> 清空对话 </span>
+              </a-button>
             </div>
 
-            <div class="session-list">
-              <SessionItem
-                v-for="session in sessionList"
-                :key="session.id"
-                :active="session.id === activeSession.id"
-                :session="session"
-                @click="handleSessionSwitch(session)"
-                @delete="handleDeleteSession"
-              ></SessionItem>
-            </div>
           </div>
-          <a-layout-content>
-            <Chat
-              :session="activeSession"
-              :loading="isWaitingForResponse"
-              @save="saveSessions"
-              @loading="handleLoading"
-            />
-          </a-layout-content>
+
+          <div class="session-list">
+            <SessionItem
+              v-for="session in sessionList"
+              :key="session.id"
+              :active="session.id === activeSession.id"
+              :session="session"
+              @click="handleSessionSwitch(session)"
+              @delete="handleDeleteSession"
+            ></SessionItem>
+          </div>
         </div>
+        <a-layout-content>
+          <Chat
+            :session="activeSession"
+            :loading="isWaitingForResponse"
+            @save="saveSessions"
+            @loading="handleLoading"
+          />
+        </a-layout-content>
       </div>
     </a-card>
     <Footer />
