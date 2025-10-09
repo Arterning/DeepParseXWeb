@@ -114,26 +114,26 @@
       </div>
       <div v-else>
         <div class="grid grid-cols-2 gap-4">
-          <div
+          <a-card
             v-for="record in renderData"
             :key="record.id"
-            class="flex items-start p-4 rounded-lg border shadow-none hover:shadow-lg transition-shadow duration-300"
+            class="shadow-none rounded-lg hover:shadow-lg transition-shadow duration-300"
             :class="{
               'border-blue-500 ring-1 ring-blue-500': rowSelectKeys.includes(
                 record.id
               ),
             }"
           >
-            <div class="mr-4 pt-1">
-              <a-checkbox
-                :model-value="rowSelectKeys.includes(record.id)"
-                @change="() => toggleSelection(record.id)"
-              />
-            </div>
-            <div class="flex-1 min-w-0">
-              <div class="flex justify-between items-center mb-2">
+            <div class="flex flex-col min-w-0">
+              <div class="flex justify-between items-center mb-4">
+                <div class="mr-2 pt-0.5">
+                  <a-checkbox
+                    :model-value="rowSelectKeys.includes(record.id)"
+                    @change="() => toggleSelection(record.id)"
+                  />
+                </div>
                 <a-link
-                  class="text-lg font-semibold truncate block"
+                  class="flex-1  text-lg font-semibold truncate block"
                   :title="record.name"
                   @click="
                     router.push({
@@ -151,13 +151,13 @@
               </div>
               <span
                 v-if="record.doc_name"
-                class="text-xs text-gray-400 flex items-center"
+                class="text-xs text-gray-400 flex items-center px-1"
               >
                 <icon-location /> {{ record.doc_name }}
               </span>
 
               <div
-                class="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-gray-600 mb-3"
+                class="flex flex-wrap items-center px-1 gap-x-4 gap-y-1 text-sm text-gray-600 mb-3"
               >
                 <div class="flex items-center">
                   <span class="font-medium text-gray-500">From:</span>
@@ -183,7 +183,7 @@
               </div>
 
               <p
-                class="text-gray-600 text-sm truncate mb-4"
+                class="text-gray-600 text-sm truncate mb-4 px-1"
                 :title="record.original"
               >
                 {{ record.original || 'No content to display.' }}
@@ -215,7 +215,7 @@
                 </div>
               </div>
             </div>
-          </div>
+          </a-card>
         </div>
 
         <div
