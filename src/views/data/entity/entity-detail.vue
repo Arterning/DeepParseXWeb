@@ -67,7 +67,7 @@
               </div>
             </div>
             <div class="text-blue-500 cursor-pointer ml-2">
-              <span class="text-sm">查看</span>
+              <a-link class="text-sm" @click="router.push({name: 'DocDetail', params: { id: doc.id }, query: { appendix: doc.title }})">查看</a-link>
             </div>
           </div>
         </div>
@@ -80,6 +80,7 @@
 <script lang="ts" setup>
 import { computed } from 'vue';
 import { EntityRes } from '@/api/entity';
+import router from '@/router';
 
 interface Props {
   data: EntityRes;
