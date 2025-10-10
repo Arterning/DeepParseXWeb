@@ -78,9 +78,9 @@ const initChart = () => {
       show: true,
       formatter: (params: any) => {
         if (params.dataType === 'node') {
-          return `${params.data.label}<br/>类型: ${params.data.type || '未知'}`;
+          return `<b>${params.data.category || '未知'}</b><br/>${params.data.name}`;
         } else if (params.dataType === 'edge') {
-          return `关系: ${params.data.label}`;
+          return `${params.data.source}<br/><b>${params.data.name}</b><br/>${params.data.target}`;
         }
         return '';
       }
@@ -237,6 +237,7 @@ const updateChart = (data: GraphData) => {
   // 转换边数据
   const links = data.edges.map((edge: EdgeData) => ({
     id: edge.id,
+    name: edge.label,
     source: edge.source,
     target: edge.target,
     // label: edge.label,
@@ -289,7 +290,7 @@ const editNode = (nodeData: any) => {
 // 编辑边
 const editEdge = (edgeData: any) => {
   editType.value = 'edge';
-  editValue.value = edgeData.label;
+  editValue.value = edgeData.name;
   editData.value = edgeData;
   showEditModal.value = true;
 };
