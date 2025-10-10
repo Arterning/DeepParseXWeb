@@ -12,32 +12,32 @@ const emit = defineEmits<{
   extractGraph: [entityTypes: string[]];
 }>();
 
-const isFullscreen = ref(false);
+// const isFullscreen = ref(false);
 
-const toggleFullscreen = () => {
-  const element = document.getElementById('knowledge-graph-container');
-  if (screenfull.isEnabled && element) {
-    screenfull.toggle(element);
-  }
-};
+// const toggleFullscreen = () => {
+//   const element = document.getElementById('knowledge-graph-container');
+//   if (screenfull.isEnabled && element) {
+//     screenfull.toggle(element);
+//   }
+// };
 
-const onFullscreenChange = () => {
-  if (screenfull.isEnabled) {
-    isFullscreen.value = screenfull.isFullscreen;
-  }
-};
+// const onFullscreenChange = () => {
+//   if (screenfull.isEnabled) {
+//     isFullscreen.value = screenfull.isFullscreen;
+//   }
+// };
 
-onMounted(() => {
-  if (screenfull.isEnabled) {
-    screenfull.on('change', onFullscreenChange);
-  }
-});
+// onMounted(() => {
+//   if (screenfull.isEnabled) {
+//     screenfull.on('change', onFullscreenChange);
+//   }
+// });
 
-onUnmounted(() => {
-  if (screenfull.isEnabled) {
-    screenfull.off('change', onFullscreenChange);
-  }
-});
+// onUnmounted(() => {
+//   if (screenfull.isEnabled) {
+//     screenfull.off('change', onFullscreenChange);
+//   }
+// });
 
 const graphData = ref<GraphData>({
   nodes: [],
@@ -64,7 +64,7 @@ const saveData = () => {
 const newNode = ref({
   id: '',
   label: '',
-  type: 'person'
+  type: '人物'
 });
 
 // 边表单
@@ -86,7 +86,7 @@ const addNode = () => {
     type: newNode.value.type
   });
 
-  newNode.value = { id: '', label: '', type: 'person' };
+  newNode.value = { id: '', label: '', type: '人物' };
   saveData();
   emit('dataChange', graphData.value);
 };
@@ -339,11 +339,11 @@ const handleExtractConfirm = () => {
           刷新
         </button>
 
-        <button @click="toggleFullscreen"
+        <!-- <button @click="toggleFullscreen"
           class="bg-[#2971CF] hover:bg-blue-700 text-white p-2 rounded transition-colors duration-200 flex items-center justify-center">
           <span :class="isFullscreen ? 'i-heroicons-arrows-pointing-in-solid' : 'i-heroicons-arrows-pointing-out-solid'"></span>
           {{ isFullscreen ? '退出全屏' : '全屏' }}
-        </button>
+        </button> -->
 
         <!-- <button @click="emit('dataChange', { nodes: [], edges: [] })"
           class="bg-red-300 hover:bg-red-700 text-white p-2 rounded transition-colors duration-200 flex items-center justify-center">

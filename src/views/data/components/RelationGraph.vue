@@ -1,7 +1,21 @@
 <template>
   <div class="relation-graph-container">
     <a-empty v-if="!graphData.nodes.length" />
-    <div v-else ref="chartContainer" class="w-full h-full rounded-lg"></div>
+    <div v-else class="chart-wrapper">
+      <div ref="chartContainer" class="w-full h-full rounded-lg"></div>
+      <a-button 
+        class="fullscreen-btn" 
+        size="small" 
+        type="text"
+        @click="toggleFullscreen"
+      >
+        <template #icon>
+          <icon-fullscreen-exit v-if="isFullscreen" />
+          <icon-fullscreen v-else />
+        </template>
+        {{ isFullscreen ? '退出全屏' : '全屏' }}
+      </a-button>
+    </div>
   </div>
 </template>
 
@@ -9,6 +23,7 @@
 import { ref, onMounted, watch, nextTick } from 'vue';
 import * as echarts from 'echarts';
 import type { GraphData, NodeData, EdgeData } from '@/types/graph';
+import { IconFullscreen, IconFullscreenExit } from '@arco-design/web-vue/es/icon';
 
 const props = defineProps<{
   graphData: GraphData;
@@ -20,13 +35,16 @@ const chartContainer = ref<HTMLDivElement | null>(null);
 let chartInstance: echarts.ECharts | null = null;
 const selectedElements = ref<string[]>([]);
 
+// 全屏状态
+const isFullscreen = ref(false);
+
 // 节点类型颜色映射 - 使用更优雅的配色方案
 const nodeTypeColors: Record<string, string> = {
-  '人物': '#4A90E2',      // 优雅蓝色
-  '组织': '#7B68EE',      // 柔和紫色
-  '地点': '#50C878',      // 清新绿色
-  '事件': '#FF8C00',      // 温暖橙色
-  '概念': '#E91E63'       // 现代粉色
+  '人物': '#f59311',      // 优雅蓝色
+  '组织': '#0e72cc',      // 柔和紫色
+  '地点': '#fa4343',      // 清新绿色
+  '事件': '#16afcc',      // 温暖橙色
+  '概念': '#6ca30f'       // 现代粉色
 };
 
 // 初始化图表
@@ -54,19 +72,18 @@ const initChart = () => {
       left: 0,
       bottom: 0,
       data: [
-        { name: '人物', itemStyle: { color: '#4A90E2' } },
-        { name: '组织', itemStyle: { color: '#7B68EE' } },
-        { name: '地点', itemStyle: { color: '#50C878' } },
-        { name: '事件', itemStyle: { color: '#FF8C00' } },
-        { name: '概念', itemStyle: { color: '#E91E63' } }
+        { name: '人物', itemStyle: { color: '#f59311' } },
+        { name: '组织', itemStyle: { color: '#0e72cc' } },
+        { name: '地点', itemStyle: { color: '#fa4343' } },
+        { name: '事件', itemStyle: { color: '#16afcc' } },
+        { name: '概念', itemStyle: { color: '#6ca30f' } }
       ],
       textStyle: {
-        color: '#374151',
+        color: '#9192ab',
         fontSize: 12,
         fontWeight: 'bold'
       },
       itemGap: 8,
-      backgroundColor: 'rgba(255, 255, 255, 0.8)',
       padding: [10, 15]
     },
     series: [{
@@ -75,11 +92,11 @@ const initChart = () => {
       data: [],
       links: [],
       categories: [
-        { name: '人物', itemStyle: { color: '#4A90E2' } },
-        { name: '组织', itemStyle: { color: '#7B68EE' } },
-        { name: '地点', itemStyle: { color: '#50C878' } },
-        { name: '事件', itemStyle: { color: '#FF8C00' } },
-        { name: '概念', itemStyle: { color: '#E91E63' } }
+        { name: '人物', itemStyle: { color: '#f59311' } },
+        { name: '组织', itemStyle: { color: '#0e72cc' } },
+        { name: '地点', itemStyle: { color: '#fa4343' } },
+        { name: '事件', itemStyle: { color: '#16afcc' } },
+        { name: '概念', itemStyle: { color: '#6ca30f' } }
       ],
       legendHoverLink: true,
       roam: true,
@@ -95,30 +112,30 @@ const initChart = () => {
         formatter: '{c}',
         fontSize: 10,
         color: '#ffffff',
-        backgroundColor: '#3A6CCA',
-        // borderColor: '#6B7280',
-        // borderWidth: 1,
-        borderRadius: 5,
-        padding: [0, 4]
+        backgroundColor: '#9192ab',
+        borderColor: '#9192ab',
+        borderWidth: 1,
+        borderRadius: 4,
+        padding: [2, 4]
       },
       label: {
         show: true,
         position: 'inside',
-        fontSize: 14,
+        fontSize: 12,
         color: '#ffffff',
         fontWeight: 'bold',
-        textBorderColor: '#3A6CCA',
+        textBorderColor: '#000000',
         textBorderWidth: 2
       },
       emphasis: {
         focus: 'adjacency',
         lineStyle: {
-          width: 1
+          width: 4
         }
       },
       force: {
-        repulsion: 800,
-        edgeLength: 80,
+        repulsion: 1000,
+        edgeLength: 100,
         layoutAnimation: true
       }
     }]
@@ -207,7 +224,7 @@ const updateChart = (data: GraphData) => {
       id: node.id,
       name: node.label,
       category: node.type || '未知',
-      symbol: 'circle', // 统一使用圆形
+      symbol: 'circle',
       symbolSize: symbolSize,
       itemStyle: {
         color: nodeTypeColors[node.type || ''] || '#9CA3AF'
@@ -215,10 +232,10 @@ const updateChart = (data: GraphData) => {
       label: {
         show: true,
         position: 'inside',
-        fontSize: Math.max(10, Math.min(16, symbolSize / 4)), // 根据节点大小调整字体
+        fontSize: Math.max(14, Math.min(20, symbolSize / 4)), // 根据节点大小调整字体
         color: '#ffffff',
         fontWeight: 'bold',
-        textBorderColor: '#000000',
+        textBorderColor: '#9192ab',
         textBorderWidth: 2
       }
     };
@@ -231,20 +248,19 @@ const updateChart = (data: GraphData) => {
     target: edge.target,
     // label: edge.label,
     lineStyle: {
-      color: '#6B7280',
+      color: '#9192ab',
       width: 2,
       curveness: 0.1
     },
     label: {
       show: true,
       formatter: edge.label,
-      fontSize: 10,
-      color: '#ffffff',
-      backgroundColor: '#374151',
-      borderColor: '#6B7280',
-      borderWidth: 1,
-      borderRadius: 4,
-      padding: [2, 4]
+      fontSize: 12,
+      color: '#000000',
+      backgroundColor: '#9192ab',
+      borderWidth: 0,
+      borderRadius: 12,
+      padding: [4, 8]
     }
   }));
 
@@ -362,6 +378,33 @@ const handleResize = () => {
   }
 };
 
+// 全屏切换
+const toggleFullscreen = () => {
+  if (!document.fullscreenElement) {
+    // 进入全屏
+    const container = document.querySelector('.relation-graph-container') as HTMLElement;
+    if (container && container.requestFullscreen) {
+      container.requestFullscreen();
+    }
+  } else {
+    // 退出全屏
+    if (document.exitFullscreen) {
+      document.exitFullscreen();
+    }
+  }
+};
+
+// 全屏状态变化监听
+const handleFullscreenChange = () => {
+  isFullscreen.value = !!document.fullscreenElement;
+  // 全屏状态变化时重新调整图表大小
+  setTimeout(() => {
+    if (chartInstance) {
+      chartInstance.resize();
+    }
+  }, 100);
+};
+
 // 初始化
 onMounted(async () => {
   await nextTick();
@@ -370,6 +413,8 @@ onMounted(async () => {
   
   // 监听窗口大小变化
   window.addEventListener('resize', handleResize);
+  // 监听全屏状态变化
+  document.addEventListener('fullscreenchange', handleFullscreenChange);
 });
 
 // 监听数据变化
@@ -384,6 +429,7 @@ onUnmounted(() => {
     chartInstance.dispose();
   }
   window.removeEventListener('resize', handleResize);
+  document.removeEventListener('fullscreenchange', handleFullscreenChange);
 });
 </script>
 
@@ -391,11 +437,25 @@ onUnmounted(() => {
 .relation-graph-container {
   width: 100%;
   height: calc(100vh - 380px);
-  /* min-height: 400px; */
+  min-height: 400px;
+  position: relative;
 }
 
-/* .relation-graph-container > div {
+.chart-wrapper {
+  position: relative;
   width: 100%;
   height: 100%;
-} */
+}
+
+.fullscreen-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 1000;
+}
+
+.relation-graph-container > div {
+  width: 100%;
+  height: 100%;
+}
 </style>

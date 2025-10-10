@@ -23,18 +23,22 @@
                 <a-skeleton-line :rows="8" />
               </a-space>
             </a-skeleton>
-            <div class="flex flex-col h-screen" v-if="!extractGraphLoading">
+            <div class="flex flex-col" v-if="!extractGraphLoading">
               <GraphControls 
-                class="p-2 border-b"
+                class="pb-4 border-b"
                 :initial-data="graphData"
                 @extract-graph="handleExtractGraph"
                 @dataChange="handleDataChange"
               />
-              <KnowledgeGraph 
+              <!-- <KnowledgeGraph 
                 class="flex-1" 
                 :graph-data="graphData" 
                 @dataChange="handleDataChange"
-              />
+              /> -->
+              <RelationGraph
+                :graph-data="graphData" 
+                @dataChange="handleDataChange"
+              /> 
             </div>
           </div>
         </a-tab-pane>   
@@ -62,6 +66,7 @@ import FileDescription from '../components/FileDescription.vue';
 import FileTranslation from './components/FileTranslation.vue';
 import GraphControls from './GraphControls.vue';
 import KnowledgeGraph from './KnowledgeGraph.vue';
+import RelationGraph from '../components/RelationGraph.vue';
 import Entity from './entity.vue';
 import { Message } from '@arco-design/web-vue';
 

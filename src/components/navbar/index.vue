@@ -6,19 +6,19 @@
           <!-- <span class="relative z-10"></span> -->
           
           <!-- 顶部流动条 -->
-          <span class="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-blue-500 to-transparent animate-flow-x"></span>
+          <span class="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-blue-600 to-transparent animate-flow-x"></span>
           
           <!-- 右侧流动条 -->
-          <span class="absolute top-0 right-0 bottom-0 w-[2px] bg-gradient-to-b from-transparent via-blue-500 to-transparent animate-flow-y delay-100"></span>
+          <span class="absolute top-0 right-0 bottom-0 w-[2px] bg-gradient-to-b from-transparent via-blue-600 to-transparent animate-flow-y delay-100"></span>
           
           <!-- 底部流动条 -->
-          <span class="absolute bottom-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-blue-500 to-transparent animate-flow-x delay-200"></span>
+          <span class="absolute bottom-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-blue-600 to-transparent animate-flow-x delay-200"></span>
           
           <!-- 左侧流动条 -->
-          <span class="absolute top-0 left-0 bottom-0 w-[2px] bg-gradient-to-b from-transparent via-blue-500 to-transparent animate-flow-y delay-300"></span>
+          <span class="absolute top-0 left-0 bottom-0 w-[2px] bg-gradient-to-b from-transparent via-blue-600 to-transparent animate-flow-y delay-300"></span>
           
           <!-- 按钮底色 -->
-          <span class="absolute inset-[2px] rounded-md z-0"></span>
+          <!-- <span class="absolute inset-[2px] rounded-lg z-0"></span> -->
 
           <img
             alt="logo"
@@ -28,8 +28,8 @@
         </div>
         <div
           :heading="5"
-          :style="{ margin: 0, fontSize: '20px'}"
-          class="cursor-pointer font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-slate-200"
+          :style="{ margin: 0, fontSize: '22px'}"
+          class="cursor-pointer font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-blue-400 drop-shadow-md"
           >
           {{ $t('login.form.sub_title') }}
         </div>
