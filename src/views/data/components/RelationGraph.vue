@@ -1,7 +1,7 @@
 <template>
   <div class="relation-graph-container">
-    <a-empty v-if="!graphData.nodes.length" />
-    <div v-else class="chart-wrapper">
+    <a-empty v-show="!graphData.nodes.length" class="mt-6"/>
+    <div v-show="graphData.nodes.length" class="chart-wrapper bg-white dark:bg-[var(--color-bg-2)]">
       <div ref="chartContainer" class="w-full h-full rounded-lg"></div>
       <a-button 
         class="fullscreen-btn" 
@@ -16,6 +16,20 @@
         {{ isFullscreen ? '退出全屏' : '全屏' }}
       </a-button>
     </div>
+
+    <!-- 编辑节点弹窗 -->
+    <a-modal
+      v-model:visible="showEditModal"
+      :title="editType === 'node' ? '编辑节点' : '编辑关系'"
+      @ok="handleEdit"
+      @cancel="showEditModal = false"
+    >
+      <a-input 
+        v-model="editValue" 
+        :placeholder="editType === 'node' ? '请输入节点名称' : '请输入关系类型'"
+        @press-enter="handleEdit"
+      />
+    </a-modal>
   </div>
 </template>
 
@@ -38,13 +52,18 @@ const selectedElements = ref<string[]>([]);
 // 全屏状态
 const isFullscreen = ref(false);
 
-// 节点类型颜色映射 - 使用更优雅的配色方案
+// 编辑弹窗状态
+const showEditModal = ref(false);
+const editType = ref<'node' | 'edge'>('node');
+const editValue = ref('');
+const editData = ref<any>(null);
+
 const nodeTypeColors: Record<string, string> = {
-  '人物': '#f59311',      // 优雅蓝色
-  '组织': '#0e72cc',      // 柔和紫色
-  '地点': '#fa4343',      // 清新绿色
-  '事件': '#16afcc',      // 温暖橙色
-  '概念': '#6ca30f'       // 现代粉色
+  '人物': '#f59311', 
+  '组织': '#0e72cc', 
+  '地点': '#fa4343',
+  '事件': '#16afcc',
+  '概念': '#6ca30f' 
 };
 
 // 初始化图表
@@ -106,32 +125,6 @@ const initChart = () => {
         color: '#6B7280',
         width: 2,
         curveness: 0.1
-      },
-      edgeLabel: {
-        show: true,
-        formatter: '{c}',
-        fontSize: 10,
-        color: '#ffffff',
-        backgroundColor: '#9192ab',
-        borderColor: '#9192ab',
-        borderWidth: 1,
-        borderRadius: 4,
-        padding: [2, 4]
-      },
-      label: {
-        show: true,
-        position: 'inside',
-        fontSize: 12,
-        color: '#ffffff',
-        fontWeight: 'bold',
-        textBorderColor: '#000000',
-        textBorderWidth: 2
-      },
-      emphasis: {
-        focus: 'adjacency',
-        lineStyle: {
-          width: 4
-        }
       },
       force: {
         repulsion: 1000,
@@ -211,9 +204,9 @@ const updateChart = (data: GraphData) => {
   // 转换节点数据
   const nodes = data.nodes.map((node: NodeData) => {
     const connections = connectionCount[node.id];
-    // 根据连接数计算节点大小 (20-80像素范围)
-    const baseSize = 20;
-    const maxSize = 80;
+    // 根据连接数计算节点大小
+    const baseSize = 50;
+    const maxSize = 100;
     const sizeRange = maxSize - baseSize;
     const normalizedConnections = maxConnections > minConnections 
       ? (connections - minConnections) / (maxConnections - minConnections)
@@ -232,7 +225,7 @@ const updateChart = (data: GraphData) => {
       label: {
         show: true,
         position: 'inside',
-        fontSize: Math.max(14, Math.min(20, symbolSize / 4)), // 根据节点大小调整字体
+        fontSize: Math.max(12, Math.min(20, symbolSize / 4)), // 根据节点大小调整字体
         color: '#ffffff',
         fontWeight: 'bold',
         textBorderColor: '#9192ab',
@@ -256,8 +249,8 @@ const updateChart = (data: GraphData) => {
       show: true,
       formatter: edge.label,
       fontSize: 12,
-      color: '#000000',
-      backgroundColor: '#9192ab',
+      color: '#ffffff',
+      backgroundColor: '#3A6CCA',
       borderWidth: 0,
       borderRadius: 12,
       padding: [4, 8]
@@ -287,32 +280,43 @@ const handleEdgeClick = (edgeData: any) => {
 
 // 编辑节点
 const editNode = (nodeData: any) => {
-  const newLabel = prompt('编辑节点名称', nodeData.name);
-  if (newLabel !== null && newLabel !== nodeData.name) {
-    // 更新数据并触发事件
-    const updatedData = {
-      nodes: props.graphData.nodes.map(node => 
-        node.id === nodeData.id ? { ...node, label: newLabel } : node
-      ),
-      edges: props.graphData.edges
-    };
-    emit('dataChange', updatedData);
-  }
+  editType.value = 'node';
+  editValue.value = nodeData.name;
+  editData.value = nodeData;
+  showEditModal.value = true;
 };
 
 // 编辑边
 const editEdge = (edgeData: any) => {
-  const newLabel = prompt('编辑关系类型', edgeData.label);
-  if (newLabel !== null && newLabel !== edgeData.label) {
-    // 更新数据并触发事件
+  editType.value = 'edge';
+  editValue.value = edgeData.label;
+  editData.value = edgeData;
+  showEditModal.value = true;
+};
+
+// 处理编辑确认
+const handleEdit = () => {
+  if (!editValue.value.trim()) return;
+  
+  if (editType.value === 'node') {
+    const updatedData = {
+      nodes: props.graphData.nodes.map(node => 
+        node.id === editData.value.id ? { ...node, label: editValue.value } : node
+      ),
+      edges: props.graphData.edges
+    };
+    emit('dataChange', updatedData);
+  } else {
     const updatedData = {
       nodes: props.graphData.nodes,
       edges: props.graphData.edges.map(edge => 
-        edge.id === edgeData.id ? { ...edge, label: newLabel } : edge
+        edge.id === editData.value.id ? { ...edge, label: editValue.value } : edge
       )
     };
     emit('dataChange', updatedData);
   }
+  
+  showEditModal.value = false;
 };
 
 // 查找指定位置的节点
@@ -422,6 +426,23 @@ watch(() => props.graphData, (newData) => {
   updateChart(newData);
 }, { deep: true });
 
+// 当过滤导致数据为空后再恢复为非空时，确保图表能重新初始化并显示
+watch(() => props.graphData.nodes.length, async (len) => {
+  if (len > 0) {
+    await nextTick();
+    if (!chartInstance && chartContainer.value) {
+      initChart();
+    }
+    updateChart(props.graphData);
+    // 恢复显示后调整尺寸
+    setTimeout(() => {
+      if (chartInstance) {
+        chartInstance.resize();
+      }
+    }, 0);
+  }
+});
+
 // 组件卸载时清理
 import { onUnmounted } from 'vue';
 onUnmounted(() => {
@@ -437,7 +458,6 @@ onUnmounted(() => {
 .relation-graph-container {
   width: 100%;
   height: calc(100vh - 380px);
-  min-height: 400px;
   position: relative;
 }
 
