@@ -77,16 +77,12 @@ const newEdge = ref({
   label: ''
 });
 
-const handleBeforeOk = async (formRef: Ref<FormInstance | undefined>, onSuccess: Function) => {
-  console.log(formRef);
-  
-  // try {
-  //   await formRef?.validate();
-  //   onSuccess();
-  //   return true; // 通过校验，允许关闭
-  // } catch (error) {
-  //   return false; // 校验不通过，阻止关闭
-  // }
+const handleBeforeOk = async (type: 0 | 1) => {
+  const form = type ? addRelationFormRef.value : addNodeFormRef.value;
+  if (!form) return false;
+  return await new Promise<boolean>((resolve) => {
+    form.validate((errors) => resolve(!errors || errors.length === 0));
+  });
 };
 
 
@@ -201,26 +197,12 @@ const handleExtractConfirm = () => {
 <template>
   <div class="space-y-4">
     <!-- 添加节点 -->
-    <a-modal v-model:visible="showAddNodeModal" :title="$t('添加节点')" :on-before-ok="() => handleBeforeOk(addNodeFormRef, addNode)">
+    <a-modal v-model:visible="showAddNodeModal" :title="$t('添加节点')" :on-before-ok="() => handleBeforeOk(0)" @ok="addNode">
       <a-form ref="addNodeFormRef" :model="newNode" layout="vertical" class="px-4">
-        <a-form-item field="id" label="ID" required
-        :rules="[{ required: true,validator: (value, callback) => {
-          if (!value || value.trim() === '') {
-            callback('请输入节点ID');
-          } else {
-            callback();
-          }
-        }}]">
+        <a-form-item field="id" label="ID" :rules="[{ required: true, message: '请输入节点ID'}]">
           <a-input v-model="newNode.id" placeholder="ID" />
         </a-form-item>
-        <a-form-item field="label" label="节点名称" required         
-        :rules="[{ required: true,validator: (value, callback) => {
-          if (!value || value.trim() === '') {
-            callback('请输入节点名称');
-          } else {
-            callback();
-          }
-        }}]">
+        <a-form-item field="label" label="节点名称" :rules="[{ required: true, message: '请输入节点名称'}]">
           <a-input v-model="newNode.label" placeholder="节点名称" />
         </a-form-item>
         <a-form-item field="type" label="类型" >
@@ -240,17 +222,10 @@ const handleExtractConfirm = () => {
       </a-form>
     </a-modal>
 
-    <a-modal v-model:visible="showAddRelationModal" :title="$t('添加关系')" :on-before-ok="() => handleBeforeOk(addRelationFormRef, addEdge)">
+    <a-modal v-model:visible="showAddRelationModal" :title="$t('添加关系')" :on-before-ok="() => handleBeforeOk(1)" @ok="addEdge">
       <!-- 添加关系 -->
       <a-form ref="addRelationFormRef" :model="newEdge" layout="vertical" class="px-4">
-        <a-form-item field="source" label="源节点" required
-        :rules="[{ required: true,validator: (value, callback) => {
-          if (!value || value.trim() === '') {
-            callback('请输入源节点');
-          } else {
-            callback();
-          }
-        }}]">
+        <a-form-item field="source" label="源节点" :rules="[{ required: true, message: '请选择源节点'}]">
           <a-select v-model="newEdge.source">
             <a-option value="" disabled>选择源节点</a-option>
             <a-option v-for="node in graphData.nodes" :key="node.id" :value="node.id">
@@ -258,14 +233,7 @@ const handleExtractConfirm = () => {
             </a-option>
           </a-select>
         </a-form-item>
-        <a-form-item field="target" label="目标节点" required 
-        :rules="[{ required: true,validator: (value, callback) => {
-          if (!value || value.trim() === '') {
-            callback('请输入目标节点');
-          } else {
-            callback();
-          }
-        }}]">
+        <a-form-item field="target" label="目标节点" :rules="[{ required: true, message: '请选择目标节点'}]">
           <a-select v-model="newEdge.target">
             <a-option value="" disabled>选择目标节点</a-option>
             <a-option v-for="node in graphData.nodes" :key="node.id" :value="node.id">
@@ -273,14 +241,7 @@ const handleExtractConfirm = () => {
             </a-option>
           </a-select>
         </a-form-item>
-        <a-form-item field="label" label="关系类型" required 
-        :rules="[{ required: true,validator: (value, callback) => {
-          if (!value || value.trim() === '') {
-            callback('请输入关系类型');
-          } else {
-            callback();
-          }
-        }}]">
+        <a-form-item field="label" label="关系类型" :rules="[{ required: true, message: '请输入关系类型'}]">
           <a-input v-model="newEdge.label" placeholder="例如: 朋友, 同事, 属于" />
         </a-form-item>
         <!-- <button @click="addEdge"
