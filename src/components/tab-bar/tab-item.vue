@@ -192,13 +192,13 @@
   .link-activated {
     background-color: #2971CF;
     .arco-tag-close-btn{
-      color: #e0e0e0;
+      color: #ffffff;
     }
-    .arco-tag-close-btn:hover{
+    .arco-tag-icon-hover:hover{
       color: var(--color-text-2);
     }
     .tag-link {
-      color: #e0e0e0;
+      color: #ffffff;
     }
 
     // & + .arco-tag-close-btn {
@@ -212,15 +212,15 @@
     }
   }
 
-  .arco-dropdown-open {
-    .tag-link {
-      color: rgb(var(--danger-6));
-    }
+  // .arco-dropdown-open {
+  //   .tag-link {
+  //     color: rgb(var(--danger-6));
+  //   }
 
-    .arco-tag-close-btn {
-      color: rgb(var(--danger-6));
-    }
-  }
+  //   .arco-tag-close-btn {
+  //     color: rgb(var(--danger-6));
+  //   }
+  // }
 
   .sperate-line {
     border-bottom: 1px solid var(--color-neutral-3);
