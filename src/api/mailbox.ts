@@ -6,6 +6,7 @@ export interface MailBoxReq {
   email_num?: number;
   country?: string;
   other_info?: string;
+  user_name?: string;
 }
 
 export interface MailBoxRes extends MailBoxReq {
@@ -120,4 +121,28 @@ export interface AnalyzeRelationshipsRes {
 
 export function analyzeMailboxRelationships(data: AnalyzeRelationshipsReq): Promise<AnalyzeRelationshipsRes> {
   return axios.post('/api/v1/sys/mailbox/analyze-relationships', data);
+}
+
+// 邮箱邮件数量排名响应接口
+export interface MailboxRankingItem {
+  email: string;
+  count: number;
+}
+
+
+// 获取邮箱邮件数量排名
+export function getMailboxRanking(): Promise<MailboxRankingItem[]> {
+  return axios.get('/api/v1/sys/mailbox/ranking');
+}
+
+// 邮箱类型分布响应接口
+export interface EmailProviderDistributionItem {
+  name: string;
+  value: number;
+}
+
+
+// 获取邮箱类型分布
+export function getEmailProviderDistribution(): Promise<EmailProviderDistributionItem[]> {
+  return axios.get('/api/v1/sys/mailbox/provider-distribution');
 }
