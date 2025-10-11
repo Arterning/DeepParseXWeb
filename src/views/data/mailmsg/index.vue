@@ -101,10 +101,6 @@
         </template>
         删除
       </a-button>
-      <a-button type="text" @click="openDir=true">
-        <template #icon><icon-folder /></template>
-        {{ dirSelect?dirSelect.name:'/' }}
-      </a-button>
       <a-radio-group v-model="viewMode" size="small">
         <a-radio value="table">
           <template #radio="{ checked }">
@@ -127,6 +123,10 @@
           </template>
         </a-radio>
       </a-radio-group>
+      <a-button type="text" @click="openDir=true">
+        <template #icon><icon-folder /></template>
+        {{ dirSelect?dirSelect.name:'/' }}
+      </a-button>
     </a-space>
     <div class="mt-5">
       <div

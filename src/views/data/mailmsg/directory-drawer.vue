@@ -30,13 +30,29 @@
             :default-expanded-keys="expandedKeys"
             :selected-keys="selectedKeys"
             @select="onSelect"
-            block-node
           >
             <template #title="nodeData">
-              <div class="flex items-center space-x-2">
-                <icon-folder class="text-blue-500" />
-                <span>{{ nodeData.title }}</span>
-              </div>
+              <template v-if="nodeData.edit">
+                <a-input @click.stop :default-value="nodeData.title" size="mini" allow-clear
+                  placeholder="目录名不可为空"
+                  @keyup.enter="updateDirName($event, nodeData)"
+                  @blur="nodeData.edit=false"
+                  class="border-0 bg-transparent hover:bg-transparent"
+                />
+              </template>
+              <template v-else>
+                <a-dropdown trigger="contextMenu">
+                  <div class="flex items-center space-x-2 truncate">
+                    <icon-folder class="text-blue-500" />
+                    <span>{{ nodeData.title }}</span>
+                  </div>
+                  <template #content>
+                    <a-doption @click="handleCreate(nodeData)">新建目录</a-doption>
+                    <a-doption @click="nodeData.edit=true">重命名</a-doption>
+                    <a-doption @click="handleDelete(nodeData)">删除</a-doption>
+                  </template>
+                </a-dropdown>
+              </template>
             </template>
           </a-tree>
           
@@ -53,9 +69,9 @@
 
 <script setup lang='ts'>
   import { ref, computed, watch, onMounted } from 'vue';
-  import { Message } from '@arco-design/web-vue';
+  import { Modal, Message } from '@arco-design/web-vue';
   import useLoading from '@/hooks/loading';
-  import { queryDirectoryList, type DirectoryRes } from '@/api/dir';
+  import { createDirectory, deleteDirectory, queryDirectoryList, updateDirectory, type DirectoryRes } from '@/api/dir';
   import { IconFolder } from '@arco-design/web-vue/es/icon';
 
   const props = defineProps({
@@ -99,7 +115,8 @@
       return {
         key: item.id.toString(),
         title: item.name,
-        children: item.children ? buildTreeData(item.children) : undefined
+        children: item.children ? buildTreeData(item.children) : undefined,
+        edit: false,
       };
     }).filter(Boolean);
   };
@@ -115,9 +132,7 @@
       
       const res = await queryDirectoryList(params);
       directoryList.value = res;
-      
-      const treeDataResult = buildTreeData(directoryList.value);
-      
+
       // 递归收集所有节点的 key 用于默认展开
       expandedKeys.value = getAllNodeKeys(directoryList.value);
       
@@ -191,6 +206,73 @@
     searchKey.value = '';
     loadDirectoryList();
   };
+
+  // 新建目录
+  const handleCreate = async (node: any) => {
+    const baseName = '新建文件夹';
+    let newName = baseName;
+    // 处理同名
+    const siblings = directoryList.value;
+    let i = 1;
+    while (siblings.some(d => d.name === newName)) {
+      newName = `${baseName}(${i++})`;
+    }
+    
+    try {
+      await createDirectory({ name: newName, parent_id: Number(node.key) || undefined });
+      await loadDirectoryList(searchKey.value);
+    } catch (e) {
+      // console.error(e);
+      Message.error('新建失败');
+    }
+  };
+
+  // 重命名目录
+  const updateDirName = async (e: any, node: any) => {
+    let name = e.target?.value || '';
+    if (!name) {
+      return;
+    }
+    // 处理同名
+    const siblings = directoryList.value;
+    let i = 1;
+    while (siblings.some(d => d.name === name)) { 
+      name = `${name}(${i++})`;
+    }
+    try {
+      await updateDirectory(Number(node.key), { name: name.trim() });
+      node.edit = false;
+      await loadDirectoryList(searchKey.value);
+    } catch (e) {
+      // console.error(e);
+      Message.error('重命名失败');
+    }
+  }
+
+  // 删除目录
+  const handleDelete = async (node: any) => {
+    const id = Number(node.key);
+    if(id === 0) {
+      Message.error('不可删除根目录！');
+      return;
+    }
+    Modal.confirm({
+      title: '确认删除',
+      content: `确定要删除 ${node.title} 及其子目录吗？`,
+      okText: '确认',
+      cancelText: '取消',
+      onOk: async () => {
+        try {
+          await deleteDirectory({ pk: [id] })
+          Message.success('删除成功')
+          await loadDirectoryList(searchKey.value)
+        } catch (e) {
+          console.error(e)
+          Message.error('删除失败')
+        }
+      }
+    })
+  }
 
   // 关闭抽屉
   const onClose = () => {
