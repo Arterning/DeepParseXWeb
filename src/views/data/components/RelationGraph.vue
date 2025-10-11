@@ -220,7 +220,24 @@ const updateChart = (data: GraphData) => {
       symbol: 'circle',
       symbolSize: symbolSize,
       itemStyle: {
-        color: nodeTypeColors[node.type || ''] || '#9CA3AF'
+        // color: {
+        //   type: 'radial',
+        //   x: 0.5,
+        //   y: 0.5,
+        //   r: 0.8,
+        //   colorStops: [
+        //     { offset: 0, color: '#FFFFFF' }, // 中心亮
+        //     { offset: 0.5, color: nodeTypeColors[node.type || ''] || '#9CA3AF' }, // 主体色
+        //     { offset: 1, color: '#000000' } // 边缘微暗
+        //   ],
+        //   global: false
+        // },
+        color: nodeTypeColors[node.type || ''] || '#9CA3AF',
+        shadowBlur: 10,
+        shadowColor: nodeTypeColors[node.type || ''] || '#9CA3AF',
+        shadowOffsetX: 2,
+        shadowOffsetY: 2,
+        opacity: 0.8
       },
       label: {
         show: true,
