@@ -64,16 +64,17 @@
 
     <a-modal
       v-model:visible="createModalVisible"
-      title="新建文件夹"
+      title="新建目录"
       :on-before-ok="beforeSubmit"
       @ok="submitCreate"
       @cancel="resetCreateModal"
       ok-text="创建"
       cancel-text="取消"
     >
+      <a-alert class="mb-4">目录名不要与同级下其它目录相同。</a-alert>
       <a-input
         v-model="createDirName"
-        placeholder="请输入文件夹名称"
+        placeholder="请输入目录名称"
         allow-clear
         autofocus
       />

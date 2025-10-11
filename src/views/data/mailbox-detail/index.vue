@@ -23,9 +23,9 @@
         </a-descriptions>
 
         <h4 class="text-lg font-semibold mb-3" style="color: var(--color-text-1);">关系图谱</h4>
-        <a-layout class="w-full h-[320px]">
-          <a-layout-sider>
-            <div class="p-4 space-y-4">
+        <div class="w-full h-[320px] flex">
+          
+            <div class="space-y-4 w-[200px]">
               <div>
                 <label class="block text-sm font-medium text-gray-700 mb-2">最大分析层级</label>
                 <a-input-number v-model="maxLayers" :min="1" :max="10000"/>
@@ -42,11 +42,8 @@
                 <a-button type="primary" long :loading="analyzing" :disabled="!mailbox?.name" @click="startAnalysis">筛选</a-button>
               </div>
             </div>
-          </a-layout-sider>
-          <a-layout-content class="border">
-            <div ref="graphContainer" class="h-full w-full"></div>
-          </a-layout-content>
-        </a-layout>
+            <div ref="graphContainer" class="h-full flex-1"></div>
+          </div>
         <!-- 相关邮件列表（跟随关系图后） -->
         <div class="mt-6">
           <h4 class="text-lg font-semibold mb-3" style="color: var(--color-text-1);">相关邮件</h4>
