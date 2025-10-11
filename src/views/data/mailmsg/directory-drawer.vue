@@ -27,10 +27,13 @@
           <a-tree
             v-if="treeData.length > 0"
             :data="treeData"
-            :default-expanded-keys="expandedKeys"
+            v-model:expanded-keys="expandedKeys"
             :selected-keys="selectedKeys"
             @select="onSelect"
           >
+            <template #switcher-icon>
+              <icon-down class="text-blue-500" />
+            </template>
             <template #title="nodeData">
               <template v-if="nodeData.edit">
                 <a-input @click.stop :default-value="nodeData.title" size="mini" allow-clear
@@ -47,23 +50,34 @@
                     <span>{{ nodeData.title }}</span>
                   </div>
                   <template #content>
-                    <a-doption @click="handleCreate(nodeData)">新建目录</a-doption>
-                    <a-doption @click="nodeData.edit=true">重命名</a-doption>
-                    <a-doption @click="handleDelete(nodeData)">删除</a-doption>
+                    <a-doption @click="openCreateModal(nodeData)">新建目录</a-doption>
+                    <a-doption v-if="nodeData.key!==0" @click="nodeData.edit=true">重命名</a-doption>
+                    <a-doption v-if="nodeData.key!==0" @click="handleDelete(nodeData)">删除</a-doption>
                   </template>
                 </a-dropdown>
               </template>
             </template>
           </a-tree>
-          
-          <!-- 空状态 -->
-          <div v-else class="text-center py-8" style="color: var(--color-text-3);">
-            <icon-folder class="mx-auto mb-2" style="font-size: 24px;" />
-            <div>{{ searchKey ? '未找到匹配的目录' : '暂无目录' }}</div>
-          </div>
         </a-spin>
       </div>
     </div>
+
+    <a-modal
+      v-model:visible="createModalVisible"
+      title="新建文件夹"
+      :on-before-ok="beforeSubmit"
+      @ok="submitCreate"
+      @cancel="resetCreateModal"
+      ok-text="创建"
+      cancel-text="取消"
+    >
+      <a-input
+        v-model="createDirName"
+        placeholder="请输入文件夹名称"
+        allow-clear
+        autofocus
+      />
+    </a-modal>
   </a-drawer>
 </template>
 
@@ -94,6 +108,10 @@
   const selectedKeys = ref<string[]>([]);
   const expandedKeys = ref<string[]>([]);
   const searchKey = ref('');
+
+  const createModalVisible = ref(false)
+  const createDirName = ref('')
+  const createParentKey = ref<number | null>(null)
 
   // 树形数据
   const treeData = computed(() => {
@@ -134,7 +152,7 @@
       directoryList.value = res;
 
       // 递归收集所有节点的 key 用于默认展开
-      expandedKeys.value = getAllNodeKeys(directoryList.value);
+      // expandedKeys.value = getAllNodeKeys(directoryList.value);
       
     } catch (error) {
       console.error('Load directory error:', error);
@@ -207,23 +225,50 @@
     loadDirectoryList();
   };
 
-  // 新建目录
-  const handleCreate = async (node: any) => {
-    const baseName = '新建文件夹';
-    let newName = baseName;
-    // 处理同名
-    const siblings = directoryList.value;
-    let i = 1;
-    while (siblings.some(d => d.name === newName)) {
-      newName = `${baseName}(${i++})`;
+  const openCreateModal = (node: any) => {
+    createParentKey.value = Number(node.key)
+    createDirName.value = new Date().toISOString().slice(0, 10).replace(/-/g, '')
+    createModalVisible.value = true
+
+    if (!expandedKeys.value.includes(node.key)) {
+      expandedKeys.value.push(node.key)
     }
-    
+  }
+
+  const resetCreateModal = () => {
+    createModalVisible.value = false
+    createDirName.value = ''
+  }
+
+  const beforeSubmit = async (done: any) => {
+    const name = createDirName.value.trim()
+    if (!name) {
+      Message.warning('文件夹名不能为空')
+      done(false);
+    }
+
+    const parentNode = findNodeByKey(directoryList.value, createParentKey.value?.toString() || '0')
+    const siblingNames = parentNode?.children?.map((c: any) => c.name) || []
+    if (siblingNames.includes(name)) {
+      Message.error('同一目录下已存在同名文件夹')
+      done(false);
+    }
+
+    done(true);
+  };
+
+  // 新建目录
+  const submitCreate = async (node: any) => {
+    const name = createDirName.value.trim();
     try {
-      await createDirectory({ name: newName, parent_id: Number(node.key) || undefined });
-      await loadDirectoryList(searchKey.value);
-    } catch (e) {
-      // console.error(e);
-      Message.error('新建失败');
+      await createDirectory({ name, parent_id: createParentKey.value || undefined })
+      Message.success('创建成功')
+      createModalVisible.value = false
+      createDirName.value = ''
+      await loadDirectoryList(searchKey.value)
+    } catch (err) {
+      console.error(err)
+      Message.error('创建失败')
     }
   };
 
@@ -233,10 +278,9 @@
     if (!name) {
       return;
     }
-    // 处理同名
-    const siblings = directoryList.value;
+    // 处理同层同名
     let i = 1;
-    while (siblings.some(d => d.name === name)) { 
+    while (directoryList.value.some(d => d.name === name)) { 
       name = `${name}(${i++})`;
     }
     try {

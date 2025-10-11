@@ -101,6 +101,12 @@
         </template>
         删除
       </a-button>
+      <SettingTable
+        v-show="viewMode==='table'"
+        :columns="columns"
+        :storage-key="storageKey"
+        @update-columns="updateVisibleColumns"
+      />
       <a-radio-group v-model="viewMode" size="small">
         <a-radio value="table">
           <template #radio="{ checked }">
@@ -406,7 +412,7 @@
 <script lang="ts" setup>
   import { Message, SelectOptionData, TableColumnData } from '@arco-design/web-vue';
   import { useI18n } from 'vue-i18n';
-  import { computed, reactive, ref } from 'vue';
+  import { computed, onMounted, reactive, ref } from 'vue';
   import useLoading from '@/hooks/loading';
   import {
     createMailMsg,
@@ -422,13 +428,34 @@
   import { useRouter } from 'vue-router';
   import { tableDateFormat } from '@/utils/date';
   import DirectoryDrawer from './directory-drawer.vue';
-
+  import SettingTable from '@/components/setting-table/index.vue';
+  
   const { t } = useI18n();
   const { loading, setLoading } = useLoading(true);
   const router = useRouter();
 
   const openDir = ref(false);
   const dirSelect = ref<any>(null);
+
+  const storageKey = 'docTable';
+
+  // 列表展示
+  const visibleColumns = ref<TableColumnData[]>([]);
+
+  const updateVisibleColumns = (selectedColumns: string[]) => {
+    visibleColumns.value = columns.value.filter((column) => {
+      return column.dataIndex && selectedColumns.includes(column.dataIndex);
+    });
+  };
+
+  onMounted(() => {
+    const savedColumns = localStorage.getItem(storageKey);
+    if (savedColumns) {
+      updateVisibleColumns(JSON.parse(savedColumns));
+    } else {
+      visibleColumns.value = columns.value; // 默认全部显示
+    }
+  });
 
   // 表单
   const generateFormModel = () => {

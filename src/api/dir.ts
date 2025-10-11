@@ -3,6 +3,7 @@ import qs from 'query-string';
 
 export interface DirectoryReq {
   name: string;
+  parent_id?: number;
 }
 
 export interface DirectoryRes extends DirectoryReq {

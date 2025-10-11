@@ -118,6 +118,7 @@
       {{ $t('data.doc.button.delete') }}
     </a-button>
     <SettingTable
+      v-show="viewMode==='table'"
       :columns="columns"
       :storage-key="storageKey"
       @update-columns="updateVisibleColumns"
