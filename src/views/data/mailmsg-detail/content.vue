@@ -232,9 +232,10 @@
     const hasHeadTag = /<head[^>]*>/i.test(trimmed) && /<\/head>/i.test(trimmed);
     const hasBodyTag = /<body[^>]*>/i.test(trimmed) && /<\/body>/i.test(trimmed);
     const hasDivTag = /<div[^>]*>/i.test(trimmed) && /<\/div>/i.test(trimmed);
+    const hasTableTag = /<table[^>]*>/i.test(trimmed) && /<\/table>/i.test(trimmed);
     
     // 至少需要html标签或者doctype + html结构
-    return hasHtmlTag || (hasDoctype && (hasHeadTag || hasBodyTag || hasDivTag));
+    return hasHtmlTag || (hasDoctype && (hasHeadTag || hasBodyTag )) || hasDivTag || hasTableTag;
   }
 
   const router = useRouter();
