@@ -127,6 +127,7 @@ watch(extractGraphLoading, (val) => {
 onMounted(async () => {
   setLoading(true);
   info.value = await queryMailMsgDetail(Number(id));
+  console.log(info.value);
   
   if (info.value.doc_id) {
     doc.value = await querySysDocDetail(info.value.doc_id);

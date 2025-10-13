@@ -42,7 +42,7 @@
                 <a-button type="primary" long :loading="analyzing" :disabled="!mailbox?.name" @click="startAnalysis">筛选</a-button>
               </div>
             </div>
-            <div ref="graphContainer" class="h-full flex-1"></div>
+            <div ref="graphContainer" class="h-full flex-1 ml-4 rounded-lg bg-gray-50 dark:bg-zinc-800"></div>
           </div>
         <!-- 相关邮件列表（跟随关系图后） -->
         <div class="mt-6">
@@ -126,7 +126,7 @@
             <div class="bg-gray-50 p-4 rounded-lg">
               <h4 class="text-lg font-semibold text-gray-800 mb-2">邮箱节点</h4>
               <div class="text-2xl font-bold text-blue-600">{{
-                selectedNode.label
+                selectedNode.name
               }}</div>
             </div>
 
@@ -187,7 +187,7 @@
           <div class="space-y-4">
             <div class="bg-gray-50 p-4 rounded-lg">
               <h4 class="text-lg font-semibold text-gray-800 mb-2">关系连接</h4>
-              <div class="flex items-center space-x-2">
+              <span class="whitespace-normal break-words text-left block">
                 <span class="text-blue-600 font-medium">{{
                   selectedEdge.source
                 }}</span>
@@ -195,7 +195,7 @@
                 <span class="text-blue-600 font-medium">{{
                   selectedEdge.target
                 }}</span>
-              </div>
+              </span>
             </div>
 
             <div class="space-y-3">
@@ -278,11 +278,12 @@
   import { tableDateFormat } from '@/utils/date';
   import type { TableColumnData } from '@arco-design/web-vue';
   import type { Pagination } from '@/types/global';
-  const router = useRouter();
-  import cytoscape from 'cytoscape';
-  import coseBilkent from 'cytoscape-cose-bilkent';
+
   import { queryMailBoxDetail, MailBoxRes, analyzeMailboxRelationships, type AnalyzeRelationshipsReq, type AnalyzeRelationshipsRes } from '@/api/mailbox';
   import { useRoute } from 'vue-router';
+  import * as echarts from 'echarts';
+
+  const router = useRouter();
 
   const mailbox = ref<MailBoxRes>();
   const analyzing = ref(false);
@@ -294,15 +295,13 @@
 
   // 图谱
   const graphContainer = ref<HTMLDivElement | null>(null);
-  const cy = ref<cytoscape.Core | null>(null);
+  let chart: echarts.ECharts | null = null;
   const analysisResult = ref<AnalyzeRelationshipsRes | null>(null);
 
   // 抽屉
   const drawerVisible = ref(false);
   const selectedNode = ref<any>(null);
   const selectedEdge = ref<any>(null);
-
-  cytoscape.use(coseBilkent);
 
   onBeforeMount(async () => {
     const route = useRoute();
@@ -395,150 +394,148 @@
   const renderGraph = () => {
     if (!graphContainer.value || !analysisResult.value) return;
 
-    if (cy.value) {
-      cy.value.destroy();
+    if (chart) {
+      chart.dispose();
     }
+    chart = echarts.init(graphContainer.value);
 
-    const elements = [
-      ...analysisResult.value.nodes.map((node) => ({
-        data: {
-          id: node.id,
-          label: node.label,
-          email_count: node.email_count,
-          layer: node.layer,
-          weight: node.email_count,
-          emails: node.emails,
+    const nodes = analysisResult.value.nodes.map((node) => {
+      const symbolSize = Math.max(50, Math.min(80, node.email_count));
+      const baseColor = getLayerColor(node.layer);
+      return {
+        id: node.id,
+        name: node.label,
+        symbolSize: symbolSize,
+        value: node.email_count,
+        layer: node.layer,
+        itemStyle: {
+          color: baseColor,
+          borderWidth: 4,
+          borderColor: baseColor,
+          opacity: 0.8
         },
-      })),
-      ...analysisResult.value.edges.map((edge) => ({
-        data: {
-          id: `${edge.source}-${edge.target}`,
-          source: edge.source,
-          target: edge.target,
-          weight: edge.weight,
-          email_count: edge.email_count,
-          latest_time: edge.latest_time,
-          relation_type: edge.relation_type,
-          emails: edge.emails,
+        label: {
+          show: true,
+          fontSize: Math.max(12, Math.min(20, symbolSize / 4)), // 根据节点大小调整字体
+          color: '#ffffff',
+          fontWeight: 'bold',
+          textBorderColor: '#9192ab',
+          textBorderWidth: 2
         },
-      })),
-    ];
+        emails: node.emails,
+        email_count: node.email_count,
+        weight: node.email_count,
+      };
+    });
 
-    cy.value = cytoscape({
-      container: graphContainer.value,
-      elements,
-      wheelSensitivity: 0.2,
-      style: [
-        {
-          selector: 'node',
-          style: {
-            'label': 'data(label)',
-            'text-valign': 'center',
-            'text-halign': 'center',
-            'background-color': '#06b6d4',
-            'color': '#ffffff',
-            'text-outline-color': '#0e7490',
-            'text-outline-width': '2px',
-            'width': 'mapData(weight, 0, 100, 30, 80)',
-            'height': 'mapData(weight, 0, 100, 30, 80)',
-            'font-size': '12px',
-            'text-wrap': 'wrap',
-            'text-max-width': '100px',
-            'overlay-opacity': 0,
-            'border-width': 2,
-            'border-color': '#0891b2',
-          },
+    const edges = analysisResult.value.edges.map((edge) => ({
+      source: edge.source,
+      target: edge.target,
+      value: edge.email_count,
+      lineStyle: {
+        width: Math.max(2, Math.min(6, edge.weight)),
+        color: getRelationTypeColor(edge.relation_type),
+        opacity: 0.8,
+        curveness: 0.1,
+      },
+      relation_type: edge.relation_type,
+      email_count: edge.email_count,
+      latest_time: edge.latest_time,
+      weight: edge.weight,
+      emails: edge.emails,
+    }));
+
+    const option: echarts.EChartsOption = {
+      backgroundColor: 'transparent',
+      tooltip: {
+        backgroundColor: 'rgba(30, 33, 56, 0.95)',
+        borderColor: '#3A6CCA',
+        borderWidth: 1,
+        textStyle: { color: '#fff', fontSize: 12 },
+        formatter: (params: any) => {
+          if (params.dataType === 'node') {
+            return `
+              <b>${params.data.name}</b><br/>
+              邮件数量: ${params.data.value}<br/>
+              层级: ${params.data.layer}
+            `;
+          } else if (params.dataType === 'edge') {
+            return `
+              <b>${params.data.source} → ${params.data.target}</b><br/>
+              邮件数量: ${params.data.email_count}<br/>
+              类型: ${getRelationTypeText(params.data.relation_type)}
+            `;
+          }
+          return '';
         },
+      },
+      series: [
         {
-          selector: 'node[layer = 0]',
-          style: {
-            'background-color': '#dc2626',
-            'border-color': '#b91c1c',
+          type: 'graph',
+          layout: 'force',
+          data: nodes,
+          links: edges,
+          roam: true,
+          draggable: false,
+          focusNodeAdjacency: true,
+          edgeSymbol: ['none', 'arrow'], 
+          edgeSymbolSize: [4, 10],
+          label: { position: 'inside', formatter: '{b}' },
+          emphasis: {
+            focus: 'adjacency',
+            lineStyle: {
+              width: 3,
+              // color: '#FFD166',
+            },
           },
-        },
-        {
-          selector: 'node[layer = 1]',
-          style: {
-            'background-color': '#ea580c',
-            'border-color': '#c2410c',
+          lineStyle: {
+            width: 2,
+            // color: '#9192ab',
+            opacity: 0.9,
           },
-        },
-        {
-          selector: 'node[layer = 2]',
-          style: {
-            'background-color': '#d97706',
-            'border-color': '#b45309',
+          force: {
+            repulsion: 3000,
+            edgeLength: [60, 200],
+            layoutAnimation: false,
           },
-        },
-        {
-          selector: 'edge',
-          style: {
-            'width': 'mapData(weight, 0, 10, 2, 8)',
-            'line-color': '#64748b',
-            'target-arrow-color': '#64748b',
-            'target-arrow-shape': 'triangle',
-            'curve-style': 'bezier',
-            'opacity': 0.8,
-          },
-        },
-        {
-          selector: 'edge[relation_type = "send"]',
-          style: {
-            'line-color': '#059669',
-            'target-arrow-color': '#059669',
-          },
-        },
-        {
-          selector: 'edge[relation_type = "receive"]',
-          style: {
-            'line-color': '#7c3aed',
-            'target-arrow-color': '#7c3aed',
-          },
+          animationDuration: 800,
+          animationEasingUpdate: 'cubicInOut',
         },
       ],
-      layout: {
-        name: 'cose-bilkent',
-        animate: false,
-        nodeDimensionsIncludeLabels: true,
-        nodeRepulsion: 8000,
-        idealEdgeLength: 100,
-        edgeElasticity: 0.1,
-      },
-    });
+    };
 
-    // 添加节点点击事件
-    cy.value.on('tap', 'node', (event) => {
-      const node = event.target;
-      const data = node.data();
-      selectedNode.value = data;
-      selectedEdge.value = null;
-      drawerVisible.value = true;
-    });
+    chart.setOption(option);
 
-    // 添加边点击事件
-    cy.value.on('tap', 'edge', (event) => {
-      const edge = event.target;
-      const data = edge.data();
-      selectedEdge.value = data;
-      selectedNode.value = null;
-      drawerVisible.value = true;
+    chart.on('click', (params: any) => {
+      if (params.dataType === 'node') {
+        selectedNode.value = params.data;
+        selectedEdge.value = null;
+        drawerVisible.value = true;
+      } else if (params.dataType === 'edge') {
+        selectedEdge.value = params.data;
+        selectedNode.value = null;
+        drawerVisible.value = true;
+      }
     });
   };
+
+
 
   // 辅助函数
   const getLayerColor = (layer: number) => {
-    const colors = ['red', 'orange', 'gold', 'green', 'blue', 'purple'];
-    return colors[layer] || 'gray';
+    const colors = ['#63b2ee', '#76da91', '#f8cb7f', '#f89588', '#7cd6cf', '#7898e1'];
+    return colors[layer] || '#9192ab';
   };
+
 
   const getRelationTypeColor = (type: string) => {
     switch (type) {
       case 'send':
-        return 'green';
+        return '#9192ab';
       case 'receive':
-        return 'purple';
+        return '#9192ab';
       default:
-        return 'gray';
+        return '#9192ab';
     }
   };
 
