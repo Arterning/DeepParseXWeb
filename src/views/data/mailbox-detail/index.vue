@@ -67,7 +67,8 @@
                       <a-link @click="
                         router.push({
                           name: 'MailMsgDetail',
-                          params: { id: record.id, appendix: record.name, category:'doc' },
+                          params: { id: record.id }, 
+                          query: { appendix: record.name, category:'doc' }
                         })
                       ">
                         <icon-eye style="font-size:16px" />
@@ -96,7 +97,8 @@
                       <a-link @click="
                         router.push({
                           name: 'MailMsgDetail',
-                          params: { id: record.id, appendix: record.name, category:'doc' },
+                          params: { id: record.id },
+                          query: { appendix: record.name, category:'doc' }
                         })
                       ">
                         <icon-eye style="font-size:16px" />
