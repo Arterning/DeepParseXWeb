@@ -4,28 +4,27 @@
     <a-row>
         <a-col :span="7">
         <a-scrollbar class="h-[calc(100vh-300px)]" style="width:100%; overflow-y: auto; padding-right: 2rem;">
-            <a-upload multiple draggable :directory="uploadDirectory" accept=".zip,.rar,.eml" :custom-request="customRequest" :limit="MAX_UPLOAD_COUNT" :before-upload="beforeUpload" @exceed-limit="onExceedLimit" @change="handleUploadChange" :file-list="uploadFileList">
+          <a-upload multiple draggable :directory="uploadDirectory" accept=".zip,.rar,.eml" :custom-request="customRequest" :limit="MAX_UPLOAD_COUNT" :before-upload="beforeUpload" @exceed-limit="onExceedLimit" @change="handleUploadChange" :file-list="uploadFileList">
             <template #upload-button>
-                <div class="rounded-lg border-2 border-dashed w-full p-4 flex flex-col justify-center space-y-4 items-center text-center" :class="{ 'border-blue-500 bg-blue-50': isDragOver }" @dragenter.prevent="handleDragEnter" @dragover.prevent="handleDragOver" @dragleave.prevent="handleDragLeave" @drop.prevent="handleDrop">
+              <div class="rounded-lg border-2 border-dashed w-full p-4 flex flex-col justify-center space-y-4 items-center text-center" :class="{ 'border-blue-500 bg-blue-50': isDragOver }" @dragenter.prevent="handleDragEnter" @dragover.prevent="handleDragOver" @dragleave.prevent="handleDragLeave" @drop.prevent="handleDrop">
+                <div>
+                  <span class="text-gray-500 text-sm mr-2 font-bold">上传模式</span>
+                  <a-switch @click.stop v-model="uploadDirectory">
+                    <template #checked>
+                      目录
+                    </template>
+                    <template #unchecked>
+                      单个
+                    </template>
+                  </a-switch>
+                </div>
                 <icon-upload :size="24" />
                 <div>将邮件文件或文件夹拖放至此处</div>
                 <div class="text-gray-500 text-sm">支持 .eml格式邮件，以及 .zip、.rar压缩包</div>
-                  <div class="text-gray-500 text-sm">最大文件数量：{{ selectedCount }}/{{ MAX_UPLOAD_COUNT }}</div>
-                <a-button :type="uploadDirectory? undefined: 'primary'" long @click.stop="uploadDirectory=false">
-                    <template #icon>
-                    <icon-file />
-                    </template>
-                    <template #default>选择文件</template>
-                </a-button>
-                <a-button :type="uploadDirectory? 'primary': undefined" long @click.stop="uploadDirectory=true">
-                    <template #icon>
-                    <icon-folder />
-                    </template>
-                    <template #default>选择文件夹</template>
-                </a-button>
-                </div>
+                <div class="text-gray-500 text-sm">最大文件数量：{{ selectedCount }}/{{ MAX_UPLOAD_COUNT }}</div>
+              </div>
             </template>
-            </a-upload>                      
+          </a-upload>                      
         </a-scrollbar>
         </a-col>
         <a-col :span="17">

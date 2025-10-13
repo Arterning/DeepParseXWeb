@@ -642,7 +642,7 @@
       value: edge.email_count,
       lineStyle: {
         width: Math.max(2, Math.min(6, edge.weight)),
-        color: getRelationTypeColor(edge.relation_type),
+        color: '#9192ab',
         opacity: 0.8,
         curveness: 0.1,
       },
@@ -755,9 +755,9 @@
   const getRelationTypeColor = (type: string) => {
     switch (type) {
       case 'send':
-        return '#9192ab';
+        return '#63b2ee';
       case 'receive':
-        return '#9192ab';
+        return '#76da91';
       default:
         return '#9192ab';
     }
