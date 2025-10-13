@@ -25,7 +25,7 @@
       </span>
     </div> -->
     <a-tag :color="checked? '#2971CF': ''"
-     @click="goto(itemData)" closable @close="tagClose(itemData, index)">
+      @click="goto(itemData)" closable @close="tagClose(itemData, index)">
       <template #icon>
         <icon-file v-if="itemData.category==='doc'" :style="{ color: checked ? '#fff' : '' }" />
         <icon-email v-if="itemData.category==='email'" :style="{ color: checked ? '#fff' : '' }" />
