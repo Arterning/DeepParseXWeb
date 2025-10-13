@@ -203,7 +203,7 @@ const updateChart = (data: GraphData) => {
   
   // 转换节点数据
   const nodes = data.nodes.map((node: NodeData) => {
-    const connections = connectionCount[node.id];
+    const connections = Math.ceil(connectionCount[node.id] / 2);
     // 根据连接数计算节点大小
     const baseSize = 50;
     const maxSize = 100;
