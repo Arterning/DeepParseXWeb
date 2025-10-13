@@ -492,7 +492,7 @@
     router.push({
       name: 'MailMsgDetail',
       params: { id: pk },
-      query: { appendix: title, category: 'email' },
+      query: { appendix: title, category: 'doc' },
     })
   };
   const toggleSelection = (id: number) => {
