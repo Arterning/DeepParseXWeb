@@ -52,7 +52,6 @@
       !tagList.value.some((tag) => tag.fullPath === route.fullPath)
     ) {
       const { appendix, category } = route.query;
-      console.log(route);
       tabBarStore.updateTabList(route, appendix as string, category as string);
     }
   }, true);
