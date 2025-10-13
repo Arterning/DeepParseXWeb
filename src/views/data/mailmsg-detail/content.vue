@@ -111,51 +111,47 @@
 
     <a-modal v-model:visible="showEntityTypeModal" title="实体类型选择" @ok="handleExtractConfirm">
       <div class="space-y-4">
-        <div class="flex gap-2 items-center">
+        <div class="flex gap-3 items-center">
           <a-input 
             v-model="entityTypeInput" 
             placeholder="输入实体类型，如'人物'"
-            class="w-40"
             @keyup.enter="addEntityType"
           />
-          <button 
+          <a-button 
             @click="addEntityType"
-            class="bg-[#2971CF] text-white px-3 py-1 rounded transition-colors duration-200"
+            type="primary"
           >
             添加
-          </button>
+          </a-button>
         </div>
         
         <!-- 常用实体类型快速选择 -->
         <div class="mt-2 flex flex-wrap gap-2 items-center">
           <span class="text-sm text-gray-400 mr-2">常用类型：</span>
-          <button 
+          <a-button 
             v-for="type in commonEntityTypes"
             :key="type"
             @click="addCommonEntityType(type)"
-            class="text-sm bg-gray-700 hover:bg-gray-600 text-white px-2 py-1 rounded transition-colors duration-200"
+            size="mini"
+            type="outline"
           >
             {{ type }}
-          </button>
+          </a-button>
         </div>
         
         <!-- 已选择的实体类型 -->
         <div v-if="selectedEntityTypes.length > 0" class="mt-3">
           <span class="text-sm text-gray-400">已选择：</span>
           <div class="flex flex-wrap gap-2 mt-1">
-            <span 
+            <a-tag 
               v-for="type in selectedEntityTypes"
               :key="type"
-              class="inline-flex items-center bg-blue-900/50 text-blue-300 px-2 py-1 rounded text-sm"
+              @close="removeEntityType(type)"
+              closable
+              color="#2971CF"
             >
               {{ type }}
-              <button 
-                @click="removeEntityType(type)"
-                class="ml-1 text-blue-300 hover:text-blue-100 w-5 h-5 flex items-center justify-center rounded-full hover:bg-blue-700/30 transition-colors"
-              >
-                ×
-              </button>
-            </span>
+            </a-tag>
           </div>
         </div>
         
@@ -250,6 +246,7 @@
       },
       query: {
         appendix: attachment.name,
+        category: 'doc' 
       },
     });
   };

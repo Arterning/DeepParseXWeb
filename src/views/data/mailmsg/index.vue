@@ -165,13 +165,7 @@
                   <a-link
                     class="flex-1 text-lg font-semibold truncate block"
                     :title="record.name"
-                    @click="
-                      router.push({
-                        name: 'MailMsgDetail',
-                        params: { id: record.id },
-                        query: { appendix: record.name },
-                      })
-                    "
+                    @click="ViewApi(record.id, record.name)"
                   >
                     {{ record.name }}
                   </a-link>
@@ -232,13 +226,7 @@
                     <a-button
                       size="mini"
                       type="primary"
-                      @click="
-                        router.push({
-                          name: 'MailMsgDetail',
-                          params: { id: record.id },
-                          query: { appendix: record.name },
-                        })
-                      "
+                      @click="ViewApi(record.id, record.name)"
                     >
                       查看
                     </a-button>
@@ -290,13 +278,7 @@
             <template #name="{ record }">
               <a-link
                 class="truncate block"
-                @click="
-                  router.push({
-                    name: 'MailMsgDetail',
-                    params: { id: record.id },
-                    query: { appendix: record.name },
-                  })
-                "
+                @click="ViewApi(record.id, record.name)"
                 >{{ record.name }}
                 </a-link>
             </template>
@@ -312,13 +294,7 @@
                   </a-link>
                 </a-tooltip>
                 <a-tooltip content="查看">
-                  <a-link @click="
-                    router.push({
-                      name: 'MailMsgDetail',
-                      params: { id: record.id },
-                      query: { appendix: record.name },
-                    })
-                  ">
+                  <a-link @click="ViewApi(record.id, record.name)">
                     <icon-unordered-list style="font-size: 16" />
                   </a-link>
                 </a-tooltip>
@@ -508,7 +484,17 @@
     drawerTitle.value = t('删除');
     openDelete.value = true;
   };
-
+  const ViewApi = async (pk: number, title: string) => {
+    // operateRow.value = pk;
+    // drawerTitle.value = t('查看');
+    // await fetchApiDetail(pk);
+    // openView.value = true;
+    router.push({
+      name: 'MailMsgDetail',
+      params: { id: pk },
+      query: { appendix: title, category: 'email' },
+    })
+  };
   const toggleSelection = (id: number) => {
     const index = rowSelectKeys.value.indexOf(id);
     if (index > -1) {

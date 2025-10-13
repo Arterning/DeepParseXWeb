@@ -19,6 +19,7 @@
                     },
                     query: {
                         appendix: item.title,
+                        category: 'doc' 
                     }
                 })
             ">

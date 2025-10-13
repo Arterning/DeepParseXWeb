@@ -86,7 +86,7 @@
                   @click="router.push({
                     name: 'OrgDetail', 
                     params: { id: record.id }, 
-                    query: { appendix: record.org_name},
+                    query: { appendix: record.org_name, category: 'doc' },
                   })">{{ record.org_name }}</a-link>
               </template> 
               

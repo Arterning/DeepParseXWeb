@@ -210,7 +210,7 @@
     router.push({
       name: 'DocDetail',
       params: { id: item.id },
-      query: { appendix: item.title }
+      query: { appendix: item.title, category: 'doc' },
     });
 
     handleSaveHistory();

@@ -87,11 +87,11 @@
                     </template>
                     <template #operate="{ record }">
                         <a-space>
-                            <a-tooltip content="查看详情">
+                            <!-- <a-tooltip content="查看详情">
                                 <a-link @click="viewApi(record.id)">
                                     <icon-unordered-list style="font-size:16" />
                                 </a-link>
-                            </a-tooltip>
+                            </a-tooltip> -->
                             <a-tooltip content="删除">
                                 <a-link @click="deleteApi(record.id)" status="danger">
                                     <icon-delete style="font-size:16" />

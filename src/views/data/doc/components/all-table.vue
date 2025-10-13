@@ -176,7 +176,8 @@
               },
               query: {
                 appendix: record.name,
-              },
+                category: 'doc'
+              }
             })
           "
           >{{ record.title }}
@@ -263,13 +264,7 @@
               <a-tooltip :content="record.title">
                 <a-link
                   class="text-lg font-medium truncate block max-w-[180px]"
-                  @click="
-                    router.push({
-                      name: 'DocDetail',
-                      params: { id: record.id },
-                      query: { appendix: record.name },
-                    })
-                  "
+                  @click="ViewApi(record.id, record.title)"
                 >
                   {{ record.title }}
                 </a-link>
@@ -666,14 +661,14 @@
     openNewOrEdit.value = true;
   };
   const ViewApi = async (pk: number, title: string) => {
-    operateRow.value = pk;
+    // operateRow.value = pk;
     // drawerTitle.value = t('查看');
     // await fetchApiDetail(pk);
     // openView.value = true;
     router.push({
       name: 'DocDetail',
       params: { id: pk },
-      query: { appendix: title },
+      query: { appendix: title, category: 'doc' },
     });
   };
   const DeleteApi = () => {

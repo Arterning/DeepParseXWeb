@@ -4,7 +4,7 @@
     trigger="contextMenu"
     @select="actionSelect"
   >
-    <div
+    <!-- <div
       :class="{ 'link-activated': itemData.fullPath === $route.fullPath }"
       class="arco-tag arco-tag-size-medium arco-tag-checked"
       @click="goto(itemData)"
@@ -23,7 +23,22 @@
       >
         <icon-close />
       </span>
-    </div>
+    </div> -->
+    <a-tag :color="checked? '#2971CF': ''"
+     @click="goto(itemData)" closable @close="tagClose(itemData, index)">
+      <template #icon>
+        <icon-file v-if="itemData.category==='doc'" :style="{ color: checked ? '#fff' : '' }" />
+        <icon-email v-if="itemData.category==='email'" :style="{ color: checked ? '#fff' : '' }" />
+      </template>
+      <a-tooltip v-if="itemData.appendix" :content="itemData.appendix">
+        <div class="ellipsis"> 
+          {{itemData.appendix}}
+        </div>
+      </a-tooltip>
+      <div v-else>
+        {{ $t(itemData.title)}}
+      </div>
+    </a-tag>
     <template #content>
       <!-- <a-doption :disabled="disabledReload" :value="Eaction.reload">
         <icon-refresh />
@@ -96,6 +111,8 @@
   const router = useRouter();
   const route = useRoute();
   const tabBarStore = useTabBarStore();
+
+  const checked = computed(()=>props.itemData.fullPath === route.fullPath)
 
   const goto = (tag: TagProps) => {
     router.push({ ...tag });
@@ -183,28 +200,26 @@
 </script>
 
 <style lang="less" scoped>
-  .tag-link {
-    color: var(--color-text-2);
-    text-decoration: none;
-    
-  }
-
-  .link-activated {
-    background-color: #2971CF;
-    .arco-tag-close-btn{
-      color: #ffffff;
-    }
-    .arco-tag-icon-hover:hover{
-      color: var(--color-text-2);
-    }
-    .tag-link {
-      color: #ffffff;
-    }
+  // .tag-link {
+  //   color: var(--color-text-2);
+  //   text-decoration: none;
+  // }
+  // .link-activated {
+  //   background-color: #2971CF;
+  //   .arco-tag-close-btn{
+  //     color: #ffffff;
+  //   }
+  //   .arco-tag-icon-hover:hover{
+  //     color: var(--color-text-2);
+  //   }
+  //   .tag-link {
+  //     color: #ffffff;
+  //   }
 
     // & + .arco-tag-close-btn {
     //   color: #13c2c2;
     // }
-  }
+  // }
 
   :deep(.arco-dropdown-option-content) {
     span {

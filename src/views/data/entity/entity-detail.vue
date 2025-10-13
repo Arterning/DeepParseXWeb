@@ -67,7 +67,7 @@
               </div>
             </div>
             <div class="text-blue-500 cursor-pointer ml-2">
-              <a-link class="text-sm" @click="router.push({name: 'DocDetail', params: { id: doc.id }, query: { appendix: doc.title }})">查看</a-link>
+              <a-link class="text-sm" @click="router.push({name: 'DocDetail', params: { id: doc.id }, query: { appendix: doc.title, category: 'doc' }})">查看</a-link>
             </div>
           </div>
         </div>

@@ -233,7 +233,7 @@ const removeFromCollection = async (docId: number) => {
 // 点击文件卡片
 const handleDocClick = (doc: Record<string ,any>) => {
   // 这里可以实现跳转到文件详情页的逻辑
-  router.push({name: 'DocDetail', params: { id: doc.id }, query: { appendix: doc.title }});
+  router.push({name: 'DocDetail', params: { id: doc.id }, query: { appendix: doc.title, category: 'doc' }});
 };
 
 // 取消操作

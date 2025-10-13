@@ -12,7 +12,7 @@ import { TabBarState, TagProps } from './types';
 const TAB_BAR_STORAGE_KEY = 'tab-bar-storage';
 
 
-const formatTag = async (route: RouteLocationNormalized, appendix?:string): Promise<TagProps> => {
+const formatTag = async (route: RouteLocationNormalized, appendix?:string, category?: string): Promise<TagProps> => {
   const { name, meta, fullPath, query, params } = route;
   return {
     title: meta.locale || '',
@@ -21,7 +21,8 @@ const formatTag = async (route: RouteLocationNormalized, appendix?:string): Prom
     query,
     params,
     ignoreCache: meta.ignoreCache,
-    appendix
+    appendix,
+    category
   };
 };
 
@@ -73,9 +74,9 @@ const useAppStore = defineStore('tabBar', {
   },
 
   actions: {
-    async updateTabList(route: RouteLocationNormalized, appendix?: string) {
+    async updateTabList(route: RouteLocationNormalized, appendix?: string, category?: string) {
       if (BAN_LIST.includes(route.name as string)) return;
-      const tag = await formatTag(route, appendix);
+      const tag = await formatTag(route, appendix, category);
       
       this.tagList.push(tag);
       if (!route.meta.ignoreCache) {

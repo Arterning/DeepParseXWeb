@@ -12,7 +12,7 @@
             />
           </div>
         </div>
-        <div class="tag-bar-operation"></div>
+        <!-- <div class="tag-bar-operation"></div> -->
       </div>
     </a-affix>
   </div>
@@ -51,9 +51,9 @@
       !route.meta.noAffix &&
       !tagList.value.some((tag) => tag.fullPath === route.fullPath)
     ) {
-      const { appendix } = route.query;
-      // console.log(route.query);
-      tabBarStore.updateTabList(route, appendix as string);
+      const { appendix, category } = route.query;
+      console.log(route);
+      tabBarStore.updateTabList(route, appendix as string, category as string);
     }
   }, true);
 

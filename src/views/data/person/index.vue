@@ -132,8 +132,7 @@
               @click="
                 router.push({
                   name: 'PersonDetail',
-                  params: { id :record.id },
-                  query: { appendix: record.name},
+                  params: { id :record.id, appendix: record.name, type: 'doc'},
                 })
               "
               >{{ record.name }}</a-link>

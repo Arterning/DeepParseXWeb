@@ -177,7 +177,7 @@ const isSelected = (tag: TagRes) => {
 
 const handleDocClick = (doc: TagDocument) => {
   // 这里可以添加更多逻辑，比如跳转到文档详情页
-  router.push({name: 'DocDetail', params: { id: doc.id }, query: { appendix: doc.title }});
+  router.push({name: 'DocDetail', params: { id: doc.id }, query: { appendix: doc.title, category: 'doc' }});
 };
 </script>
 

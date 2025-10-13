@@ -130,6 +130,7 @@
                       router.push({
                         name: 'MailBoxDetail',
                         params: { id: item.id },
+                        query: { appendix: item.name }
                       })
                     "
                   >
@@ -179,6 +180,7 @@
                     router.push({
                       name: 'MailBoxDetail',
                       params: { id: record.id },
+                      query: { appendix: record.name }
                     })
                   ">
                     <icon-eye style="font-size:16" />
