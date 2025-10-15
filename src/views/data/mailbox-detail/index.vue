@@ -287,7 +287,7 @@
 </template>
 
 <script lang="ts" setup>
-  import { onBeforeMount, ref, nextTick, onMounted, reactive, computed } from 'vue';
+  import { onBeforeMount, ref, nextTick, onMounted, reactive, computed, onUnmounted } from 'vue';
   import Footer from '@/components/footer/index.vue';
   import { Message } from '@arco-design/web-vue';
   import dayjs, { type Dayjs } from 'dayjs';
@@ -750,6 +750,18 @@
       }
     }
   };
+
+  const handleFullscreenChange = () => {
+    isFullscreen.value = !!document.fullscreenElement;
+  };
+
+  onMounted(() => {
+    document.addEventListener('fullscreenchange', handleFullscreenChange);
+  });
+
+  onUnmounted(() => {
+    document.removeEventListener('fullscreenchange', handleFullscreenChange);
+  });  
 </script>
 
 <style scoped>

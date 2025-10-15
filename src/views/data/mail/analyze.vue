@@ -496,7 +496,7 @@
     </div>
   </template>
   <script setup lang="ts">
-  import { ref, onMounted, nextTick } from 'vue';
+  import { ref, onMounted, nextTick, onUnmounted } from 'vue';
   import { Message } from '@arco-design/web-vue';
   import dayjs, { type Dayjs } from 'dayjs';
   import cytoscape from 'cytoscape';
@@ -948,23 +948,31 @@
     await startAnalysis();
   };
   
-  // 全屏切换（保持原实现）
   const toggleFullscreen = () => {
     if (!document.fullscreenElement) {
       const container = document.querySelector('.relation-graph-container') as HTMLElement;
       if (container && container.requestFullscreen) {
         container.requestFullscreen();
-        isFullscreen.value = true;
       }
     } else {
       if (document.exitFullscreen) {
         document.exitFullscreen();
-        isFullscreen.value = false;
       }
     }
   };
-  
-  onMounted(() => { loadMailboxes(); });
+
+  const handleFullscreenChange = () => {
+    isFullscreen.value = !!document.fullscreenElement;
+  };
+
+  onMounted(() => {
+    loadMailboxes(); 
+    document.addEventListener('fullscreenchange', handleFullscreenChange);
+  });
+
+  onUnmounted(() => {
+    document.removeEventListener('fullscreenchange', handleFullscreenChange);
+  });  
   
   defineExpose({ getCentralityNodes });
   </script>
