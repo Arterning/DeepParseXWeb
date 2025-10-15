@@ -155,7 +155,7 @@
               }"
             >
               <div class="flex flex-col min-w-0">
-                <div class="flex justify-between items-center mb-4">
+                <div class="flex justify-between items-center mb-2">
                   <div class="mr-2 pt-0.5">
                     <a-checkbox
                       :model-value="rowSelectKeys.includes(record.id)"
@@ -169,6 +169,13 @@
                   >
                     {{ record.name }}
                   </a-link>
+                  
+                  <!-- <a-tooltip :content="record.attachments.length?`${record.attachments.length}个附件`:'没有附件'">
+                    <a-badge :count="3" dot>
+                      <icon-attachment />
+                    </a-badge>
+                  </a-tooltip> -->
+                  
                   <span class="text-sm text-gray-500 flex-shrink-0 ml-4">{{
                     tableDateFormat(record.time) 
                   }}</span>
@@ -181,7 +188,7 @@
                 </span>
 
                 <div
-                  class="flex flex-wrap items-center px-1 gap-x-4 gap-y-1 text-sm text-gray-600 mb-3"
+                  class="flex flex-wrap items-center px-1 gap-x-4 gap-y-1 text-sm text-gray-600 mb-2"
                 >
                   <div class="flex items-center">
                     <span class="font-medium text-gray-500">From:</span>
@@ -207,11 +214,15 @@
                 </div>
 
                 <p
-                  class="text-gray-600 text-sm truncate mb-4 px-1"
+                  class="text-gray-600 text-sm truncate px-1 mb-2"
                   :title="record.original"
                 >
                   {{ record.original || 'No content to display.' }}
                 </p>
+
+                <div class="text-gray-600 text-sm mb-2">
+                  <icon-attachment class="mr-2"/>{{record.attachments.length}}个附件
+                </div>
 
                 <div class="flex justify-between items-center">
                   <div class="flex items-center space-x-2">
@@ -280,9 +291,8 @@
                 class="truncate block"
                 @click="ViewApi(record.id, record.name)"
                 >{{ record.name }}
-                </a-link>
+              </a-link>
             </template>
-
             <template #time="{ record }">
               {{ tableDateFormat(record.time) }}
             </template>
@@ -550,6 +560,14 @@
       width: 120,
     },
     {
+      title: '附件数量',
+      dataIndex: 'attachCount',
+      sortable: {
+        sortDirections: ['ascend', 'descend'],
+      },
+      width: 120,
+    },
+    {
       title: '日期',
       slotName: 'time',
       sortable: {
@@ -658,6 +676,9 @@
         size: pagination.pageSize,
       } as MailMsgParams);
       renderData.value = res.items;
+      renderData.value.map((e:any)=>{
+        e.attachCount = e.attachments.length
+      })
       pagination.total = res.total;
     } catch (error) {
       // console.log(error);
