@@ -29,9 +29,7 @@
       <p v-if="!translation" class="text-center text-gray-500 dark:text-gray-400 py-8 italic">
         点击提取按钮，提取文件翻译 🚀
       </p>
-      <div v-else class="whitespace-pre-wrap break-words text-gray-800 dark:text-gray-200">
-        {{ translation }}
-      </div>
+      <div v-else class="whitespace-pre-wrap break-words text-gray-800 dark:text-gray-200" v-html="translation"></div>
     </div>
   </a-card>
 </template>

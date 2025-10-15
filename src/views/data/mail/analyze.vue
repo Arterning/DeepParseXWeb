@@ -110,7 +110,7 @@
           </div>
         </div>
   
-        <div v-if="analysisResult.network_analysis" class="relation-graph-container mx-6 relative h-96 bg-zinc-50 dark:bg-zinc-800">
+        <div v-if="analysisResult.network_analysis" class="relation-graph-container mx-6 relative h-96 bg-zinc-50">
           <!-- 图谱容器 -->
           <div ref="graphContainer"></div>
           <a-button 
@@ -509,9 +509,12 @@
     type AnalyzeRelationshipsRes,
     type EmailData,
   } from '@/api/mailbox';
+  import { useAppStore } from '@/store';
   
   cytoscape.use(fcose);
   
+  const appStore = useAppStore();
+
   // 表单数据
   const selectedMailboxes = ref<string[]>([]);
   const maxLayers = ref<number>(2);
@@ -886,7 +889,6 @@
       }
       hDeg = hDeg * 60; // to degrees
     }
-  
     const darkenFactor = 1 - 0.85 * weight; // 控制亮度缩放（更平滑）
     const saturateFactor = 1 + 0.6 * weight; // 提升饱和度的倍数
   

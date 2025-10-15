@@ -500,6 +500,9 @@
     {
       title: '邮箱',
       dataIndex: 'name',
+      sortable: {
+        sortDirections: ['ascend', 'descend']
+      },
       ellipsis: true,
       tooltip: true,
     },

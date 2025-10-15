@@ -80,7 +80,10 @@
       </template>
       <template #second v-if="translate">
         <a-typography-paragraph>
-          {{ info?.zh_content }}
+          <div v-if="isHtmlContent(info?.zh_content)" class="prose max-w-none" v-html="info?.zh_content"></div>
+          <div v-else class="whitespace-pre-wrap break-words dark:text-white text-gray-800 leading-relaxed">
+            {{ info?.zh_content }}
+          </div>
         </a-typography-paragraph>
       </template>
     </a-split>
