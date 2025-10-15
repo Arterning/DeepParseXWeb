@@ -23,27 +23,45 @@
         </a-descriptions>
 
         <h4 class="text-lg font-semibold mb-3" style="color: var(--color-text-1);">关系图谱</h4>
-        <div class="w-full h-[320px] flex">
+        <!-- <div class="w-full h-[320px] flex"> -->
           
-            <div class="space-y-4 w-[200px]">
-              <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">最大分析层级</label>
-                <a-input-number v-model="maxLayers" :min="1" :max="10000"/>
-              </div>
-              <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">开始时间</label>
-                <a-date-picker v-model:value="startTime"/>
-              </div>
-              <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">结束时间</label>
-                <a-date-picker v-model:value="endTime"/>
-              </div>
-              <div class="pt-2">
-                <a-button type="primary" long :loading="analyzing" :disabled="!mailbox?.name" @click="startAnalysis">筛选</a-button>
-              </div>
-            </div>
-            <div ref="graphContainer" class="h-full flex-1 ml-4 rounded-lg bg-gray-50 dark:bg-zinc-800"></div>
+        <a-row :gutter="16">
+          <a-col :span="6">
+            <label class="block text-sm font-medium text-gray-700 mb-2">最大分析层级</label>
+            <a-input-number v-model="maxLayers" :min="1" :max="10000"/>
+          </a-col>
+          <a-col :span="6">
+            <label class="block text-sm font-medium text-gray-700 mb-2">开始时间</label>
+            <a-date-picker class="w-full" v-model:value="startTime"/>
+          </a-col>
+          <a-col :span="6">
+            <label class="block text-sm font-medium text-gray-700 mb-2">结束时间</label>
+            <a-date-picker class="w-full" v-model:value="endTime"/>
+          </a-col>
+          <a-col :span="6">
+            <a-button class="mt-7" type="primary" :loading="analyzing" :disabled="!mailbox?.name" @click="startAnalysis">筛选</a-button>
+          </a-col>
+        </a-row>
+
+        <div class="relation-graph-container h-96 relative mt-5">
+          <!-- 图谱容器 -->
+          <div ref="graphContainer" class="h-full rounded-lg bg-zinc-50 dark:bg-zinc-800">
+            <a-button 
+              class="fullscreen-btn" 
+              size="small" 
+              type="text"
+              @click="toggleFullscreen"
+            >
+              <template #icon>
+                <icon-fullscreen-exit v-if="isFullscreen" />
+                <icon-fullscreen v-else />
+              </template>
+              {{ isFullscreen ? '退出全屏' : '全屏' }}
+            </a-button>
           </div>
+        </div>
+           
+          <!-- </div> -->
         <!-- 相关邮件列表（跟随关系图后） -->
         <div class="mt-6">
           <h4 class="text-lg font-semibold mb-3" style="color: var(--color-text-1);">相关邮件</h4>
@@ -126,7 +144,7 @@
             <div class="bg-gray-50 p-4 rounded-lg">
               <h4 class="text-lg font-semibold text-gray-800 mb-2">邮箱节点</h4>
               <div class="text-2xl font-bold text-blue-600">{{
-                selectedNode.name
+                selectedNode.label
               }}</div>
             </div>
 
@@ -136,14 +154,14 @@
                 <span class="font-semibold">{{ selectedNode.email_count }}</span>
               </div>
 
-              <div class="flex justify-between items-center py-2 border-b">
+              <!-- <div class="flex justify-between items-center py-2 border-b">
                 <span class="text-gray-600">分析层级</span>
                 <span class="font-semibold">
                   <a-tag :color="getLayerColor(selectedNode.layer)">
                     第 {{ selectedNode.layer }} 层
                   </a-tag>
                 </span>
-              </div>
+              </div> -->
 
               <div class="flex justify-between items-center py-2 border-b">
                 <span class="text-gray-600">权重</span>
@@ -278,15 +296,18 @@
   import { tableDateFormat } from '@/utils/date';
   import type { TableColumnData } from '@arco-design/web-vue';
   import type { Pagination } from '@/types/global';
-
+  import cytoscape from 'cytoscape';
+  import fcose from 'cytoscape-fcose';
   import { queryMailBoxDetail, MailBoxRes, analyzeMailboxRelationships, type AnalyzeRelationshipsReq, type AnalyzeRelationshipsRes } from '@/api/mailbox';
   import { useRoute } from 'vue-router';
-  import * as echarts from 'echarts';
+
+  cytoscape.use(fcose);
 
   const router = useRouter();
 
   const mailbox = ref<MailBoxRes>();
   const analyzing = ref(false);
+  const isFullscreen = ref(false);
 
   // 表单
   const maxLayers = ref<number>(2);
@@ -295,13 +316,21 @@
 
   // 图谱
   const graphContainer = ref<HTMLDivElement | null>(null);
-  let chart: echarts.ECharts | null = null;
+  const cy = ref<cytoscape.Core | null>(null);
   const analysisResult = ref<AnalyzeRelationshipsRes | null>(null);
 
+  const PRESET_COLORS = ['#b1d8f6','#baecc8','#fce5bf','#fccac4','#beeae7','#bcccf0','#f6eec2','#ccc3e6'];
   // 抽屉
   const drawerVisible = ref(false);
   const selectedNode = ref<any>(null);
   const selectedEdge = ref<any>(null);
+
+  // 归一化到 0..1（越大越接近 1）
+  const normalize01 = (val: number, min: number, max: number) => {
+    if (!isFinite(val)) return 0;
+    if (max === min) return 1;
+    return Math.max(0, Math.min(1, (val - min) / (max - min)));
+  };
 
   onBeforeMount(async () => {
     const route = useRoute();
@@ -391,140 +420,300 @@
     }
   };
 
+  // 渲染图谱
   const renderGraph = () => {
     if (!graphContainer.value || !analysisResult.value) return;
 
-    if (chart) {
-      chart.dispose();
+    if (cy.value) {
+      cy.value.destroy();
+      cy.value = null;
     }
-    chart = echarts.init(graphContainer.value);
 
-    const nodes = analysisResult.value.nodes.map((node) => {
-      const symbolSize = Math.max(50, Math.min(80, node.email_count));
-      const baseColor = getLayerColor(node.layer);
-      return {
-        id: node.id,
-        name: node.label,
-        symbolSize: symbolSize,
-        value: node.email_count,
-        layer: node.layer,
-        itemStyle: {
-          color: baseColor,
-          borderWidth: 4,
-          borderColor: baseColor,
-          opacity: 0.8
-        },
-        label: {
-          show: true,
-          fontSize: Math.max(12, Math.min(20, symbolSize / 4)), // 根据节点大小调整字体
-          color: '#ffffff',
-          fontWeight: 'bold',
-          textBorderColor: '#9192ab',
-          textBorderWidth: 2
-        },
-        emails: node.emails,
-        email_count: node.email_count,
-        weight: node.email_count,
-      };
+    const communityList = analysisResult.value.network_analysis?.communities?.communities || [];
+    // map community_id -> color (use preset colors cyclically)
+    const communityColorMap: Record<number, string> = {};
+    communityList.forEach((comm, idx) => {
+      const id = (comm as any).id;
+      communityColorMap[id] = PRESET_COLORS[idx % PRESET_COLORS.length];
     });
 
-    const edges = analysisResult.value.edges.map((edge) => ({
-      source: edge.source,
-      target: edge.target,
-      value: edge.email_count,
-      lineStyle: {
-        width: Math.max(2, Math.min(6, edge.weight)),
-        color: '#9192ab',
-        opacity: 0.8,
-        curveness: 0.1,
-      },
-      relation_type: edge.relation_type,
-      email_count: edge.email_count,
-      latest_time: edge.latest_time,
-      weight: edge.weight,
-      emails: edge.emails,
-    }));
+    // node-level community info returned by backend (可能存在)
+    const backendNodeCommunityMap = analysisResult.value.network_analysis?.communities?.nodes || {};
 
-    const option: echarts.EChartsOption = {
-      backgroundColor: 'transparent',
-      tooltip: {
-        backgroundColor: 'rgba(30, 33, 56, 0.95)',
-        borderColor: '#3A6CCA',
-        borderWidth: 1,
-        textStyle: { color: '#fff', fontSize: 12 },
-        formatter: (params: any) => {
-          if (params.dataType === 'node') {
-            return `
-              <b>${params.data.name}</b><br/>
-              邮件数量: ${params.data.value}<br/>
-              层级: ${params.data.layer}
-            `;
-          } else if (params.dataType === 'edge') {
-            return `
-              <b>${params.data.source} → ${params.data.target}</b><br/>
-              邮件数量: ${params.data.email_count}<br/>
-              类型: ${getRelationTypeText(params.data.relation_type)}
-            `;
-          }
-          return '';
-        },
-      },
-      series: [
-        {
-          type: 'graph',
-          layout: 'force',
-          data: nodes,
-          links: edges,
-          roam: true,
-          draggable: false,
-          focusNodeAdjacency: true,
-          edgeSymbol: ['none', 'arrow'], 
-          edgeSymbolSize: [4, 10],
-          label: { position: 'inside', formatter: '{b}' },
-          emphasis: {
-            focus: 'adjacency',
-            lineStyle: {
-              width: 3,
-              // color: '#FFD166',
-            },
-          },
-          lineStyle: {
-            width: 2,
-            // color: '#9192ab',
-            opacity: 0.9,
-          },
-          force: {
-            repulsion: 3000,
-            edgeLength: [60, 200],
-            layoutAnimation: false,
-          },
-          animationDuration: 800,
-          animationEasingUpdate: 'cubicInOut',
-        },
-      ],
-    };
-
-    chart.setOption(option);
-
-    chart.on('click', (params: any) => {
-      if (params.dataType === 'node') {
-        selectedNode.value = params.data;
-        selectedEdge.value = null;
-        drawerVisible.value = true;
-      } else if (params.dataType === 'edge') {
-        selectedEdge.value = params.data;
-        selectedNode.value = null;
-        drawerVisible.value = true;
+    // nodeColorMap: nodeId -> color (deterministic fallback if no community)
+    const nodeColorMap: Record<string, string> = {};
+    analysisResult.value.nodes.forEach((n, idx) => {
+      const nodeId = n.id;
+      const backendEntry = backendNodeCommunityMap?.[nodeId];
+      if (backendEntry && backendEntry.community_id != null) {
+        const cid = backendEntry.community_id;
+        nodeColorMap[nodeId] = communityColorMap[cid] ?? PRESET_COLORS[cid % PRESET_COLORS.length];
+      } else {
+        // fallback: assign by index to keep determinism
+        nodeColorMap[nodeId] = PRESET_COLORS[idx % PRESET_COLORS.length];
       }
     });
+
+    // --- 使用 node_impact 指标来决定节点大小（归一到 min/max）
+    const impactMap = analysisResult.value.network_analysis?.key_nodes?.node_impacts || [];
+    const impactValues = impactMap.map(item => item.impact).filter(v => typeof v === 'number') as number[];
+    const useImpact = impactValues.length > 0;
+
+    let minImpact = 0, maxImpact = 0;
+    if (useImpact) {
+      minImpact = Math.min(...impactValues);
+      maxImpact = Math.max(...impactValues);
+    }
+
+    const emailCounts = analysisResult.value.nodes.map(n => n.email_count || 1);
+    const minCount = Math.min(...emailCounts);
+    const maxCount = Math.max(...emailCounts);
+
+    const minSize = 60;
+    const maxSize = 100;
+
+    // node size map
+    const nodeSizeMap: Record<string, number> = {};
+    analysisResult.value.nodes.forEach((n) => {
+      const id = n.id;
+      let size = minSize;
+      
+      // 查找该节点的 impact 值
+      const nodeImpact = impactMap.find(item => item.node === id);
+      if (useImpact && nodeImpact && nodeImpact.impact != null) {
+        const z = normalize01(nodeImpact.impact, minImpact, maxImpact); // 0..1
+        size = Math.round(minSize + z * (maxSize - minSize));
+      } else {
+        // fallback to email_count normalization
+        const z2 = normalize01(n.email_count || 1, minCount, maxCount);
+        size = Math.round(minSize + z2 * (maxSize - minSize));
+      }
+      nodeSizeMap[id] = Math.max(minSize, Math.min(maxSize, size));
+    });
+
+    // 计算邮件数量的归一化参数，用于颜色明暗度
+    const emailCountForColor = analysisResult.value.nodes.map(n => n.email_count || 1);
+    const minEmailCount = Math.min(...emailCountForColor);
+    const maxEmailCount = Math.max(...emailCountForColor);
+    
+    // 归一化函数：将 email_count 映射到 0-0.8 范围
+    const normalizeEmailCount = (count: number) => {
+      if (maxEmailCount === minEmailCount) return 0.4; // 如果所有节点邮件数相同，使用中等明暗度
+      return normalize01(count, minEmailCount, maxEmailCount) * 0.8;
+    };
+
+    // 构造 Cytoscape 实例
+    cy.value = cytoscape({
+      container: graphContainer.value,
+      style: [
+        {
+          selector: 'node',
+          style: {
+            'background-color': (ele: any) => {
+              const normalizedCount = normalizeEmailCount(ele.data('email_count') || 1);
+              return getDarkenColor(nodeColorMap[ele.id()], normalizedCount) || '#9192ab';
+            },
+            'border-color': (ele: any) => {
+              const isSelected = mailbox.value?.name === ele.data('label');
+              if (isSelected) {
+                return getDarkenColor(nodeColorMap[ele.id()], 1);
+              }
+              const normalizedCount = normalizeEmailCount(ele.data('email_count') || 1);
+              return getDarkenColor(nodeColorMap[ele.id()], normalizedCount) || '#9192ab';
+            },
+            'text-outline-color': (ele: any) =>  mailbox.value?.name === ele.data('label')? getDarkenColor(nodeColorMap[ele.id()], 1): '#9192ab',
+            // 'border-style': (ele: any) => selectedMailboxes.value.includes(ele.data('label'))? 'dashed': 'solid',
+            'border-width': (ele: any) => Math.max(nodeSizeMap[ele.data('id')] / 12),
+            'opacity': 0.9,
+            'label': 'data(label)',
+            'color': '#fff',
+            'font-size': (ele: any) => Math.max(nodeSizeMap[ele.data('id')] / 4),
+            'font-weight': 'bold',
+            // 'text-outline-color': '#9192ab',
+            'text-outline-width': 2,
+            'text-valign': 'center',
+            'text-halign': 'center',
+            'width': (ele: any) => nodeSizeMap[ele.id()] || minSize,
+            'height': (ele: any) => nodeSizeMap[ele.id()] || minSize,
+            'overlay-opacity': 0,
+          },
+        },
+        {
+          selector: 'edge',
+          style: {
+            'width': 2,
+            'opacity': 0.8,
+            'line-color': (ele: any) => '#9192ab',
+            'target-arrow-color': (ele: any) => '#9192ab',
+            'target-arrow-shape': 'triangle',
+            'curve-style': 'bezier',
+          },
+        },
+        {
+          selector: 'node:selected',
+          style: {
+            'border-style': 'double'
+          },
+        },
+        {
+          selector: 'edge:selected',
+          style: {
+            'line-color': (ele: any) => getDarkenColor('#9192ab', 1),
+            'target-arrow-color': (ele: any) => getDarkenColor('#9192ab', 1),
+            'width': 4,
+          },
+        },
+      ],
+      elements: {
+        nodes: analysisResult.value.nodes.map(n => ({
+          data: {
+            id: n.id,
+            label: n.label,
+            // layer 字段忽略（按你的要求）
+            email_count: n.email_count,
+            emails: n.emails,
+            weight: impactMap.find( i => i.node === n.id)?.impact
+          },
+        })),
+        edges: analysisResult.value.edges.map(e => ({
+          data: {
+            source: e.source,
+            target: e.target,
+            weight: e.weight,
+            email_count: e.email_count,
+            latest_time: e.latest_time,
+            relation_type: e.relation_type,
+            emails: e.emails,
+          },
+        })),
+      },
+      layout: {
+        name: 'fcose',
+        randomize: true,
+        nodeRepulsion: 5000,
+        // fcose 不支持函数形式理想长度的所有版本，为兼容性使用基于权重的数值映射：
+        idealEdgeLength: 120,
+        edgeElasticity: 0.5,
+        gravity: 0.5,
+        numIter: 1000,
+      },
+      wheelSensitivity: 0.2,
+    });
+
+    // const savedPositions: Record<string, { x: number; y: number }> = {};
+    // const savePositions = () => {
+    //   cy.value?.nodes().forEach((n: any) => {
+    //     const p = n.position();
+    //     savedPositions[n.id()] = { x: p.x, y: p.y };
+    //   });
+    // };
+
+    // 点击事件
+    cy.value.on('tap', 'node', (evt) => {
+      selectedNode.value = evt.target.data();
+      selectedEdge.value = null;
+      drawerVisible.value = true;
+    });
+
+    cy.value.on('tap', 'edge', (evt) => {
+      selectedEdge.value = evt.target.data();
+      selectedNode.value = null;
+      drawerVisible.value = true;
+    });
+
+    // 背景点击关闭抽屉
+    cy.value.on('tap', (evt) => {
+      if (evt.target === cy.value) {
+        drawerVisible.value = false;
+      }
+    });
+
+    // // 布局完成后保存位置快照并 fit 视图
+    // cy.value.once('layoutstop', () => {
+    //   savePositions();
+    //   try { cy.value?.fit(undefined, 40); } catch (e) { /* ignore */ }
+    // });
+
+    // // 当用户拖动释放节点（dragfree）时，用动画把节点返回到保存的位置
+    // cy.value.on('dragfree', 'node', (evt: any) => {
+    //   const node = evt.target;
+    //   const id = node.id();
+    //   const pos = savedPositions[id];
+    //   if (!pos) return;
+    //   const origEvent = evt.originalEvent;
+    //   node.animate({ position: { x: pos.x, y: pos.y } }, { duration: 600, easing: 'ease-out' });
+    // });
   };
 
 
+  // const getLayerColor = (layer: number) => {
+  //   const colors = ['#63b2ee', '#76da91', '#f8cb7f', '#f89588', '#7cd6cf', '#7898e1'];
+  //   return colors[layer] || '#9192ab';
+  // };
 
-  // 辅助函数
-  const getLayerColor = (layer: number) => {
-    const colors = ['#63b2ee', '#76da91', '#f8cb7f', '#f89588', '#7cd6cf', '#7898e1'];
-    return colors[layer] || '#9192ab';
+  const getDarkenColor = (hex: string, weight = 0.5): string => {
+    // 限制 weight
+    weight = Math.max(0, Math.min(1, weight));
+
+    // 规范 hex
+    let h = (hex || '').replace('#', '').trim();
+    if (!h) return '#000000';
+    if (h.length === 3) h = h.split('').map(c => c + c).join('');
+
+    const r = parseInt(h.slice(0, 2), 16) / 255;
+    const g = parseInt(h.slice(2, 4), 16) / 255;
+    const b = parseInt(h.slice(4, 6), 16) / 255;
+
+    // RGB -> HSL
+    const max = Math.max(r, g, b), min = Math.min(r, g, b);
+    let hDeg = 0, s = 0;
+    const l = (max + min) / 2;
+
+    if (max !== min) {
+      const d = max - min;
+      s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+      switch (max) {
+        case r: hDeg = (g - b) / d + (g < b ? 6 : 0); break;
+        case g: hDeg = (b - r) / d + 2; break;
+        case b: hDeg = (r - g) / d + 4; break;
+      }
+      hDeg = hDeg * 60; // to degrees
+    }
+
+    const darkenFactor = 1 - 0.85 * weight; // 控制亮度缩放（更平滑）
+    const saturateFactor = 1 + 0.6 * weight; // 提升饱和度的倍数
+
+    const newL = Math.max(0, Math.min(1, l * darkenFactor));
+    const newS = Math.max(0, Math.min(1, s * saturateFactor));
+
+    // HSL -> RGB
+    const hNorm = ((hDeg % 360) + 360) % 360 / 360; // 0..1
+    const hue2rgb = (p: number, q: number, t: number) => {
+      if (t < 0) t += 1;
+      if (t > 1) t -= 1;
+      if (t < 1/6) return p + (q - p) * 6 * t;
+      if (t < 1/2) return q;
+      if (t < 2/3) return p + (q - p) * (2/3 - t) * 6;
+      return p;
+    };
+
+    let nr = 0, ng = 0, nb = 0;
+    if (newS === 0) {
+      nr = ng = nb = newL; // achromatic
+    } else {
+      const q = newL < 0.5 ? newL * (1 + newS) : newL + newS - newL * newS;
+      const p = 2 * newL - q;
+      nr = hue2rgb(p, q, hNorm + 1/3);
+      ng = hue2rgb(p, q, hNorm);
+      nb = hue2rgb(p, q, hNorm - 1/3);
+    }
+
+    const toHex = (v: number) => {
+      const v255 = Math.round(Math.max(0, Math.min(1, v)) * 255);
+      return v255.toString(16).padStart(2, '0');
+    };
+
+    return `#${toHex(nr)}${toHex(ng)}${toHex(nb)}`;
   };
 
 
@@ -541,12 +730,25 @@
 
   const getRelationTypeText = (type: string) => {
     switch (type) {
-      case 'send':
-        return '发送';
-      case 'receive':
-        return '接收';
-      default:
-        return '未知';
+      case 'send': return '发送';
+      case 'receive': return '接收';
+      default: return '未知';
+    }
+  };
+
+  // 全屏切换
+  const toggleFullscreen = () => {
+    if (!document.fullscreenElement) {
+      // 进入全屏
+      const container = document.querySelector('.relation-graph-container') as HTMLElement;
+      if (container && container.requestFullscreen) {
+        container.requestFullscreen();
+      }
+    } else {
+      // 退出全屏
+      if (document.exitFullscreen) {
+        document.exitFullscreen();
+      }
     }
   };
 </script>
@@ -554,5 +756,17 @@
 <style scoped>
   .email-card {
     margin-bottom: 20px;
+  }
+
+  .fullscreen-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 1000;
+  }
+
+  .relation-graph-container > div {
+    width: 100%;
+    height: 100%;
   }
 </style>

@@ -8,14 +8,14 @@
             <template #upload-button>
               <div class="rounded-lg border-2 border-dashed w-full p-4 flex flex-col justify-center space-y-4 items-center text-center" :class="{ 'border-blue-500 bg-blue-50': isDragOver }" @dragenter.prevent="handleDragEnter" @dragover.prevent="handleDragOver" @dragleave.prevent="handleDragLeave" @drop.prevent="handleDrop">
                 <div>
-                  <span class="text-gray-500 text-sm mr-2 font-bold">上传模式</span>
-                  <a-switch @click.stop v-model="uploadDirectory">
-                    <template #checked>
+                  <span class="text-gray-500 text-sm mr-2 font-bold">文件夹上传</span>
+                  <a-switch @click.stop v-model="uploadDirectory" size="small">
+                    <!-- <template #checked>
                       目录
                     </template>
                     <template #unchecked>
                       单个
-                    </template>
+                    </template> -->
                   </a-switch>
                 </div>
                 <icon-upload :size="24" />
