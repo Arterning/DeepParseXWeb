@@ -569,7 +569,6 @@
           data: {
             id: n.id,
             label: n.label,
-            // layer 字段忽略（按你的要求）
             email_count: n.email_count,
             emails: n.emails,
             weight: impactMap.find( i => i.node === n.id)?.impact
@@ -739,15 +738,15 @@
   // 全屏切换
   const toggleFullscreen = () => {
     if (!document.fullscreenElement) {
-      // 进入全屏
       const container = document.querySelector('.relation-graph-container') as HTMLElement;
       if (container && container.requestFullscreen) {
         container.requestFullscreen();
+        isFullscreen.value = true;
       }
     } else {
-      // 退出全屏
       if (document.exitFullscreen) {
         document.exitFullscreen();
+        isFullscreen.value = false;
       }
     }
   };
