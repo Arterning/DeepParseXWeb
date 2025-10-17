@@ -137,7 +137,6 @@
           >
             <a-select
               v-model="form.entity_type"
-              multiple
             >
               <a-option v-for="item in commonEntityTypes" :key="item" :value="item">
                 {{ item }}

@@ -12,7 +12,7 @@
         <div class="flex flex-wrap gap-4 mb-4">
           <div class="flex items-center gap-2">
             <a-icon-user />
-            <span>{{ info?.sender }}</span>
+            <span class="cursor-pointer hover:underline" @click="goMailBox(info.sender)">{{ info?.sender }}</span>
           </div>
           <div class="flex items-center gap-2">
             <a-icon-calendar />
@@ -28,9 +28,11 @@
         <a-space class="flex mb-4">
           <div class="text-sm font-medium w-16">收件人</div>
           <a-scrollbar style="max-height: 100px; overflow: auto">
-            <div class="space-x-2 space-y-2">
+            <div class="space-x-2">
               <a-tag
-                v-for="(recipient, index) in parseReceiver"
+                v-for="(recipient, index) in info.receiver.replace(/\s+/g, '').split(',')"
+                @click="goMailBox(recipient)"
+                class="cursor-pointer"
                 :key="index"
               >
                 {{ recipient }}
@@ -174,6 +176,7 @@
   import { emailDateFormat } from '@/utils/date';
   import { useRouter } from 'vue-router';
   import { isHtmlContent } from '@/utils/doc';
+import { queryMailBoxDetailByName } from '@/api/mailbox';
 
   const translate = ref(false);
 
@@ -238,7 +241,14 @@
       },
     });
   };
-
+  const goMailBox = async (name: string) => {
+    const { id } = await queryMailBoxDetailByName(name);
+    router.push({
+      name: 'MailBoxDetail',
+      params: { id },
+      query: { appendix: name, category: 'email' },
+    })
+  }
   const parseReceiver = computed(() => {
     const raw = props.info.receiver || ''
     const results: string[] = []

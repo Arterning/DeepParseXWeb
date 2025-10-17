@@ -192,11 +192,26 @@
               </p>
             </template>
             <template #receiver="{ record }">
-              <a-tooltip :content="record.receiver">
-                <a-link class="block truncate" @click="goMailBox(record.receiver)">
-                  {{ record.receiver }}
-                </a-link>                
-              </a-tooltip>
+              <template v-if="record.receiver.replace(/\s+/g, '').split(',').length===1">
+                <a-tooltip :content="record.receiver">
+                  <a-link class="block truncate" @click="goMailBox(record.receiver)">
+                    {{ record.receiver }}
+                  </a-link>                
+                </a-tooltip>                
+              </template>
+              <template v-else>
+                <a-popover title="收件人列表">
+                  <div class="truncate">
+                    {{ record.receiver }}
+                  </div> 
+                  <template #content>
+                    <a-link v-for="item in record.receiver.replace(/\s+/g, '').split(',')" class="block" @click="goMailBox(item)">
+                      {{ item }}
+                    </a-link>  
+                  </template>
+                </a-popover>
+              </template>
+
             </template>
             <template #sender="{ record }">
               <a-tooltip :content="record.sender">
@@ -292,12 +307,14 @@
                       >{{ record.sender }}</a-tag
                     >
                   </div>
-                  <div class="flex items-center">
+                  <div class="flex items-center flex-wrap">
                     <span class="font-medium text-gray-500">To:</span>
+                    
                     <a-tag
+                      v-for="item in record.receiver.replace(/\s+/g, '').split(',')"
                       class="cursor-pointer ml-1.5 text-gray-500 px-2 py-0.5 rounded-full"
-                      @click="goMailBox(record.receiver)"
-                      >{{ record.receiver }}</a-tag
+                      @click="goMailBox(item)"
+                      >{{ item }}</a-tag
                     >
                   </div>
                   <div v-if="record.cc" class="flex items-center">

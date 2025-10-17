@@ -73,6 +73,12 @@ importers:
       cytoscape-edgehandles:
         specifier: ^4.0.1
         version: 4.0.1(cytoscape@3.31.2)
+      cytoscape-fcose:
+        specifier: ^2.2.0
+        version: 2.2.0(cytoscape@3.31.2)
+      cytoscape-popper:
+        specifier: ^4.0.1
+        version: 4.0.1(cytoscape@3.31.2)
       d3-cloud:
         specifier: ^1.2.7
         version: 1.2.7
@@ -2070,6 +2076,9 @@ packages:
   cose-base@1.0.3:
     resolution: {integrity: sha512-s9whTXInMSgAp/NVXVNuVxVKzGH2qck3aQlVHxDCdAEPgtMKwc4Wq6/QKhgdEdgbLSi9rBTAcPoRa6JpiG4ksg==}
 
+  cose-base@2.2.0:
+    resolution: {integrity: sha512-AzlgcsCbUMymkADOJtQm3wO9S3ltPfYOFD5033keQn9NJzIbtnZj+UdBJe7DYml/8TdbtHJW3j58SOnKhWY/5g==}
+
   cosmiconfig-typescript-loader@4.4.0:
     resolution: {integrity: sha512-BabizFdC3wBHhbI4kJh0VkQP9GkBfoHPydD0COMce1nJ1kJAB3F2TmJ/I7diULBKtmEWSwEbuN/KDtgnmUUVmw==}
     engines: {node: '>=v14.21.3'}
@@ -2189,6 +2198,16 @@ packages:
 
   cytoscape-edgehandles@4.0.1:
     resolution: {integrity: sha512-uSYshkqRZ4luCxK295bEVTg46q4ZW+fwJhcIzMrtfNR7zeAnJ38Z48kUGeu5ibtXkgLbcZAg0YE4ED2dRuaePg==}
+    peerDependencies:
+      cytoscape: ^3.2.0
+
+  cytoscape-fcose@2.2.0:
+    resolution: {integrity: sha512-ki1/VuRIHFCzxWNrsshHYPs6L7TvLu3DL+TyIGEsRcvVERmxokbf5Gdk7mFxZnTdiGtnA4cfSmjZJMviqSuZrQ==}
+    peerDependencies:
+      cytoscape: ^3.2.0
+
+  cytoscape-popper@4.0.1:
+    resolution: {integrity: sha512-u2gYDMMvGSlAJbNfKvMljOM/p+BrHu0A4VcpELa+xJf54HoMn+nV0iuhALZx+O89b74SKJRy7jYo2WfkD5uvsw==}
     peerDependencies:
       cytoscape: ^3.2.0
 
@@ -4152,8 +4171,8 @@ packages:
     resolution: {integrity: sha512-y+8btoc/CK70XqcHqjxiGWBOeIL8upbS0peTPXTvgrh21n1RiWWcIpSWM+4uXq+IAgNh9YYQWdc7LVDPDAEEAg==}
     hasBin: true
 
-  katex@0.16.22:
-    resolution: {integrity: sha512-XCHRdUw4lf3SKBaJe4EvgqIuWwkPSo9XoeO8GjQW94Bp7TWv9hNhzZjZ+OH9yf1UmLygb7DIT5GSFQiyt16zYg==}
+  katex@0.16.25:
+    resolution: {integrity: sha512-woHRUZ/iF23GBP1dkDQMh1QBad9dmr8/PAwNA54VrSOVYgI12MAcE14TqnDdQOdzyEonGzMepYnqBMYdsoAr8Q==}
     hasBin: true
 
   keycharm@0.4.0:
@@ -4189,6 +4208,9 @@ packages:
 
   layout-base@1.0.2:
     resolution: {integrity: sha512-8h2oVEZNktL4BH2JCOI90iD1yXwL6iNW7KcCKT2QZgQJR2vbqDsldCTPRU9NifTCqHZci57XvQQ15YTu+sTYPg==}
+
+  layout-base@2.0.1:
+    resolution: {integrity: sha512-dp3s92+uNI1hWIpPGH3jK2kxE2lMjdXdr+DH8ynZHpd6PUlH6x6cbuXnoMmiNumznqaNO31xu9e79F0uuZ0JFg==}
 
   lazy-cache@1.0.4:
     resolution: {integrity: sha512-RE2g0b5VGZsOCFOCgP7omTRYFqydmZkBwl5oNnQ1lDYC57uyO9KqNnNVxT7COSHTxrRCWVcAVOcbjk+tvh/rgQ==}
@@ -7992,7 +8014,7 @@ snapshots:
 
   '@ruanyf/markdown-it-katex@5.0.0':
     dependencies:
-      katex: 0.16.22
+      katex: 0.16.25
 
   '@sindresorhus/is@0.7.0': {}
 
@@ -9367,6 +9389,10 @@ snapshots:
     dependencies:
       layout-base: 1.0.2
 
+  cose-base@2.2.0:
+    dependencies:
+      layout-base: 2.0.1
+
   cosmiconfig-typescript-loader@4.4.0(@types/node@20.5.1)(cosmiconfig@8.3.6(typescript@4.9.5))(ts-node@10.9.2(@types/node@20.5.1)(typescript@4.9.5))(typescript@4.9.5):
     dependencies:
       '@types/node': 20.5.1
@@ -9522,6 +9548,15 @@ snapshots:
       cytoscape: 3.31.2
       lodash.memoize: 4.1.2
       lodash.throttle: 4.1.1
+
+  cytoscape-fcose@2.2.0(cytoscape@3.31.2):
+    dependencies:
+      cose-base: 2.2.0
+      cytoscape: 3.31.2
+
+  cytoscape-popper@4.0.1(cytoscape@3.31.2):
+    dependencies:
+      cytoscape: 3.31.2
 
   cytoscape@3.31.2: {}
 
@@ -11602,7 +11637,7 @@ snapshots:
     dependencies:
       commander: 2.20.3
 
-  katex@0.16.22:
+  katex@0.16.25:
     dependencies:
       commander: 8.3.0
 
@@ -11633,6 +11668,8 @@ snapshots:
   known-css-properties@0.26.0: {}
 
   layout-base@1.0.2: {}
+
+  layout-base@2.0.1: {}
 
   lazy-cache@1.0.4: {}
 
