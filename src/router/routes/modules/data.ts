@@ -37,45 +37,11 @@ const DASHBOARD: AppRouteRecordRaw = {
       },
     },
     {
-      path: 'person',
-      name: 'Person',
-      component: () => import('@/views/data/person/index.vue'),
-      meta: {
-        locale: '人物管理',
-        requiresAuth: true,
-        roles: ['*'],
-        hideInMenu: false,
-      },
-    },
-    {
       path: 'upload-task',
       name: 'UploadTask',
       component: () => import('@/views/data/upload-task/index.vue'),
       meta: {
         locale: 'menu.data.uploadTask',
-        requiresAuth: true,
-        roles: ['*'],
-        hideInMenu: true,
-      },
-    },
-    {
-      path: 'org',
-      name: 'Org',
-      component: () => import('@/views/data/org/index.vue'),
-      meta: {
-        locale: 'menu.data.org',
-        requiresAuth: true,
-        icon: 'IconFile',
-        roles: ['*'],
-        hideInMenu: false,
-      },
-    },
-    {
-      path: 'org-detail/:id',
-      name: 'OrgDetail',
-      component: () => import('@/views/data/org-detail/index.vue'),
-      meta: {
-        locale: 'menu.data.org.detail',
         requiresAuth: true,
         roles: ['*'],
         hideInMenu: true,
