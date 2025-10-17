@@ -7,11 +7,13 @@
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <!-- 邮箱选择 -->
           <div>
-            <div class="mb-1"><label class="text-sm font-medium text-gray-700 mr-2">选择邮箱</label>
-            <a-link class="text-sm" @click="()=>{
-              selectedMailboxes = [];
-              mailboxes.map((e:any)=>selectedMailboxes.push(e.name))
-            }">全选</a-link></div>
+            <div class="mb-1">
+              <label class="text-sm font-medium text-gray-700 mr-2">选择邮箱</label>
+              <!-- <a-link class="text-sm" @click="()=>{
+                selectedMailboxes = [];
+                mailboxes.map((e:any)=>selectedMailboxes.push(e.name))
+              }">全选</a-link> -->
+            </div>
             
             <a-select
               v-model="selectedMailboxes"
@@ -55,6 +57,7 @@
               v-model:value="startTime"
               show-time
               placeholder="选择开始时间"
+              @ok="(e)=>{startTime = e}"
               class="w-full"
             />
           </div>
@@ -68,6 +71,7 @@
               v-model:value="endTime"
               show-time
               placeholder="选择结束时间"
+              @ok="(e)=>{endTime = e}"
               class="w-full"
             />
           </div>
@@ -110,7 +114,7 @@
           </div>
         </div>
   
-        <div v-if="analysisResult.network_analysis" class="relation-graph-container mx-6 relative h-96 bg-zinc-50">
+        <div v-if="analysisResult.network_analysis" class="relation-graph-container mx-6 relative h-[480px] bg-gray-50 dark:bg-gray-200">
           <!-- 图谱容器 -->
           <div ref="graphContainer"></div>
           <a-button 
@@ -382,11 +386,12 @@
             <!-- 相关邮件列表 -->
             <div class="mt-6">
               <h5 class="text-md font-semibold text-gray-800 mb-3">相关邮件</h5>
-              <div class="max-h-60 overflow-y-auto space-y-2">
+              <div class="max-h-96 overflow-y-auto space-y-2">
                 <div
                   v-for="email in selectedNode.emails"
                   :key="email.id"
-                  class="p-3 bg-gray-50 rounded-lg border hover:bg-gray-100 transition-colors"
+                  class="cursor-pointer p-3 bg-gray-50 rounded-lg border hover:bg-gray-100 transition-colors"
+                  @click="getMail(email)"
                 >
                   <div class="text-sm font-medium text-gray-800 mb-1">{{
                     email.subject
@@ -445,7 +450,12 @@
   
               <div class="flex justify-between items-center py-2 border-b">
                 <span class="text-gray-600">关系权重</span>
-                <span class="font-semibold">{{ selectedEdge.weight }}</span>
+                <span class="font-semibold">
+                  {{ selectedEdge.weight }}
+                  <a-tooltip :content="selectedEdge.description">
+                    <icon-question-circle />
+                  </a-tooltip>
+                </span>
               </div>
   
               <div class="flex justify-between items-center py-2 border-b">
@@ -500,6 +510,7 @@
   import { Message } from '@arco-design/web-vue';
   import dayjs, { type Dayjs } from 'dayjs';
   import cytoscape from 'cytoscape';
+  import router from '@/router';
   import fcose from 'cytoscape-fcose';
   import {
     queryMailBoxList,
@@ -510,6 +521,7 @@
     type EmailData,
   } from '@/api/mailbox';
   import { useAppStore } from '@/store';
+  import { queryMailMsgDetail } from '@/api/mailmsg';
   
   cytoscape.use(fcose);
   
@@ -592,9 +604,12 @@
         mailboxes: selectedMailboxes.value,
         max_layers: maxLayers.value,
       };
-  
-      if (startTime.value) params.start_time = startTime.value.toISOString();
-      if (endTime.value) params.end_time = endTime.value.toISOString();
+      
+      
+      // if (startTime.value) params.start_time = startTime.value.toISOString();
+      // if (endTime.value) params.end_time = endTime.value.toISOString();
+      if (startTime.value) params.start_time = startTime.value;
+      if (endTime.value) params.end_time = endTime.value;
       if (referenceTime.value) params.reference_time = referenceTime.value.toISOString();
   
       analysisResult.value = await analyzeMailboxRelationships(params);
@@ -660,8 +675,8 @@
     const minCount = Math.min(...emailCounts);
     const maxCount = Math.max(...emailCounts);
 
-    const minSize = 60;
-    const maxSize = 100;
+    const minSize = 30;
+    const maxSize = 80;
 
     // node size map
     const nodeSizeMap: Record<string, number> = {};
@@ -732,7 +747,7 @@
         {
           selector: 'edge',
           style: {
-            'width': 2,
+            'width': 1,
             'opacity': 0.8,
             'line-color': (ele: any) => '#9192ab',
             'target-arrow-color': (ele: any) => '#9192ab',
@@ -743,7 +758,8 @@
         {
           selector: 'node:selected',
           style: {
-            'border-style': 'double'
+            'border-style': 'double',
+            'z-index': 9999
           },
         },
         {
@@ -751,7 +767,8 @@
           style: {
             'line-color': (ele: any) => getDarkenColor('#9192ab', 1),
             'target-arrow-color': (ele: any) => getDarkenColor('#9192ab', 1),
-            'width': 4,
+            'width': 2,
+            'z-index': 9999
           },
         },
       ],
@@ -762,39 +779,55 @@
             label: n.label,
             email_count: n.email_count,
             emails: n.emails,
-            weight: impactMap.find( i => i.node === n.id)?.impact
+            weight: impactMap.find( i => i.node === n.id)?.impact || 0
           },
         })),
-        edges: analysisResult.value.edges.map(e => ({
-          data: {
-            source: e.source,
-            target: e.target,
-            weight: e.weight,
-            email_count: e.email_count,
-            latest_time: e.latest_time,
-            relation_type: e.relation_type,
-            emails: e.emails,
-          },
-        })),
+         edges: analysisResult.value.edges.map(e => {
+           // 根据权重计算理想边长和弹性
+           // 权重越大，边越短（关系越紧密）
+           const normalizedWeight = e.weight || 1;
+           const idealLength = Math.max(50, 200 - normalizedWeight * 20);
+           const elasticity = Math.min(1, normalizedWeight / 10);
+           
+           return {
+             data: {
+               source: e.source,
+               target: e.target,
+               weight: e.weight,
+               description: e.description,
+               email_count: e.email_count,
+               latest_time: e.latest_time,
+               relation_type: e.relation_type,
+               emails: e.emails,
+               // 添加边的布局参数
+               idealLength: idealLength,
+               elasticity: elasticity
+             },
+           };
+         }),
       },
-       layout: {
-         name: 'fcose',
-         randomize: true,
-         nodeRepulsion: 5000,
-         // fcose 不支持函数形式理想长度的所有版本，为兼容性使用基于权重的数值映射：
-         idealEdgeLength: 120,
-         edgeElasticity: 0.2,
-         gravity: 0.5,
-         numIter: 1000,
-         // 根据容器尺寸调整布局范围
-         fit: true,
-         boundingBox: {
-           x1: 0,
-           y1: 0,
-           x2: graphContainer.value?.clientWidth || 800,
-           y2: graphContainer.value?.clientHeight || 400
-         }
-       },
+      layout: {
+        name: 'fcose',
+        randomize: true,
+        nodeRepulsion: 5000,
+        // 使用函数根据边的权重动态设置边长
+        idealEdgeLength: (edge: any) => {
+          return edge.data('idealLength') || 120;
+        },
+        edgeElasticity: (edge: any) => {
+          return edge.data('elasticity') || 0.2;
+        },
+        gravity: 0.5,
+        numIter: 1000,
+        // 根据容器尺寸调整布局范围
+        fit: true,
+        boundingBox: {
+          x1: 0,
+          y1: 0,
+          x2: graphContainer.value?.clientWidth || 800,
+          y2: graphContainer.value?.clientHeight || 400
+        }
+      },
       wheelSensitivity: 0.2,
     });
 
@@ -967,6 +1000,13 @@
     isFullscreen.value = !!document.fullscreenElement;
   };
 
+  const getMail = async (email: any) => {
+    const { doc_id } = await queryMailMsgDetail(email.id);
+    if(doc_id) {
+      router.push({name: 'DocDetail', params: { id: doc_id }, query: { appendix: email.subject, category: 'doc' }})
+    }
+  }
+
   onMounted(() => {
     loadMailboxes(); 
     document.addEventListener('fullscreenchange', handleFullscreenChange);
@@ -985,7 +1025,7 @@
     position: absolute;
     top: 10px;
     right: 10px;
-    z-index: 1000;
+    z-index: 1;
   }
   
   .relation-graph-container > div {

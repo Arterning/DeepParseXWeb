@@ -20,6 +20,7 @@ const useUserStore = defineStore('user', {
     is_superuser: false,
     is_staff: false,
     roles: '',
+    dept: undefined
   }),
 
   getters: {
@@ -50,6 +51,10 @@ const useUserStore = defineStore('user', {
     async info() {
       const res = await getUserInfo();
       this.setInfo(res);
+    },
+
+    async setDept(dept: any) {
+      this.$state.dept = dept;
     },
 
     // Get captcha

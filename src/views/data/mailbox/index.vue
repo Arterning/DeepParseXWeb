@@ -67,7 +67,7 @@
         </a-space>
         <a-space>
           <a-tooltip content="切换视图">
-            <a-button type="text" @click="viewType = !viewType">
+            <a-button type="text" @click="isTableView = !isTableView">
               <template #icon>
                 <icon-swap />
               </template>
@@ -80,7 +80,47 @@
           <a-spin size="large" />
         </div>
         <template v-else>
-          <template v-if="viewType">
+          <a-table
+            v-if="isTableView"
+            v-model:selected-keys="rowSelectKeys"
+            :bordered="false"
+            :columns="columns"
+            :data="renderData"
+            :loading="loading"
+            :pagination="pagination"
+            :row-selection="rowSelection"
+            row-key="id"
+            @page-change="onPageChange"
+            @page-size-change="onPageSizeChange"
+          >
+            <template #name="{ record }">
+              {{ record.name }}
+            </template>
+            <template #email_num="{ record }">
+              {{ record.email_num }}
+            </template>
+            <template #operate="{ record }">
+              <a-space>
+                <a-tooltip content="编辑">
+                  <a-link @click="EditMailBox(record.id)">
+                    <icon-edit style="font-size:16" />
+                  </a-link>
+                </a-tooltip>
+                <a-tooltip content="查看">
+                  <a-link @click="
+                    router.push({
+                      name: 'MailBoxDetail',
+                      params: { id: record.id },
+                      query: { appendix: record.name, category: 'email'}
+                    })
+                  ">
+                    <icon-eye style="font-size:16" />
+                  </a-link>
+                </a-tooltip>
+              </a-space>
+            </template>
+          </a-table>
+          <template v-else>
             <div
               v-if="renderData.length === 0"
               class="text-center text-gray-500 dark:text-gray-400"
@@ -94,7 +134,7 @@
               <a-card
                 v-for="item in renderData"
                 :key="item.id"
-                class="rounded-lg transition-all duration-200 hover:shadow-lg dark:bg-gray-800"
+                class="doc-card rounded-lg transition-all duration-300 hover:shadow-lg"
                 :class="{
                   'border-blue-500 border-2': rowSelectKeys.includes(item.id),
                 }"
@@ -149,46 +189,6 @@
               />
             </div>
           </template>
-          <a-table
-            v-else
-            v-model:selected-keys="rowSelectKeys"
-            :bordered="false"
-            :columns="columns"
-            :data="renderData"
-            :loading="loading"
-            :pagination="pagination"
-            :row-selection="rowSelection"
-            row-key="id"
-            @page-change="onPageChange"
-            @page-size-change="onPageSizeChange"
-          >
-            <template #name="{ record }">
-              {{ record.name }}
-            </template>
-            <template #email_num="{ record }">
-              {{ record.email_num }}
-            </template>
-            <template #operate="{ record }">
-              <a-space>
-                <a-tooltip content="编辑">
-                  <a-link @click="EditMailBox(record.id)">
-                    <icon-edit style="font-size:16" />
-                  </a-link>
-                </a-tooltip>
-                <a-tooltip content="查看">
-                  <a-link @click="
-                    router.push({
-                      name: 'MailBoxDetail',
-                      params: { id: record.id },
-                      query: { appendix: record.name, category: 'email'}
-                    })
-                  ">
-                    <icon-eye style="font-size:16" />
-                  </a-link>
-                </a-tooltip>
-              </a-space>
-            </template>
-          </a-table>
         </template>
       </div>
       <div class="content-modal">
@@ -297,7 +297,7 @@
   const { loading, setLoading } = useLoading(true);
   const router = useRouter();
   const appStore = useAppStore();
-  const viewType = ref(true);
+  const isTableView = ref(false);
 
   // 存储图表数据
   const mailboxRankingData = ref<MailboxRankingItem[]>([]);

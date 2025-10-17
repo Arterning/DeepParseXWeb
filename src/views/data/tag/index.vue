@@ -1,23 +1,21 @@
 <template>
   <a-layout class="flex-layout">
     <a-card :title="$t('我的标签')" class="general-card">
-      <div class="flex flex-wrap content">
+      <div class="flex flex-wrap content gap-3">
         <a-empty v-if="renderData.length == 0"/>
-        <a-tag v-for="tag in renderData" :key="tag.id" @click="handleTagClick(tag)" :color="getRandomColor(tag.id)" class="cursor-pointer mx-2 text-lg font-semibold">{{ tag.name }}</a-tag>
+        <a-tag v-for="tag in renderData" :key="tag.id" @click="handleTagClick(tag)" :color="getRandomColor(tag.id)" class="cursor-pointer text-lg font-semibold">{{ tag.name }}</a-tag>
       </div>
-      <div class="flex flex-wrap gap-4">
-        <a-card v-for="doc in tagDocuments" :key="doc.id" hoverable :bordered="false" @click="handleDocClick(doc)" class="tag-card cursor-pointer mt-4 w-64 hover:shadow-lg transition-shadow duration-300">
-          <div class="flex flex-col items-start gap-2 p-2">
-            <div class="flex items-center gap-2">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 content">
+        <a-card v-for="doc in tagDocuments" :key="doc.id" @click="handleDocClick(doc)" class="doc-card rounded-lg cursor-pointer hover:shadow-lg transition-all duration-300">
+            <div class="flex items-center gap-2 mb-2">
               <component :is="getSvgByType(doc.type)" class="w-10 h-10" />
-              <div class="text-lg font-semibold">{{ doc.title }}</div>
+              <span class="text-lg font-semibold truncate flex-1 min-w-0">{{ doc.title }}</span>
             </div>
             
             <div class="flex items-center gap-2 text-gray-600">
               <icon-calendar />
               <span>{{ tableDateFormat(doc?.doc_time) }}</span>
             </div>
-          </div>
           <!-- <template #extra>
               <div class="flex gap-2">
                 <a-button type="text" size="small" @click="EditTag(tag.id)">
@@ -166,9 +164,9 @@ const handleTagClick = async (tag: TagRes) => {
   // Message.success(`点击了标签: ${tag.name}`);
 
   const res = await queryTagDetail(tag.id);
-  console.log('queryTagDetail res', res);
+  // console.log('queryTagDetail res', res);
   tagDocuments.value = res.docs || [];
-  console.log('tagDocuments.value', tagDocuments.value);
+  // console.log('tagDocuments.value', tagDocuments.value);
 };
 
 const isSelected = (tag: TagRes) => {
@@ -176,19 +174,20 @@ const isSelected = (tag: TagRes) => {
 };
 
 const handleDocClick = (doc: TagDocument) => {
+  console.log(doc);
+  
   // 这里可以添加更多逻辑，比如跳转到文档详情页
   router.push({name: 'DocDetail', params: { id: doc.id }, query: { appendix: doc.title, category: 'doc' }});
 };
 </script>
 
 <style scoped>
-.tag-card {
-  border: 1px solid var(--color-border);
-  border-radius: 8px;
-}
+/* .tag-card { */
+  /* border: 1px solid var(--color-border); */
+/* } */
 
-.tag-card:hover {
+/* .tag-card:hover {
   border-color: var(--color-primary-light-3);
-}
+} */
 </style>
   

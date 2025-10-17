@@ -5,4 +5,5 @@ export interface UserState {
   is_superuser: boolean;
   is_staff: boolean;
   roles: string;
+  dept: any;
 }

@@ -453,7 +453,7 @@
     // 重置方法
     const resetMethod = () => {
       formModel.value.name = undefined;
-      formModel.value.entity_type = undefined;
+      formModel.value.entity_type = ['组织', '人物'];
     };
 
 

@@ -45,6 +45,15 @@ export function queryMailBoxDetail(pk: number): Promise<MailBoxRes> {
   return axios.get(`/api/v1/sys/mailbox/${pk}`);
 }
 
+export function queryMailBoxDetailByName(name: string): Promise<MailBoxRes> {
+  return axios.get(`/api/v1/sys/mailbox/by-name`, {
+    params: { name },
+    paramsSerializer: (obj) => {
+      return qs.stringify(obj);
+    },
+  });
+}
+
 export function createMailBox(data: MailBoxReq) {
   return axios.post('/api/v1/sys/mailbox', data);
 }
@@ -88,6 +97,7 @@ export interface EdgeData {
   source: string;
   target: string;
   weight: number;
+  description: string;
   email_count: number;
   latest_time: string;
   relation_type: string;

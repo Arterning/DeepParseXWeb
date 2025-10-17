@@ -1,21 +1,25 @@
 <template>
     <div class="cursor-pointer">
-          <a-popover trigger="click" position="bl">
-              <div class="action-icon"><icon-settings size="18" /></div>
-              <template #content>
-                  <div>
-                      <a-checkbox-group v-model="selectedColumns">
-                          <a-row>
-                              <a-col v-for="column in columns" :key="column.dataIndex" :span="8">
-                                  <a-checkbox :value="column.dataIndex">{{
-                                      column.title
-                                      }}</a-checkbox>
-                              </a-col>
-                          </a-row>
-                      </a-checkbox-group>
-                  </div>
-              </template>
-          </a-popover>
+      <a-popover trigger="click" position="bl">
+          <a-button type="text">
+            <template #icon>
+              <icon-settings size="16" />
+            </template>
+          </a-button>
+          <template #content>
+              <div>
+                  <a-checkbox-group v-model="selectedColumns">
+                      <a-row>
+                          <a-col v-for="column in columns" :key="column.dataIndex" :span="8">
+                              <a-checkbox :value="column.dataIndex">{{
+                                  column.title
+                                  }}</a-checkbox>
+                          </a-col>
+                      </a-row>
+                  </a-checkbox-group>
+              </div>
+          </template>
+      </a-popover>
     </div>
   </template>
   

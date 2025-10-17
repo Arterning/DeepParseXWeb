@@ -6,7 +6,7 @@
         <a-scrollbar class="h-[calc(100vh-300px)]" style="width:100%; overflow-y: auto; padding-right: 2rem;">
           <a-upload multiple draggable :directory="uploadDirectory" accept=".zip,.rar,.eml" :custom-request="customRequest" :limit="MAX_UPLOAD_COUNT" :before-upload="beforeUpload" @exceed-limit="onExceedLimit" @change="handleUploadChange" :file-list="uploadFileList">
             <template #upload-button>
-              <div class="rounded-lg border-2 border-dashed w-full p-4 flex flex-col justify-center space-y-4 items-center text-center" :class="{ 'border-blue-500 bg-blue-50': isDragOver }" @dragenter.prevent="handleDragEnter" @dragover.prevent="handleDragOver" @dragleave.prevent="handleDragLeave" @drop.prevent="handleDrop">
+              <div class="rounded-lg border w-full p-4 flex flex-col justify-center space-y-4 items-center text-center" :class="{ 'border-blue-500 bg-blue-50': isDragOver }" @dragenter.prevent="handleDragEnter" @dragover.prevent="handleDragOver" @dragleave.prevent="handleDragLeave" @drop.prevent="handleDrop">
                 <div>
                   <span class="text-gray-500 text-sm mr-2 font-bold">文件夹上传</span>
                   <a-switch @click.stop v-model="uploadDirectory" size="small">
@@ -103,7 +103,7 @@
 </template>
 
 <script setup lang='ts'>
-  import { computed, reactive, ref, toRef } from 'vue';
+  import { computed, onMounted, reactive, ref, toRef } from 'vue';
   import { useI18n } from 'vue-i18n';
   import useLoading from '@/hooks/loading';
   import {
@@ -114,8 +114,9 @@
   } from '@arco-design/web-vue';
   import { deleteSysDoc, parseDoc } from '@/api/doc';
   import { getToken } from '@/utils/auth';
-  import { queryDirectoryList, type DirectoryRes } from '@/api/dir';
-import router from '@/router';
+  import { createDirectory, queryDirectoryList, type DirectoryRes } from '@/api/dir';
+  import router from '@/router';
+  import { useUserStore } from '@/store';
 
   defineProps({
     open: Boolean
@@ -126,7 +127,7 @@ import router from '@/router';
 //     'open-task-drawer',
 //     'refresh-task-drawer'
 //   ])
-
+  const userStore = useUserStore();
   const { t } = useI18n();
   const { loading, setLoading } = useLoading(false);
   const okText = computed(()=>{
@@ -217,17 +218,44 @@ import router from '@/router';
     }));
   };
 
+  let deptDirId = undefined as number | undefined;
   const loadDirTree = async (name?: string) => {
     try {
       const params: any = {};
       if (name) params.name = name;
-      const res = await queryDirectoryList(params);
+      let res = await queryDirectoryList(params); // 现有目录
+      const { dept } = userStore.$state; // 获取用户所属部门
+      const existDept = res.find(item => !item.parent_id && item.name === dept); // 查找目标部门是否存在于一级目录
+      
+      if (!existDept) { // 不存在则新建
+        await createDirectory({ name: dept });
+        res = await queryDirectoryList(params); // TODO： 重新获取现有目录（因为createDirectory没返回任何新目录信息）
+      }
       dirTreeOptions.value = buildTreeOptions(res as unknown as DirectoryRes[]);
+      // 此时必然存在一个部门同名目录
+      const deptDir = dirTreeOptions.value.find(item => item.title === dept);
+      deptDirId = deptDir.key;
+      // console.log(deptDir);
+      let exitDir = false; // 记录【今日】目录是否存在
+      if(deptDir.children){
+        const child = deptDir.children.find(item => item.title === todayStr.value); // 查找【今日】目录
+        exitDir = child? true: false;
+        form.doc_dir_id = child.key; // 存在时将其设置为默认选项
+      }
+      // console.log(exitDir);
+      if (!exitDir) { // 不存在时添加一个临时目录（如果没有上传文件，无需创建）
+        deptDir.children = deptDir.children || [];
+        deptDir.children.push({key: '-1', value: '-1', title: todayStr.value, children: undefined });
+        form.doc_dir_id = '-1';
+        // console.log(form.doc_dir_id);
+      }
+
     } catch (e) {}
   };
 
-  // 打开弹窗时加载目录树
-  loadDirTree();
+  onMounted(()=>{
+    loadDirTree();
+  })
 
   // 选择目录时，回填名称到 option.directory
   const onDirChange = (_val: any, node: any) => {
@@ -289,18 +317,25 @@ import router from '@/router';
     
     setLoading(true);
     try {
+      if (form.doc_dir_id === '-1') { // 用户选择了临时创建的【今日】目录，需实际创建该目录
+        await createDirectory({ name: todayStr.value, parent_id: deptDirId});
+        const res = await queryDirectoryList({}); // TODO： 重新获取现有目录（因为createDirectory没返回任何新目录信息）
+        const parent = res.find( item => item.id === deptDirId);
+        form.doc_dir_id = parent?.children.find(item => item.name === todayStr.value)?.id;
+      }
+
       for(let id of uploadedIds.value) {
         await parseDoc(id, {name: form.name, doc_dir_id: form.doc_dir_id, option: form.option});
       }
     
       Message.success('任务已提交');
       // 成功后重置本弹窗内容
-      resetModalState();
+      // resetModalState();
       // 关闭弹窗并刷新外部任务视图
-    //   emit('update:open', false);
-    //   emit('open-task-drawer');
-    //   emit('refresh-task-drawer');
-       router.push({ name: 'UploadTask' }) 
+      // emit('update:open', false);
+      // emit('open-task-drawer');
+      // emit('refresh-task-drawer');
+      router.push({ name: 'UploadTask' }) 
     } catch (error) {
       Message.error('任务提交失败，请重试');
       // console.log(error);      

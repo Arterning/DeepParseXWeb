@@ -17,7 +17,7 @@
           :key="collection.id"
         >
           <div class="flex items-center">
-            <span class="overflow-hidden whitespace-nowrap text-ellipsis max-w-[8rem]">{{ collection.name }}</span>
+            <span class="overflow-hidden whitespace-nowrap text-ellipsis">{{ collection.name }}</span>
             <div class="ml-auto">
               <icon-edit
                 class="text-gray-400 hover:text-primary"
@@ -42,7 +42,7 @@
           <a-card
             v-for="doc in currentCollection.docs"
             :key="doc.id"
-            class="doc-card hover:shadow-lg transition-shadow duration-300 rounded-lg"
+            class="doc-card hover:shadow-lg transition-all duration-300 rounded-lg"
             :style="{ cursor: 'pointer' }"
             @click="handleDocClick(doc)"
           >
@@ -53,11 +53,11 @@
             >
               <icon-close class="w-4 h-4 text-gray-500 hover:text-red-500" />
             </div>
-            <div class="flex items-start gap-3">
+            <div class="flex items-center gap-3">
               <component :is="getSvgByType(doc.type)" class="w-12 h-12" />
-              <div class="flex-1">
-                <h3 class="text-lg font-medium mb-2">{{ doc.title }}</h3>
-                <div class="text-gray-500 mb-1 text-sm">
+              <div class="flex-1 min-w-0">
+                <h3 class="text-lg truncate font-medium mb-2">{{ doc.title }}</h3>
+                <div class="text-gray-500 truncate mb-1 text-sm">
                   {{ doc.name }}
                 </div>
                 <!-- <a-tag>{{ doc.type }}</a-tag> -->
@@ -251,14 +251,3 @@ onMounted(async () => {
   }
 });
 </script>
-
-<style scoped>
-.doc-card {
-  border: 1px solid var(--color-border);
-  transition: all 0.3s ease;
-}
-
-.doc-card:hover {
-  border-color: var(--color-primary-light-3);
-}
-</style>

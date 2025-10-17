@@ -8,6 +8,7 @@ export interface DirectoryReq {
 
 export interface DirectoryRes extends DirectoryReq {
   id: number;
+  children: DirectoryRes[];
 }
 
 export interface DirectoryParams {

@@ -18,11 +18,52 @@
 
 <style lang="less" >
   .move-enter-active {
-    animation: puffIn 0.2s ease-in-out;
-    animation-delay: 0.1s;
+    animation: slideInLeft 0.25s;
+    animation-delay: 0.25s;
   }
   .move-leave-active {
-    animation: vanishOut 0.1s ease-in-out;
+    animation: slideOutRight 0.25s;
+  }
+  @keyframes slideOutRight {
+    from {
+      transform: translate3d(0, 0, 0);
+      opacity: 1;
+    }
+
+    to {
+      // visibility: hidden;
+      transform: translate3d(2rem, 0, 0);
+      opacity: 0;
+    }
+  }
+  @keyframes slideInLeft {
+    from {
+      transform: translate3d(-2rem, 0, 0);
+      // visibility: visible;
+      opacity: 0;
+    }
+
+    to {
+      transform: translate3d(0, 0, 0);
+      opacity: 1;
+    }
+  }
+
+  @keyframes backOutRight {
+    0% {
+      transform: scale(1);
+      opacity: 1;
+    }
+
+    20% {
+      transform: translateX(0px) scale(0.7);
+      opacity: 0.7;
+    }
+
+    100% {
+      transform: translateX(2000px) scale(0.7);
+      opacity: 0.7;
+    }
   }
 
   @keyframes puffIn {

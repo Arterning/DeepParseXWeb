@@ -489,7 +489,7 @@ onUnmounted(() => {
   position: absolute;
   top: 10px;
   right: 10px;
-  z-index: 1000;
+  z-index: 1;
 }
 
 .relation-graph-container > div {

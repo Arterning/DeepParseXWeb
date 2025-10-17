@@ -87,3 +87,23 @@ export const buildSrcURL = (file: string) => {
     }
     return url;
 }
+
+export function isHtmlContent(input: string): boolean {
+    if (!input || typeof input !== 'string') {
+      return false;
+    }
+
+    const trimmed = input.trim();
+    
+    // 检查是否包含HTML文档的基本结构
+    const hasDoctype = /<!doctype\s+html/i.test(trimmed);
+    const hasHtmlTag = /<html[^>]*>/i.test(trimmed) && /<\/html>/i.test(trimmed);
+    const hasHeadTag = /<head[^>]*>/i.test(trimmed) && /<\/head>/i.test(trimmed);
+    const hasBodyTag = /<body[^>]*>/i.test(trimmed) && /<\/body>/i.test(trimmed);
+    const hasDivTag = /<div[^>]*>/i.test(trimmed) && /<\/div>/i.test(trimmed);
+    const hasTableTag = /<table[^>]*>/i.test(trimmed) && /<\/table>/i.test(trimmed);
+    const hasPTag = /<p[^>]*>/i.test(trimmed) && /<\/p>/i.test(trimmed);
+    
+    // 至少需要html标签或者doctype + html结构
+    return hasHtmlTag || (hasDoctype && (hasHeadTag || hasBodyTag )) || hasDivTag || hasTableTag || hasPTag;
+  }

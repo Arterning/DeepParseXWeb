@@ -6,7 +6,7 @@
       <a-tabs>
         <a-tab-pane key="1" title="邮件内容">
           <div class="content">
-            <Content :info="info" @extract-graph="handleExtractGraph"/>            
+            <Content :info="info" @extract-graph="handleExtractGraph" />            
           </div>      
         </a-tab-pane>
         <a-tab-pane key="2" title="基本信息">
@@ -109,11 +109,11 @@ const { loading, setLoading } = useLoading(true);
 
 const { id } = route.params;
 
-const handleExtractGraph = async () => {
+const handleExtractGraph = async (entityTypes: string[]) => {
   if (!info.value) return;
   extractGraphLoading.value = true;
   Message.success('提取进行中');
-  const res = await extractGraphData(info.value.doc_id);
+  const res = await extractGraphData(info.value.doc_id, entityTypes);
   extractGraphLoading.value = false;
   handleDataChange(res);
 };

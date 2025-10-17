@@ -886,6 +886,7 @@
     setLoading(true);
     try {
       const res = await getUser(username);
+      userStore.setDept(res.dept);
       resetUserInfoForm(res);
       userUUID.value = res.uuid;
     } catch (error) {

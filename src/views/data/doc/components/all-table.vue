@@ -100,56 +100,46 @@
   </a-row>    
 
   <a-divider class="mt-0" />
-  <a-space :size="'medium'">
-    <a-button type="primary" @click="NewApi()">
-      <template #icon>
-        <icon-plus />
-      </template>
-      {{ $t('data.doc.button.create') }}
-    </a-button>
-    <a-button
-      :disabled="deleteButtonStatus()"
-      status="danger"
-      @click="DeleteApi"
-    >
-      <template #icon>
-        <icon-minus />
-      </template>
-      {{ $t('data.doc.button.delete') }}
-    </a-button>
-    <SettingTable
-      v-show="viewMode==='table'"
-      :columns="columns"
-      :storage-key="storageKey"
-      @update-columns="updateVisibleColumns"
-    />
-    <a-radio-group v-model="viewMode" size="small">
-      <a-radio value="table">
-        <template #radio="{ checked }">
-          <a-space :size="4">
-            <icon-list
-              :style="{ color: checked ? 'rgb(var(--primary-6))' : '' }"
-            />
-            <span v-if="checked">表格</span>
-          </a-space>
+  <a-space class="flex justify-between">
+    <a-space :size="'medium'">
+      <a-button type="primary" @click="NewApi()">
+        <template #icon>
+          <icon-plus />
         </template>
-      </a-radio>
-      <a-radio value="card">
-        <template #radio="{ checked }">
-          <a-space :size="4">
-            <icon-apps
-              :style="{ color: checked ? 'rgb(var(--primary-6))' : '' }"
-            />
-            <span v-if="checked">卡片</span>
-          </a-space>
+        {{ $t('data.doc.button.create') }}
+      </a-button>
+      <a-button
+        :disabled="deleteButtonStatus()"
+        status="danger"
+        @click="DeleteApi"
+      >
+        <template #icon>
+          <icon-minus />
         </template>
-      </a-radio>
-    </a-radio-group>
+        {{ $t('data.doc.button.delete') }}
+      </a-button>
+    </a-space>
+    <a-space>
+      <SettingTable
+        v-show="isTableView"
+        :columns="columns"
+        :storage-key="storageKey"
+        @update-columns="updateVisibleColumns"
+      />
+      <a-tooltip content="切换视图">
+        <a-button type="text" @click="isTableView = !isTableView">
+          <template #icon>
+            <icon-swap />
+          </template>
+        </a-button>
+      </a-tooltip>
+    </a-space>    
   </a-space>
+
 
   <div class="mt-5">
     <a-table
-      v-if="viewMode === 'table'"
+      v-if="isTableView"
       v-model:selected-keys="rowSelectKeys"
       :bordered="false"
       column-resizable
@@ -244,13 +234,13 @@
 
     <!-- 卡片视图 -->
     <div
-      v-if="viewMode === 'card'"
+      v-else
       class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4"
     >
       <a-card
         v-for="record in renderData"
         :key="record.id"
-        class="hover:shadow-lg transition-shadow duration-300 rounded-lg"
+        class="doc-card hover:shadow-lg transition-shadow duration-300 rounded-lg"
         :hoverable="true"
         :loading="loading"
       >
@@ -344,10 +334,17 @@
           >
         </div>
       </a-card>
+      <div
+        v-if="!loading && renderData.length === 0"
+        class="text-center py-16"
+      >
+        <a-empty />
+      </div>
     </div>
-
-    <!-- 分页器 -->
-    <div v-if="viewMode === 'card'" class="mt-4 flex justify-end">
+    <div 
+      v-if="!isTableView && renderData.length > 0"
+      class="mt-4 flex justify-center"
+    >
       <a-pagination
         v-model:current="pagination.current"
         v-model:page-size="pagination.pageSize"
@@ -359,6 +356,8 @@
         @page-size-change="onPageSizeChange"
       />
     </div>
+    <!-- 分页器 -->
+    
   </div>
   <div class="content-modal">
     <a-modal
@@ -458,7 +457,7 @@
 
         <a-row :gutter="24">
           <a-form-item :label="$t('标签')" field="tags">
-            <a-space wrap>
+            <a-space wrap class="mt-1">
               <a-tag
                 v-for="(tag, index) of tags"
                 :key="index"
@@ -594,7 +593,7 @@
   const { loading, setLoading } = useLoading(true);
   const router = useRouter();
   const storageKey = 'docTable';
-  const viewMode = ref('card');
+  const isTableView = ref(false);
 
   // 列表展示
   const visibleColumns = ref<TableColumnData[]>([]);

@@ -72,16 +72,16 @@
     <a-split v-if="translate" v-model:size="splitSize" min="0.3" max="0.7" class="h-[calc(100vh-300px)]">
       <template #first>
         <a-typography-paragraph>
-          <div v-if="isHtmlContent(info?.original)" class="prose max-w-none" v-html="info?.original"></div>
-          <div v-else class="whitespace-pre-wrap break-words dark:text-white text-gray-800 leading-relaxed">
+          <div v-if="isHtmlContent(info?.original)" class="prose max-w-none content" v-html="info?.original"></div>
+          <div v-else class="whitespace-pre-wrap break-words dark:text-white text-gray-800 leading-relaxed content">
             {{ info?.original }}
           </div>
         </a-typography-paragraph>
       </template>
       <template #second v-if="translate">
         <a-typography-paragraph>
-          <div v-if="isHtmlContent(info?.zh_content)" class="prose max-w-none" v-html="info?.zh_content"></div>
-          <div v-else class="whitespace-pre-wrap break-words dark:text-white text-gray-800 leading-relaxed">
+          <div v-if="isHtmlContent(info?.zh_content)" class="prose max-w-none content" v-html="info?.zh_content"></div>
+          <div v-else class="whitespace-pre-wrap break-words dark:text-white text-gray-800 leading-relaxed content">
             {{ info?.zh_content }}
           </div>
         </a-typography-paragraph>
@@ -90,8 +90,8 @@
     
     <!-- 邮件正文 -->
     <a-scrollbar v-else class="pr-6 h-[calc(100vh-300px)] overflow-y-auto">
-      <div v-if="isHtmlContent(info?.original)" class="prose max-w-none" v-html="info?.original"></div>
-      <div v-else class="whitespace-pre-wrap break-words dark:text-white text-gray-800 leading-relaxed">
+      <div v-if="isHtmlContent(info?.original)" class="prose max-w-none content" v-html="info?.original"></div>
+      <div v-else class="whitespace-pre-wrap break-words dark:text-white text-gray-800 leading-relaxed content">
         {{ info?.original }}
       </div>
     </a-scrollbar>
@@ -153,7 +153,9 @@
               closable
               color="#2971CF"
             >
-              {{ type }}
+              {{ 
+              
+              type }}
             </a-tag>
           </div>
         </div>
@@ -171,6 +173,7 @@
   import { MailMsgRes } from '@/api/mailmsg';
   import { emailDateFormat } from '@/utils/date';
   import { useRouter } from 'vue-router';
+  import { isHtmlContent } from '@/utils/doc';
 
   const translate = ref(false);
 
@@ -221,25 +224,6 @@
   const handleDelete = () => {
     Message.success('邮件已删除');
   };
-
-  function isHtmlContent(input: string): boolean {
-    if (!input || typeof input !== 'string') {
-      return false;
-    }
-
-    const trimmed = input.trim();
-    
-    // 检查是否包含HTML文档的基本结构
-    const hasDoctype = /<!doctype\s+html/i.test(trimmed);
-    const hasHtmlTag = /<html[^>]*>/i.test(trimmed) && /<\/html>/i.test(trimmed);
-    const hasHeadTag = /<head[^>]*>/i.test(trimmed) && /<\/head>/i.test(trimmed);
-    const hasBodyTag = /<body[^>]*>/i.test(trimmed) && /<\/body>/i.test(trimmed);
-    const hasDivTag = /<div[^>]*>/i.test(trimmed) && /<\/div>/i.test(trimmed);
-    const hasTableTag = /<table[^>]*>/i.test(trimmed) && /<\/table>/i.test(trimmed);
-    
-    // 至少需要html标签或者doctype + html结构
-    return hasHtmlTag || (hasDoctype && (hasHeadTag || hasBodyTag )) || hasDivTag || hasTableTag;
-  }
 
   const router = useRouter();
   const handleAttachmentClick = (attachment: any) => {

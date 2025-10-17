@@ -84,56 +84,46 @@
       </a-col>
     </a-row>
     <a-divider class="mt-0" />
-    <a-space :size="'medium'">
-      <a-button type="primary" @click="NewMailMsg()">
-        <template #icon>
-          <icon-plus />
-        </template>
-        新增
-      </a-button>
-      <a-button
-        :disabled="deleteButtonStatus()"
-        status="danger"
-        @click="DeleteMailMsg"
-      >
-        <template #icon>
-          <icon-minus />
-        </template>
-        删除
-      </a-button>
-      <SettingTable
-        v-show="viewMode==='table'"
-        :columns="columns"
-        :storage-key="storageKey"
-        @update-columns="updateVisibleColumns"
-      />
-      <a-radio-group v-model="viewMode" size="small">
-        <a-radio value="table">
-          <template #radio="{ checked }">
-            <a-space :size="4">
-              <icon-list
-                :style="{ color: checked ? 'rgb(var(--primary-6))' : '' }"
-              />
-              <span v-if="checked">表格</span>
-            </a-space>
+    <a-space class="flex justify-between">
+      <a-space :size="'medium'">
+        <a-button type="primary" @click="NewMailMsg()">
+          <template #icon>
+            <icon-plus />
           </template>
-        </a-radio>
-        <a-radio value="card">
-          <template #radio="{ checked }">
-            <a-space :size="4">
-              <icon-apps
-                :style="{ color: checked ? 'rgb(var(--primary-6))' : '' }"
-              />
-              <span v-if="checked">卡片</span>
-            </a-space>
+          新增
+        </a-button>
+        <a-button
+          :disabled="deleteButtonStatus()"
+          status="danger"
+          @click="DeleteMailMsg"
+        >
+          <template #icon>
+            <icon-minus />
           </template>
-        </a-radio>
-      </a-radio-group>
-      <a-button type="text" @click="openDir=true">
-        <template #icon><icon-folder /></template>
-        {{ dirSelect?dirSelect.name:'/' }}
-      </a-button>
+          删除
+        </a-button>
+        <a-button type="text" @click="openDir=true">
+          <template #icon><icon-folder /></template>
+          {{ dirSelect?dirSelect.name:'/' }}
+        </a-button>
+      </a-space>
+      <a-space>
+        <SettingTable
+          v-show="isTableView"
+          :columns="columns"
+          :storage-key="storageKey"
+          @update-columns="updateVisibleColumns"
+        />
+        <a-tooltip content="切换视图">
+          <a-button type="text" @click="isTableView = !isTableView">
+            <template #icon>
+              <icon-swap />
+            </template>
+          </a-button>
+        </a-tooltip>
+      </a-space>   
     </a-space>
+
     <div class="mt-5">
       <div
         v-if="loading"
@@ -142,12 +132,116 @@
         <a-spin size="large" />
       </div>
       <div v-else>
-        <template v-if="viewMode==='card'">
+        <template v-if="isTableView">
+          <a-table
+            v-model:selected-keys="rowSelectKeys"
+            :bordered="false"
+            column-resizable
+            :columns="visibleColumns"
+            :data="renderData"
+            :loading="loading"
+            :pagination="pagination"
+            :row-selection="rowSelection"
+            row-key="id"
+            @page-change="onPageChange"
+            @page-size-change="onPageSizeChange"
+          >
+            <!-- <template #index="{ rowIndex }">
+              {{ rowIndex + 1 }}
+            </template> -->
+            <template #name="{ record }">
+              <a-tooltip :content="record.name">
+                <a-link
+                  class="truncate block"
+                  @click="ViewApi(record.id, record.name)"
+                  >{{ record.name }}
+                </a-link>
+              </a-tooltip>              
+            </template>
+            <template #original="{record}">
+              <!-- HTML 内容 - 显示"网页元素"链接和 Popover 预览 -->
+              <a-popover
+                v-if="isHtmlContent(record.original)"
+                position="right"
+                :content-style="{ padding: 0, width: '400px', height: '300px' }"
+              >
+                <a-link>
+                  <icon-file-image class="mr-1" />
+                  网页元素
+                </a-link>
+                <template #content>
+                  <div class="html-preview-container">
+                    <div class="html-preview-header">
+                      <span class="text-sm text-gray-500">预览</span>
+                    </div>
+                    <iframe
+                      :srcdoc="record.original"
+                      class="html-preview-iframe"
+                      sandbox="allow-same-origin"
+                    />
+                  </div>
+                </template>
+              </a-popover>
+              <!-- 普通文本内容 -->
+              <p
+                v-else
+                class="truncate"
+                :title="record.original"
+              >
+                {{ record.original || 'No content to display.' }}
+              </p>
+            </template>
+            <template #receiver="{ record }">
+              <a-tooltip :content="record.receiver">
+                <a-link class="block truncate" @click="goMailBox(record.receiver)">
+                  {{ record.receiver }}
+                </a-link>                
+              </a-tooltip>
+            </template>
+            <template #sender="{ record }">
+              <a-tooltip :content="record.sender">
+                <a-link class="block truncate" @click="goMailBox(record.sender)">
+                  {{ record.sender }}
+                </a-link>                
+              </a-tooltip>
+            </template>
+            <template #time="{ record }">
+              {{ tableDateFormat(record.time) }}
+            </template>
+            <template #operate="{ record }">
+              <a-space>
+                <a-tooltip content="编辑">
+                  <a-link @click="EditMailMsg(record.id)">
+                    <icon-edit style="font-size: 16" />
+                  </a-link>
+                </a-tooltip>
+                <a-tooltip content="查看">
+                  <a-link @click="ViewApi(record.id, record.name)">
+                    <icon-unordered-list style="font-size: 16" />
+                  </a-link>
+                </a-tooltip>
+                <!-- 取消收藏 -->
+                <a-tooltip v-if="record.is_collected" content="取消收藏">
+                  <a-link @click="handleUnCollect(record.doc_id)">
+                    <icon-star-fill style="font-size: 16" />
+                  </a-link>
+                </a-tooltip>
+                <!-- 收藏 -->
+                <a-tooltip v-else content="收藏">
+                  <a-link @click="CollectionApi(record.doc_id)">
+                    <icon-star style="font-size: 16" />
+                  </a-link>
+                </a-tooltip>
+              </a-space>
+            </template>
+          </a-table>
+        </template>
+        <template v-else>
           <div class="grid grid-cols-2 gap-4">
             <a-card
               v-for="record in renderData"
               :key="record.id"
-              class="shadow-none rounded-lg hover:shadow-lg transition-shadow duration-300"
+              class="doc-card rounded-lg hover:shadow-lg transition-all duration-300"
               :class="{
                 'border-blue-500 ring-1 ring-blue-500': rowSelectKeys.includes(
                   record.id
@@ -155,7 +249,7 @@
               }"
             >
               <div class="flex flex-col min-w-0">
-                <div class="flex justify-between items-center mb-2">
+                <div class="flex justify-between items-center mb-1">
                   <div class="mr-2 pt-0.5">
                     <a-checkbox
                       :model-value="rowSelectKeys.includes(record.id)"
@@ -182,7 +276,7 @@
                 </div>
                 <span
                   v-if="record.doc_name"
-                  class="text-xs text-gray-400 flex items-center px-1"
+                  class="text-xs text-gray-400 flex items-center px-1 mb-1.5"
                 >
                   <icon-location /> {{ record.doc_name }}
                 </span>
@@ -192,16 +286,18 @@
                 >
                   <div class="flex items-center">
                     <span class="font-medium text-gray-500">From:</span>
-                    <span
-                      class="ml-1.5 text-gray-500 px-2 py-0.5 rounded-full"
-                      >{{ record.sender }}</span
+                    <a-tag
+                      class="cursor-pointer ml-1.5 text-gray-500 px-2 py-0.5 rounded-full"
+                      @click="goMailBox(record.sender)"
+                      >{{ record.sender }}</a-tag
                     >
                   </div>
                   <div class="flex items-center">
                     <span class="font-medium text-gray-500">To:</span>
-                    <span
-                      class="ml-1.5 text-gray-500 px-2 py-0.5 rounded-full"
-                      >{{ record.receiver }}</span
+                    <a-tag
+                      class="cursor-pointer ml-1.5 text-gray-500 px-2 py-0.5 rounded-full"
+                      @click="goMailBox(record.receiver)"
+                      >{{ record.receiver }}</a-tag
                     >
                   </div>
                   <div v-if="record.cc" class="flex items-center">
@@ -213,12 +309,39 @@
                   </div>
                 </div>
 
-                <p
-                  class="text-gray-600 text-sm truncate px-1 mb-2"
-                  :title="record.original"
-                >
-                  {{ record.original || 'No content to display.' }}
-                </p>
+                <div class="text-gray-600 text-sm px-1 mb-2">
+                  <!-- HTML 内容 - 显示"网页元素"链接和 Popover 预览 -->
+                  <a-popover
+                    v-if="isHtmlContent(record.original)"
+                    position="right"
+                    :content-style="{ padding: 0, width: '400px', height: '300px' }"
+                  >
+                    <a-link class="text-sm">
+                      <icon-file-image class="mr-1" />
+                      网页元素
+                    </a-link>
+                    <template #content>
+                      <div class="html-preview-container">
+                        <div class="html-preview-header">
+                          <span class="text-sm text-gray-500">预览</span>
+                        </div>
+                        <iframe
+                          :srcdoc="record.original"
+                          class="html-preview-iframe"
+                          sandbox="allow-same-origin"
+                        />
+                      </div>
+                    </template>
+                  </a-popover>
+                  <!-- 普通文本内容 -->
+                  <p
+                    v-else
+                    class="truncate"
+                    :title="record.original"
+                  >
+                    {{ record.original || 'No content to display.' }}
+                  </p>
+                </div>
 
                 <div class="text-gray-600 text-sm mb-2">
                   <icon-attachment class="mr-2"/>{{record.attachments.length}}个附件
@@ -230,18 +353,23 @@
                       record.category
                     }}</a-tag>
                   </div>
-                  <div class="flex items-center space-x-2">
-                    <a-button size="mini" @click="EditMailMsg(record.id)">
-                      编辑
-                    </a-button>
-                    <a-button
-                      size="mini"
-                      type="primary"
-                      @click="ViewApi(record.id, record.name)"
-                    >
-                      查看
-                    </a-button>
-                  </div>
+                  <a-space>
+                    <a-tooltip content="修改">
+                      <a-link @click="EditMailMsg(record.id)">
+                        <icon-edit />
+                      </a-link>
+                    </a-tooltip>
+                    <a-tooltip v-if="record.is_collected" content="取消收藏">
+                      <a-link @click="handleUnCollect(record.doc_id)">
+                        <icon-star-fill style="font-size: 16" />
+                      </a-link>
+                    </a-tooltip>
+                    <a-tooltip v-else content="收藏">
+                      <a-link @click="CollectionApi(record.doc_id)">
+                        <icon-star />
+                      </a-link>
+                    </a-tooltip>
+                  </a-space>
                 </div>
               </div>
             </a-card>
@@ -255,7 +383,7 @@
 
           <div
             v-if="renderData.length > 0"
-            class="flex justify-end items-center mt-4"
+            class="flex justify-center mt-4"
           >
             <a-pagination
               :total="pagination.total || 0"
@@ -267,50 +395,6 @@
               @page-size-change="onPageSizeChange"
             />
           </div>
-        </template>
-
-        <template v-else>
-          <a-table
-            v-model:selected-keys="rowSelectKeys"
-            :bordered="false"
-            column-resizable
-            :columns="columns"
-            :data="renderData"
-            :loading="loading"
-            :pagination="pagination"
-            :row-selection="rowSelection"
-            row-key="id"
-            @page-change="onPageChange"
-            @page-size-change="onPageSizeChange"
-          >
-            <!-- <template #index="{ rowIndex }">
-              {{ rowIndex + 1 }}
-            </template> -->
-            <template #name="{ record }">
-              <a-link
-                class="truncate block"
-                @click="ViewApi(record.id, record.name)"
-                >{{ record.name }}
-              </a-link>
-            </template>
-            <template #time="{ record }">
-              {{ tableDateFormat(record.time) }}
-            </template>
-            <template #operate="{ record }">
-              <a-space>
-                <a-tooltip content="编辑">
-                  <a-link @click="EditMailMsg(record.id)">
-                    <icon-edit style="font-size: 16" />
-                  </a-link>
-                </a-tooltip>
-                <a-tooltip content="查看">
-                  <a-link @click="ViewApi(record.id, record.name)">
-                    <icon-unordered-list style="font-size: 16" />
-                  </a-link>
-                </a-tooltip>
-              </a-space>
-            </template>
-          </a-table>
         </template>
       </div>
     </div>
@@ -374,6 +458,43 @@
               :placeholder="$t('请输入抄送者')"
             ></a-input>
           </a-form-item>
+          <a-form-item :label="$t('标签')" field="tags">
+            <a-space wrap class="mt-1">
+              <a-tag
+                v-for="(tag, index) of form.tags"
+                :key="index"
+                :closable="index >= 0"
+                @close="handleRemove(tag)"
+              >
+                {{ tag }}
+              </a-tag>
+
+              <a-input
+                v-if="showInput"
+                ref="inputRef"
+                v-model.trim="inputVal"
+                :style="{ width: '90px' }"
+                size="mini"
+                @keyup.enter="handleAdd"
+                @blur="handleAdd"
+              />
+              <a-tag
+                v-else
+                :style="{
+                  width: '90px',
+                  backgroundColor: 'var(--color-fill-2)',
+                  border: '1px dashed var(--color-fill-3)',
+                  cursor: 'pointer',
+                }"
+                @click="handleEdit"
+              >
+                <template #icon>
+                  <icon-plus />
+                </template>
+                添加标签
+              </a-tag>
+            </a-space>
+          </a-form-item>
         </a-form>
       </a-modal>
       <a-modal
@@ -389,6 +510,39 @@
           {{ $t('modal.title.tips.delete') }}
         </a-space>
       </a-modal>
+      <a-modal
+        :visible="collectView"
+        @ok="handleCollectOk"
+        @cancel="handleCollectCancel"
+      >
+        <template #title> 选择收藏位置 </template>
+        <div>
+          <a-select
+            v-model="collectionSelect"
+            :style="{ width: '100%', marginBottom: '15px' }"
+            placeholder="请选择需要保存的收藏夹"
+          >
+            <a-option
+              v-for="item of collectionOptions"
+              :key="item.value"
+              :value="item.value"
+              >{{ item.label }}
+            </a-option>
+          </a-select>
+          <a-button
+            style="width: 100%"
+            @click="router.push({ name: 'Collection' })"
+          >
+            <div> 新建收藏夹 </div>
+            <div>
+              <icon-plus />
+            </div>
+          </a-button>
+        </div>
+        <!-- <template #footer>
+          <a-button type="primary" style="width: 100%;" @ok="handleOk">收藏</a-button>
+        </template> -->
+      </a-modal>
     </div>
     <DirectoryDrawer v-model:open="openDir" :refresh-trigger="dirSelect?.id" 
     @directory-change="(item:any)=>{ dirSelect = item; fetchData()}"/>
@@ -398,7 +552,7 @@
 <script lang="ts" setup>
   import { Message, SelectOptionData, TableColumnData } from '@arco-design/web-vue';
   import { useI18n } from 'vue-i18n';
-  import { computed, onMounted, reactive, ref } from 'vue';
+  import { computed, nextTick, onMounted, reactive, ref } from 'vue';
   import useLoading from '@/hooks/loading';
   import {
     createMailMsg,
@@ -415,6 +569,10 @@
   import { tableDateFormat } from '@/utils/date';
   import DirectoryDrawer from './directory-drawer.vue';
   import SettingTable from '@/components/setting-table/index.vue';
+  import { isHtmlContent } from '@/utils/doc';
+  import { queryStarCollectionList, StarCollectionRes } from '@/api/starCollection';
+  import { collectDoc, querySysDocDetail, SysDocRes, updateSysDoc } from '@/api/doc';
+import { queryMailBoxDetailByName } from '@/api/mailbox';
   
   const { t } = useI18n();
   const { loading, setLoading } = useLoading(true);
@@ -456,7 +614,7 @@
       time: undefined,
     };
   };
-  const viewMode = ref('card');
+  const isTableView = ref(false);
   const formModel = ref(generateFormModel());
   // 表格
   const renderData = ref<MailMsgRes[]>([]);
@@ -505,6 +663,15 @@
       query: { appendix: title, category: 'doc' },
     })
   };
+  const goMailBox = async (name: string) => {
+    const { id } = await queryMailBoxDetailByName(name);
+    router.push({
+      name: 'MailBoxDetail',
+      params: { id },
+      query: { appendix: name, category: 'email' },
+    })
+  }
+
   const toggleSelection = (id: number) => {
     const index = rowSelectKeys.value.indexOf(id);
     if (index > -1) {
@@ -527,6 +694,7 @@
     },
     {
       title: '邮件主题',
+      dataIndex: 'name',
       slotName: 'name',
       width:200,
       ellipsis: true,
@@ -535,6 +703,7 @@
     {
       title: '邮件摘要',
       dataIndex: 'original',
+      slotName: 'original',
       ellipsis: true,
     },
     {
@@ -548,6 +717,7 @@
     {
       title: '收件人',
       dataIndex: 'receiver',
+      slotName: 'receiver',
       ellipsis: true,
       tooltip: true,
       width: 120,
@@ -555,6 +725,7 @@
     {
       title: '发件人',
       dataIndex: 'sender',
+      slotName: 'sender',
       ellipsis: true,
       tooltip: true,
       width: 120,
@@ -565,10 +736,11 @@
       sortable: {
         sortDirections: ['ascend', 'descend'],
       },
-      width: 120,
+      width: 110,
     },
     {
       title: '日期',
+      dataIndex: 'time',
       slotName: 'time',
       sortable: {
         sortDirections: ['ascend', 'descend'],
@@ -583,6 +755,7 @@
       slotName: 'operate',
       width: 100,
       align: 'center',
+      fixed: 'right',
     },
   ]);
 
@@ -594,7 +767,7 @@
     openNewOrEdit.value = false;
     openDelete.value = false;
   };
-  const formDefaultValues: MailMsgReq = {
+  const formDefaultValues: any = {
     name: '',
     original: '',
     zh_content: '',
@@ -605,10 +778,12 @@
     sender: '',
     receiver: '',
     cc: '',
+    tags: [],
   };
-  const form = reactive<MailMsgReq>({ ...formDefaultValues });
+  const form = reactive<any>({ ...formDefaultValues });
   const buttonStatus = ref<string>();
   const formRef = ref();
+  let edit_doc = {} as SysDocRes; //TODO 被编辑的邮件->文件信息副本【屎山】
 
   // 表单校验
   const beforeSubmit = async (done: any) => {
@@ -629,8 +804,12 @@
         cancelReq();
         Message.success(t('submit.create.success'));
         await fetchData();
-      } else {
-        await updateMailMsg(operateRow.value, form);
+      } else { 
+        if(edit_doc.id){ //TODO 先更新更新文件标签【屎山】
+          edit_doc.tags = form.tags;
+          await updateSysDoc(edit_doc.id, edit_doc);
+        }
+        await updateMailMsg(operateRow.value, form); //TODO 之后提交邮件的更新
         cancelReq();
         Message.success(t('submit.update.success'));
         await fetchData();
@@ -692,7 +871,9 @@
     setLoading(true);
     try {
       const res = await queryMailMsgDetail(pk);
+      edit_doc = await querySysDocDetail(res.doc_id);//TODO 没返回tags，单独获取【屎山】
       resetForm(res);
+      form.tags = edit_doc.tags.map((item: Record<any, any>) => item.name);//TODO【屎山】
     } catch (error) {
       // console.log(error);
     } finally {
@@ -702,7 +883,6 @@
 
   // 事件: 分页
   const onPageChange = (current: number) => {
-    console.log('current', current);
     pagination.current = current;
     fetchData();
   };
@@ -739,6 +919,74 @@
       form[key] = data[key];
     });
   };
+
+  const inputRef = ref<HTMLInputElement>();
+  const showInput = ref(false);
+  const inputVal = ref('');
+
+  const handleRemove = (key: string) => {
+    form.tags = form.tags.filter((tag) => tag !== key);
+  };
+
+  const handleEdit = () => {
+    showInput.value = true;
+
+    nextTick(() => {
+      if (inputRef.value) {
+        inputRef.value.focus();
+      }
+    });
+  };
+
+  const handleAdd = () => {
+    if (inputVal.value) {
+      form.tags.push(inputVal.value);
+      inputVal.value = '';
+    }
+    showInput.value = false;
+  };
+
+
+  const collectView = ref(false);
+  const collectionSelect = ref();
+  const collections = ref<StarCollectionRes[]>([]);
+  const collectionOptions = computed(() => {
+    return collections.value.map((item) => {
+      return {
+        value: item.id,
+        label: item.name,
+      };
+    });
+  });
+  const CollectionApi = async (pk: number) => {
+    operateRow.value = pk;
+    collectView.value = true;
+    const res = await queryStarCollectionList({});
+    collections.value = res.items;
+  };
+  const handleCollectOk = async () => {
+    if (!collectionSelect.value) {
+      Message.error('请选择收藏夹');
+      return;
+    }
+    await collectDoc({
+      doc_id: operateRow.value,
+      collection_id: collectionSelect.value,
+    });
+    collectView.value = false;
+    await fetchData();
+    Message.success('收藏成功');
+  };
+  const handleUnCollect = async (id: number) => {
+    await collectDoc({ doc_id: id });
+    collectView.value = false;
+    await fetchData();
+    Message.success('操作成功');
+  };
+
+  const handleCollectCancel = () => {
+    collectView.value = false;
+  };
 </script>
 
 <script lang="ts">
@@ -746,3 +994,30 @@
     name: 'MailMsg',
   };
 </script>
+
+<style scoped>
+.html-preview-container {
+  width: 100%;
+  height: 300px;
+  display: flex;
+  flex-direction: column;
+}
+
+.html-preview-header {
+  padding: 8px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.html-preview-iframe {
+  flex: 1;
+  border: none;
+  background: white;
+  /* 缩小显示效果 */
+  /* transform: scale(0.8); */
+  transform-origin: top left;
+  /* width: 125%; */
+  height: 300px; 
+}
+</style>
