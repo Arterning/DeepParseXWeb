@@ -1,0 +1,33 @@
+name: Build and Package FBA UI Image
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build-and-package:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      
+      - name: Build Docker image
+        run: |
+          docker build -t fba_ui:latest .
+      
+      - name: Save image as tar
+        run: |
+          mkdir -p output
+          docker save -o output/fba_ui.tar fba_ui:latest
+          echo "Current directory: $(pwd)"
+          echo "Output directory content: $(ls -la output)"
+      
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: fba_ui-image
+          path: output/fba_ui.tar
+          retention-days: 7
