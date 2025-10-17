@@ -19,11 +19,16 @@
             </a-col>
             <a-col :span="8">
               <a-form-item field="entity_type" label="实体类型">
-                <a-input
+                <a-select
                   v-model="formModel.entity_type"
+                  multiple
                   :placeholder="$t('搜索实体类型')"
                   @keydown.enter="search"
-                />
+                >
+                <a-option v-for="item in commonEntityTypes" :key="item" :value="item">
+                  {{ item }}
+                </a-option>
+              </a-select>
               </a-form-item>
             </a-col>
           </a-row>
@@ -130,9 +135,14 @@
             label="类型"
             field="entity_type"
           >
-            <a-input
+            <a-select
               v-model="form.entity_type"
-            ></a-input>
+              multiple
+            >
+              <a-option v-for="item in commonEntityTypes" :key="item" :value="item">
+                {{ item }}
+              </a-option>
+            </a-select>
           </a-form-item>
 
           <a-form-item
@@ -230,12 +240,14 @@
   
     const { t } = useI18n();
     const { loading, setLoading } = useLoading(true);
+
+    const commonEntityTypes = ['邮箱账号', '联系方式', '电话号码', '网址', 'IP地址', '身份证号', '银行卡号', '车牌号', '组织机构代码', '税号'];
   
     // 表单
     const generateFormModel = () => {
       return {
         name: undefined,
-        entity_type: undefined,
+        entity_type: ['组织', '人物'],
       };
     };
     const formModel = ref(generateFormModel());
