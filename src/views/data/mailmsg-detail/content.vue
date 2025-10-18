@@ -25,31 +25,39 @@
         </div>
 
         <!-- 收件人信息 -->        
-        <a-space class="flex mb-4">
+        <a-space class="flex mb-2">
           <div class="text-sm font-medium w-16">收件人</div>
-          <a-scrollbar style="max-height: 100px; overflow: auto">
+          <!-- <a-scrollbar style="max-height: 100px; overflow: auto"> -->
             <div class="space-x-2">
               <a-tag
                 v-for="(recipient, index) in info.receiver.replace(/\s+/g, '').split(',')"
                 @click="goMailBox(recipient)"
-                class="cursor-pointer"
-                :key="index"
+                class="cursor-pointer my-1 hover:shadow"
+                :key="`re${index}`"
               >
                 {{ recipient }}
               </a-tag>
             </div>
-          </a-scrollbar>
+          <!-- </a-scrollbar>  -->
 
           <!-- <a-tag>{{ parseReceiver }}</a-tag> -->
         </a-space>
 
         <!-- 抄送信息 -->  
-        <a-space v-if="info?.cc" class="flex flex-nowrap mb-4">
+        <a-space v-if="info?.cc" class="flex flex-nowrap mb-2">
           <div class="text-sm font-medium w-16">抄送</div>
           <!--            <a-tag v-for="(cc, index) in info?.cc" :key="index" type="gray">-->
           <!--              {{ cc }}-->
           <!--            </a-tag>-->
-          <a-tag class="text-wrap h-auto">{{ info?.cc }}</a-tag>
+          <div class="space-x-2">
+            <a-tag
+              v-for="(cc, index) in info.cc.replace(/\s+/g, '').split(',')"
+              @click="goMailBox(cc)"
+              class="cursor-pointer my-1 hover:shadow"
+              :key="`cc${index}`"
+            >{{ cc }}</a-tag>
+          </div>
+
         </a-space>
       </div>
       <div>
@@ -108,7 +116,7 @@
           class="flex items-center text-blue-600 hover:text-blue-800 cursor-pointer"
           @click="handleAttachmentClick(attachment)"
         >
-          <a-icon-file-text class="mr-2" />
+          <a-icon-file class="mr-2" />
           <span>{{ attachment.name }}</span>
         </div>
       </div>

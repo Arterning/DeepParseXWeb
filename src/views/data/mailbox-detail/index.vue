@@ -76,6 +76,34 @@
                 @page-change="(p:number) => fetchSenderList({ page: p, size: senderPagination.pageSize })"
                 @page-size-change="(s:number) => fetchSenderList({ page: 1, size: s })"
               >
+                <template #sender="{ record }">
+                  <a-tooltip :content="record.sender">
+                    <a-link class="block truncate" @click="goMailBox(record.sender)">
+                      {{ record.sender }}
+                    </a-link>                
+                  </a-tooltip>
+                </template>  
+                <template #receiver="{ record }">
+                  <template v-if="record.receiver.replace(/\s+/g, '').split(',').length===1">
+                    <a-tooltip :content="record.receiver">
+                      <a-link class="block truncate" @click="goMailBox(record.receiver)">
+                        {{ record.receiver }}
+                      </a-link>                
+                    </a-tooltip>                
+                  </template>
+                  <template v-else>
+                    <a-popover title="收件人列表">
+                      <div class="truncate">
+                        {{ record.receiver }}
+                      </div> 
+                      <template #content>
+                        <a-link v-for="item in record.receiver.replace(/\s+/g, '').split(',')" class="block" @click="goMailBox(item)">
+                          {{ item }}
+                        </a-link>  
+                      </template>
+                    </a-popover>
+                  </template>
+                </template>
                 <template #time="{ record }">
                   {{ tableDateFormat(record.time) }}
                 </template>
@@ -106,6 +134,34 @@
                 @page-change="(p:number) => fetchReceiverList({ page: p, size: receiverPagination.pageSize })"
                 @page-size-change="(s:number) => fetchReceiverList({ page: 1, size: s })"
               >
+                <template #sender="{ record }">
+                  <a-tooltip :content="record.sender">
+                    <a-link class="block truncate" @click="goMailBox(record.sender)">
+                      {{ record.sender }}
+                    </a-link>                
+                  </a-tooltip>
+                </template>  
+                <template #receiver="{ record }">
+                  <template v-if="record.receiver.replace(/\s+/g, '').split(',').length===1">
+                    <a-tooltip :content="record.receiver">
+                      <a-link class="block truncate" @click="goMailBox(record.receiver)">
+                        {{ record.receiver }}
+                      </a-link>                
+                    </a-tooltip>                
+                  </template>
+                  <template v-else>
+                    <a-popover title="收件人列表">
+                      <div class="truncate">
+                        {{ record.receiver }}
+                      </div> 
+                      <template #content>
+                        <a-link v-for="item in record.receiver.replace(/\s+/g, '').split(',')" class="block" @click="goMailBox(item)">
+                          {{ item }}
+                        </a-link>  
+                      </template>
+                    </a-popover>
+                  </template>
+                </template>
                 <template #time="{ record }">
                   {{ tableDateFormat(record.time) }}
                 </template>
@@ -304,7 +360,7 @@
   import type { Pagination } from '@/types/global';
   import cytoscape from 'cytoscape';
   import fcose from 'cytoscape-fcose';
-  import { queryMailBoxDetail, MailBoxRes, analyzeMailboxRelationships, type AnalyzeRelationshipsReq, type AnalyzeRelationshipsRes } from '@/api/mailbox';
+  import { queryMailBoxDetail, MailBoxRes, analyzeMailboxRelationships, type AnalyzeRelationshipsReq, type AnalyzeRelationshipsRes, queryMailBoxDetailByName } from '@/api/mailbox';
   import { useRoute } from 'vue-router';
 
   cytoscape.use(fcose);
@@ -391,8 +447,8 @@
   const mailColumns = computed<TableColumnData[]>(() => [
     { title: 'ID', dataIndex: 'id', width: 80 },
     { title: '邮件主题', dataIndex: 'name', ellipsis: true, tooltip: true },
-    { title: '发件人', dataIndex: 'sender', width: 160, ellipsis: true, tooltip: true },
-    { title: '收件人', dataIndex: 'receiver', width: 160, ellipsis: true, tooltip: true },
+    { title: '发件人', dataIndex: 'sender', slotName: 'sender', width: 160 },
+    { title: '收件人', dataIndex: 'receiver', slotName: 'receiver', width: 160 },
     { title: '日期', slotName: 'time', width: 170 },
     { title: '操作', slotName: 'operate', align: 'center', width: 100 },
   ]);
@@ -793,7 +849,14 @@
       router.push({name: 'DocDetail', params: { id: doc_id }, query: { appendix: email.subject, category: 'doc' }})
     }
   }
-
+  const goMailBox = async (name: string) => {
+    const { id } = await queryMailBoxDetailByName(name);
+    router.push({
+      name: 'MailBoxDetail',
+      params: { id },
+      query: { appendix: name, category: 'email' },
+    })
+  }
   onMounted(() => {
     document.addEventListener('fullscreenchange', handleFullscreenChange);
   });

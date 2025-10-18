@@ -161,14 +161,14 @@
             <template #original="{record}">
               <!-- HTML 内容 - 显示"网页元素"链接和 Popover 预览 -->
               <a-popover
-                v-if="isHtmlContent(record.original)"
                 position="right"
                 :content-style="{ padding: 0, width: '400px', height: '300px' }"
               >
-                <a-link>
+                <a-link v-if="isHtmlContent(record.original)">
                   <icon-file-image class="mr-1" />
                   网页元素
                 </a-link>
+                <p v-else class="truncate">{{ record.original || '无内容' }}</p>
                 <template #content>
                   <div class="html-preview-container">
                     <div class="html-preview-header">
@@ -182,14 +182,6 @@
                   </div>
                 </template>
               </a-popover>
-              <!-- 普通文本内容 -->
-              <p
-                v-else
-                class="truncate"
-                :title="record.original"
-              >
-                {{ record.original || 'No content to display.' }}
-              </p>
             </template>
             <template #receiver="{ record }">
               <template v-if="record.receiver.replace(/\s+/g, '').split(',').length===1">
@@ -297,12 +289,12 @@
                 </span>
 
                 <div
-                  class="flex flex-wrap items-center px-1 gap-x-4 gap-y-1 text-sm text-gray-600 mb-2"
+                  class="flex flex-wrap items-center px-1 gap-x-4 gap-y-1 text-sm text-gray-600 mb-1.5"
                 >
                   <div class="flex items-center">
                     <span class="font-medium text-gray-500">From:</span>
                     <a-tag
-                      class="cursor-pointer ml-1.5 text-gray-500 px-2 py-0.5 rounded-full"
+                      class="cursor-pointer hover:shadow my-0.5 ml-1.5 text-gray-500 px-2 py-0.5 rounded-full"
                       @click="goMailBox(record.sender)"
                       >{{ record.sender }}</a-tag
                     >
@@ -312,16 +304,18 @@
                     
                     <a-tag
                       v-for="item in record.receiver.replace(/\s+/g, '').split(',')"
-                      class="cursor-pointer ml-1.5 text-gray-500 px-2 py-0.5 rounded-full"
+                      class="cursor-pointer my-0.5 hover:shadow ml-1.5 text-gray-500 px-2 py-0.5 rounded-full"
                       @click="goMailBox(item)"
                       >{{ item }}</a-tag
                     >
                   </div>
-                  <div v-if="record.cc" class="flex items-center">
+                  <div v-if="record.cc" class="flex items-center flex-wrap">
                     <span class="font-medium text-gray-500">CC:</span>
-                    <span
-                      class="ml-1.5 text-gray-500 px-2 py-0.5 rounded-full"
-                      >{{ record.cc }}</span
+                    <a-tag
+                      v-for="item in record.cc.replace(/\s+/g, '').split(',')"
+                      class="cursor-pointer my-0.5 hover:shadow ml-1.5 text-gray-500 px-2 py-0.5 rounded-full"
+                      @click="goMailBox(item)"
+                      >{{ item }}</a-tag
                     >
                   </div>
                 </div>
@@ -329,14 +323,14 @@
                 <div class="text-gray-600 text-sm px-1 mb-2">
                   <!-- HTML 内容 - 显示"网页元素"链接和 Popover 预览 -->
                   <a-popover
-                    v-if="isHtmlContent(record.original)"
                     position="right"
                     :content-style="{ padding: 0, width: '400px', height: '300px' }"
                   >
-                    <a-link class="text-sm">
+                    <a-link v-if="isHtmlContent(record.original)" class="h-8">
                       <icon-file-image class="mr-1" />
                       网页元素
                     </a-link>
+                    <p v-else class="h-8 truncate">{{ record.original || '无内容' }}</p>
                     <template #content>
                       <div class="html-preview-container">
                         <div class="html-preview-header">
@@ -350,14 +344,6 @@
                       </div>
                     </template>
                   </a-popover>
-                  <!-- 普通文本内容 -->
-                  <p
-                    v-else
-                    class="truncate"
-                    :title="record.original"
-                  >
-                    {{ record.original || 'No content to display.' }}
-                  </p>
                 </div>
 
                 <div class="text-gray-600 text-sm mb-2">
@@ -366,7 +352,7 @@
 
                 <div class="flex justify-between items-center">
                   <div class="flex items-center space-x-2">
-                    <a-tag v-if="record.category" color="arcoblue">{{
+                    <a-tag v-if="record.category" color="arcoblue" size="small">{{
                       record.category
                     }}</a-tag>
                   </div>
@@ -770,7 +756,7 @@ import { queryMailBoxDetailByName } from '@/api/mailbox';
       title: t('data.doc.columns.operate'),
       dataIndex: 'operate',
       slotName: 'operate',
-      width: 100,
+      width: 120,
       align: 'center',
       fixed: 'right',
     },
