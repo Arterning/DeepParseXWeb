@@ -57,7 +57,7 @@
             class="flex items-center text-blue-600 hover:text-blue-800 cursor-pointer"
             @click="handleAttachmentClick(attachment)"
           >
-            <a-icon-file-text class="mr-2" />
+            <a-icon-file class="mr-2" />
             <span>{{ attachment.name }}</span>
           </div>
         </div>

@@ -9,7 +9,6 @@ import localeSysApi from '@/views/admin/api/locale/zh-CN';
 import localeServerMonitor from '@/views/monitor/server/locale/zh-CN';
 import localeRedisMonitor from '@/views/monitor/redis/locale/zh-CN';
 import localSysDoc from '@/views/data/doc/locale/zh-CN';
-import localSysOrg from '@/views/data/org/locale/zh-CN';
 import localeSysUser from '@/views/admin/user/locale/zh-CN';
 import localeSysRole from '@/views/admin/role/locale/zh-CN';
 import localeGenerator from '@/views/automation/code-generator/local/zh-CN';
@@ -88,5 +87,4 @@ export default {
   ...localeSysRole,
   ...localeGenerator,
   ...localSysDoc,
-  ...localSysOrg,
 };
