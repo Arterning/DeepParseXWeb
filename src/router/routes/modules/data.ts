@@ -44,7 +44,7 @@ const DASHBOARD: AppRouteRecordRaw = {
         locale: 'menu.data.uploadTask',
         requiresAuth: true,
         roles: ['*'],
-        hideInMenu: true,
+        hideInMenu: false,
       },
     },
     {
