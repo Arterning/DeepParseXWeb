@@ -236,19 +236,19 @@
       const deptDir = dirTreeOptions.value.find(item => item.title === dept);
       deptDirId = deptDir.key;
       // console.log(deptDir);
-      let exitDir = false; // 记录【今日】目录是否存在
       if(deptDir.children){
         const child = deptDir.children.find(item => item.title === todayStr.value); // 查找【今日】目录
-        exitDir = child? true: false;
-        form.doc_dir_id = child.key; // 存在时将其设置为默认选项
+        if (child) {
+          form.doc_dir_id = child.key; // 存在时将其设置为默认选项
+          return;
+        } 
       }
-      // console.log(exitDir);
-      if (!exitDir) { // 不存在时添加一个临时目录（如果没有上传文件，无需创建）
-        deptDir.children = deptDir.children || [];
-        deptDir.children.push({key: '-1', value: '-1', title: todayStr.value, children: undefined });
-        form.doc_dir_id = '-1';
-        // console.log(form.doc_dir_id);
-      }
+      
+      // 不存在时添加一个临时目录（如果没有上传文件，无需创建）
+      deptDir.children = deptDir.children || [];
+      deptDir.children.push({key: '-1', value: '-1', title: todayStr.value, children: undefined });
+      form.doc_dir_id = '-1';
+      // console.log(form.doc_dir_id);
 
     } catch (e) {}
   };
