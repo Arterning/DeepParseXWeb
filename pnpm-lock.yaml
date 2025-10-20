@@ -76,9 +76,6 @@ importers:
       cytoscape-fcose:
         specifier: ^2.2.0
         version: 2.2.0(cytoscape@3.31.2)
-      cytoscape-popper:
-        specifier: ^4.0.1
-        version: 4.0.1(cytoscape@3.31.2)
       d3-cloud:
         specifier: ^1.2.7
         version: 1.2.7
@@ -2203,11 +2200,6 @@ packages:
 
   cytoscape-fcose@2.2.0:
     resolution: {integrity: sha512-ki1/VuRIHFCzxWNrsshHYPs6L7TvLu3DL+TyIGEsRcvVERmxokbf5Gdk7mFxZnTdiGtnA4cfSmjZJMviqSuZrQ==}
-    peerDependencies:
-      cytoscape: ^3.2.0
-
-  cytoscape-popper@4.0.1:
-    resolution: {integrity: sha512-u2gYDMMvGSlAJbNfKvMljOM/p+BrHu0A4VcpELa+xJf54HoMn+nV0iuhALZx+O89b74SKJRy7jYo2WfkD5uvsw==}
     peerDependencies:
       cytoscape: ^3.2.0
 
@@ -9552,10 +9544,6 @@ snapshots:
   cytoscape-fcose@2.2.0(cytoscape@3.31.2):
     dependencies:
       cose-base: 2.2.0
-      cytoscape: 3.31.2
-
-  cytoscape-popper@4.0.1(cytoscape@3.31.2):
-    dependencies:
       cytoscape: 3.31.2
 
   cytoscape@3.31.2: {}
