@@ -28,8 +28,8 @@
         </div>
         <div
           :heading="5"
-          :style="{ margin: 0, fontSize: '22px'}"
-          class="cursor-pointer font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-blue-400 drop-shadow-md"
+          :style="{ margin: 0, fontSize: '20px'}"
+          class="tracking-wide cursor-pointer font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-blue-400 drop-shadow-md"
           >
           {{ $t('login.form.sub_title') }}
         </div>

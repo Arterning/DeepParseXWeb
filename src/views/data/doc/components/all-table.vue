@@ -240,8 +240,7 @@
       <a-card
         v-for="record in renderData"
         :key="record.id"
-        class="doc-card hover:shadow-lg transition-shadow duration-300 rounded-lg"
-        :hoverable="true"
+        class="doc-card hover:shadow-lg transition-all duration-300 rounded-lg"
         :loading="loading"
       >
         <div v-if="record" class="flex items-start gap-3">

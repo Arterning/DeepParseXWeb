@@ -169,7 +169,7 @@ const showEntityTypeModal = ref(false);
 // 实体类型选择相关
 const selectedEntityTypes = ref<string[]>([]);
 const entityTypeInput = ref('');
-const commonEntityTypes = ['邮箱账号', '联系方式', '电话号码', '网址', 'IP地址', '身份证号', '银行卡号', '车牌号', '组织机构代码', '税号'];
+// const commonEntityTypes = ['邮箱账号', '联系方式', '电话号码', '网址', 'IP地址', '身份证号', '银行卡号', '车牌号', '组织机构代码', '税号'];
 
 const addEntityType = () => {
   if (entityTypeInput.value && !selectedEntityTypes.value.includes(entityTypeInput.value)) {
@@ -253,7 +253,7 @@ const handleExtractConfirm = () => {
     </a-modal>
 
     <!-- 实体类型选择弹框 -->
-    <a-modal v-model:visible="showEntityTypeModal" title="实体类型选择" @ok="handleExtractConfirm">
+    <!-- <a-modal v-model:visible="showEntityTypeModal" title="实体类型选择" @ok="handleExtractConfirm">
       <div class="space-y-4">
         <div class="flex gap-3 items-center">
           <a-input 
@@ -267,10 +267,10 @@ const handleExtractConfirm = () => {
           >
             添加
           </a-button>
-        </div>
+        </div> -->
         
         <!-- 常用实体类型快速选择 -->
-        <div class="mt-2 flex flex-wrap gap-2 items-center">
+        <!-- <div class="mt-2 flex flex-wrap gap-2 items-center">
           <span class="text-sm text-gray-400 mr-2">常用类型：</span>
           <a-button 
             v-for="type in commonEntityTypes"
@@ -281,10 +281,10 @@ const handleExtractConfirm = () => {
           >
             {{ type }}
           </a-button>
-        </div>
+        </div> -->
         
         <!-- 已选择的实体类型 -->
-        <div v-if="selectedEntityTypes.length > 0" class="mt-3">
+        <!-- <div v-if="selectedEntityTypes.length > 0" class="mt-3">
           <span class="text-sm text-gray-400">已选择：</span>
           <div class="flex flex-wrap gap-2 mt-1">
             <a-tag 
@@ -303,7 +303,7 @@ const handleExtractConfirm = () => {
           请选择要提取的实体类型
         </div>
       </div>
-    </a-modal>
+    </a-modal> -->
 
     <div class="flex justify-between">
       <!-- <h3 class="text-lg font-semibold text-cyan-400 mb-3">操作</h3> -->

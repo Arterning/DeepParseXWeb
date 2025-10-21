@@ -26,13 +26,12 @@
       <div class="max-h-80 overflow-y-auto">
         <a-list :data="entitiesByType" :bordered="false" size="small">
           <template #item="{ item }">
-            <a-list-item>
-              <div class="flex flex-col space-y-2">
-                <div style="color: var(--color-text-1);">{{ item.name || '未知地点' }}</div>
-                <div v-if="item.description" class="text-sm" style="color: var(--color-text-2);">
-                  {{ item.description }}
-                </div>
-              </div>
+            <a-list-item class="break-all">
+              <a-list-item-meta
+                :title="item.name || '未知'"
+                :description="item.description"
+              >
+              </a-list-item-meta>
             </a-list-item>
           </template>
         </a-list>

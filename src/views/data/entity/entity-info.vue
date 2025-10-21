@@ -7,8 +7,8 @@
           :model="formModel"
           label-align="right"
         >
-          <a-row :gutter="16">
-            <a-col :span="8">
+          <a-row :gutter="24">
+            <a-col :span="12">
               <a-form-item field="name" label="名称">
                 <a-input
                   v-model="formModel.name"
@@ -17,7 +17,7 @@
                 />
               </a-form-item>
             </a-col>
-            <a-col :span="8">
+            <a-col :span="12">
               <a-form-item field="entity_type" label="实体类型">
                 <a-select
                   v-model="formModel.entity_type"
@@ -428,13 +428,13 @@
   
     // 事件: 分页
     const onPageChange = async (current: number) => {
-      await fetchEntityList({ page: current, size: pagination.pageSize });
+      await fetchEntityList({ page: current, size: pagination.pageSize, entity_type: formModel.value.entity_type });
     };
   
     // 事件: 分页大小
     const onPageSizeChange = async (pageSize: number) => {
       pagination.pageSize = pageSize;
-      await fetchEntityList({ page: 1, size: pageSize });
+      await fetchEntityList({ page: 1, size: pageSize, entity_type: formModel.value.entity_type });
     };
   
     // 搜索

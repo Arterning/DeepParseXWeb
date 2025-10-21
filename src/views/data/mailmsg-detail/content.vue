@@ -208,7 +208,7 @@ import { queryMailBoxDetailByName } from '@/api/mailbox';
   // 实体类型选择相关
   const selectedEntityTypes = ref<string[]>([]);
   const entityTypeInput = ref('');
-  const commonEntityTypes = ['邮箱账号', '联系方式', '电话号码', '网址', 'IP地址', '身份证号', '银行卡号', '车牌号', '组织机构代码', '税号'];
+  const commonEntityTypes = ['账号密码', '邮箱账号', '联系方式', '电话号码', '网址', 'IP地址', '身份证号', '银行卡号', '车牌号', '组织机构代码', '税号'];
 
   const addEntityType = () => {
     if (entityTypeInput.value && !selectedEntityTypes.value.includes(entityTypeInput.value)) {
