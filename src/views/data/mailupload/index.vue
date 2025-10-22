@@ -330,7 +330,7 @@
     
       Message.success('任务已提交');
       // 成功后重置本弹窗内容
-      // resetModalState();
+      resetModalState();
       // 关闭弹窗并刷新外部任务视图
       // emit('update:open', false);
       // emit('open-task-drawer');
