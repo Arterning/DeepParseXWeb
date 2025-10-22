@@ -5,7 +5,7 @@
     <a-card class="mb-4 bg-white dark:bg-gray-800">
       <template #title>
         <div class="flex justify-between items-center">
-          <span class="text-lg font-medium dark:text-white">AI 服务配置</span>
+          <span class="text-lg font-medium dark:text-white">选项</span>
           <a-button 
             type="primary" 
             @click="saveConfig" 
@@ -28,19 +28,10 @@
             class="w-full"
           >
             <a-tab-pane key="1" title="大语言模型配置">
-              <div class="h-full flex items-center justify-center text-gray-400">
-                选择此选项卡配置大语言模型
-              </div>
             </a-tab-pane>
             <a-tab-pane key="2" title="文本嵌入模型配置">
-              <div class="h-full flex items-center justify-center text-gray-400">
-                选择此选项卡配置文本嵌入模型
-              </div>
             </a-tab-pane>
             <a-tab-pane key="3" title="OCR 配置">
-              <div class="h-full flex items-center justify-center text-gray-400">
-                选择此选项卡配置 OCR 服务
-              </div>
             </a-tab-pane>
           </a-tabs>
         </div>
@@ -185,6 +176,7 @@ const loadConfig = async () => {
   loading.value = true;
   try {
     const data = await getConfig();
+    console.log('获取到的配置数据:', data);
     configData.value = data;
     
     // 从 settings 中提取配置

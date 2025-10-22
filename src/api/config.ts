@@ -26,23 +26,22 @@ export interface GetConfigListDetails extends ConfigSchemaBase {
 
 // 获取系统配置详情
 export const getConfig = async (): Promise<GetConfigListDetails> => {
-  const response = await axios.get('/api/v1/admin/config');
-  return response.data;
+  return await axios.get('/api/v1/sys/configs');
 };
 
 // 创建系统配置
 export const createConfig = async (params: CreateConfigParam): Promise<void> => {
-  await axios.post('/api/v1/admin/config', params);
+  await axios.post('/api/v1/sys/configs', params);
 };
 
 // 更新系统配置
 export const updateConfig = async (pk: number, params: UpdateConfigParam): Promise<void> => {
-  await axios.put(`/api/v1/admin/config/${pk}`, params);
+  await axios.put(`/api/v1/sys/configs/${pk}`, params);
 };
 
 // 批量删除系统配置
 export const deleteConfig = async (pk: number[]): Promise<void> => {
-  await axios.delete('/api/v1/admin/config', {
+  await axios.delete('/api/v1/sys/configs', {
     params: {
       pk: pk
     }
