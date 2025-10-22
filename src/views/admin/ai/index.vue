@@ -1,7 +1,7 @@
 <template>
   <a-layout class="flex-layout">
-    <a-card class="general-card mt-8">
-      <a-tabs v-model:activeKey="activeTab" default-active-key="1">
+    <a-card class="general-card">
+      <a-tabs v-model:activeKey="activeTab" default-active-key="1" class="px-8">
         <a-tab-pane key="1">
           <template #title>大语言模型配置</template>
           <div class="space-y-6">
