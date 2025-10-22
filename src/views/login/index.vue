@@ -45,7 +45,7 @@
   import LoginBanner from './components/banner.vue';
   import LoginForm from './components/login-form.vue';
   import { useI18n } from 'vue-i18n';
-  import { login } from '@/api/auth';
+  import { thirdPartyLogin } from '@/api/auth';
 
   const { t } = useI18n();
   const router = useRouter();
@@ -85,10 +85,9 @@
     
     isLoggingIn.value = true;
     try {
-      // 调用登录接口，传入accessTicket
-      // 注意：这里假设login接口可以接受accessTicket参数，实际使用时可能需要根据后端API调整
-      const result = await login({
-        accessTicket: accessTicket.value
+      // 调用第三方登录接口，传入ticket参数
+      const result = await thirdPartyLogin({
+        ticket: accessTicket.value
       });
       
       if (result) {

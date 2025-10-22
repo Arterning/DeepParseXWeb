@@ -15,6 +15,18 @@ export interface CaptchaRes {
   image_type: string;
 }
 
+// 第三方登录参数接口
+export interface ThirdPartyLoginParams {
+  ticket: string;
+}
+
+// 第三方登录接口
+export function thirdPartyLogin(params: ThirdPartyLoginParams): Promise<LoginRes> {
+  return axios.post('/login/third-party', {
+    params: params
+  });
+}
+
 export function getCaptcha(): Promise<CaptchaRes> {
   return axios.get('/api/v1/auth/captcha');
 }
