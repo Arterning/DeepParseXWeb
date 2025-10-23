@@ -97,7 +97,13 @@
       if (result) {
         Message.success('登录成功');
         // 登录成功后跳转到首页或指定页面
-        router.push('/');
+        const { redirect, ...othersQuery } = router.currentRoute.value.query;
+        await router.push({
+          name: (redirect as string) || 'Workplace',
+          query: {
+            ...othersQuery,
+          },
+        });
       }
     } catch (error) {
       console.error('一键登录失败:', error);
