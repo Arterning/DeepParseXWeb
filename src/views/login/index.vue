@@ -46,6 +46,7 @@
   import LoginForm from './components/login-form.vue';
   import { useI18n } from 'vue-i18n';
   import { thirdPartyLogin } from '@/api/auth';
+  import { clearToken, setToken } from '@/utils/auth';
 
   const { t } = useI18n();
   const router = useRouter();
@@ -89,6 +90,9 @@
       const result = await thirdPartyLogin({
         ticket: accessTicket.value
       });
+      
+      // 保存token到localStorage
+      setToken(result.access_token);  
       
       if (result) {
         Message.success('登录成功');
