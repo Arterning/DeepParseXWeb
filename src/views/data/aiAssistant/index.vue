@@ -174,21 +174,44 @@
     localStorage.setItem('sessionList', JSON.stringify(sessionList.value));
   };
 
+  // 从localStorage获取chunk的函数
+  const findChunkById = (chunkId: string) => {
+    const chunksData = localStorage.getItem('aiChatChunks');
+    if (!chunksData) return null;
+    
+    try {
+      const chunks = JSON.parse(chunksData);
+      return chunks.find((chunk: any) => chunk.chunk_id === chunkId);
+    } catch (error) {
+      console.error('解析chunks数据失败:', error);
+      return null;
+    }
+  };
+
   // 打开引用文档抽屉的方法
   const openDrawer = (element: HTMLElement) => {
-    const docId = element.getAttribute('data-doc-id');
-    const docName = element.getAttribute('data-doc-name');
-    const chunkText = element.getAttribute('data-chunk-text');
-
-    if (docId && docName && chunkText) {
+    // 获取data-chunk-id属性
+    const chunkId = element.dataset.chunkId;
+    
+    if (!chunkId) {
+      console.error('缺少chunkId参数');
+      return;
+    }
+    
+    // 从localStorage中查找对应的chunk
+    const chunk = findChunkById(chunkId);
+    
+    if (chunk) {
       selectedDoc.value = {
-        docId,
-        docName,
-        chunkText: chunkText
+        docId: chunk.doc_id.toString(),
+        docName: chunk.doc_name,
+        chunkText: chunk.chunk_text
           .replace(/&quot;/g, '"')
           .replace(/&#39;/g, "'")
       };
       drawerVisible.value = true;
+    } else {
+      console.error(`未找到ID为${chunkId}的文本片段`);
     }
   };
 

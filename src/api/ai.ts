@@ -5,8 +5,19 @@ export interface Prompt {
   doc_id?: number;
 }
 
+// 定义API返回的数据结构
+export interface ChatResponse {
+    answer: string;
+    chunks: Array<{
+      chunk_id: string;
+      chunk_text: string;
+      doc_id: number;
+      doc_name: string;
+    }>;
+  }
 
-export function chat(params: Prompt): Promise<string> {
+
+export function chat(params: Prompt): Promise<ChatResponse> {
   return axios.post('/api/v1/sys/chat', params);
 }
 
