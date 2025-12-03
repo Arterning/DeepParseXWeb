@@ -1,38 +1,22 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { getCaptcha, login } from '@/lib/api/auth';
+import { login } from '@/lib/api/auth';
 import { Loader2 } from 'lucide-react';
 
 export default function LoginPage() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
-  const [captchaImage, setCaptchaImage] = useState('');
   const [formData, setFormData] = useState({
     username: '',
     password: '',
-    captcha: '',
   });
   const [error, setError] = useState('');
-
-  useEffect(() => {
-    loadCaptcha();
-  }, []);
-
-  const loadCaptcha = async () => {
-    try {
-      const res = await getCaptcha();
-      setCaptchaImage(`data:${res.image_type};base64,${res.image}`);
-    } catch (err) {
-      console.error('Failed to load captcha:', err);
-      setError('验证码加载失败');
-    }
-  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -41,12 +25,11 @@ export default function LoginPage() {
 
     try {
       const res = await login(formData);
+      console.log("ressult:", res);
       localStorage.setItem('access_token', res.access_token);
-      router.push('/');
+      router.push('/dashboard');
     } catch (err: any) {
       setError(err.response?.data?.detail || '登录失败，请检查用户名和密码');
-      loadCaptcha();
-      setFormData({ ...formData, captcha: '' });
     } finally {
       setIsLoading(false);
     }
@@ -108,29 +91,6 @@ export default function LoginPage() {
                 disabled={isLoading}
                 className="h-11"
               />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="captcha">验证码</Label>
-              <div className="flex gap-3">
-                <Input
-                  id="captcha"
-                  type="text"
-                  placeholder="请输入验证码"
-                  value={formData.captcha}
-                  onChange={(e) => setFormData({ ...formData, captcha: e.target.value })}
-                  required
-                  disabled={isLoading}
-                  className="h-11"
-                />
-                {captchaImage && (
-                  <div
-                    className="flex-shrink-0 w-28 h-11 rounded-md border border-slate-200 dark:border-slate-800 overflow-hidden cursor-pointer hover:opacity-80 transition-opacity"
-                    onClick={loadCaptcha}
-                  >
-                    <img src={captchaImage} alt="验证码" className="w-full h-full object-cover" />
-                  </div>
-                )}
-              </div>
             </div>
             {error && (
               <div className="text-sm text-red-500 bg-red-50 dark:bg-red-950/30 px-4 py-2 rounded-md">

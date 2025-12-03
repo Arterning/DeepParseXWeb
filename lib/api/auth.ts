@@ -3,7 +3,6 @@ import apiClient from './client';
 export interface LoginData {
   username: string;
   password: string;
-  captcha: string;
 }
 
 export interface LoginRes {
