@@ -1,36 +1,121 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# DeepParseX Web - 前端应用
 
-## Getting Started
+基于 Next.js 16、shadcn/ui 和 Tailwind CSS 4 构建的现代化前端应用。
 
-First, run the development server:
+## 技术栈
+
+- **Next.js 16** - React 框架，使用 App Router
+- **React 19** - UI 库
+- **TypeScript** - 类型安全
+- **Tailwind CSS 4** - 样式框架
+- **shadcn/ui** - UI 组件库
+- **Axios** - HTTP 客户端
+- **Lucide React** - 图标库
+
+## 开始使用
+
+### 1. 安装依赖
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+pnpm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 2. 配置环境变量
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+复制 `.env.local.example` 到 `.env.local` 并配置你的后端 API 地址：
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+cp .env.local.example .env.local
+```
 
-## Learn More
+编辑 `.env.local`：
 
-To learn more about Next.js, take a look at the following resources:
+```env
+NEXT_PUBLIC_API_URL=http://localhost:8000
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### 3. 启动开发服务器
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```bash
+pnpm dev
+```
 
-## Deploy on Vercel
+应用将在 [http://localhost:3000](http://localhost:3000) 启动。
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 已实现功能
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### 登录页面 (`/login`)
+
+- 简约高级的设计风格
+- 渐变背景与玻璃态效果
+- 用户名、密码、验证码输入
+- 验证码自动加载和刷新
+- 表单验证
+- 错误提示
+- 加载状态
+
+## 项目结构
+
+```
+web/
+├── app/                    # Next.js App Router 页面
+│   ├── login/             # 登录页面
+│   ├── layout.tsx         # 根布局
+│   └── page.tsx           # 首页
+├── components/            # React 组件
+│   └── ui/                # shadcn/ui 组件
+├── lib/                   # 工具函数和配置
+│   ├── api/               # API 客户端
+│   │   ├── client.ts      # Axios 配置
+│   │   └── auth.ts        # 认证 API
+│   └── utils.ts           # 工具函数
+├── public/                # 静态资源
+└── ...配置文件
+```
+
+## API 接口
+
+### 认证接口
+
+- `GET /api/v1/auth/captcha` - 获取验证码
+- `POST /api/v1/auth/login` - 用户登录
+- `POST /api/v1/auth/logout` - 用户登出
+
+## 添加新的 shadcn 组件
+
+```bash
+pnpm dlx shadcn@latest add [component-name]
+```
+
+例如：
+```bash
+pnpm dlx shadcn@latest add button
+pnpm dlx shadcn@latest add input
+pnpm dlx shadcn@latest add card
+```
+
+## 构建生产版本
+
+```bash
+pnpm build
+pnpm start
+```
+
+## 开发规范
+
+- 使用 TypeScript 进行类型检查
+- 使用 ESLint 进行代码检查
+- 使用 Prettier 进行代码格式化
+- 组件采用函数式编程
+- 使用 Client Component (`'use client'`) 处理交互逻辑
+- API 调用统一通过 `lib/api` 目录管理
+
+## 后续开发
+
+待实现的功能：
+- 主页面和仪表板
+- 文档管理界面
+- 知识图谱可视化
+- 用户管理
+- 系统设置
+- 响应式设计优化
