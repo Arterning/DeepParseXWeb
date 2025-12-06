@@ -6,7 +6,8 @@ import { AppLayout } from '@/components/app-layout';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { querySysDocDetail, type SysDocRes } from '@/lib/api/doc';
-import { ArrowLeft, FileText, Calendar, User, Mail, Paperclip, Loader2 } from 'lucide-react';
+import { buildPreviewURL } from '@/lib/utils';
+import { ArrowLeft, FileText, Calendar, User, Mail, Paperclip, Loader2, Image as ImageIcon, FileType } from 'lucide-react';
 
 export default function FileDetailPage() {
   const router = useRouter();
@@ -64,7 +65,7 @@ export default function FileDetailPage() {
   if (!doc) {
     return (
       <AppLayout>
-        <div className="max-w-5xl mx-auto space-y-6">
+        <div className="max-w-7xl mx-auto space-y-6">
           <Button
             variant="ghost"
             onClick={() => router.push('/dashboard/files')}
@@ -229,6 +230,114 @@ export default function FileDetailPage() {
     );
   };
 
+  // 渲染图片类型的文件详情
+  const renderImageDetail = () => {
+    if (!doc.file) return null;
+
+    const previewUrl = buildPreviewURL(doc.file);
+
+    return (
+      <div className="grid lg:grid-cols-2 gap-6">
+        {/* 左侧：图片预览 */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <ImageIcon className="w-5 h-5 text-blue-600" />
+              图片预览
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="relative w-full bg-slate-100 dark:bg-slate-800 rounded-lg overflow-hidden">
+              <img
+                src={previewUrl}
+                alt={doc.title || doc.name}
+                className="w-full h-auto object-contain max-h-[600px]"
+                loading="lazy"
+              />
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* 右侧：OCR提取的文本 */}
+        <Card>
+          <CardHeader>
+            <CardTitle>OCR 提取文本</CardTitle>
+          </CardHeader>
+          <CardContent>
+            {doc.content ? (
+              <div className="p-4 bg-slate-50 dark:bg-slate-800 rounded-lg max-h-[600px] overflow-y-auto">
+                <p className="whitespace-pre-wrap text-sm leading-relaxed">
+                  {doc.content}
+                </p>
+              </div>
+            ) : (
+              <p className="text-sm text-slate-500 dark:text-slate-400">暂无OCR文本内容</p>
+            )}
+          </CardContent>
+        </Card>
+      </div>
+    );
+  };
+
+  // 渲染PDF类型的文件详情
+  const renderPdfDetail = () => {
+    if (!doc.file) return null;
+
+    const previewUrl = buildPreviewURL(doc.file);
+
+    return (
+      <div className="grid lg:grid-cols-2 gap-6">
+        {/* 左侧：PDF预览 */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <FileType className="w-5 h-5 text-blue-600" />
+              PDF 预览
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="relative w-full bg-slate-100 dark:bg-slate-800 rounded-lg overflow-hidden">
+              <iframe
+                src={previewUrl}
+                className="w-full h-[600px] border-0"
+                title={doc.title || doc.name}
+              />
+            </div>
+            <p className="mt-2 text-xs text-slate-500 dark:text-slate-400">
+              如果PDF无法显示，请
+              <a
+                href={previewUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-blue-600 hover:underline ml-1"
+              >
+                点击此处在新窗口中打开
+              </a>
+            </p>
+          </CardContent>
+        </Card>
+
+        {/* 右侧：OCR提取的文本 */}
+        <Card>
+          <CardHeader>
+            <CardTitle>OCR 提取文本</CardTitle>
+          </CardHeader>
+          <CardContent>
+            {doc.content ? (
+              <div className="p-4 bg-slate-50 dark:bg-slate-800 rounded-lg max-h-[600px] overflow-y-auto">
+                <p className="whitespace-pre-wrap text-sm leading-relaxed">
+                  {doc.content}
+                </p>
+              </div>
+            ) : (
+              <p className="text-sm text-slate-500 dark:text-slate-400">暂无OCR文本内容</p>
+            )}
+          </CardContent>
+        </Card>
+      </div>
+    );
+  };
+
   // 渲染通用文件详情
   const renderGenericDetail = () => {
     return (
@@ -265,7 +374,7 @@ export default function FileDetailPage() {
 
   return (
     <AppLayout>
-      <div className="max-w-5xl mx-auto space-y-6">
+      <div className="max-w-7xl mx-auto space-y-6">
         {/* 返回按钮 */}
         <Button
           variant="ghost"
@@ -317,7 +426,10 @@ export default function FileDetailPage() {
         </Card>
 
         {/* 根据文件类型展示不同内容 */}
-        {doc.email_msg ? renderEmailDetail() : renderGenericDetail()}
+        {doc.email_msg ? renderEmailDetail() :
+         doc.type === '图片' ? renderImageDetail() :
+         doc.type === 'PDF' ? renderPdfDetail() :
+         renderGenericDetail()}
       </div>
     </AppLayout>
   );
