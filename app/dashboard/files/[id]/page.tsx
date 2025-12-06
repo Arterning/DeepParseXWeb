@@ -5,15 +5,20 @@ import { useRouter, useParams } from 'next/navigation';
 import { AppLayout } from '@/components/app-layout';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { querySysDocDetail, type SysDocRes } from '@/lib/api/doc';
+import { querySysDocDetail, updateSysDoc, type SysDocRes } from '@/lib/api/doc';
 import { buildPreviewURL } from '@/lib/utils';
-import { ArrowLeft, FileText, Calendar, User, Mail, Paperclip, Loader2, Image as ImageIcon, FileType } from 'lucide-react';
+import { ArrowLeft, FileText, Calendar, User, Mail, Paperclip, Loader2, Image as ImageIcon, FileType, Edit, Save, X } from 'lucide-react';
+import { Textarea } from '@/components/ui/textarea';
+import { toast } from 'sonner';
 
 export default function FileDetailPage() {
   const router = useRouter();
   const params = useParams();
   const [doc, setDoc] = useState<SysDocRes | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editedContent, setEditedContent] = useState('');
+  const [isSaving, setIsSaving] = useState(false);
 
   useEffect(() => {
     const token = localStorage.getItem('access_token');
@@ -50,6 +55,42 @@ export default function FileDetailPage() {
     if (bytes < 1024) return bytes + ' B';
     if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(2) + ' KB';
     return (bytes / (1024 * 1024)).toFixed(2) + ' MB';
+  };
+
+  const handleStartEdit = () => {
+    setEditedContent(doc?.content || '');
+    setIsEditing(true);
+  };
+
+  const handleCancelEdit = () => {
+    setIsEditing(false);
+    setEditedContent('');
+  };
+
+  const handleSaveEdit = async () => {
+    if (!doc) return;
+
+    try {
+      setIsSaving(true);
+      await updateSysDoc(doc.id, {
+        ...doc,
+        content: editedContent,
+      });
+
+      // 更新本地状态
+      setDoc({
+        ...doc,
+        content: editedContent,
+      });
+
+      setIsEditing(false);
+      toast.success('内容已保存');
+    } catch (err) {
+      console.error('Failed to save content:', err);
+      toast.error('保存失败，请重试');
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   if (isLoading) {
@@ -261,10 +302,55 @@ export default function FileDetailPage() {
         {/* 右侧：OCR提取的文本 */}
         <Card>
           <CardHeader>
-            <CardTitle>OCR 提取文本</CardTitle>
+            <div className="flex items-center justify-between">
+              <CardTitle>OCR 提取文本</CardTitle>
+              <div className="flex gap-2">
+                {!isEditing ? (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={handleStartEdit}
+                  >
+                    <Edit className="w-4 h-4 mr-1" />
+                    编辑
+                  </Button>
+                ) : (
+                  <>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={handleCancelEdit}
+                      disabled={isSaving}
+                    >
+                      <X className="w-4 h-4 mr-1" />
+                      取消
+                    </Button>
+                    <Button
+                      size="sm"
+                      onClick={handleSaveEdit}
+                      disabled={isSaving}
+                    >
+                      {isSaving ? (
+                        <Loader2 className="w-4 h-4 mr-1 animate-spin" />
+                      ) : (
+                        <Save className="w-4 h-4 mr-1" />
+                      )}
+                      保存
+                    </Button>
+                  </>
+                )}
+              </div>
+            </div>
           </CardHeader>
           <CardContent>
-            {doc.content ? (
+            {isEditing ? (
+              <Textarea
+                value={editedContent}
+                onChange={(e) => setEditedContent(e.target.value)}
+                className="min-h-[600px] font-mono text-sm"
+                placeholder="请输入OCR文本内容"
+              />
+            ) : doc.content ? (
               <div className="p-4 bg-slate-50 dark:bg-slate-800 rounded-lg max-h-[600px] overflow-y-auto">
                 <p className="whitespace-pre-wrap text-sm leading-relaxed">
                   {doc.content}
@@ -320,10 +406,55 @@ export default function FileDetailPage() {
         {/* 右侧：OCR提取的文本 */}
         <Card>
           <CardHeader>
-            <CardTitle>OCR 提取文本</CardTitle>
+            <div className="flex items-center justify-between">
+              <CardTitle>OCR 提取文本</CardTitle>
+              <div className="flex gap-2">
+                {!isEditing ? (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={handleStartEdit}
+                  >
+                    <Edit className="w-4 h-4 mr-1" />
+                    编辑
+                  </Button>
+                ) : (
+                  <>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={handleCancelEdit}
+                      disabled={isSaving}
+                    >
+                      <X className="w-4 h-4 mr-1" />
+                      取消
+                    </Button>
+                    <Button
+                      size="sm"
+                      onClick={handleSaveEdit}
+                      disabled={isSaving}
+                    >
+                      {isSaving ? (
+                        <Loader2 className="w-4 h-4 mr-1 animate-spin" />
+                      ) : (
+                        <Save className="w-4 h-4 mr-1" />
+                      )}
+                      保存
+                    </Button>
+                  </>
+                )}
+              </div>
+            </div>
           </CardHeader>
           <CardContent>
-            {doc.content ? (
+            {isEditing ? (
+              <Textarea
+                value={editedContent}
+                onChange={(e) => setEditedContent(e.target.value)}
+                className="min-h-[600px] font-mono text-sm"
+                placeholder="请输入OCR文本内容"
+              />
+            ) : doc.content ? (
               <div className="p-4 bg-slate-50 dark:bg-slate-800 rounded-lg max-h-[600px] overflow-y-auto">
                 <p className="whitespace-pre-wrap text-sm leading-relaxed">
                   {doc.content}

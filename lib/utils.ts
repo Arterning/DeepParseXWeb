@@ -11,6 +11,6 @@ export function cn(...inputs: ClassValue[]) {
  * @returns 完整的预览URL
  */
 export function buildPreviewURL(file: string): string {
-  const baseURL = process.env.NEXT_PUBLIC_API_BASE_URL || (typeof window !== 'undefined' ? window.origin : '');
+  const baseURL = process.env.NEXT_PUBLIC_API_URL || (typeof window !== 'undefined' ? window.origin : '');
   return `${baseURL}/api/v1/sys/docs/preview/${file}`;
 }
