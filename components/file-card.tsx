@@ -8,7 +8,7 @@ import { type SysDocRes } from '@/lib/api/doc';
 interface FileCardProps {
   doc: SysDocRes;
   onClick: (id: number) => void;
-  onDelete: (id: number) => void;
+  onDelete?: (id: number) => void;
 }
 
 export function FileCard({ doc, onClick, onDelete }: FileCardProps) {
@@ -57,17 +57,19 @@ export function FileCard({ doc, onClick, onDelete }: FileCardProps) {
         </div>
       </CardContent>
 
-      <Button
-        variant="ghost"
-        size="icon"
-        onClick={(e) => {
-          e.stopPropagation();
-          onDelete(doc.id);
-        }}
-        className="absolute top-2 right-2 h-8 w-8 opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-100 dark:hover:bg-red-900/20 hover:text-red-600"
-      >
-        <Trash2 className="h-4 w-4" />
-      </Button>
+      {onDelete && (
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={(e) => {
+            e.stopPropagation();
+            onDelete(doc.id);
+          }}
+          className="absolute top-2 right-2 h-8 w-8 opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-100 dark:hover:bg-red-900/20 hover:text-red-600"
+        >
+          <Trash2 className="h-4 w-4" />
+        </Button>
+      )}
     </Card>
   );
 }
