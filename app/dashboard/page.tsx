@@ -118,11 +118,13 @@ export default function DashboardPage() {
                 <Card key={doc.id} className="hover:shadow-md transition-shadow cursor-pointer">
                   <CardHeader>
                     <div className="flex items-start justify-between">
-                      <div className="flex items-start gap-3">
-                        <FileText className="w-5 h-5 text-blue-600 mt-1" />
-                        <div>
-                          <CardTitle className="text-lg">{doc.title || doc.name}</CardTitle>
-                          <CardDescription className="mt-1">
+                      <div className="flex items-start gap-3 flex-1 min-w-0">
+                        <FileText className="w-5 h-5 text-blue-600 mt-1 flex-shrink-0" />
+                        <div className="flex-1 min-w-0">
+                          <CardTitle className="text-lg truncate overflow-hidden" title={doc.title || doc.name}>
+                            {doc.title || doc.name}
+                          </CardTitle>
+                          <CardDescription className="mt-1 line-clamp-2">
                             {doc.desc || doc.content?.substring(0, 100) + '...'}
                           </CardDescription>
                         </div>
@@ -158,7 +160,9 @@ export default function DashboardPage() {
                         <FileText className="w-5 h-5 text-blue-600" />
                       </div>
                       <div className="flex-1 min-w-0">
-                        <CardTitle className="text-base truncate">{doc.title || doc.name}</CardTitle>
+                        <CardTitle className="text-base truncate overflow-hidden" title={doc.title || doc.name}>
+                          {doc.title || doc.name}
+                        </CardTitle>
                         <CardDescription className="text-xs mt-1 flex items-center gap-2">
                           <Calendar className="w-3 h-3" />
                           {formatDate(doc.created_time)}
@@ -167,7 +171,7 @@ export default function DashboardPage() {
                     </div>
                   </CardHeader>
                   <CardContent>
-                    <div className="text-sm text-slate-600 dark:text-slate-400">
+                    <div className="text-sm text-slate-600 dark:text-slate-400 line-clamp-2">
                       {doc.desc || doc.content?.substring(0, 80) + '...'}
                     </div>
                     <div className="flex justify-between items-center mt-3 text-xs text-slate-500">
