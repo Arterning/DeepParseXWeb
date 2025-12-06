@@ -122,8 +122,11 @@ export default function FilesPage() {
           <>
             <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
               {docs.map((doc) => (
-                <Card key={doc.id} className="hover:shadow-md transition-shadow">
-                  <CardContent className="p-4">
+                <Card key={doc.id} className="hover:shadow-md transition-shadow relative group">
+                  <CardContent
+                    className="p-4 cursor-pointer"
+                    onClick={() => router.push(`/dashboard/files/${doc.id}`)}
+                  >
                     <div className="flex items-start gap-3 mb-3">
                       <div className="w-10 h-10 rounded-lg bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center flex-shrink-0">
                         <FileText className="w-5 h-5 text-blue-600" />
@@ -147,17 +150,19 @@ export default function FilesPage() {
                       <span>{doc.type || '未知'}</span>
                       <span>{formatSize(doc.size)}</span>
                     </div>
-
-                    <Button
-                      variant="destructive"
-                      size="sm"
-                      onClick={() => handleDelete(doc.id)}
-                      className="w-full mt-3"
-                    >
-                      <Trash2 className="w-3 h-3 mr-1" />
-                      删除
-                    </Button>
                   </CardContent>
+
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleDelete(doc.id);
+                    }}
+                    className="absolute top-2 right-2 h-8 w-8 opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-100 dark:hover:bg-red-900/20 hover:text-red-600"
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
                 </Card>
               ))}
             </div>
