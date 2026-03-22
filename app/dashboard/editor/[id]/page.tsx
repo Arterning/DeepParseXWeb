@@ -42,6 +42,7 @@ import {
 } from 'lucide-react';
 import { querySysDocDetail } from '@/lib/api/doc';
 import { updateDocMeta } from '@/lib/api/doc_dir';
+import { ThemeToggle } from '@/components/theme-toggle';
 
 // FortuneSheet must not be SSR'd (it uses browser APIs on import)
 const SheetEditor = dynamic(() => import('./sheet-editor'), { ssr: false });
@@ -393,6 +394,9 @@ export default function EditorPage() {
             {docTitle}
           </button>
         )}
+
+        {/* Theme toggle */}
+        <ThemeToggle className="shrink-0" />
 
         {/* Save status */}
         <div className="shrink-0 flex items-center gap-1.5 text-sm">

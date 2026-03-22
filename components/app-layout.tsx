@@ -3,6 +3,7 @@
 import { usePathname, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
+import { ThemeToggle } from '@/components/theme-toggle';
 import { Home, Upload, FileText, Folder, LogOut } from 'lucide-react';
 
 const navItems = [
@@ -56,10 +57,13 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
             </nav>
           </div>
 
-          <Button variant="outline" onClick={handleLogout} className="gap-2">
-            <LogOut className="w-4 h-4" />
-            退出登录
-          </Button>
+          <div className="flex items-center gap-1">
+            <ThemeToggle />
+            <Button variant="outline" onClick={handleLogout} className="gap-2">
+              <LogOut className="w-4 h-4" />
+              退出登录
+            </Button>
+          </div>
         </div>
       </header>
 
