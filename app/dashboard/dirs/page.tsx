@@ -19,6 +19,8 @@ import {
   Upload,
   X,
   FolderPlus,
+  Sheet,
+  FileType,
 } from 'lucide-react';
 import {
   getDocDirTree,
@@ -29,6 +31,7 @@ import {
   updateDocDirAssociation,
   updateDocMeta,
   deleteDoc,
+  createDocFile,
   type DocDir,
   type DocFile,
 } from '@/lib/api/doc_dir';
@@ -45,6 +48,14 @@ interface EditDocState {
   name: string;
   desc: string;
 }
+
+// 新建文件类型
+type CreateFileType = 'word' | 'excel';
+
+const FILE_TYPE_LABELS: Record<CreateFileType, string> = {
+  word: 'Word 文档',
+  excel: '表格',
+};
 
 const PAGE_SIZE = 20;
 
@@ -79,10 +90,13 @@ export default function DirsPage() {
   const [renameDirTarget, setRenameDirTarget] = useState<DocDir | null>(null);
   const [renameDirName, setRenameDirName] = useState('');
   const [editDocTarget, setEditDocTarget] = useState<EditDocState | null>(null);
+  const [createFileModal, setCreateFileModal] = useState<CreateFileType | null>(null);
+  const [newFileName, setNewFileName] = useState('');
   const [createDropdownOpen, setCreateDropdownOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const contextMenuRef = useRef<HTMLDivElement>(null);
 
   // Auth check
   useEffect(() => {
@@ -94,15 +108,23 @@ export default function DirsPage() {
     loadDirs();
   }, [router]);
 
-  // Close menus on outside click
+  // Close dropdown / context menu when clicking outside
+  // Use mousedown so it fires BEFORE React's onClick on the toggle button,
+  // allowing contains() check to prevent premature closing.
   useEffect(() => {
-    const handleClick = () => {
-      setCreateDropdownOpen(false);
-      setContextMenu(null);
+    const onMouseDown = (e: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+        setCreateDropdownOpen(false);
+      }
+      if (contextMenuRef.current && !contextMenuRef.current.contains(e.target as Node)) {
+        setContextMenu(null);
+      }
     };
-    document.addEventListener('click', handleClick);
-    return () => document.removeEventListener('click', handleClick);
+    document.addEventListener('mousedown', onMouseDown);
+    return () => document.removeEventListener('mousedown', onMouseDown);
   }, []);
+
+  // ── Data loading ─────────────────────────────────────────────────────────
 
   const loadDirs = async () => {
     try {
@@ -133,6 +155,8 @@ export default function DirsPage() {
       setIsLoadingDocs(false);
     }
   };
+
+  // ── Directory interactions ────────────────────────────────────────────────
 
   const handleSelectDir = (dir: DocDir) => {
     setSelectedDir(dir);
@@ -167,6 +191,30 @@ export default function DirsPage() {
       setCreateDirModal(null);
       setNewDirName('');
       await loadDirs();
+    } catch (err) {
+      alert('创建失败');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  // Create Word / Excel file
+  const handleCreateFile = async () => {
+    if (!newFileName.trim() || !createFileModal) return;
+    try {
+      setIsSubmitting(true);
+      const title = newFileName.trim();
+      const result = await createDocFile({
+        title,
+        name: title,
+        type: createFileModal,
+        doc_dir_id: selectedDir?.id ?? null,
+      });
+      setCreateFileModal(null);
+      setNewFileName('');
+      await loadDocs(selectedDir, docsPage);
+      // Navigate to the newly created file
+      if (result?.id) router.push(`/dashboard/files/${result.id}`);
     } catch (err) {
       alert('创建失败');
     } finally {
@@ -213,11 +261,7 @@ export default function DirsPage() {
   const handleMoveDir = async (dragged: DocDir, target: DocDir) => {
     if (dragged.id === target.id) return;
     try {
-      await updateDocDir(dragged.id, {
-        name: dragged.name,
-        parent_id: target.id,
-        sort: dragged.sort,
-      });
+      await updateDocDir(dragged.id, { name: dragged.name, parent_id: target.id, sort: dragged.sort });
       await loadDirs();
     } catch (err: any) {
       alert(err?.response?.data?.msg || '移动失败');
@@ -368,11 +412,7 @@ export default function DirsPage() {
             onClick={(e) => hasChildren && toggleExpand(dir.id, e)}
           >
             {hasChildren ? (
-              isExpanded ? (
-                <ChevronDown className="w-3.5 h-3.5" />
-              ) : (
-                <ChevronRight className="w-3.5 h-3.5" />
-              )
+              isExpanded ? <ChevronDown className="w-3.5 h-3.5" /> : <ChevronRight className="w-3.5 h-3.5" />
             ) : null}
           </button>
 
@@ -437,7 +477,6 @@ export default function DirsPage() {
   // ── Render ─────────────────────────────────────────────────────────────────
   return (
     <AppLayout>
-      {/* Cancel AppLayout's container padding to get a full-height split view */}
       <div className="-mx-4 -my-8 flex" style={{ height: 'calc(100vh - 73px)' }}>
         {/* ── Left panel: Directory tree ─────────────────────────────────── */}
         <div className="w-72 shrink-0 border-r border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 flex flex-col">
@@ -450,10 +489,7 @@ export default function DirsPage() {
               <Button
                 size="sm"
                 className="h-7 px-2 gap-1 text-xs bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setCreateDropdownOpen((v) => !v);
-                }}
+                onClick={() => setCreateDropdownOpen((v) => !v)}
               >
                 <Plus className="w-3.5 h-3.5" />
                 新建
@@ -461,26 +497,39 @@ export default function DirsPage() {
               </Button>
 
               {createDropdownOpen && (
-                <div className="absolute right-0 top-full mt-1 w-36 bg-white dark:bg-slate-800 rounded-lg shadow-lg border border-slate-200 dark:border-slate-700 z-50 py-1">
+                <div className="absolute right-0 top-full mt-1 w-40 bg-white dark:bg-slate-800 rounded-lg shadow-lg border border-slate-200 dark:border-slate-700 z-50 py-1">
                   <button
                     className="w-full text-left px-3 py-2 text-sm hover:bg-slate-100 dark:hover:bg-slate-700 flex items-center gap-2"
-                    onClick={(e) => {
-                      e.stopPropagation();
+                    onClick={() => {
                       setCreateDirModal({ parentId: selectedDir?.id ?? null });
                       setNewDirName('');
                       setCreateDropdownOpen(false);
                     }}
                   >
-                    <FolderPlus className="w-4 h-4" />
+                    <FolderPlus className="w-4 h-4 text-yellow-500" />
                     新建目录
                   </button>
                   <button
-                    className="w-full text-left px-3 py-2 text-sm text-slate-400 cursor-not-allowed flex items-center gap-2"
-                    disabled
-                    title="即将支持"
+                    className="w-full text-left px-3 py-2 text-sm hover:bg-slate-100 dark:hover:bg-slate-700 flex items-center gap-2"
+                    onClick={() => {
+                      setCreateFileModal('word');
+                      setNewFileName('');
+                      setCreateDropdownOpen(false);
+                    }}
                   >
-                    <FileText className="w-4 h-4" />
-                    新建文件
+                    <FileType className="w-4 h-4 text-blue-500" />
+                    Word 文档
+                  </button>
+                  <button
+                    className="w-full text-left px-3 py-2 text-sm hover:bg-slate-100 dark:hover:bg-slate-700 flex items-center gap-2"
+                    onClick={() => {
+                      setCreateFileModal('excel');
+                      setNewFileName('');
+                      setCreateDropdownOpen(false);
+                    }}
+                  >
+                    <Sheet className="w-4 h-4 text-green-500" />
+                    表格
                   </button>
                 </div>
               )}
@@ -516,7 +565,7 @@ export default function DirsPage() {
               e.dataTransfer.dropEffect = 'copy';
             }
           }}
-          onDragLeave={(e) => {
+          onDragLeave={() => {
             if (!draggedDir) {
               dragCounterRef.current--;
               if (dragCounterRef.current === 0) setIsDragOverFiles(false);
@@ -573,7 +622,7 @@ export default function DirsPage() {
               <div className="flex flex-col items-center justify-center h-64 text-slate-400">
                 <Upload className="w-12 h-12 mb-4 opacity-30" />
                 <p>目录为空</p>
-                <p className="text-sm mt-1">拖放文件到此处上传</p>
+                <p className="text-sm mt-1">拖放文件到此处上传，或点击"新建"创建文件</p>
               </div>
             ) : (
               <>
@@ -603,12 +652,9 @@ export default function DirsPage() {
                           </span>
                         )}
                         <span className="text-xs text-slate-400">
-                          {doc.created_time
-                            ? new Date(doc.created_time).toLocaleDateString('zh-CN')
-                            : ''}
+                          {doc.created_time ? new Date(doc.created_time).toLocaleDateString('zh-CN') : ''}
                         </span>
 
-                        {/* Hover action buttons */}
                         <div className="hidden group-hover:flex items-center gap-1">
                           <button
                             className="p-1 rounded hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500"
@@ -651,7 +697,6 @@ export default function DirsPage() {
                   ))}
                 </div>
 
-                {/* Pagination */}
                 {totalPages > 1 && (
                   <div className="flex justify-center gap-2 mt-6">
                     <Button
@@ -684,9 +729,9 @@ export default function DirsPage() {
       {/* ── Context Menu ────────────────────────────────────────────────────── */}
       {contextMenu && (
         <div
+          ref={contextMenuRef}
           className="fixed z-[100] bg-white dark:bg-slate-800 rounded-lg shadow-xl border border-slate-200 dark:border-slate-700 py-1 min-w-[128px]"
           style={{ left: contextMenu.x, top: contextMenu.y }}
-          onClick={(e) => e.stopPropagation()}
         >
           <button
             className="w-full text-left px-4 py-2 text-sm hover:bg-slate-100 dark:hover:bg-slate-700 flex items-center gap-2"
@@ -695,8 +740,7 @@ export default function DirsPage() {
               setContextMenu(null);
             }}
           >
-            <Eye className="w-4 h-4" />
-            查看
+            <Eye className="w-4 h-4" /> 查看
           </button>
           <button
             className="w-full text-left px-4 py-2 text-sm hover:bg-slate-100 dark:hover:bg-slate-700 flex items-center gap-2"
@@ -710,16 +754,14 @@ export default function DirsPage() {
               setContextMenu(null);
             }}
           >
-            <Pencil className="w-4 h-4" />
-            编辑
+            <Pencil className="w-4 h-4" /> 编辑
           </button>
           <div className="my-1 border-t border-slate-200 dark:border-slate-700" />
           <button
             className="w-full text-left px-4 py-2 text-sm hover:bg-red-50 dark:hover:bg-red-900/30 text-red-600 flex items-center gap-2"
             onClick={() => handleDeleteDoc(contextMenu.doc)}
           >
-            <Trash2 className="w-4 h-4" />
-            删除
+            <Trash2 className="w-4 h-4" /> 删除
           </button>
         </div>
       )}
@@ -730,10 +772,7 @@ export default function DirsPage() {
           className="fixed inset-0 z-50 flex items-center justify-center bg-black/40"
           onClick={() => setCreateDirModal(null)}
         >
-          <div
-            className="bg-white dark:bg-slate-800 rounded-xl p-6 w-80 shadow-2xl"
-            onClick={(e) => e.stopPropagation()}
-          >
+          <div className="bg-white dark:bg-slate-800 rounded-xl p-6 w-80 shadow-2xl" onClick={(e) => e.stopPropagation()}>
             <h3 className="font-semibold text-lg mb-4">新建目录</h3>
             <Input
               autoFocus
@@ -743,12 +782,53 @@ export default function DirsPage() {
               onKeyDown={(e) => e.key === 'Enter' && handleCreateDir()}
             />
             <div className="flex justify-end gap-2 mt-4">
-              <Button variant="outline" onClick={() => setCreateDirModal(null)}>
-                取消
-              </Button>
+              <Button variant="outline" onClick={() => setCreateDirModal(null)}>取消</Button>
               <Button
                 onClick={handleCreateDir}
                 disabled={!newDirName.trim() || isSubmitting}
+                className="bg-gradient-to-r from-blue-600 to-indigo-600"
+              >
+                {isSubmitting ? <Loader2 className="w-4 h-4 animate-spin" /> : '创建'}
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ── Create Word / Excel Modal ───────────────────────────────────────── */}
+      {createFileModal && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/40"
+          onClick={() => setCreateFileModal(null)}
+        >
+          <div className="bg-white dark:bg-slate-800 rounded-xl p-6 w-80 shadow-2xl" onClick={(e) => e.stopPropagation()}>
+            <div className="flex items-center gap-3 mb-4">
+              {createFileModal === 'word' ? (
+                <FileType className="w-6 h-6 text-blue-500" />
+              ) : (
+                <Sheet className="w-6 h-6 text-green-500" />
+              )}
+              <h3 className="font-semibold text-lg">新建 {FILE_TYPE_LABELS[createFileModal]}</h3>
+            </div>
+            {selectedDir ? (
+              <p className="text-sm text-slate-500 mb-3">
+                创建到目录：<span className="font-medium text-slate-700 dark:text-slate-300">{selectedDir.name}</span>
+              </p>
+            ) : (
+              <p className="text-sm text-amber-600 mb-3">未选择目录，文件将创建到根目录</p>
+            )}
+            <Input
+              autoFocus
+              placeholder={`${FILE_TYPE_LABELS[createFileModal]}名称`}
+              value={newFileName}
+              onChange={(e) => setNewFileName(e.target.value)}
+              onKeyDown={(e) => e.key === 'Enter' && handleCreateFile()}
+            />
+            <div className="flex justify-end gap-2 mt-4">
+              <Button variant="outline" onClick={() => setCreateFileModal(null)}>取消</Button>
+              <Button
+                onClick={handleCreateFile}
+                disabled={!newFileName.trim() || isSubmitting}
                 className="bg-gradient-to-r from-blue-600 to-indigo-600"
               >
                 {isSubmitting ? <Loader2 className="w-4 h-4 animate-spin" /> : '创建'}
@@ -764,10 +844,7 @@ export default function DirsPage() {
           className="fixed inset-0 z-50 flex items-center justify-center bg-black/40"
           onClick={() => setRenameDirTarget(null)}
         >
-          <div
-            className="bg-white dark:bg-slate-800 rounded-xl p-6 w-80 shadow-2xl"
-            onClick={(e) => e.stopPropagation()}
-          >
+          <div className="bg-white dark:bg-slate-800 rounded-xl p-6 w-80 shadow-2xl" onClick={(e) => e.stopPropagation()}>
             <h3 className="font-semibold text-lg mb-4">重命名目录</h3>
             <Input
               autoFocus
@@ -776,9 +853,7 @@ export default function DirsPage() {
               onKeyDown={(e) => e.key === 'Enter' && handleRenameDir()}
             />
             <div className="flex justify-end gap-2 mt-4">
-              <Button variant="outline" onClick={() => setRenameDirTarget(null)}>
-                取消
-              </Button>
+              <Button variant="outline" onClick={() => setRenameDirTarget(null)}>取消</Button>
               <Button
                 onClick={handleRenameDir}
                 disabled={!renameDirName.trim() || isSubmitting}
@@ -797,10 +872,7 @@ export default function DirsPage() {
           className="fixed inset-0 z-50 flex items-center justify-center bg-black/40"
           onClick={() => setEditDocTarget(null)}
         >
-          <div
-            className="bg-white dark:bg-slate-800 rounded-xl p-6 w-96 shadow-2xl"
-            onClick={(e) => e.stopPropagation()}
-          >
+          <div className="bg-white dark:bg-slate-800 rounded-xl p-6 w-96 shadow-2xl" onClick={(e) => e.stopPropagation()}>
             <div className="flex items-center justify-between mb-4">
               <h3 className="font-semibold text-lg">编辑文件</h3>
               <button
@@ -835,9 +907,7 @@ export default function DirsPage() {
               </div>
             </div>
             <div className="flex justify-end gap-2 mt-4">
-              <Button variant="outline" onClick={() => setEditDocTarget(null)}>
-                取消
-              </Button>
+              <Button variant="outline" onClick={() => setEditDocTarget(null)}>取消</Button>
               <Button
                 onClick={handleEditDocSubmit}
                 disabled={isSubmitting}

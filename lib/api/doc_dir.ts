@@ -72,3 +72,12 @@ export function deleteDoc(pk: number[]): Promise<void> {
     paramsSerializer: (obj) => qs.stringify(obj),
   });
 }
+
+export function createDocFile(data: {
+  title: string;
+  name: string;
+  type: string;
+  doc_dir_id?: number | null;
+}): Promise<{ id: number }> {
+  return apiClient.post('/api/v1/sys/docs', data);
+}
