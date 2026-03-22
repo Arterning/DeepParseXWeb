@@ -3,11 +3,12 @@
 import { usePathname, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { Home, Upload, FileText, LogOut } from 'lucide-react';
+import { Home, Upload, FileText, Folder, LogOut } from 'lucide-react';
 
 const navItems = [
   { name: '首页', href: '/dashboard', icon: Home },
   { name: '上传', href: '/dashboard/upload', icon: Upload },
+  { name: '目录', href: '/dashboard/dirs', icon: Folder },
   { name: '文件', href: '/dashboard/files', icon: FileText },
 ];
 
@@ -36,7 +37,10 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
             <nav className="hidden md:flex items-center gap-1">
               {navItems.map((item) => {
                 const Icon = item.icon;
-                const isActive = pathname === item.href;
+                const isActive =
+                  item.href === '/dashboard'
+                    ? pathname === item.href
+                    : pathname.startsWith(item.href);
                 return (
                   <Link key={item.href} href={item.href}>
                     <Button
