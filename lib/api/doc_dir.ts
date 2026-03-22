@@ -62,7 +62,10 @@ export function updateDocDirAssociation(docId: number, dirId: number | null): Pr
   return apiClient.put(`/api/v1/sys/docs/${docId}`, { doc_dir_id: dirId });
 }
 
-export function updateDocMeta(docId: number, data: { title?: string; name?: string; desc?: string }): Promise<void> {
+export function updateDocMeta(
+  docId: number,
+  data: { title?: string; name?: string; desc?: string; content?: string },
+): Promise<void> {
   return apiClient.put(`/api/v1/sys/docs/${docId}`, data);
 }
 

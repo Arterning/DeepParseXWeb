@@ -127,9 +127,9 @@ export default function FileDetailPage() {
 
   // 渲染邮件类型的文件详情
   const renderEmailDetail = () => {
-    if (!doc.email_msg) return null;
+    if (!(doc as any).email_msg) return null;
 
-    const { email_msg } = doc;
+    const { email_msg } = doc as any;
 
     return (
       <div className="space-y-6">
@@ -254,7 +254,7 @@ export default function FileDetailPage() {
             </CardHeader>
             <CardContent>
               <div className="space-y-2">
-                {email_msg.attachments.map((attachment) => (
+                {email_msg.attachments.map((attachment: any) => (
                   <div
                     key={attachment.id}
                     className="flex items-center gap-2 p-3 bg-slate-50 dark:bg-slate-800 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors"
@@ -557,7 +557,7 @@ export default function FileDetailPage() {
         </Card>
 
         {/* 根据文件类型展示不同内容 */}
-        {doc.email_msg ? renderEmailDetail() :
+        {(doc as any).email_msg ? renderEmailDetail() :
          doc.type === '图片' ? renderImageDetail() :
          doc.type === 'PDF' ? renderPdfDetail() :
          renderGenericDetail()}

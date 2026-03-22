@@ -213,8 +213,8 @@ export default function DirsPage() {
       setCreateFileModal(null);
       setNewFileName('');
       await loadDocs(selectedDir, docsPage);
-      // Navigate to the newly created file
-      if (result?.id) router.push(`/dashboard/files/${result.id}`);
+      // Navigate to the inline editor for the newly created file
+      if (result?.id) router.push(`/dashboard/editor/${result.id}`);
     } catch (err) {
       alert('创建失败');
     } finally {
